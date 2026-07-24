@@ -14,6 +14,6 @@ echo "Running flutter pub get..."
 flutter pub get
 
 echo "Building Flutter web app..."
-flutter build web --release
+flutter build web --release --web-renderer canvaskit
 
 echo "Build complete."
