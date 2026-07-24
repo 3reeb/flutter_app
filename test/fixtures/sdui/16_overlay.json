@@ -1,0 +1,8 @@
+{
+  "ui": {
+    "type": "overlay",
+    "props": {
+      "anchor": "bottom"
+    }
+  }
+}

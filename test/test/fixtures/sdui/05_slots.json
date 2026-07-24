@@ -1,0 +1,15 @@
+{
+  "ui": {
+    "type": "card",
+    "props": {
+      "$slots": {
+        "header": {
+          "type": "text",
+          "props": {
+            "text": "Header"
+          }
+        }
+      }
+    }
+  }
+}

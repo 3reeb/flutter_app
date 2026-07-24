@@ -1,0 +1,139 @@
+type: box:col
+style: "w-full h-full bg-#0F0F14"
+children:
+  # Navbar
+  - type: box:row
+    style: "w-full py-16 px-24 bg-#1A1A2E border-1 border-white/10 items-center justify-between"
+    children:
+      - type: text:h2
+        props:
+          text: "Quantum SDUI"
+        style: "text-white font-bold tracking-wide"
+
+      - type: box:col
+        children:
+          - type: component:use
+            name: ds/ProductCard@3
+            props:
+              title: "Wireless Headphones"
+              price: "$89"
+              image: "https://cdn.example.com/headphones.png"
+              badge: "Best seller"
+            slots:
+              footer:
+                type: box:row
+                children:
+                  - type: text
+                    props:
+                      value: "Ships tomorrow"
+
+      - type: box:row
+        style: "gap-24"
+        children:
+          - type: action:button
+            props:
+              text: "Home c"
+              onClick:
+                - action: "nav.push"
+                  path: "/"
+            style: "text-#6366F1 font-bold hover:text-white cursor-pointer"
+
+          - type: action:button
+            props:
+              text: "User 42"
+              onClick:
+                - action: "nav.push"
+                  path: "/users/42"
+            style: "text-slate-400 hover:text-white cursor-pointer"
+
+          - type: action:button
+            props:
+              text: "Blog"
+              onTap:
+                - action: "nav.push"
+                  path: "/blog/my/first/post"
+            style: "text-slate-400 hover:text-white cursor-pointer"
+
+  # Page Content Area
+  - type: box
+    # Notice: No scrollable flag here. Just flex-1 to fill space!
+    style: "flex-1"
+    children:
+      - type: slot
+        name: page # The router strictly looks for the slot named 'page'
+$define:
+  ds/ProductCard@3:
+    name: ds/ProductCard@3
+    description: Commerce product card with media, price, stock, and CTA.
+
+    props:
+      title: ""
+      price: ""
+      currency: "USD"
+      image: null
+      badge: null
+      ctaText: "Add to cart"
+      disabled: false
+
+    state:
+      inCart: false
+      loading: false
+
+    computed:
+      displayPrice:
+        deps: ["price", "currency"]
+        op: concat
+        args: [" "]
+        fallback: ""
+
+    variants:
+      compact:
+        props:
+          layout: compact
+      featured:
+        props:
+          layout: featured
+          ctaText: "Shop now"
+
+    slots:
+      footer:
+        type: box:row
+        children: []
+
+    hooks:
+      mount:
+        - type: analytics:track
+          event: product_card_view
+      unmount:
+        - type: cache:release
+          key: product-card
+
+    ui:
+      type: box:card
+      props:
+        padding: 16
+        radius: 20
+      children:
+        - type: box:row
+          children:
+            - type: media:image
+              props:
+                src: "{{props.image}}"
+                ratio: "1:1"
+            - type: box:col
+              children:
+                - type: text
+                  props:
+                    value: "{{props.title}}"
+                - type: text
+                  props:
+                    value: "{{props.price}}"
+        - type: slot
+          props:
+            name: footer
+
+    metadata:
+      domain: commerce
+      version: 3.0.0
+      owner: design-system
+      tags: ["product", "card", "commerce"]

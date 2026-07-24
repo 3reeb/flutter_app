@@ -1,0 +1,796 @@
+type: page
+meta:
+  title: All Issues
+route:
+  urlPattern: /issues
+ui:
+  type: box:col
+  style: w-full h-full bg-[#1f1f21] text-white overflow-hidden
+  children:
+  - type: box:col
+    style: w-full h-full px-30 pt-24 pb-18 gap-16
+    children:
+    - type: box:row
+      style: w-full items-start justify-between
+      children:
+      - type: text
+        props:
+          text: All Issues
+          style: text-3xl font-bold text-[#f4f4f5]
+      - type: box:col
+        props:
+          items: center
+          justify: center
+        style: bg-[#f4f4f5] text-[#111111] rounded-20 px-18 py-11
+        children:
+        - type: text
+          props:
+            text: Create issue
+            style: text-sm font-medium text-[#111111]
+    - type: box:row
+      style: w-full items-center gap-12
+      children:
+      - type: box:row
+        style: flex-1 items-center h-40 bg-[#1d1d20] border border-[#3b3b40] rounded-20 px-16
+        children:
+        - type: text
+          props:
+            text: Filter issues...
+            style: text-[#8e9197] text-sm
+      - type: text
+        props:
+          text: 30 issues
+          style: text-[#8e9197] text-sm
+      - type: box:col
+        props:
+          items: center
+          justify: center
+        style: bg-[#35353b] text-[#f5f5f5] rounded-18 px-18 py-11
+        children:
+        - type: text
+          props:
+            text: View Options
+            style: text-sm font-medium text-[#f5f5f5]
+    - type: box:row
+      style: w-full items-center gap-10 pt-4
+      children:
+      - type: text
+        props:
+          text: ⌄
+          style: text-[#a9acb2] text-lg
+      - type: text
+        props:
+          text: In Progress
+          style: text-[#f4f4f5] text-base font-semibold
+      - type: box:col
+        style: w-24 h-24 rounded-full bg-[#2f2f33] items-center justify-center
+        children:
+        - type: text
+          props:
+            text: '6'
+            style: text-[#f4f4f5] text-sm font-semibold
+    - type: box:col
+      props:
+        scrollable: true
+      style: flex-1 w-full bg-transparent
+      children:
+      - type: box:row
+        style: w-full items-center gap-14 px-0 py-18 border-b border-[#2f2f35]
+        children:
+        - type: box:row
+          style: w-52 items-center gap-12
+          children:
+          - type: box:col
+            props:
+              items: center
+              justify: center
+            style: w-10 h-10 rounded-full bg-[#6f95ff]
+            children: []
+          - type: text
+            props:
+              text: ▮▮▮
+              style: text-[#8e9197] text-sm
+        - type: box:row
+          style: flex-1 items-center gap-12 overflow-hidden
+          children:
+          - type: text
+            props:
+              text: T235040469
+              style: text-[#9aa0a6] text-sm
+          - type: text
+            props:
+              text: Update user interface
+              style: text-[#f3f4f6] text-base font-medium
+              maxLines: 1
+              overflow: ellipsis
+          - type: text
+            props:
+              text: › Update payment gateway integration
+              style: text-[#8b8f97] text-base
+              maxLines: 1
+              overflow: ellipsis
+        - type: text
+          props:
+            text: Payment gateway integ...
+            style: text-[#f0f0f0] text-sm
+            maxLines: 1
+            overflow: ellipsis
+        - type: text
+          props:
+            text: Jul 3
+            style: text-[#c2c5ca] text-sm
+        - type: text
+          props:
+            text: Jul 3
+            style: text-[#c2c5ca] text-sm
+        - type: box:col
+          props:
+            items: center
+            justify: center
+          style: w-32 h-32 rounded-full bg-[#36363b]
+          children:
+          - type: text
+            props:
+              text: OM
+              style: text-xs font-semibold text-[#aeb0b5]
+        - type: text
+          props:
+            text: ⋯
+            style: text-[#b0b3b8] text-lg
+      - type: box:row
+        style: w-full items-center gap-14 px-0 py-18 border-b border-[#2f2f35]
+        children:
+        - type: box:row
+          style: w-52 items-center gap-12
+          children:
+          - type: box:col
+            props:
+              items: center
+              justify: center
+            style: w-10 h-10 rounded-full bg-[#6f95ff]
+            children: []
+          - type: text
+            props:
+              text: ▮▮▮
+              style: text-[#8e9197] text-sm
+        - type: box:row
+          style: flex-1 items-center gap-12 overflow-hidden
+          children:
+          - type: text
+            props:
+              text: T235040470
+              style: text-[#9aa0a6] text-sm
+          - type: text
+            props:
+              text: Use Projects to organize work for features or releases
+              style: text-[#f3f4f6] text-base font-medium
+              maxLines: 1
+              overflow: ellipsis
+        - type: text
+          props:
+            text: —
+            style: text-[#f0f0f0] text-sm
+            maxLines: 1
+            overflow: ellipsis
+        - type: text
+          props:
+            text: Jul 1
+            style: text-[#c2c5ca] text-sm
+        - type: text
+          props:
+            text: Jul 3
+            style: text-[#c2c5ca] text-sm
+        - type: box:col
+          props:
+            items: center
+            justify: center
+          style: w-32 h-32 rounded-full bg-[#36363b]
+          children:
+          - type: text
+            props:
+              text: JL
+              style: text-xs font-semibold text-[#aeb0b5]
+        - type: text
+          props:
+            text: ⋯
+            style: text-[#b0b3b8] text-lg
+      - type: box:row
+        style: w-full items-center gap-14 px-0 py-18 border-b border-[#2f2f35]
+        children:
+        - type: box:row
+          style: w-52 items-center gap-12
+          children:
+          - type: box:col
+            props:
+              items: center
+              justify: center
+            style: w-10 h-10 rounded-full bg-[#6f95ff]
+            children: []
+          - type: text
+            props:
+              text: ▮▮▮
+              style: text-[#8e9197] text-sm
+        - type: box:row
+          style: flex-1 items-center gap-12 overflow-hidden
+          children:
+          - type: text
+            props:
+              text: T235040471
+              style: text-[#9aa0a6] text-sm
+          - type: text
+            props:
+              text: Use Cycles to focus work over n-weeks
+              style: text-[#f3f4f6] text-base font-medium
+              maxLines: 1
+              overflow: ellipsis
+        - type: text
+          props:
+            text: —
+            style: text-[#f0f0f0] text-sm
+            maxLines: 1
+            overflow: ellipsis
+        - type: text
+          props:
+            text: Jul 1
+            style: text-[#c2c5ca] text-sm
+        - type: text
+          props:
+            text: Jul 3
+            style: text-[#c2c5ca] text-sm
+        - type: box:col
+          props:
+            items: center
+            justify: center
+          style: w-32 h-32 rounded-full bg-[#36363b]
+          children:
+          - type: text
+            props:
+              text: IN
+              style: text-xs font-semibold text-[#aeb0b5]
+        - type: text
+          props:
+            text: ⋯
+            style: text-[#b0b3b8] text-lg
+      - type: box:row
+        style: w-full items-center gap-14 px-0 py-18 border-b border-[#2f2f35]
+        children:
+        - type: box:row
+          style: w-52 items-center gap-12
+          children:
+          - type: box:col
+            props:
+              items: center
+              justify: center
+            style: w-10 h-10 rounded-full bg-[#6f95ff]
+            children: []
+          - type: text
+            props:
+              text: ▮▮▮
+              style: text-[#8e9197] text-sm
+        - type: box:row
+          style: flex-1 items-center gap-12 overflow-hidden
+          children:
+          - type: text
+            props:
+              text: T235040484
+              style: text-[#9aa0a6] text-sm
+          - type: text
+            props:
+              text: Migrate database schema to v2
+              style: text-[#f3f4f6] text-base font-medium
+              maxLines: 1
+              overflow: ellipsis
+          - type: text
+            props:
+              text: › Payment gateway integration
+              style: text-[#8b8f97] text-base
+              maxLines: 1
+              overflow: ellipsis
+        - type: text
+          props:
+            text: Payment gateway integ...
+            style: text-[#f0f0f0] text-sm
+            maxLines: 1
+            overflow: ellipsis
+        - type: text
+          props:
+            text: Jul 4
+            style: text-[#c2c5ca] text-sm
+        - type: text
+          props:
+            text: Jul 5
+            style: text-[#c2c5ca] text-sm
+        - type: box:col
+          props:
+            items: center
+            justify: center
+          style: w-32 h-32 rounded-full bg-[#36363b]
+          children:
+          - type: text
+            props:
+              text: LB
+              style: text-xs font-semibold text-[#aeb0b5]
+        - type: text
+          props:
+            text: ⋯
+            style: text-[#b0b3b8] text-lg
+      - type: box:row
+        style: w-full items-center gap-14 px-0 py-18 border-b border-[#2f2f35]
+        children:
+        - type: box:row
+          style: w-52 items-center gap-12
+          children:
+          - type: box:col
+            props:
+              items: center
+              justify: center
+            style: w-10 h-10 rounded-full bg-[#6f95ff]
+            children: []
+          - type: text
+            props:
+              text: ▮▮▮
+              style: text-[#8e9197] text-sm
+        - type: box:row
+          style: flex-1 items-center gap-12 overflow-hidden
+          children:
+          - type: text
+            props:
+              text: T235040485
+              style: text-[#9aa0a6] text-sm
+          - type: text
+            props:
+              text: Write integration tests for checkout flow
+              style: text-[#f3f4f6] text-base font-medium
+              maxLines: 1
+              overflow: ellipsis
+        - type: text
+          props:
+            text: Payment gateway integ...
+            style: text-[#f0f0f0] text-sm
+            maxLines: 1
+            overflow: ellipsis
+        - type: text
+          props:
+            text: Jul 4
+            style: text-[#c2c5ca] text-sm
+        - type: text
+          props:
+            text: Jul 5
+            style: text-[#c2c5ca] text-sm
+        - type: box:col
+          props:
+            items: center
+            justify: center
+          style: w-32 h-32 rounded-full bg-[#36363b]
+          children:
+          - type: text
+            props:
+              text: EJ
+              style: text-xs font-semibold text-[#aeb0b5]
+        - type: text
+          props:
+            text: ⋯
+            style: text-[#b0b3b8] text-lg
+      - type: box:row
+        style: w-full items-center gap-14 px-0 py-18 border-b border-[#2f2f35]
+        children:
+        - type: box:row
+          style: w-52 items-center gap-12
+          children:
+          - type: box:col
+            props:
+              items: center
+              justify: center
+            style: w-10 h-10 rounded-full bg-[#6f95ff]
+            children: []
+          - type: text
+            props:
+              text: ▮▮▮
+              style: text-[#8e9197] text-sm
+        - type: box:row
+          style: flex-1 items-center gap-12 overflow-hidden
+          children:
+          - type: text
+            props:
+              text: T235040486
+              style: text-[#9aa0a6] text-sm
+          - type: text
+            props:
+              text: Set up CI/CD pipeline for staging
+              style: text-[#f3f4f6] text-base font-medium
+              maxLines: 1
+              overflow: ellipsis
+        - type: text
+          props:
+            text: —
+            style: text-[#f0f0f0] text-sm
+            maxLines: 1
+            overflow: ellipsis
+        - type: text
+          props:
+            text: Jul 2
+            style: text-[#c2c5ca] text-sm
+        - type: text
+          props:
+            text: Jul 5
+            style: text-[#c2c5ca] text-sm
+        - type: box:col
+          props:
+            items: center
+            justify: center
+          style: w-32 h-32 rounded-full bg-[#36363b]
+          children:
+          - type: text
+            props:
+              text: AT
+              style: text-xs font-semibold text-[#aeb0b5]
+        - type: text
+          props:
+            text: ⋯
+            style: text-[#b0b3b8] text-lg
+      - type: box:row
+        style: w-full items-center gap-10 pt-12 pb-4
+        children:
+        - type: text
+          props:
+            text: ⌄
+            style: text-[#a9acb2] text-lg
+        - type: text
+          props:
+            text: Todo
+            style: text-[#f4f4f5] text-base font-semibold
+        - type: box:col
+          style: w-24 h-24 rounded-full bg-[#2f2f33] items-center justify-center
+          children:
+          - type: text
+            props:
+              text: '12'
+              style: text-[#f4f4f5] text-sm font-semibold
+      - type: box:row
+        style: w-full items-center gap-14 px-0 py-18 border-b border-[#2f2f35]
+        children:
+        - type: box:row
+          style: w-52 items-center gap-12
+          children:
+          - type: box:col
+            props:
+              items: center
+              justify: center
+            style: w-10 h-10 rounded-full bg-[#f2c94c]
+            children: []
+          - type: text
+            props:
+              text: ▮▮▮
+              style: text-[#8e9197] text-sm
+        - type: box:row
+          style: flex-1 items-center gap-12 overflow-hidden
+          children:
+          - type: text
+            props:
+              text: T235040472
+              style: text-[#9aa0a6] text-sm
+          - type: text
+            props:
+              text: Testing code
+              style: text-[#f3f4f6] text-base font-medium
+              maxLines: 1
+              overflow: ellipsis
+          - type: text
+            props:
+              text: › Update payment gateway integration
+              style: text-[#8b8f97] text-base
+              maxLines: 1
+              overflow: ellipsis
+        - type: text
+          props:
+            text: Payment gateway integ...
+            style: text-[#f0f0f0] text-sm
+            maxLines: 1
+            overflow: ellipsis
+        - type: text
+          props:
+            text: Jul 3
+            style: text-[#c2c5ca] text-sm
+        - type: text
+          props:
+            text: Jul 3
+            style: text-[#c2c5ca] text-sm
+        - type: box:col
+          props:
+            items: center
+            justify: center
+          style: w-32 h-32 rounded-full bg-[#36363b]
+          children:
+          - type: text
+            props:
+              text: WK
+              style: text-xs font-semibold text-[#aeb0b5]
+        - type: text
+          props:
+            text: ⋯
+            style: text-[#b0b3b8] text-lg
+      - type: box:row
+        style: w-full items-center gap-14 px-0 py-18 border-b border-[#2f2f35]
+        children:
+        - type: box:row
+          style: w-52 items-center gap-12
+          children:
+          - type: box:col
+            props:
+              items: center
+              justify: center
+            style: w-10 h-10 rounded-full bg-[#f2c94c]
+            children: []
+          - type: text
+            props:
+              text: ▮▮▮
+              style: text-[#8e9197] text-sm
+        - type: box:row
+          style: flex-1 items-center gap-12 overflow-hidden
+          children:
+          - type: text
+            props:
+              text: T235040473
+              style: text-[#9aa0a6] text-sm
+          - type: text
+            props:
+              text: Design payment method retry UI
+              style: text-[#f3f4f6] text-base font-medium
+              maxLines: 1
+              overflow: ellipsis
+        - type: text
+          props:
+            text: Payment gateway integ...
+            style: text-[#f0f0f0] text-sm
+            maxLines: 1
+            overflow: ellipsis
+        - type: text
+          props:
+            text: Jul 3
+            style: text-[#c2c5ca] text-sm
+        - type: text
+          props:
+            text: Jul 4
+            style: text-[#c2c5ca] text-sm
+        - type: box:col
+          props:
+            items: center
+            justify: center
+          style: w-32 h-32 rounded-full bg-[#36363b]
+          children:
+          - type: text
+            props:
+              text: SK
+              style: text-xs font-semibold text-[#aeb0b5]
+        - type: text
+          props:
+            text: ⋯
+            style: text-[#b0b3b8] text-lg
+      - type: box:row
+        style: w-full items-center gap-14 px-0 py-18 border-b border-[#2f2f35]
+        children:
+        - type: box:row
+          style: w-52 items-center gap-12
+          children:
+          - type: box:col
+            props:
+              items: center
+              justify: center
+            style: w-10 h-10 rounded-full bg-[#f2c94c]
+            children: []
+          - type: text
+            props:
+              text: ▮▮▮
+              style: text-[#8e9197] text-sm
+        - type: box:row
+          style: flex-1 items-center gap-12 overflow-hidden
+          children:
+          - type: text
+            props:
+              text: T235040474
+              style: text-[#9aa0a6] text-sm
+          - type: text
+            props:
+              text: Audit webhook failure handling
+              style: text-[#f3f4f6] text-base font-medium
+              maxLines: 1
+              overflow: ellipsis
+        - type: text
+          props:
+            text: Payment gateway integ...
+            style: text-[#f0f0f0] text-sm
+            maxLines: 1
+            overflow: ellipsis
+        - type: text
+          props:
+            text: Jul 4
+            style: text-[#c2c5ca] text-sm
+        - type: text
+          props:
+            text: Jul 4
+            style: text-[#c2c5ca] text-sm
+        - type: box:col
+          props:
+            items: center
+            justify: center
+          style: w-32 h-32 rounded-full bg-[#36363b]
+          children:
+          - type: text
+            props:
+              text: MM
+              style: text-xs font-semibold text-[#aeb0b5]
+        - type: text
+          props:
+            text: ⋯
+            style: text-[#b0b3b8] text-lg
+      - type: box:row
+        style: w-full items-center gap-14 px-0 py-18 border-b border-[#2f2f35]
+        children:
+        - type: box:row
+          style: w-52 items-center gap-12
+          children:
+          - type: box:col
+            props:
+              items: center
+              justify: center
+            style: w-10 h-10 rounded-full bg-[#f2c94c]
+            children: []
+          - type: text
+            props:
+              text: ▮▮▮
+              style: text-[#8e9197] text-sm
+        - type: box:row
+          style: flex-1 items-center gap-12 overflow-hidden
+          children:
+          - type: text
+            props:
+              text: T235040475
+              style: text-[#9aa0a6] text-sm
+          - type: text
+            props:
+              text: Add loading skeletons for checkout
+              style: text-[#f3f4f6] text-base font-medium
+              maxLines: 1
+              overflow: ellipsis
+        - type: text
+          props:
+            text: Payment gateway integ...
+            style: text-[#f0f0f0] text-sm
+            maxLines: 1
+            overflow: ellipsis
+        - type: text
+          props:
+            text: Jul 4
+            style: text-[#c2c5ca] text-sm
+        - type: text
+          props:
+            text: Jul 5
+            style: text-[#c2c5ca] text-sm
+        - type: box:col
+          props:
+            items: center
+            justify: center
+          style: w-32 h-32 rounded-full bg-[#36363b]
+          children:
+          - type: text
+            props:
+              text: AL
+              style: text-xs font-semibold text-[#aeb0b5]
+        - type: text
+          props:
+            text: ⋯
+            style: text-[#b0b3b8] text-lg
+      - type: box:row
+        style: w-full items-center gap-14 px-0 py-18 border-b border-[#2f2f35]
+        children:
+        - type: box:row
+          style: w-52 items-center gap-12
+          children:
+          - type: box:col
+            props:
+              items: center
+              justify: center
+            style: w-10 h-10 rounded-full bg-[#f2c94c]
+            children: []
+          - type: text
+            props:
+              text: ▮▮▮
+              style: text-[#8e9197] text-sm
+        - type: box:row
+          style: flex-1 items-center gap-12 overflow-hidden
+          children:
+          - type: text
+            props:
+              text: T235040476
+              style: text-[#9aa0a6] text-sm
+          - type: text
+            props:
+              text: Wire analytics events for checkout
+              style: text-[#f3f4f6] text-base font-medium
+              maxLines: 1
+              overflow: ellipsis
+        - type: text
+          props:
+            text: Payment gateway integ...
+            style: text-[#f0f0f0] text-sm
+            maxLines: 1
+            overflow: ellipsis
+        - type: text
+          props:
+            text: Jul 5
+            style: text-[#c2c5ca] text-sm
+        - type: text
+          props:
+            text: Jul 5
+            style: text-[#c2c5ca] text-sm
+        - type: box:col
+          props:
+            items: center
+            justify: center
+          style: w-32 h-32 rounded-full bg-[#36363b]
+          children:
+          - type: text
+            props:
+              text: JP
+              style: text-xs font-semibold text-[#aeb0b5]
+        - type: text
+          props:
+            text: ⋯
+            style: text-[#b0b3b8] text-lg
+      - type: box:row
+        style: w-full items-center gap-14 px-0 py-18 border-b border-[#2f2f35]
+        children:
+        - type: box:row
+          style: w-52 items-center gap-12
+          children:
+          - type: box:col
+            props:
+              items: center
+              justify: center
+            style: w-10 h-10 rounded-full bg-[#f2c94c]
+            children: []
+          - type: text
+            props:
+              text: ▮▮▮
+              style: text-[#8e9197] text-sm
+        - type: box:row
+          style: flex-1 items-center gap-12 overflow-hidden
+          children:
+          - type: text
+            props:
+              text: T235040477
+              style: text-[#9aa0a6] text-sm
+          - type: text
+            props:
+              text: Review staging deploy checklist
+              style: text-[#f3f4f6] text-base font-medium
+              maxLines: 1
+              overflow: ellipsis
+        - type: text
+          props:
+            text: Payment gateway integ...
+            style: text-[#f0f0f0] text-sm
+            maxLines: 1
+            overflow: ellipsis
+        - type: text
+          props:
+            text: Jul 5
+            style: text-[#c2c5ca] text-sm
+        - type: text
+          props:
+            text: Jul 6
+            style: text-[#c2c5ca] text-sm
+        - type: box:col
+          props:
+            items: center
+            justify: center
+          style: w-32 h-32 rounded-full bg-[#36363b]
+          children:
+          - type: text
+            props:
+              text: HS
+              style: text-xs font-semibold text-[#aeb0b5]
+        - type: text
+          props:
+            text: ⋯
+            style: text-[#b0b3b8] text-lg

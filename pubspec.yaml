@@ -1,0 +1,42 @@
+name: quantum_layout
+description: Quantum Layout Engine — A single-file, production-grade Flutter layout engine.
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.22.0"
+
+dependencies:
+  cloud_firestore: ^6.6.0
+  crypto: ^3.0.7
+  firebase_auth: ^6.5.4
+  firebase_core: ^4.11.0
+  firebase_database: ^12.4.4
+  firebase_storage: ^13.4.3
+  flutter:
+    sdk: flutter
+  yaml: ^3.1.2
+
+  flutter_secure_storage: ^10.3.1
+  path_provider: ^2.1.6
+  sqflite: ^2.4.3
+  vector_math: any
+  video_player: ^2.11.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  sqflite_common_ffi: ^2.4.2
+  path_provider_windows: ^2.3.0
+  path_provider_platform_interface: ^2.1.3
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/pages/
+    - assets/pages/users/
+    - assets/pages/blog/
+    - assets/config/

@@ -1,0 +1,205 @@
+# ════════════════════════════════════════════════════════════════════════════
+# ROUTE & SEO METADATA (Parsed by QLPageYamlConfig)
+# ════════════════════════════════════════════════════════════════════════════
+type: page
+route:
+  urlPattern: "/"
+  transition: "fade"
+  transitionMs: 400
+
+meta:
+  title: "Quantum | Next-Gen Storefront"
+  description: "Experience 120Hz SDUI rendering."
+  ogImage: "https://cdn.quantum.dev/og-home.png"
+
+# ════════════════════════════════════════════════════════════════════════════
+# REACTIVE STATE (Zustand-pattern, parsed by QLDataStore)
+# ════════════════════════════════════════════════════════════════════════════
+state:
+  searchQuery: ""
+  activeCategory: "All"
+  cartCount: 0
+  # Auto-computed derived state using Tokens and Pipes
+  welcomeMessage:
+    type: derived
+    compute: "Welcome back, {{env.USER_NAME | default('Guest')}}"
+
+# ════════════════════════════════════════════════════════════════════════════
+# DATA PIPELINES (Zero-Copy Data Orchestrator)
+# ════════════════════════════════════════════════════════════════════════════
+pipelines:
+  featured_products:
+    schema: "ProductSchema" # Must be defined in schemas.yaml
+    executionMode: "auto"
+    autoFetch: true
+    pageSize: 20
+    fetch:
+      # Automatically runs through QuantumApiEngine in a background Isolate
+      - action: "api.engine.read"
+        path: "/api/v1/products?category={{state.activeCategory}}&q={{state.searchQuery}}"
+
+# ════════════════════════════════════════════════════════════════════════════
+# LOCAL MACROS (AOT Compiled Reusable Components)
+# ════════════════════════════════════════════════════════════════════════════
+macros:
+  CategoryFilterChip:
+    props:
+      label: "Unknown"
+    ui:
+      type: action:button
+      props:
+        text: "{{props.label}}"
+        # Reactive Pipe: if activeCategory == label, use solid fill, else soft fill
+        fill: "{{state.activeCategory | eq(props.label) | switch(true:solid, false:soft)}}"
+        intent: "primary"
+        shape: "pill"
+        scale: "sm"
+        onClick:
+          # Micro-action syntax
+          - action: state.set
+            key: activeCategory
+            value: "{{props.label}}"
+
+# ════════════════════════════════════════════════════════════════════════════
+# UI TREE (The Visual Render Graph)
+# ════════════════════════════════════════════════════════════════════════════
+ui:
+  type: box:safe
+  style: "w-full h-full bg-slate-50 col"
+  children:
+    # ── HEADER (Static Top Bar) ──
+    - type: box:row
+      style: "w-full p-16 items-center justify-between bg-white border-b border-slate-200 z-10"
+      children:
+        - type: text:h2
+          style: "font-bold text-slate-900"
+          props:
+            text: "QuantumStore"
+
+        - type: box:row
+          style: "items-center gap-12"
+          children:
+            - type: field:search
+              style: "w-240"
+              props:
+                bind: "searchQuery"
+                placeholder: "Search products..."
+
+            - type: action:button
+              props:
+                text: "Cart ({{state.cartCount}})"
+                intent: "slate-900"
+                fill: "ghost"
+                shape: "pill"
+                onClick:
+                  - "route.push path=/cart"
+
+    # ── HERO SECTION (Parallax Matrix GPU Primitive) ──
+    - type: box:layer
+      style: "w-full h-200 overflow-hidden"
+      children:
+        - type: media:image
+          style: "w-full h-full"
+          props:
+            src: "https://images.unsplash.com/photo-1550745165-9bc0b252726f"
+            fit: "cover"
+            blurIntensity: 4.0
+        - type: box:col
+          style: "w-full h-full items-center justify-center bg-black/40 p-24"
+          children:
+            - type: text:h1
+              style: "text-white font-bold text-center"
+              props:
+                text: "{{state.welcomeMessage}}"
+            - type: text:p
+              style: "text-slate-200 mt-8"
+              props:
+                text: "Discover the speed of zero-allocation architecture."
+
+    # ── CATEGORIES (Horizontal Scroll with Macro Injection) ──
+    - type: box:scroll
+      style: "w-full p-16 row gap-8 bg-white shadow-sm"
+      children:
+        - type: CategoryFilterChip
+          props: { label: "All" }
+        - type: CategoryFilterChip
+          props: { label: "Sneakers" }
+        - type: CategoryFilterChip
+          props: { label: "Apparel" }
+        - type: CategoryFilterChip
+          props: { label: "Accessories" }
+
+    # ── PRODUCT GRID (q_repeater + Neutron Star Layout Engine) ──
+    - type: box:scroll
+      style: "w-full flex-1 p-16"
+      children:
+        - type: q_repeater
+          props:
+            pipeline: "featured_products"
+            behavior: "grid" # Tells the repeater to use QuantumGrid
+            cols: 2 # 2-column grid
+            gap: 16
+          slots:
+            # Empty State (Guards against 0 items)
+            empty:
+              type: template:empty_state
+              props:
+                title: "No products found"
+                body: "Try adjusting your search or category."
+
+            # Item Template (Rendered O(N) times via the VM)
+            item:
+              type: box:card
+              style: "col gap-12 bg-white rounded-16 shadow-sm overflow-hidden hoverable"
+              props:
+                magneto: true # Applies 3D Tilt Physics from Quantum Behaviors
+              children:
+                - type: media:image
+                  style: "w-full aspect-square"
+                  props:
+                    src: "{{item.imageUrl}}"
+                    fit: "cover"
+
+                - type: box:col
+                  style: "w-full px-12 pb-12"
+                  children:
+                    - type: text:label
+                      style: "text-slate-500"
+                      props:
+                        text: "{{item.brand | uppercase}}"
+
+                    - type: text:h3
+                      style: "font-bold text-slate-900 mt-4 text-ellipsis"
+                      props:
+                        text: "{{item.name}}"
+
+                    - type: box:row
+                      style: "w-full items-center justify-between mt-12"
+                      children:
+                        - type: text:h2
+                          style: "font-bold text-emerald-600"
+                          props:
+                            text: "{{item.price | currency}}"
+
+                        - type: action:button
+                          props:
+                            text: "Add"
+                            intent: "emerald"
+                            fill: "solid"
+                            scale: "sm"
+                            shape: "pill"
+                            onClick:
+                              # Increment cart count reactively
+                              - action: "state.set"
+                                key: "cartCount"
+                                value: "{{state.cartCount | add(1)}}"
+                              # Trigger a hardware Toast Overlay
+                              - action: "overlay.open"
+                                config:
+                                  {
+                                    style: "bg-emerald-600 text-white rounded-full px-16 py-10",
+                                  }
+                                blueprint:
+                                  type: text:p
+                                  props:
+                                    text: "{{item.name}} added to cart!"

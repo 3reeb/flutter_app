@@ -1,0 +1,23 @@
+{
+  "module": "fixtures",
+  "state": {
+    "user": {
+      "name": "Ada",
+      "roles": [
+        "admin",
+        "editor"
+      ]
+    }
+  },
+  "ui": {
+    "type": "box:col",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "{{state.user.name}}"
+        }
+      }
+    ]
+  }
+}

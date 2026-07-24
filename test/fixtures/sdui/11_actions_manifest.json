@@ -1,0 +1,12 @@
+{
+  "module": "fixtures",
+  "actions": {
+    "noop": [
+      {
+        "action": "state.set",
+        "key": "value",
+        "value": 1
+      }
+    ]
+  }
+}

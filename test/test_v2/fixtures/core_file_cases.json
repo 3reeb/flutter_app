@@ -1,0 +1,290 @@
+{
+  "cases": [
+    {
+      "label": "macros_built_in",
+      "folder": "macros",
+      "core": "macro",
+      "typeName": "case_01",
+      "builtInPath": "/macros/case_01.yaml",
+      "overridePath": "\\macros\\case_01.override.json",
+      "explicitCore": "custom_macro",
+      "metadata": {
+        "case": 1,
+        "phase": "built_in"
+      }
+    },
+    {
+      "label": "macros_override",
+      "folder": "macros",
+      "core": "macro",
+      "typeName": "case_01_override",
+      "builtInPath": "macros\\case_01_override.yaml",
+      "overridePath": "macros/case_01_override.override.json",
+      "explicitCore": null,
+      "metadata": {
+        "case": 1,
+        "phase": "override"
+      }
+    },
+    {
+      "label": "templates_built_in",
+      "folder": "templates",
+      "core": "template",
+      "typeName": "case_02",
+      "builtInPath": "/templates/case_02.yaml",
+      "overridePath": "\\templates\\case_02.override.json",
+      "explicitCore": "alt_template",
+      "metadata": {
+        "case": 2,
+        "phase": "built_in"
+      }
+    },
+    {
+      "label": "templates_override",
+      "folder": "templates",
+      "core": "template",
+      "typeName": "case_02_override",
+      "builtInPath": "templates\\case_02_override.yaml",
+      "overridePath": "templates/case_02_override.override.json",
+      "explicitCore": "custom_template",
+      "metadata": {
+        "case": 2,
+        "phase": "override"
+      }
+    },
+    {
+      "label": "layouts_built_in",
+      "folder": "layouts",
+      "core": "layout",
+      "typeName": "case_03",
+      "builtInPath": "/layouts/case_03.yaml",
+      "overridePath": "\\layouts\\case_03.override.json",
+      "explicitCore": null,
+      "metadata": {
+        "case": 3,
+        "phase": "built_in"
+      }
+    },
+    {
+      "label": "layouts_override",
+      "folder": "layouts",
+      "core": "layout",
+      "typeName": "case_03_override",
+      "builtInPath": "layouts\\case_03_override.yaml",
+      "overridePath": "layouts/case_03_override.override.json",
+      "explicitCore": "alt_layout",
+      "metadata": {
+        "case": 3,
+        "phase": "override"
+      }
+    },
+    {
+      "label": "actions_built_in",
+      "folder": "actions",
+      "core": "action",
+      "typeName": "case_04",
+      "builtInPath": "/actions/case_04.yaml",
+      "overridePath": "\\actions\\case_04.override.json",
+      "explicitCore": "custom_action",
+      "metadata": {
+        "case": 4,
+        "phase": "built_in"
+      }
+    },
+    {
+      "label": "actions_override",
+      "folder": "actions",
+      "core": "action",
+      "typeName": "case_04_override",
+      "builtInPath": "actions\\case_04_override.yaml",
+      "overridePath": "actions/case_04_override.override.json",
+      "explicitCore": null,
+      "metadata": {
+        "case": 4,
+        "phase": "override"
+      }
+    },
+    {
+      "label": "fields_built_in",
+      "folder": "fields",
+      "core": "field",
+      "typeName": "case_05",
+      "builtInPath": "/fields/case_05.yaml",
+      "overridePath": "\\fields\\case_05.override.json",
+      "explicitCore": "alt_field",
+      "metadata": {
+        "case": 5,
+        "phase": "built_in"
+      }
+    },
+    {
+      "label": "fields_override",
+      "folder": "fields",
+      "core": "field",
+      "typeName": "case_05_override",
+      "builtInPath": "fields\\case_05_override.yaml",
+      "overridePath": "fields/case_05_override.override.json",
+      "explicitCore": "custom_field",
+      "metadata": {
+        "case": 5,
+        "phase": "override"
+      }
+    },
+    {
+      "label": "media_built_in",
+      "folder": "media",
+      "core": "media",
+      "typeName": "case_06",
+      "builtInPath": "/media/case_06.yaml",
+      "overridePath": "\\media\\case_06.override.json",
+      "explicitCore": null,
+      "metadata": {
+        "case": 6,
+        "phase": "built_in"
+      }
+    },
+    {
+      "label": "media_override",
+      "folder": "media",
+      "core": "media",
+      "typeName": "case_06_override",
+      "builtInPath": "media\\case_06_override.yaml",
+      "overridePath": "media/case_06_override.override.json",
+      "explicitCore": "alt_media",
+      "metadata": {
+        "case": 6,
+        "phase": "override"
+      }
+    },
+    {
+      "label": "portal_built_in",
+      "folder": "portal",
+      "core": "portal",
+      "typeName": "case_07",
+      "builtInPath": "/portal/case_07.yaml",
+      "overridePath": "\\portal\\case_07.override.json",
+      "explicitCore": "custom_portal",
+      "metadata": {
+        "case": 7,
+        "phase": "built_in"
+      }
+    },
+    {
+      "label": "portal_override",
+      "folder": "portal",
+      "core": "portal",
+      "typeName": "case_07_override",
+      "builtInPath": "portal\\case_07_override.yaml",
+      "overridePath": "portal/case_07_override.override.json",
+      "explicitCore": null,
+      "metadata": {
+        "case": 7,
+        "phase": "override"
+      }
+    },
+    {
+      "label": "control_built_in",
+      "folder": "control",
+      "core": "control",
+      "typeName": "case_08",
+      "builtInPath": "/control/case_08.yaml",
+      "overridePath": "\\control\\case_08.override.json",
+      "explicitCore": "alt_control",
+      "metadata": {
+        "case": 8,
+        "phase": "built_in"
+      }
+    },
+    {
+      "label": "control_override",
+      "folder": "control",
+      "core": "control",
+      "typeName": "case_08_override",
+      "builtInPath": "control\\case_08_override.yaml",
+      "overridePath": "control/case_08_override.override.json",
+      "explicitCore": "custom_control",
+      "metadata": {
+        "case": 8,
+        "phase": "override"
+      }
+    },
+    {
+      "label": "chart_built_in",
+      "folder": "chart",
+      "core": "chart",
+      "typeName": "case_09",
+      "builtInPath": "/chart/case_09.yaml",
+      "overridePath": "\\chart\\case_09.override.json",
+      "explicitCore": null,
+      "metadata": {
+        "case": 9,
+        "phase": "built_in"
+      }
+    },
+    {
+      "label": "chart_override",
+      "folder": "chart",
+      "core": "chart",
+      "typeName": "case_09_override",
+      "builtInPath": "chart\\case_09_override.yaml",
+      "overridePath": "chart/case_09_override.override.json",
+      "explicitCore": "alt_chart",
+      "metadata": {
+        "case": 9,
+        "phase": "override"
+      }
+    },
+    {
+      "label": "animation_built_in",
+      "folder": "animation",
+      "core": "animation",
+      "typeName": "case_10",
+      "builtInPath": "/animation/case_10.yaml",
+      "overridePath": "\\animation\\case_10.override.json",
+      "explicitCore": "custom_animation",
+      "metadata": {
+        "case": 10,
+        "phase": "built_in"
+      }
+    },
+    {
+      "label": "animation_override",
+      "folder": "animation",
+      "core": "animation",
+      "typeName": "case_10_override",
+      "builtInPath": "animation\\case_10_override.yaml",
+      "overridePath": "animation/case_10_override.override.json",
+      "explicitCore": null,
+      "metadata": {
+        "case": 10,
+        "phase": "override"
+      }
+    },
+    {
+      "label": "connect_built_in",
+      "folder": "connect",
+      "core": "connect",
+      "typeName": "case_11",
+      "builtInPath": "/connect/case_11.yaml",
+      "overridePath": "\\connect\\case_11.override.json",
+      "explicitCore": "alt_connect",
+      "metadata": {
+        "case": 11,
+        "phase": "built_in"
+      }
+    },
+    {
+      "label": "connect_override",
+      "folder": "connect",
+      "core": "connect",
+      "typeName": "case_11_override",
+      "builtInPath": "connect\\case_11_override.yaml",
+      "overridePath": "connect/case_11_override.override.json",
+      "explicitCore": "custom_connect",
+      "metadata": {
+        "case": 11,
+        "phase": "override"
+      }
+    }
+  ]
+}

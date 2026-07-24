@@ -1,0 +1,23 @@
+type: screen
+
+meta:
+  title: "404 - Not Found"
+
+ui:
+  type: box:col
+  style: "w-full h-full align-center justify-center p-32 gap-24 bg-#0F0F14"
+  children:
+    - type: text:h1
+      props:
+        text: "404"
+        style: "color-white weight-900 size-96 text-center"
+    - type: text
+      props:
+        text: "Page not found."
+        style: "color-muted size-24 text-center"
+    - type: GradientBtn
+      props:
+        label: "Go Home"
+        onTap:
+          - action: "nav.push"
+            path: "/"

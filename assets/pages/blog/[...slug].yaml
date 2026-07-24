@@ -1,0 +1,30 @@
+type: screen
+
+meta:
+  title: "Blog: {{$route.param.slug}}"
+
+ui:
+  type: box:col
+  style: "w-full p-64 gap-24"
+  children:
+    - type: text:h1
+      props:
+        text: "Catch-All Route"
+        style: "color-white weight-800 size-48"
+    
+    - type: text
+      props:
+        text: "You navigated to a wildcard catch-all route."
+        style: "color-muted size-18"
+
+    - type: box:col
+      style: "glass p-24 radius-12 gap-12 mt-24"
+      children:
+        - type: text
+          props:
+            text: "Raw slug parameter:"
+            style: "color-muted size-14 uppercase tracking-wide"
+        - type: text
+          props:
+            text: "{{$route.param.slug}}"
+            style: "color-#10B981 font-mono size-18"

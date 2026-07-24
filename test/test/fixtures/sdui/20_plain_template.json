@@ -1,0 +1,8 @@
+{
+  "template": {
+    "type": "text",
+    "props": {
+      "text": "template node"
+    }
+  }
+}

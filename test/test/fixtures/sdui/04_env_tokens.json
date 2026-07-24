@@ -1,0 +1,8 @@
+{
+  "ui": {
+    "type": "text",
+    "props": {
+      "text": "App={{$env.APP_NAME}}"
+    }
+  }
+}

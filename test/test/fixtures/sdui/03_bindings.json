@@ -1,0 +1,8 @@
+{
+  "ui": {
+    "type": "text",
+    "props": {
+      "text": "{{state.user.name}}"
+    }
+  }
+}

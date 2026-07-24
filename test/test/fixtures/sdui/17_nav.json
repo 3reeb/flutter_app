@@ -1,0 +1,8 @@
+{
+  "ui": {
+    "type": "nav",
+    "props": {
+      "route": "/home"
+    }
+  }
+}

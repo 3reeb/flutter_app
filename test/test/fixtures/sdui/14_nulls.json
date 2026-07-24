@@ -1,0 +1,10 @@
+{
+  "ui": {
+    "type": "box",
+    "props": {
+      "title": null,
+      "subtitle": "",
+      "enabled": true
+    }
+  }
+}

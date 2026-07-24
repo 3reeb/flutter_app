@@ -1,0 +1,8 @@
+{
+  "ui": {
+    "type": "box",
+    "props": {
+      "$if": "{{state.show}}"
+    }
+  }
+}

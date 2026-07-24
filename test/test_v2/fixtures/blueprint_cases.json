@@ -1,0 +1,825 @@
+{
+  "cases": [
+    {
+      "label": "base_00",
+      "kind": "base",
+      "raw": {
+        "type": "text"
+      }
+    },
+    {
+      "label": "base_props_00",
+      "kind": "base_props",
+      "raw": {
+        "type": "text",
+        "props": {
+          "id": "text_0",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "base_01",
+      "kind": "base",
+      "raw": {
+        "type": "box:row"
+      }
+    },
+    {
+      "label": "base_props_01",
+      "kind": "base_props",
+      "raw": {
+        "type": "box:row",
+        "props": {
+          "id": "box_row_1",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "base_02",
+      "kind": "base",
+      "raw": {
+        "type": "box:col"
+      }
+    },
+    {
+      "label": "base_props_02",
+      "kind": "base_props",
+      "raw": {
+        "type": "box:col",
+        "props": {
+          "id": "box_col_2",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "base_03",
+      "kind": "base",
+      "raw": {
+        "type": "action:button"
+      }
+    },
+    {
+      "label": "base_props_03",
+      "kind": "base_props",
+      "raw": {
+        "type": "action:button",
+        "props": {
+          "id": "action_button_3",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "base_04",
+      "kind": "base",
+      "raw": {
+        "type": "field:text"
+      }
+    },
+    {
+      "label": "base_props_04",
+      "kind": "base_props",
+      "raw": {
+        "type": "field:text",
+        "props": {
+          "id": "field_text_4",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "base_05",
+      "kind": "base",
+      "raw": {
+        "type": "media:image"
+      }
+    },
+    {
+      "label": "base_props_05",
+      "kind": "base_props",
+      "raw": {
+        "type": "media:image",
+        "props": {
+          "id": "media_image_5",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "base_06",
+      "kind": "base",
+      "raw": {
+        "type": "media:video"
+      }
+    },
+    {
+      "label": "base_props_06",
+      "kind": "base_props",
+      "raw": {
+        "type": "media:video",
+        "props": {
+          "id": "media_video_6",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "base_07",
+      "kind": "base",
+      "raw": {
+        "type": "portal:dialog"
+      }
+    },
+    {
+      "label": "base_props_07",
+      "kind": "base_props",
+      "raw": {
+        "type": "portal:dialog",
+        "props": {
+          "id": "portal_dialog_7",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "base_08",
+      "kind": "base",
+      "raw": {
+        "type": "control:tabs"
+      }
+    },
+    {
+      "label": "base_props_08",
+      "kind": "base_props",
+      "raw": {
+        "type": "control:tabs",
+        "props": {
+          "id": "control_tabs_8",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "base_09",
+      "kind": "base",
+      "raw": {
+        "type": "system:timer"
+      }
+    },
+    {
+      "label": "base_props_09",
+      "kind": "base_props",
+      "raw": {
+        "type": "system:timer",
+        "props": {
+          "id": "system_timer_9",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "base_10",
+      "kind": "base",
+      "raw": {
+        "type": "hook:lifecycle"
+      }
+    },
+    {
+      "label": "base_props_10",
+      "kind": "base_props",
+      "raw": {
+        "type": "hook:lifecycle",
+        "props": {
+          "id": "hook_lifecycle_10",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "base_11",
+      "kind": "base",
+      "raw": {
+        "type": "visual:surface"
+      }
+    },
+    {
+      "label": "base_props_11",
+      "kind": "base_props",
+      "raw": {
+        "type": "visual:surface",
+        "props": {
+          "id": "visual_surface_11",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "base_12",
+      "kind": "base",
+      "raw": {
+        "type": "data:sliver"
+      }
+    },
+    {
+      "label": "base_props_12",
+      "kind": "base_props",
+      "raw": {
+        "type": "data:sliver",
+        "props": {
+          "id": "data_sliver_12",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "base_13",
+      "kind": "base",
+      "raw": {
+        "type": "canvas:shader"
+      }
+    },
+    {
+      "label": "base_props_13",
+      "kind": "base_props",
+      "raw": {
+        "type": "canvas:shader",
+        "props": {
+          "id": "canvas_shader_13",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "base_14",
+      "kind": "base",
+      "raw": {
+        "type": "decoration:text"
+      }
+    },
+    {
+      "label": "base_props_14",
+      "kind": "base_props",
+      "raw": {
+        "type": "decoration:text",
+        "props": {
+          "id": "decoration_text_14",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "base_15",
+      "kind": "base",
+      "raw": {
+        "type": "chart"
+      }
+    },
+    {
+      "label": "base_props_15",
+      "kind": "base_props",
+      "raw": {
+        "type": "chart",
+        "props": {
+          "id": "chart_15",
+          "style": "w-full"
+        }
+      }
+    },
+    {
+      "label": "alias_00",
+      "kind": "alias",
+      "raw": {
+        "type": "row",
+        "props": {}
+      }
+    },
+    {
+      "label": "alias_style_00",
+      "kind": "alias_style",
+      "raw": {
+        "type": "row",
+        "props": {
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_01",
+      "kind": "alias",
+      "raw": {
+        "type": "card",
+        "props": {
+          "title": "Card title"
+        }
+      }
+    },
+    {
+      "label": "alias_style_01",
+      "kind": "alias_style",
+      "raw": {
+        "type": "card",
+        "props": {
+          "title": "Card title",
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_02",
+      "kind": "alias",
+      "raw": {
+        "type": "split",
+        "props": {
+          "style": "min-h-0"
+        }
+      }
+    },
+    {
+      "label": "alias_style_02",
+      "kind": "alias_style",
+      "raw": {
+        "type": "split",
+        "props": {
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_03",
+      "kind": "alias",
+      "raw": {
+        "type": "button",
+        "props": {
+          "text": "Tap"
+        }
+      }
+    },
+    {
+      "label": "alias_style_03",
+      "kind": "alias_style",
+      "raw": {
+        "type": "button",
+        "props": {
+          "text": "Tap",
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_04",
+      "kind": "alias",
+      "raw": {
+        "type": "icon_button",
+        "props": {
+          "icon": "add"
+        }
+      }
+    },
+    {
+      "label": "alias_style_04",
+      "kind": "alias_style",
+      "raw": {
+        "type": "icon_button",
+        "props": {
+          "icon": "add",
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_05",
+      "kind": "alias",
+      "raw": {
+        "type": "chip",
+        "props": {
+          "label": "Chip"
+        }
+      }
+    },
+    {
+      "label": "alias_style_05",
+      "kind": "alias_style",
+      "raw": {
+        "type": "chip",
+        "props": {
+          "label": "Chip",
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_06",
+      "kind": "alias",
+      "raw": {
+        "type": "badge",
+        "props": {
+          "label": "Badge"
+        }
+      }
+    },
+    {
+      "label": "alias_style_06",
+      "kind": "alias_style",
+      "raw": {
+        "type": "badge",
+        "props": {
+          "label": "Badge",
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_07",
+      "kind": "alias",
+      "raw": {
+        "type": "text_field",
+        "props": {
+          "bind": "user.name"
+        }
+      }
+    },
+    {
+      "label": "alias_style_07",
+      "kind": "alias_style",
+      "raw": {
+        "type": "text_field",
+        "props": {
+          "bind": "user.name",
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_08",
+      "kind": "alias",
+      "raw": {
+        "type": "tabs",
+        "props": {
+          "initialIndex": 1
+        }
+      }
+    },
+    {
+      "label": "alias_style_08",
+      "kind": "alias_style",
+      "raw": {
+        "type": "tabs",
+        "props": {
+          "initialIndex": 1,
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_09",
+      "kind": "alias",
+      "raw": {
+        "type": "wizard",
+        "props": {
+          "step": 2
+        }
+      }
+    },
+    {
+      "label": "alias_style_09",
+      "kind": "alias_style",
+      "raw": {
+        "type": "wizard",
+        "props": {
+          "step": 2,
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_10",
+      "kind": "alias",
+      "raw": {
+        "type": "empty_state",
+        "props": {
+          "title": "Nothing"
+        }
+      }
+    },
+    {
+      "label": "alias_style_10",
+      "kind": "alias_style",
+      "raw": {
+        "type": "empty_state",
+        "props": {
+          "title": "Nothing",
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_11",
+      "kind": "alias",
+      "raw": {
+        "type": "error_state",
+        "props": {
+          "title": "Oops"
+        }
+      }
+    },
+    {
+      "label": "alias_style_11",
+      "kind": "alias_style",
+      "raw": {
+        "type": "error_state",
+        "props": {
+          "title": "Oops",
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_12",
+      "kind": "alias",
+      "raw": {
+        "type": "visual_surface",
+        "props": {
+          "tone": "glass"
+        }
+      }
+    },
+    {
+      "label": "alias_style_12",
+      "kind": "alias_style",
+      "raw": {
+        "type": "visual_surface",
+        "props": {
+          "tone": "glass",
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_13",
+      "kind": "alias",
+      "raw": {
+        "type": "hook_lifecycle",
+        "props": {
+          "stage": "build"
+        }
+      }
+    },
+    {
+      "label": "alias_style_13",
+      "kind": "alias_style",
+      "raw": {
+        "type": "hook_lifecycle",
+        "props": {
+          "stage": "build",
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_14",
+      "kind": "alias",
+      "raw": {
+        "type": "connectSlot",
+        "props": {
+          "slot": "primary"
+        }
+      }
+    },
+    {
+      "label": "alias_style_14",
+      "kind": "alias_style",
+      "raw": {
+        "type": "connectSlot",
+        "props": {
+          "slot": "primary",
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_15",
+      "kind": "alias",
+      "raw": {
+        "type": "behavior",
+        "props": {
+          "behavior": "drag"
+        }
+      }
+    },
+    {
+      "label": "alias_style_15",
+      "kind": "alias_style",
+      "raw": {
+        "type": "behavior",
+        "props": {
+          "behavior": "drag",
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_16",
+      "kind": "alias",
+      "raw": {
+        "type": "chart",
+        "props": {
+          "chartType": "bar"
+        }
+      }
+    },
+    {
+      "label": "alias_style_16",
+      "kind": "alias_style",
+      "raw": {
+        "type": "chart",
+        "props": {
+          "chartType": "bar",
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "alias_17",
+      "kind": "alias",
+      "raw": {
+        "type": "animation",
+        "props": {
+          "animationType": "fade"
+        }
+      }
+    },
+    {
+      "label": "alias_style_17",
+      "kind": "alias_style",
+      "raw": {
+        "type": "animation",
+        "props": {
+          "animationType": "fade",
+          "style": "rounded-xl"
+        }
+      }
+    },
+    {
+      "label": "complex_00",
+      "kind": "complex",
+      "raw": {
+        "type": "box:row",
+        "props": {
+          "style": "gap-4"
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Left"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Right"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "label": "complex_01",
+      "kind": "complex",
+      "raw": {
+        "type": "box:col",
+        "props": {
+          "style": "gap-4"
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Top"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Bottom"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "label": "complex_02",
+      "kind": "complex",
+      "raw": {
+        "type": "template:profile_card",
+        "props": {
+          "userId": "u2"
+        },
+        "slots": {
+          "avatar": {
+            "type": "media:image"
+          },
+          "name": {
+            "type": "text",
+            "props": {
+              "text": "Alice"
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "complex_03",
+      "kind": "complex",
+      "raw": {
+        "type": "template:field_shell",
+        "props": {
+          "bind": "user.email"
+        },
+        "slots": {
+          "label": {
+            "type": "text",
+            "props": {
+              "text": "Email"
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "complex_04",
+      "kind": "complex",
+      "raw": {
+        "type": "portal:sheet",
+        "props": {
+          "edge": "bottom"
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Sheet content"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "label": "complex_05",
+      "kind": "complex",
+      "raw": {
+        "type": "visual:scene",
+        "props": {
+          "tone": "dark"
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Scene"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "label": "complex_06",
+      "kind": "complex",
+      "raw": {
+        "type": "control:form_scope",
+        "props": {
+          "id": "form1"
+        },
+        "children": [
+          {
+            "type": "field:text",
+            "props": {
+              "bind": "name"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "label": "complex_07",
+      "kind": "complex",
+      "raw": {
+        "type": "system:timer",
+        "props": {
+          "interval": 500
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Tick"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

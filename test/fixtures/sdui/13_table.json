@@ -1,0 +1,17 @@
+{
+  "ui": {
+    "type": "matrix-table",
+    "props": {
+      "columns": [
+        "a",
+        "b"
+      ],
+      "rows": [
+        {
+          "a": 1,
+          "b": 2
+        }
+      ]
+    }
+  }
+}

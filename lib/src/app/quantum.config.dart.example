@@ -1,0 +1,146 @@
+
+// ════════════════════════════════════════════════════════════════════════════
+// quantum.config.dart.example
+//
+// Copy this file to `quantum.config.dart` and edit the single source of truth.
+// The actual implementation lives in `quantum.config.dart`.
+// This template shows the intended developer-facing shape with stronger defaults.
+// ════════════════════════════════════════════════════════════════════════════
+
+import 'quantum.config.dart';
+
+final QuantumConfigRoot quantumConfigExample = QuantumConfigRoot(
+  app: QuantumConfigAppSection(
+    appName: 'MyApp',
+    title: 'My App',
+    locale: 'en',
+    version: '1.0.0',
+    theme: const QuantumConfigThemeSection(
+      mode: 'system',
+      colors: <String, dynamic>{
+        'primary': '#4F46E5',
+      },
+      typography: <String, dynamic>{
+        'fontFamily': 'Inter',
+      },
+    ),
+    router: const QuantumConfigRouterSection(
+      initialRoute: '/',
+      pagesDir: 'pages',
+      notFoundPage: 'pages/404.yaml',
+      globalGuards: <Map<String, dynamic>>[],
+    ),
+    vm: const QuantumConfigVmSection(
+      workerThreads: 4,
+      simdArenaCapacity: 4096,
+    ),
+    telemetry: const QuantumConfigTelemetrySection(
+      enabled: true,
+      frameMonitor: true,
+    ),
+    domains: const <Map<String, dynamic>>[],
+    state: const <String, dynamic>{},
+    macros: const <String, dynamic>{},
+    schemas: const <String, dynamic>{},
+    pipes: const <String, dynamic>{},
+    actions: const <String, dynamic>{},
+    sdui: const <String, dynamic>{},
+    boot: const <String, dynamic>{
+      'appName': 'MyApp',
+      'pagesDir': 'pages',
+      'coreFolders': <String, dynamic>{
+        'macro': 'macros',
+        'template': 'templates',
+        'layout': 'layouts',
+        'box': 'boxes',
+        'action': 'actions',
+        'field': 'fields',
+        'text': 'text',
+        'media': 'media',
+        'data': 'data',
+        'portal': 'portal',
+        'control': 'control',
+        'canvas': 'canvas',
+        'system': 'system',
+        'decoration': 'decoration',
+      },
+      'preload': <Map<String, dynamic>>[],
+    },
+  ),
+  api: const QuantumConfigApiSection(
+    apiUrl: 'https://api.example.com',
+    socketUrl: 'wss://api.example.com/socket',
+    cacheDirectoryPath: '/tmp/quantum-cache',
+    environment: 'production',
+    clientSecret: null,
+    enableTelemetry: true,
+    enableOfflineQueueing: true,
+    driverMode: QuantumDriverMode.http,
+    mockMinLatency: Duration(milliseconds: 1),
+    mockMaxLatency: Duration(milliseconds: 5),
+    mockFailureProbability: 0.0,
+  ),
+  security: const QuantumConfigSecurityPolicy(
+    lockedPaths: <String>{
+      'api.clientSecret',
+      'security.clientSecret',
+      'runtime.environment',
+    },
+    sensitivePaths: <String>{
+      'api.clientSecret',
+      'security.clientSecret',
+    },
+    requireBuildLockForSensitive: true,
+    requireSignedRemoteConfig: true,
+    allowUnsignedRemoteConfigInDebug: true,
+    persistEncryptedRemoteCache: true,
+    cacheSensitiveValuesInVault: true,
+    vaultNamespace: 'quantum/config',
+    remoteSignatureKeyEnv: 'QUANTUM_REMOTE_CONFIG_SECRET',
+  ),
+  merge: const QuantumConfigMergePolicy(
+    listMode: QuantumConfigListMergeMode.replace,
+    deepMergeMaps: true,
+    mergeNulls: false,
+    allowNewKeys: true,
+    preferRemoteOnConflict: true,
+  ),
+  cache: const QuantumConfigCachePolicy(
+    enableMemoization: true,
+    remoteTtl: Duration(minutes: 5),
+    localTtl: Duration(days: 3650),
+    maxSnapshots: 4,
+    singleFlight: true,
+    useSourceDigests: true,
+  ),
+  sources: QuantumConfigSources(
+    local: QuantumConfigLocalSourceSpec(
+      sources: <QuantumConfigSource>[
+        QuantumAssetConfigSource(
+          id: 'app-yaml',
+          assetPath: 'APP.yaml',
+          priority: 10,
+        ),
+        QuantumFileConfigSource(
+          id: 'local-json',
+          filePath: '/absolute/path/to/APP.local.json',
+          priority: 20,
+        ),
+      ],
+    ),
+    remote: QuantumConfigRemoteSourceSpec(
+      sources: <QuantumConfigSource>[
+        QuantumHttpConfigSource(
+          id: 'remote-config',
+          uri: Uri.parse('https://config.example.com/APP.yaml'),
+          priority: 100,
+          timeout: Duration(seconds: 10),
+          cacheByEtag: true,
+          expectedSha256: null,
+        ),
+      ],
+    ),
+  ),
+  extras: const <String, dynamic>{},
+  buildOverlay: QuantumBuildOverlay.fromEnv(),
+);

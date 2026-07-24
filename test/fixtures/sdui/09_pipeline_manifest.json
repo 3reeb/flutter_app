@@ -1,0 +1,9 @@
+{
+  "module": "fixtures",
+  "pipelines": {
+    "feed": {
+      "schema": "card",
+      "fetch": []
+    }
+  }
+}

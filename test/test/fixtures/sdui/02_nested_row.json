@@ -1,0 +1,19 @@
+{
+  "ui": {
+    "type": "box:row",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "left"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "right"
+        }
+      }
+    ]
+  }
+}

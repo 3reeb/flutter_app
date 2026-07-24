@@ -1,0 +1,8 @@
+{
+  "ui": {
+    "type": "theme",
+    "props": {
+      "mode": "dark"
+    }
+  }
+}
