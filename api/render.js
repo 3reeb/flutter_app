@@ -40,7 +40,7 @@
 //                      Default: 30000 (30 s).
 // ════════════════════════════════════════════════════════════════════════════
 
-const chromium = require('@sparticuz/chromium');
+const chromium = require('@sparticuz/chromium-min');
 const puppeteer = require('puppeteer-core');
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -140,7 +140,7 @@ module.exports = async function handler(req, res) {
         '--font-render-hinting=none',      // consistent font rendering
         '--disable-font-subpixel-positioning',
       ],
-      executablePath: await chromium.executablePath(),
+      executablePath: await chromium.executablePath('https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar'),
       headless: chromium.headless,
       defaultViewport: {
         width: Math.ceil(width),
