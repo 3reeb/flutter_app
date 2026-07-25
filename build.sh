@@ -16,7 +16,4 @@ flutter pub get
 echo "Building Flutter web app..."
 flutter build web --release --no-tree-shake-icons
 
-echo "Installing API dependencies..."
-cd api && npm install --production && cd ..
-
 echo "Build complete."
