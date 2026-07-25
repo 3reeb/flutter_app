@@ -140,7 +140,7 @@ module.exports = async function handler(req, res) {
         '--font-render-hinting=none',      // consistent font rendering
         '--disable-font-subpixel-positioning',
       ],
-      executablePath: await chromium.executablePath('https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar'),
+      executablePath: await chromium.executablePath('https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar'),
       headless: chromium.headless,
       defaultViewport: {
         width: Math.ceil(width),

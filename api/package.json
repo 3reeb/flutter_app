@@ -4,7 +4,7 @@
   "description": "Vercel serverless API for Quantum SDUI → PNG rendering",
   "private": true,
   "dependencies": {
-    "@sparticuz/chromium-min": "^123.0.1",
-    "puppeteer-core": "^22.6.5"
+    "@sparticuz/chromium-min": "^131.0.1",
+    "puppeteer-core": "^23.4.0"
   }
 }
