@@ -53,14 +53,14 @@ void initQuantumBuiltIns(QuantumVM vm) {
 
     // 1. Check if the router passed a compiled widget into the environment (e.g., $page)
     final dynamic envWidget = ctx.env['\$$name'] ?? ctx.env[name];
-    if (envWidget is Widget) {
-      // If CSS styles are applied directly to the slot tag, wrap it in a QLBox
-      final String style = ctx.node.style ?? '';
-      if (style.isNotEmpty) {
-        return QLBox(style: style, suppressParentData: true, child: envWidget);
-      }
-      return envWidget;
-    }
+    // if (envWidget is Widget) {
+    //   // If CSS styles are applied directly to the slot tag, wrap it in a QLBox
+    //   final String style = ctx.node.style ?? '';
+    //   if (style.isNotEmpty) {
+    //     return QLBox(style: style, suppressParentData: true, child: envWidget);
+    //   }
+    //   return envWidget;
+    // }
 
     // 2. Standard SDUI nested slot resolution
     final Widget? slotWidget = ctx.slot(name);
@@ -181,8 +181,8 @@ void initQuantumBuiltIns(QuantumVM vm) {
       kind: payload['kind']?.toString(),
       query: payload['query']?.toString(),
       bundleName: payload['bundleName']?.toString() ?? 'quantumSduiBundle',
-      engineImportPath:
-          payload['engineImportPath']?.toString() ?? './quantum_sdui_type_engine',
+      engineImportPath: payload['engineImportPath']?.toString() ??
+          './quantum_sdui_type_engine',
       includeRegistry: payload['includeRegistry'] as bool? ?? true,
       includeCoreSchemas: payload['includeCoreSchemas'] as bool? ?? true,
       includeDesignSystems: payload['includeDesignSystems'] as bool? ?? true,
@@ -192,7 +192,8 @@ void initQuantumBuiltIns(QuantumVM vm) {
       includeOrchestrator: payload['includeOrchestrator'] as bool? ?? true,
     );
   }),
-      description: 'Export a TypeScript bundle for the live SDUI schema catalog',
+      description:
+          'Export a TypeScript bundle for the live SDUI schema catalog',
       params: const {
         'kind': 'String',
         'query': 'String',

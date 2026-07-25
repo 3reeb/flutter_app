@@ -43,7 +43,6 @@ final Map<String, Map<String, dynamic>> _loadedSuites = () {
   }
   return suites;
 }();
-
 final Set<String> _allCaseIds = <String>{};
 int _totalCases = 0;
 

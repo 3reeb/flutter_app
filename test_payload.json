@@ -1,0 +1,13 @@
+{
+  "json": {
+    "type": "box",
+    "style": { "backgroundColor": "#FF0000" },
+    "child": {
+      "type": "text",
+      "text": "Hello from API",
+      "style": { "color": "#FFFFFF", "fontSize": 24 }
+    }
+  },
+  "width": 300,
+  "height": 200
+}

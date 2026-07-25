@@ -1,0 +1,42 @@
+{
+  "__meta": {
+    "id": "sample.home",
+    "title": "Sample Home",
+    "tags": [
+      "sample",
+      "home"
+    ],
+    "viewport": {
+      "width": 390,
+      "height": 844,
+      "pixelRatio": 1.0
+    },
+    "background": "#0B1020",
+    "allowSolidFill": false,
+    "allowBlank": false,
+    "timeoutMs": 8000
+  },
+  "type": "box:col",
+  "style": "p-24 gap-16 bg-white rounded-3xl",
+  "children": [
+    {
+      "type": "text:h1",
+      "props": {
+        "text": "Hello SDUI"
+      }
+    },
+    {
+      "type": "text:p",
+      "props": {
+        "text": "This file is a real folder-based render test."
+      }
+    },
+    {
+      "type": "action:button",
+      "props": {
+        "text": "Primary Action",
+        "intent": "indigo"
+      }
+    }
+  ]
+}

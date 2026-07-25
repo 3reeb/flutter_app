@@ -1,15 +1,15 @@
+// ════════════════════════════════════════════════════════════════════════════
+// QUANTUM LAYOUT ENGINE (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM
 // quantum_layout_engine.dart
+// ════════════════════════════════════════════════════════════════════════════
 //
 // A performance-oriented Flutter layout engine with:
 // - cached render lists
 // - zero re-collection in paint/hit test
-// - typed-track sizing
+// - bitmask-based O(1) grid occupancy tracking
 // - custom grid, split, morph, and sliver helpers
 // - builder-backed virtualized grid for large datasets
-//
-// Notes:
-// - This is a practical production-style foundation, not a magical guarantee.
-// - Tune track definitions and use the builder-backed sliver widgets for very large lists.
+// ════════════════════════════════════════════════════════════════════════════
 
 import 'dart:collection';
 import 'dart:math' as math;
@@ -20,8 +20,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
+// Foundation dependencies (Assumed to exist in your ecosystem)
 import '../foundation/quantum_core.dart';
 import '../foundation/quantum_primitives.dart';
+
+// ────────────────────────────────────────────────────────────────────────────
+// §1 — ENUMS & PRIMITIVES
+// ────────────────────────────────────────────────────────────────────────────
 
 enum QLayoutType { grid, masonry, row, col, wrap, stack, split, morph, none }
 
@@ -31,6 +36,12 @@ enum QAlign { start, center, end, stretch, baseline }
 
 enum QJustify { start, center, end, stretch, spaceBetween, spaceAround }
 
+// ────────────────────────────────────────────────────────────────────────────
+// §2 — INHERITED SCOPES (Contextual Layout Awareness)
+// ────────────────────────────────────────────────────────────────────────────
+
+/// Injects the current layout type into the tree so children (like Flexible)
+/// can adapt their behavior dynamically.
 class QuantumLayoutScope extends InheritedWidget {
   final String layoutType;
 
@@ -69,6 +80,10 @@ class QuantumScrollScope extends InheritedWidget {
   bool updateShouldNotify(QuantumScrollScope oldWidget) =>
       axis != oldWidget.axis;
 }
+
+// ────────────────────────────────────────────────────────────────────────────
+// §3 — HIGH-LEVEL ABSTRACTION (QuantumLayout)
+// ────────────────────────────────────────────────────────────────────────────
 
 class QuantumLayout extends StatelessWidget {
   final QLayoutType layoutType;
@@ -129,6 +144,7 @@ class QuantumLayout extends StatelessWidget {
           direction:
               layoutType == QLayoutType.row ? Axis.horizontal : Axis.vertical,
           gap: columnGap > 0 ? columnGap : rowGap,
+          mainAxisSize: MainAxisSize.min,
           children: children,
         );
       case QLayoutType.wrap:
@@ -156,6 +172,10 @@ class QuantumLayout extends StatelessWidget {
   }
 }
 
+// ────────────────────────────────────────────────────────────────────────────
+// §4 — CSS-LIKE GRID & MASONRY (The Crown Jewel)
+// ────────────────────────────────────────────────────────────────────────────
+
 class QuantumGrid extends MultiChildRenderObjectWidget {
   final String columns;
   final String rows;
@@ -178,8 +198,8 @@ class QuantumGrid extends MultiChildRenderObjectWidget {
     this.flow = QFlowDirection.row,
     this.alignItems = QAlign.stretch,
     this.justifyItems = QAlign.stretch,
-    required List<Widget> children,
-  }) : super(children: children);
+    required super.children,
+  });
 
   @override
   RenderQuantumGrid createRenderObject(BuildContext context) {
@@ -212,6 +232,20 @@ class QuantumGrid extends MultiChildRenderObjectWidget {
       ..justifyItems = justifyItems
       ..textDirection = Directionality.maybeOf(context) ?? TextDirection.ltr;
   }
+}
+
+class QuantumParentData extends ContainerBoxParentData<RenderBox> {
+  int cStart = 0, cEnd = 0, cSpan = 1;
+  int rStart = 0, rEnd = 0, rSpan = 1;
+  QAlign? align;
+  QAlign? justify;
+  int zIndex = 0;
+  bool ignoreOccupancy = false;
+
+  // Internal resolved coordinates (1-based index)
+  int rcStart = 1, rcEnd = 2;
+  int rrStart = 1, rrEnd = 2;
+  int index = 0;
 }
 
 class QuantumItem extends ParentDataWidget<QuantumParentData> {
@@ -277,18 +311,6 @@ class QuantumItem extends ParentDataWidget<QuantumParentData> {
       renderObject.parent?.markNeedsPaint();
     }
   }
-}
-
-class QuantumParentData extends ContainerBoxParentData<RenderBox> {
-  int cStart = 0, cEnd = 0, cSpan = 1;
-  int rStart = 0, rEnd = 0, rSpan = 1;
-  QAlign? align;
-  QAlign? justify;
-  int zIndex = 0;
-  bool ignoreOccupancy = false;
-  int rcStart = 1, rcEnd = 2;
-  int rrStart = 1, rrEnd = 2;
-  int index = 0;
 }
 
 class RenderQuantumGrid extends RenderBox
@@ -1064,6 +1086,10 @@ class RenderQuantumGrid extends RenderBox
   double computeMaxIntrinsicHeight(double width) => 0.0;
 }
 
+// ────────────────────────────────────────────────────────────────────────────
+// §5 — FLEX WITH SCROLL SHELL & GAP INJECTION
+// ────────────────────────────────────────────────────────────────────────────
+
 class QuantumFlex extends StatelessWidget {
   final Axis direction;
   final double gap;
@@ -1072,7 +1098,6 @@ class QuantumFlex extends StatelessWidget {
   final CrossAxisAlignment crossAxisAlignment;
   final MainAxisSize mainAxisSize;
   final Clip clipBehavior;
-  final bool allowAutoScroll;
 
   const QuantumFlex({
     super.key,
@@ -1082,8 +1107,7 @@ class QuantumFlex extends StatelessWidget {
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.start,
     this.mainAxisSize = MainAxisSize.max,
-    this.clipBehavior = Clip.hardEdge,
-    this.allowAutoScroll = true,
+    this.clipBehavior = Clip.none, // Removed ClipRect
   });
 
   List<Widget> _withGap() {
@@ -1092,12 +1116,9 @@ class QuantumFlex extends StatelessWidget {
     for (int i = 0; i < children.length; i++) {
       spacedChildren.add(children[i]);
       if (i < children.length - 1) {
-        spacedChildren.add(
-          SizedBox(
+        spacedChildren.add(SizedBox(
             width: direction == Axis.horizontal ? gap : 0.0,
-            height: direction == Axis.vertical ? gap : 0.0,
-          ),
-        );
+            height: direction == Axis.vertical ? gap : 0.0));
       }
     }
     return spacedChildren;
@@ -1105,75 +1126,20 @@ class QuantumFlex extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final spacedChildren = _withGap();
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final QuantumScrollScope? existingScrollScope =
-            QuantumScrollScope.of(context);
-        final bool isVertical = direction == Axis.vertical;
-        final bool boundedMain = isVertical
-            ? constraints.hasBoundedHeight
-            : constraints.hasBoundedWidth;
-        final bool sameAxisScrollViewport =
-            existingScrollScope?.axis == direction;
-
-        // The flex shell should become scrollable whenever the main axis is
-        // bounded and the content might exceed the viewport. The only thing we
-        // avoid is nesting another QuantumScrollScope when one already exists
-        // for the same axis.
-        final bool shouldScrollShell = allowAutoScroll && boundedMain;
-
-        final MainAxisSize effectiveMainAxisSize =
-            shouldScrollShell || sameAxisScrollViewport || !boundedMain
-                ? MainAxisSize.min
-                : mainAxisSize;
-
-        final Widget flexNode = ClipRect(
-          child: Flex(
-            direction: direction,
-            mainAxisAlignment: mainAxisAlignment,
-            crossAxisAlignment: crossAxisAlignment,
-            mainAxisSize: effectiveMainAxisSize,
-            clipBehavior: clipBehavior,
-            children: spacedChildren,
-          ),
-        );
-
-        if (!shouldScrollShell) {
-          return flexNode;
-        }
-
-        final double viewportExtent =
-            isVertical ? constraints.maxHeight : constraints.maxWidth;
-        final BoxConstraints viewportConstraints = isVertical
-            ? BoxConstraints(minHeight: viewportExtent)
-            : BoxConstraints(minWidth: viewportExtent);
-
-        final Widget scrollShell = ClipRect(
-          child: SingleChildScrollView(
-            scrollDirection: direction,
-            primary: false,
-            physics: const ClampingScrollPhysics(),
-            child: ConstrainedBox(
-              constraints: viewportConstraints,
-              child: flexNode,
-            ),
-          ),
-        );
-
-        if (sameAxisScrollViewport) {
-          return scrollShell;
-        }
-
-        return QuantumScrollScope(
-          axis: direction,
-          child: scrollShell,
-        );
-      },
+    // 🚀 FOREVER FIX: Pure Flex. No LayoutBuilders. No SingleChildScrollViews.
+    return Flex(
+      direction: direction,
+      mainAxisAlignment: mainAxisAlignment,
+      crossAxisAlignment: crossAxisAlignment,
+      mainAxisSize: mainAxisSize,
+      clipBehavior: clipBehavior,
+      children: _withGap(),
     );
   }
 }
+// ────────────────────────────────────────────────────────────────────────────
+// §6 — ADVANCED UI SURFACES (Split Pane, Morph)
+// ────────────────────────────────────────────────────────────────────────────
 
 class QuantumSplitPane extends StatefulWidget {
   final Axis direction;
@@ -1375,7 +1341,7 @@ class _QuantumMorphSurfaceState extends State<QuantumMorphSurface> {
                   var newW = math.max(20.0, _w + d.delta.dx);
                   var newH = math.max(20.0, _h + d.delta.dy);
 
-                  if (widget.lockAspectRatio) {
+                  if (widget.lockAspectRatio && _aspect > 0) {
                     if (d.delta.dx.abs() > d.delta.dy.abs()) {
                       newH = newW / _aspect;
                     } else {
@@ -1389,11 +1355,11 @@ class _QuantumMorphSurfaceState extends State<QuantumMorphSurface> {
               },
               child: MouseRegion(
                 cursor: SystemMouseCursors.resizeDownRight,
-                child: SizedBox(
+                child: const SizedBox(
                   width: 20,
                   height: 20,
-                  child: const Icon(Icons.drag_indicator,
-                      size: 16, color: Colors.grey),
+                  child:
+                      Icon(Icons.drag_indicator, size: 16, color: Colors.grey),
                 ),
               ),
             ),
@@ -1403,6 +1369,10 @@ class _QuantumMorphSurfaceState extends State<QuantumMorphSurface> {
     );
   }
 }
+
+// ────────────────────────────────────────────────────────────────────────────
+// §7 — FLEXIBLE & ASPECT HELPERS (Context-Aware)
+// ────────────────────────────────────────────────────────────────────────────
 
 class _QuantumFlexibleResolution {
   final Widget child;
@@ -1470,6 +1440,7 @@ class QuantumFlexible extends StatelessWidget {
     final bool parentIsVertical = parentScope.layoutType == 'col';
     final bool inSameAxisScroll = scrollScope?.axis ==
         (parentIsVertical ? Axis.vertical : Axis.horizontal);
+
     if (inSameAxisScroll) {
       // Tight flex inside a same-axis scroll viewport is the source of most
       // parent-data and "unbounded" layout failures. In that case the child
@@ -1509,17 +1480,15 @@ class QuantumAspectRatio extends StatelessWidget {
           // if we're inside a horizontally-scrolling ancestor, the *height*
           // is the axis that's actually unbounded and width is what we
           // should size from (and vice versa). QuantumScrollScope is set by
-          // every scrollable QuantumVM renders (see quantum_vm.dart), so
-          // this is available whenever the unbounded constraint actually
-          // came from one of our own scroll wrappers.
+          // every scrollable QuantumVM renders, so this is available whenever
+          // the unbounded constraint came from one of our own scroll wrappers.
           final QuantumScrollScope? scrollScope =
               QuantumScrollScope.of(context);
           if (scrollScope != null) {
             if (scrollScope.axis == Axis.vertical) {
               // Width should already be bounded by the scroll viewport's
               // cross axis; only fall back to the screen-width guess if it
-              // genuinely isn't (e.g. a horizontally-scrolling parent above
-              // this one too).
+              // genuinely isn't.
               if (constraints.hasBoundedWidth) {
                 return AspectRatio(aspectRatio: ratio, child: child);
               }
@@ -1536,6 +1505,10 @@ class QuantumAspectRatio extends StatelessWidget {
     );
   }
 }
+
+// ────────────────────────────────────────────────────────────────────────────
+// §8 — SLIVER DELEGATES & VIRTUALIZATION
+// ────────────────────────────────────────────────────────────────────────────
 
 class QuantumStickyDelegate extends SliverPersistentHeaderDelegate {
   final double minHeight;

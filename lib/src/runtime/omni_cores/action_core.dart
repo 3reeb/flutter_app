@@ -2,11 +2,11 @@ part of '../quantum_omni_registry.dart';
 
 // Moved from quantum_omni_registry.dart: _buildAction
 
+// Moved from quantum_omni_registry.dart: _buildAction
 Widget _buildAction(QLContext rawCtx) {
   final ctx = _AliasContext(rawCtx);
   final String subType = ctx.resolvedSubType(fallback: 'button');
 
-  // FIX: Declare 'disabled' early so all action variants can access it
   final bool disabled = ctx.boolean('disabled') || ctx.boolean('loading');
 
   // STANDARD ACTION LOGIC
@@ -33,14 +33,14 @@ Widget _buildAction(QLContext rawCtx) {
       final res = fn();
       if (res is Future)
         res.catchError((e) {
-          print('Async Action Error: $e');
+          debugPrint('Async Action Error: $e');
         });
     } catch (e) {
-      print('Action Error: $e');
+      debugPrint('Action Error: $e');
     }
   }
 
-  // 🚀 PRIMITIVE: action:gesture (Raw Multi-Touch without Widget Arena overhead)
+  // 🚀 PRIMITIVE: action:gesture (Raw Multi-Touch)
   if (subType == 'gesture') {
     return _QLRawGestureNode(
       onPan: ctx.action('onPan') == null
@@ -56,11 +56,10 @@ Widget _buildAction(QLContext rawCtx) {
     );
   }
 
-  // 🚀 PRIMITIVE: action:viewport (Direct Matrix4.storage mutation)
+  // 🚀 PRIMITIVE: action:viewport
   if (subType == 'viewport') {
     final String bind = ctx.string('matrixBind');
     final QLSignal<dynamic> matrixSig = ctx.store.signal(bind);
-
     return _QLViewportNode(
       matrixSignal: matrixSig,
       child: Q('col min-w-0 min-h-0', children: ctx.children),
@@ -68,7 +67,6 @@ Widget _buildAction(QLContext rawCtx) {
   }
 
   // 🚀 HARDWARE KINEMATICS: action:raw_pointer / action:pointer
-  // Native Listener bypasses Flutter's Gesture Arena completely. 120Hz O(1) Signal injection.
   if (subType == 'raw_pointer' || subType == 'pointer') {
     final String bindX = ctx.string('bindX');
     final String bindY = ctx.string('bindY');
@@ -89,7 +87,6 @@ Widget _buildAction(QLContext rawCtx) {
   }
 
   // 🚀 HARDWARE KINEMATICS: action:focus
-  // Captures raw keystrokes (Enter, Escape, D-Pad) and tracks exact hardware focus state natively.
   if (subType == 'focus') {
     final String bindState = ctx.string('bindState');
     return Focus(
@@ -115,75 +112,64 @@ Widget _buildAction(QLContext rawCtx) {
     );
   }
 
-  if (subType == 'long_press' ||
-      subType == 'double_tap' ||
-      subType == 'hover') {
-    return MouseRegion(
-      onEnter:
-          subType == 'hover' ? (_) => _safeCall(ctx.action('onHover')) : null,
-      onExit:
-          subType == 'hover' ? (_) => _safeCall(ctx.action('onUnhover')) : null,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onLongPress: subType == 'long_press' && !disabled
-            ? () => _safeCall(ctx.action('onLongPress'))
-            : null,
-        onDoubleTap: subType == 'double_tap' && !disabled
-            ? () => _safeCall(ctx.action('onDoubleTap'))
-            : null,
-        child: Q(
-          'flex-center $matrixStyle ${ctx.node.style ?? ''}',
-          padding: ctx.list('padding'),
-          margin: ctx.list('margin'),
-          text: ctx.boolean('loading') ? null : ctx.string('text'),
-          children: ctx.children,
-        ),
-      ),
-    );
+  // Check for both 'onClick' and 'onTap' keys from JSON
+  final Function? clickAction =
+      ctx.action('onClick') ?? ctx.action('onTap') ?? ctx.action('action');
+
+  final VoidCallback? tapHandler = disabled
+      ? null
+      : () {
+          final String url = ctx.string('href');
+          if (url.isNotEmpty) {
+            _safeCall(ctx.action('onNavigate', localPayload: {'href': url}));
+          }
+          if (groupSignal != null && ctx.string('value').isNotEmpty) {
+            groupSignal.value = ctx.string('value');
+            final String bindPath = QLDataScope.readNode(ctx.flutterContext)
+                    ?.localData['groupBindPath']
+                    ?.toString() ??
+                '';
+            if (bindPath.isNotEmpty)
+              ctx.store.set(bindPath, ctx.string('value'));
+          }
+          _safeCall(clickAction);
+        };
+
+  // 🚀 FLATTENED BUTTON/HOVER LOGIC: Delegate entirely to Q Engine.
+  String interactionStyles = '';
+  if (!disabled &&
+      (subType == 'button' || subType == 'icon_button' || subType == 'chip')) {
+    interactionStyles =
+        'interactive'; // Tells Q to inject scaling & pointer natively
+  } else if (!disabled &&
+      (subType == 'long_press' ||
+          subType == 'double_tap' ||
+          subType == 'hover')) {
+    interactionStyles = 'hover'; // Basic hover, no scaling
   }
 
-  Widget node = QLSensor(
-    onTap: disabled
-        ? null
-        : () {
-            final String url = ctx.string('href');
-            if (url.isNotEmpty) {
-              _safeCall(ctx.action('onNavigate', localPayload: {'href': url}));
-            }
-            if (groupSignal != null && ctx.string('value').isNotEmpty) {
-              groupSignal.value = ctx.string('value');
-              final String bindPath = QLDataScope.readNode(ctx.flutterContext)
-                      ?.localData['groupBindPath']
-                      ?.toString() ??
-                  '';
-              if (bindPath.isNotEmpty)
-                ctx.store.set(bindPath, ctx.string('value'));
-            }
-            _safeCall(ctx.action('onClick'));
-          },
-    scaleOnTap: !disabled,
-    scaleOnHover: !disabled && subType != 'badge',
-    child: Q(
-      'flex-center $matrixStyle ${ctx.node.style ?? ''}',
-      padding: ctx.list('padding'),
-      margin: ctx.list('margin'),
-      text: ctx.boolean('loading') ? null : ctx.string('text'),
-      children: ctx.boolean('loading')
-          ? [
-              const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                      strokeWidth: 2, color: Colors.white))
-            ]
-          : [
-              if (ctx.slot('icon') != null) ...[
-                ctx.slot('icon')!,
-                if (ctx.string('text').isNotEmpty) const SizedBox(width: 8)
-              ],
-              ...ctx.children
+  Widget node = Q(
+    'flex-center $matrixStyle $interactionStyles ${ctx.node.style ?? ''}',
+    padding: ctx.list('padding'),
+    margin: ctx.list('margin'),
+    text: ctx.boolean('loading') ? null : ctx.string('text'),
+    onTap: tapHandler, // 🚀 TAP PASSED DIRECTLY TO Q! No Gesture conflicts.
+    suppressParentData: true,
+    children: ctx.boolean('loading')
+        ? [
+            const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                    strokeWidth: 2, color: Colors.white))
+          ]
+        : [
+            if (ctx.slot('icon') != null) ...[
+              ctx.slot('icon')!,
+              if (ctx.string('text').isNotEmpty) const SizedBox(width: 8)
             ],
-    ),
+            ...ctx.children
+          ],
   );
 
   return _applyImplicitBehaviors(ctx, node);
@@ -204,53 +190,6 @@ void _injectRawPointer(QLContext ctx, PointerEvent e, String bindX,
       ..setSilent(e.pressure)
       ..forceNotify();
 }
-
-Widget _buildSmartScrollViewport({
-  required Axis axis,
-  required Widget child,
-}) {
-  return QuantumFlexible(
-    fit: FlexFit.loose,
-    child: LayoutBuilder(
-      builder: (context, constraints) {
-        final bool boundedMain = axis == Axis.vertical
-            ? constraints.maxHeight.isFinite
-            : constraints.maxWidth.isFinite;
-        final Size screen = MediaQuery.sizeOf(context);
-        final double fallbackExtent =
-            axis == Axis.vertical ? screen.height : screen.width;
-        final BoxConstraints viewportConstraints = axis == Axis.vertical
-            ? BoxConstraints(
-                minHeight: boundedMain ? constraints.maxHeight : 0.0,
-                maxHeight: boundedMain ? constraints.maxHeight : fallbackExtent,
-              )
-            : BoxConstraints(
-                minWidth: boundedMain ? constraints.maxWidth : 0.0,
-                maxWidth: boundedMain ? constraints.maxWidth : fallbackExtent,
-              );
-
-        return QuantumScrollScope(
-          axis: axis,
-          child: ClipRect(
-            child: SingleChildScrollView(
-              scrollDirection: axis,
-              primary: false,
-              physics: const BouncingScrollPhysics(),
-              child: ConstrainedBox(
-                constraints: viewportConstraints,
-                child: child,
-              ),
-            ),
-          ),
-        );
-      },
-    ),
-  );
-}
-
-// ════════════════════════════════════════════════════════════════════════════
-// CORE 3: FIELD (Headless UI Shells & Form Primitives)
-// ════════════════════════════════════════════════════════════════════════════
 
 // ── 3. RAW GESTURE NODE ──
 class _QLRawGestureNode extends StatelessWidget {

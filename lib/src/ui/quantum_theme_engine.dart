@@ -1,5 +1,5 @@
 // ════════════════════════════════════════════════════════════════════════════
-// QUANTUM THEME ENGINE (QTE) v13.0 — OMEGA DoD 4x32 SIMD CORE
+// QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)
 // quantum_theme_engine.dart
 // ════════════════════════════════════════════════════════════════════════════
 
@@ -10,7 +10,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-// Barrel import covers all quantum ecosystem dependencies.
+// Barrel import covers all quantum ecosystem dependencies (including QLE).
 import '../../quantum.dart';
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -60,6 +60,18 @@ abstract final class QC32 {
   static const int hoverShadow = 11;
 }
 
+// NEW: Integers memory map for Grid Spans, Counters, and Object Pointers
+abstract final class QI32 {
+  static const int imageId = 0;
+  static const int gridColsStrId = 1; // Object ID for column template string
+  static const int gridRowsStrId = 2; // Object ID for row template string
+  static const int colSpan = 3;
+  static const int rowSpan = 4;
+  static const int colStart = 5;
+  static const int rowStart = 6;
+  static const int reserved = 7;
+}
+
 // ────────────────────────────────────────────────────────────────────────────
 // §1 — CATEGORIZED FLAGS (4x32 Bit Architecture)
 // ────────────────────────────────────────────────────────────────────────────
@@ -88,6 +100,10 @@ abstract final class QLayoutFlags {
   static const int absolute = 1 << 14;
   static const int relative = 1 << 15;
   static const int fill = 1 << 16;
+
+  // Grid Integrations
+  static const int isGrid = 1 << 17;
+  static const int isMasonry = 1 << 18;
 }
 
 abstract final class QRenderFlags {
@@ -520,7 +536,8 @@ abstract final class QStyleTokenizer {
 class QSimdArena {
   static const int floatStride = 24;
   static const int colorStride = 16;
-  static const int intStride = 4;
+  static const int intStride =
+      8; // Expanded to 8 to support Grid properties natively
 
   int _capacity;
 
@@ -713,11 +730,19 @@ class QCompiler {
     int contextMask,
   ) {
     final int fPtr = id * QSimdArena.floatStride;
+    final int iPtr = id * QSimdArena.intStride;
 
+    // Reset Defaults
     _arena.f32[fPtr + QF32.opacity] = 1.0;
     _arena.f32[fPtr + QF32.width] = -1.0;
     _arena.f32[fPtr + QF32.height] = -1.0;
     _arena.f32[fPtr + QF32.lineHeight] = 1.2;
+
+    // Grid Spans Defaults
+    _arena.i32[iPtr + QI32.colSpan] = 1;
+    _arena.i32[iPtr + QI32.rowSpan] = 1;
+    _arena.i32[iPtr + QI32.colStart] = 0;
+    _arena.i32[iPtr + QI32.rowStart] = 0;
 
     if (padding != null) _applyInsets(fPtr, QF32.padTop, padding);
     if (margin != null) _applyInsets(fPtr, QF32.marTop, margin);
@@ -845,6 +870,14 @@ class QCompiler {
       _arena.layoutFlags[id] |= (QLayoutFlags.isFlex | QLayoutFlags.flexCol);
       return;
     }
+    if (token == 'grid') {
+      _arena.layoutFlags[id] |= QLayoutFlags.isGrid;
+      return;
+    }
+    if (token == 'masonry') {
+      _arena.layoutFlags[id] |= QLayoutFlags.isMasonry;
+      return;
+    }
     if (token == 'wrap') {
       _arena.layoutFlags[id] |= (QLayoutFlags.isFlex | QLayoutFlags.wrap);
       return;
@@ -877,6 +910,40 @@ class QCompiler {
         token == 'flex-1' ||
         token == 'flex-auto') {
       _arena.layoutFlags[id] |= QLayoutFlags.expand;
+      return;
+    }
+
+    // ── GRID SPANS AND STARTS (Native integration with QLE) ──
+    if (token.startsWith('grid-cols-')) {
+      final String val = token.substring(10);
+      int? count = int.tryParse(val);
+      final String template =
+          count != null ? List.filled(count, '1fr').join(' ') : val;
+      _arena.i32[iPtr + QI32.gridColsStrId] = _arena.registerObject(template);
+      return;
+    }
+    if (token.startsWith('grid-rows-')) {
+      final String val = token.substring(10);
+      int? count = int.tryParse(val);
+      final String template =
+          count != null ? List.filled(count, '1fr').join(' ') : val;
+      _arena.i32[iPtr + QI32.gridRowsStrId] = _arena.registerObject(template);
+      return;
+    }
+    if (token.startsWith('col-span-')) {
+      _arena.i32[iPtr + QI32.colSpan] = int.tryParse(token.substring(9)) ?? 1;
+      return;
+    }
+    if (token.startsWith('row-span-')) {
+      _arena.i32[iPtr + QI32.rowSpan] = int.tryParse(token.substring(9)) ?? 1;
+      return;
+    }
+    if (token.startsWith('col-start-')) {
+      _arena.i32[iPtr + QI32.colStart] = int.tryParse(token.substring(10)) ?? 0;
+      return;
+    }
+    if (token.startsWith('row-start-')) {
+      _arena.i32[iPtr + QI32.rowStart] = int.tryParse(token.substring(10)) ?? 0;
       return;
     }
 
@@ -971,7 +1038,8 @@ class QCompiler {
         _arena.renderFlags[id] |= QRenderFlags.hasImage;
         final String url = token.substring(8, len - 2);
         if (url.isNotEmpty && !url.contains('{{'))
-          _arena.i32[iPtr + 0] = _arena.registerObject(NetworkImage(url));
+          _arena.i32[iPtr + QI32.imageId] =
+              _arena.registerObject(NetworkImage(url));
       } else if (token.startsWith('bg-gradient-to-')) {
         _arena.renderFlags[id] |= QRenderFlags.hasGradient;
         final String dir = token.substring(15);
@@ -1312,6 +1380,9 @@ class QEngine {
 // §10 — THE CORE WIDGET (O(1) Rendering & CSS Cascading)
 // ────────────────────────────────────────────────────────────────────────────
 
+// ───────────────────────────────────────────────────────────────────────
+//  UPDATED CORE `Q` WIDGET (quantum_theme_engine.dart)
+// ────────────────────────────────────────────────────────────────────────────
 class Q extends StatefulWidget {
   final String style;
   final List<dynamic>? padding;
@@ -1321,6 +1392,10 @@ class Q extends StatefulWidget {
   final List<Widget>? children;
   final VoidCallback? onTap;
   final bool suppressParentData;
+
+  // 🚀 NEW: Hardware Signal Passthroughs
+  final QLSignal<Matrix4>? transform3D;
+  final QLSignal<double>? opacitySignal;
 
   const Q(
     this.style, {
@@ -1332,6 +1407,8 @@ class Q extends StatefulWidget {
     this.children,
     this.onTap,
     this.suppressParentData = false,
+    this.transform3D,
+    this.opacitySignal,
   });
 
   factory Q.merge(
@@ -1434,38 +1511,61 @@ class _QState extends State<Q> {
       contextMask: contextMask,
     );
 
-    return AnimatedBuilder(
-      animation: QEngine.instance.tick,
-      builder: (context, _) {
-        final QSimdArena mem = QEngine.instance.mem;
-        final int id = compiled.id;
-        final int lFlags = mem.layoutFlags[id];
-        final int rFlags = mem.renderFlags[id];
-        final int tFlags = mem.textFlags[id];
-        final int sFlags = mem.stateFlags[id];
+    final QSimdArena mem = QEngine.instance.mem;
+    final int id = compiled.id;
+    final int lFlags = mem.layoutFlags[id];
+    final int rFlags = mem.renderFlags[id];
+    final int tFlags = mem.textFlags[id];
+    final int sFlags = mem.stateFlags[id];
 
-        // Early Out 1: Pure Bare Text Node
-        if (lFlags == 0 &&
-            rFlags == 0 &&
-            sFlags == 0 &&
-            widget.text != null &&
-            widget.children == null) {
-          return _buildText(mem, compiled, tFlags, widget.text!);
-        }
+    // 🚀 O(1) BARE TEXT BYPASS
+    if (lFlags == 0 &&
+        rFlags == 0 &&
+        sFlags == 0 &&
+        widget.text != null &&
+        widget.children == null &&
+        widget.transform3D == null &&
+        widget.opacitySignal == null) {
+      return _buildText(mem, compiled, tFlags, widget.text!);
+    }
 
-        Widget node = _buildChildren(mem, compiled, lFlags, tFlags);
+    // Builder function that applies the core DOM structure
+    Widget constructDom() {
+      Widget node = _buildChildren(mem, compiled, lFlags, tFlags);
 
-        // Early Out 2: Pure Layout Node (No Colors, No Hover)
-        if (rFlags == 0 && sFlags == 0) return node;
+      // Apply Decoration / Backgrounds
+      if (rFlags != 0 || sFlags != 0) {
+        node = _buildBox(mem, compiled, rFlags, sFlags, node, context);
+      }
 
-        // Apply Decoration / Backgrounds
-        if (rFlags != 0 || sFlags != 0) {
-          node = _buildBox(mem, compiled, rFlags, sFlags, node, context);
-        }
+      // Apply Hardware Injection
+      if (widget.transform3D != null) {
+        node = Transform(
+            transform: widget.transform3D!.value,
+            alignment: Alignment.center,
+            child: node);
+      }
+      if (widget.opacitySignal != null) {
+        node = Opacity(
+            opacity: widget.opacitySignal!.value.clamp(0.0, 1.0), child: node);
+      }
 
-        // Apply Interactive Scaling / Hover Gestures natively!
-        if (sFlags != 0 || widget.onTap != null) {
-          final bool hasScale = (sFlags & QStateFlags.hasInteractiveScale) != 0;
+      // Universal Interaction
+      if (sFlags != 0 || widget.onTap != null) {
+        final bool hasScale = (sFlags & QStateFlags.hasInteractiveScale) != 0;
+
+        if (hasScale) {
+          node = QLSensor(
+            onTap: widget.onTap,
+            scaleOnHover: true,
+            scaleOnTap: true,
+            onHoverChange: (hovered) {
+              if (mounted) setState(() => _isHovered = hovered);
+            },
+            child: node,
+          );
+        } else {
+          // Pure CSS hover without physics
           node = MouseRegion(
             cursor: widget.onTap != null
                 ? SystemMouseCursors.click
@@ -1476,18 +1576,53 @@ class _QState extends State<Q> {
             onExit: (_) {
               if (mounted) setState(() => _isHovered = false);
             },
-            child: GestureDetector(
-              onTap: widget.onTap,
-              behavior: HitTestBehavior.opaque,
-              child: hasScale
-                  ? QLSensor(scaleOnHover: true, scaleOnTap: true, child: node)
-                  : node,
-            ),
+            // 🚀 THE FIX: Only spawn an opaque GestureDetector if we ACTUALLY have a tap action!
+            // Otherwise, we just return the node, letting parent detectors catch the tap.
+            child: widget.onTap != null
+                ? GestureDetector(
+                    onTap: widget.onTap,
+                    behavior: HitTestBehavior.opaque,
+                    child: node,
+                  )
+                : node,
           );
         }
+      }
 
-        return node;
-      },
+      // Apply Grid Scope Extrusions natively
+      final int iPtr = compiled.iPtr;
+      if (!widget.suppressParentData &&
+          (mem.i32[iPtr + QI32.colSpan] > 1 ||
+              mem.i32[iPtr + QI32.rowSpan] > 1)) {
+        node = QuantumItem(
+          colSpan: mem.i32[iPtr + QI32.colSpan],
+          rowSpan: mem.i32[iPtr + QI32.rowSpan],
+          colStart: mem.i32[iPtr + QI32.colStart],
+          rowStart: mem.i32[iPtr + QI32.rowStart],
+          child: node,
+        );
+      }
+      return node;
+    }
+
+    // 🚀 THE ULTIMATE FPS FIX: Does this node ACTUALLY need to animate?
+    // If it has no hover states, no explicit signals, and no theme mutations pending, DO NOT USE AnimatedBuilder!
+    if (sFlags == 0 &&
+        widget.transform3D == null &&
+        widget.opacitySignal == null) {
+      return constructDom();
+    }
+
+    // 🚀 ONLY attach heavy listeners if physics or interactions are required.
+    final List<Listenable> animations = [QEngine.instance.tick];
+    if (widget.transform3D != null) animations.add(widget.transform3D!);
+    if (widget.opacitySignal != null) animations.add(widget.opacitySignal!);
+
+    return AnimatedBuilder(
+      animation: animations.length == 1
+          ? animations.first
+          : Listenable.merge(animations),
+      builder: (context, _) => constructDom(),
     );
   }
 
@@ -1596,26 +1731,45 @@ class _QState extends State<Q> {
               : WrapCrossAlignment.start,
           children: kids,
         );
+      } else if ((lFlags & (QLayoutFlags.isGrid | QLayoutFlags.isMasonry)) !=
+          0) {
+        // NATIVE QLE GRID DELEGATION
+        final bool isMasonry = (lFlags & QLayoutFlags.isMasonry) != 0;
+        final int colObjId = mem.i32[compiled.iPtr + QI32.gridColsStrId];
+        final int rowObjId = mem.i32[compiled.iPtr + QI32.gridRowsStrId];
+        final String colStr =
+            colObjId > 0 ? mem.objects[colObjId] as String : '1fr';
+        final String rowStr =
+            rowObjId > 0 ? mem.objects[rowObjId] as String : 'auto';
+
+        tree = QuantumLayoutScope(
+          layoutType: isMasonry ? 'masonry' : 'grid',
+          child: QuantumGrid(
+            columns: colStr,
+            rows: rowStr,
+            columnGap: gap,
+            rowGap: gap,
+            flow: isMasonry ? QFlowDirection.masonry : QFlowDirection.row,
+            alignItems: crossAlign == CrossAxisAlignment.center
+                ? QAlign.center
+                : QAlign.stretch,
+            justifyItems: mainAlign == MainAxisAlignment.center
+                ? QAlign.center
+                : QAlign.stretch,
+            children: kids,
+          ),
+        );
       } else if ((lFlags & QLayoutFlags.isFlex) != 0) {
-        List<Widget> spaced = kids;
-        if (gap > 0 && kids.length > 1) {
-          spaced = [];
-          for (int i = 0; i < kids.length; i++) {
-            spaced.add(kids[i]);
-            if (i < kids.length - 1)
-              spaced.add(
-                  SizedBox(width: isCol ? 0 : gap, height: isCol ? gap : 0));
-          }
-        }
+        // NATIVE QLE FLEX DELEGATION (Gap handling offloaded to QLE)
         tree = QuantumLayoutScope(
             layoutType: isCol ? 'col' : 'row',
             child: QuantumFlex(
               direction: isCol ? Axis.vertical : Axis.horizontal,
-              gap: 0.0,
+              gap: gap,
               mainAxisAlignment: mainAlign,
               crossAxisAlignment: crossAlign,
-              mainAxisSize: isCol ? MainAxisSize.min : MainAxisSize.max,
-              children: spaced,
+              mainAxisSize: MainAxisSize.min,
+              children: kids,
             ));
       }
 
@@ -1651,7 +1805,7 @@ class _QState extends State<Q> {
       Widget child, BuildContext context) {
     final int fPtr = compiled.fPtr;
     final int cPtr = compiled.cPtr;
-    final int iPtr = compiled.iPtr; // Required to fetch stored ImageProviders
+    final int iPtr = compiled.iPtr;
 
     final Color bgColor = _isHovered && (sFlags & QStateFlags.hasHoverBg) != 0
         ? Color(mem.c32[cPtr + QC32.hoverBackground])
@@ -1700,8 +1854,9 @@ class _QState extends State<Q> {
 
       // 2. Resolve Background Images
       DecorationImage? bgImage;
-      if ((rFlags & QRenderFlags.hasImage) != 0 && mem.i32[iPtr + 0] != 0) {
-        final obj = mem.objects[mem.i32[iPtr + 0]];
+      if ((rFlags & QRenderFlags.hasImage) != 0 &&
+          mem.i32[iPtr + QI32.imageId] != 0) {
+        final obj = mem.objects[mem.i32[iPtr + QI32.imageId]];
         if (obj is ImageProvider) {
           bgImage = DecorationImage(image: obj, fit: BoxFit.cover);
         }
@@ -1762,47 +1917,31 @@ class _QState extends State<Q> {
         mem.f32[fPtr + QF32.marTop],
         mem.f32[fPtr + QF32.marRight],
         mem.f32[fPtr + QF32.marBottom]);
+// 🚀 READ SCROLL SCOPE DIRECTLY: Eliminates the heavy LayoutBuilder completely!
+    final bool insideVerticalScroll = scrollScope?.axis == Axis.vertical;
+    final bool insideHorizontalScroll = scrollScope?.axis == Axis.horizontal;
 
-    if (w == double.infinity || h == double.infinity) {
-      node = LayoutBuilder(
-        builder: (context, constraints) {
-          final bool insideVerticalScroll = scrollScope?.axis == Axis.vertical;
-          final bool insideHorizontalScroll =
-              scrollScope?.axis == Axis.horizontal;
+    final double? safeW = (w == double.infinity)
+        ? (insideHorizontalScroll ? null : double.infinity)
+        : (w >= 0 ? w : null);
 
-          final double? safeW = (w == double.infinity)
-              ? (insideHorizontalScroll
-                  ? null
-                  : (constraints.hasBoundedWidth ? constraints.maxWidth : null))
-              : (w >= 0 ? w : null);
+    final double? safeH = (h == double.infinity)
+        ? (insideVerticalScroll ? null : double.infinity)
+        : (h >= 0 ? h : null);
 
-          final double? safeH = (h == double.infinity)
-              ? (insideVerticalScroll
-                  ? null
-                  : (constraints.hasBoundedHeight
-                      ? constraints.maxHeight
-                      : null))
-              : (h >= 0 ? h : null);
-
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeOutCubic,
-            width: safeW,
-            height: safeH,
-            padding: pad,
-            margin: mar,
-            decoration: dec,
-            clipBehavior: clipBehavior,
-            child: child,
-          );
-        },
-      );
+    // 🚀 O(1) BYPASS: If there are no physical dimensions or decorations, return raw child
+    if (safeW == null &&
+        safeH == null &&
+        dec == null &&
+        pad == EdgeInsets.zero &&
+        mar == EdgeInsets.zero) {
+      node = child;
     } else {
       node = AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOutCubic,
-        width: w >= 0 ? w : null,
-        height: h >= 0 ? h : null,
+        width: safeW,
+        height: safeH,
         padding: pad,
         margin: mar,
         decoration: dec,

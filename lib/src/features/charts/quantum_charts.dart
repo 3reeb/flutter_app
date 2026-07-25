@@ -779,34 +779,31 @@ Widget buildChart(QLContext ctx, QLChartType type) {
   final Color chartColor = Color(
       int.tryParse(colorHex.replaceFirst('#', 'FF'), radix: 16) ?? 0xFF3B82F6);
 
-  return QLBox(
-    style: ctx.node.style,
-    child: QLUniversalChart(
-      type: type,
-      rawData: rawData,
-      color: chartColor,
-      showGrid: ctx.boolean('showGrid', fallback: true),
-      showAxes: ctx.boolean('showAxes', fallback: true),
-      animate: ctx.boolean('animated', fallback: true),
-      lineWidth: ctx.number('lineWidth', fallback: 2.0),
-      tooltipBuilder: (context, index, pos, dataPoint) {
-        final Widget? tooltipSlot = ctx.slot('tooltip');
-        if (tooltipSlot == null || index == null || pos == null)
-          return const SizedBox.shrink();
+  return QLUniversalChart(
+    type: type,
+    rawData: rawData,
+    color: chartColor,
+    showGrid: ctx.boolean('showGrid', fallback: true),
+    showAxes: ctx.boolean('showAxes', fallback: true),
+    animate: ctx.boolean('animated', fallback: true),
+    lineWidth: ctx.number('lineWidth', fallback: 2.0),
+    tooltipBuilder: (context, index, pos, dataPoint) {
+      final Widget? tooltipSlot = ctx.slot('tooltip');
+      if (tooltipSlot == null || index == null || pos == null)
+        return const SizedBox.shrink();
 
-        // Expose hovered data to the custom tooltip slot
-        return Positioned(
-          left: pos.dx,
-          top: pos.dy - 10,
-          child: FractionalTranslation(
-            translation: const Offset(-0.5, -1.0),
-            child: QLDataScope(
-              localData: {'hoverIndex': index, 'hoverData': dataPoint},
-              child: tooltipSlot,
-            ),
+      // Expose hovered data to the custom tooltip slot
+      return Positioned(
+        left: pos.dx,
+        top: pos.dy - 10,
+        child: FractionalTranslation(
+          translation: const Offset(-0.5, -1.0),
+          child: QLDataScope(
+            localData: {'hoverIndex': index, 'hoverData': dataPoint},
+            child: tooltipSlot,
           ),
-        );
-      },
-    ),
+        ),
+      );
+    },
   );
 }

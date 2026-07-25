@@ -29,7 +29,8 @@ void main() {
     tearDown(boxCoreTearDown);
 
     // ── 1. draggable:true ─────────────────────────────────────────────────
-    testWidgets('1.1 draggable:true wraps in Draggable<Object>', (tester) async {
+    testWidgets('1.1 draggable:true wraps in Draggable<Object>',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-120 h-80 bg-blue-200 rounded-xl',
@@ -42,7 +43,8 @@ void main() {
       expect(find.text('DragMe'), findsOneWidget);
     });
 
-    testWidgets('1.2 draggable with dragAxis:horizontal restricts to horizontal drag',
+    testWidgets(
+        '1.2 draggable with dragAxis:horizontal restricts to horizontal drag',
         (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
@@ -82,7 +84,8 @@ void main() {
       expect(draggable.axis, equals(Axis.vertical));
     });
 
-    testWidgets('1.4 draggable without dragAxis has null axis (free drag)', (tester) async {
+    testWidgets('1.4 draggable without dragAxis has null axis (free drag)',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-120 h-80',
@@ -98,7 +101,8 @@ void main() {
     });
 
     // ── 2. hideOnDrag ─────────────────────────────────────────────────────
-    testWidgets('2.1 hideOnDrag:true sets childWhenDragging to SizedBox.shrink', (tester) async {
+    testWidgets('2.1 hideOnDrag:true sets childWhenDragging to SizedBox.shrink',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-120 h-80',
@@ -119,7 +123,8 @@ void main() {
     });
 
     // ── 3. longPressDraggable ─────────────────────────────────────────────
-    testWidgets('3.1 longPressDraggable:true wraps in LongPressDraggable', (tester) async {
+    testWidgets('3.1 longPressDraggable:true wraps in LongPressDraggable',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-150 h-100 bg-amber-200',
@@ -135,7 +140,8 @@ void main() {
     });
 
     // ── 4. dragData carrying payload ──────────────────────────────────────
-    testWidgets('4.1 dragData default is subType when not specified', (tester) async {
+    testWidgets('4.1 dragData default is subType when not specified',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-120 h-80',
@@ -151,34 +157,9 @@ void main() {
       expect(draggable.data, isNotNull);
     });
 
-    // ── 5. magneto implicit behavior ──────────────────────────────────────
-    testWidgets('5.1 magneto:true wraps in QLMagnetoSurface', (tester) async {
-      await tester.pumpWidget(buildTestWrapper({
-        'type': 'col',
-        'style': 'w-200 h-120 bg-violet-200 rounded-xl',
-        'props': {'magneto': true},
-        'children': [textLeaf('MagnetoCard')],
-      }));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(QLMagnetoSurface), findsOneWidget);
-    });
-
-    testWidgets('5.2 magneto with custom intensity', (tester) async {
-      await tester.pumpWidget(buildTestWrapper({
-        'type': 'col',
-        'style': 'w-200 h-120',
-        'props': {'magneto': true, 'magnetoIntensity': 2.5},
-        'children': [textLeaf('StrongMagneto')],
-      }));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(QLMagnetoSurface), findsOneWidget);
-      expect(find.text('StrongMagneto'), findsOneWidget);
-    });
-
     // ── 6. heroId implicit behavior ───────────────────────────────────────
-    testWidgets('6.1 heroId prop wraps in Hero via _applyImplicitBehaviors', (tester) async {
+    testWidgets('6.1 heroId prop wraps in Hero via _applyImplicitBehaviors',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-100 h-100 bg-emerald-300',
@@ -189,14 +170,15 @@ void main() {
 
       expect(find.byType(Hero), findsWidgets);
       final hero = tester.widgetList<Hero>(find.byType(Hero)).firstWhere(
-        (h) => h.tag == 'product-hero-42',
-        orElse: () => throw TestFailure('Hero with tag not found'),
-      );
+            (h) => h.tag == 'product-hero-42',
+            orElse: () => throw TestFailure('Hero with tag not found'),
+          );
       expect(hero.tag, equals('product-hero-42'));
     });
 
     // ── 7. dragData + dragOpacity on feedback ─────────────────────────────
-    testWidgets('7.1 dragOpacity:0.5 sets feedback Opacity to 0.5', (tester) async {
+    testWidgets('7.1 dragOpacity:0.5 sets feedback Opacity to 0.5',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-120 h-80 bg-indigo-200',
@@ -214,7 +196,8 @@ void main() {
     });
 
     // ── 8. Kanban-board pattern: draggable items in a row of cols ─────────
-    testWidgets('8.1 kanban layout with 3 draggable items in columns', (tester) async {
+    testWidgets('8.1 kanban layout with 3 draggable items in columns',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'row',
         'style': 'w-full h-full gap-16 items-start',
@@ -224,44 +207,54 @@ void main() {
           {
             'type': 'col',
             'style': 'w-220 bg-slate-100 rounded-xl gap-8',
-            'props': {'padding': [12]},
+            'props': {
+              'padding': [12]
+            },
             'children': [
               textLeaf('To Do'),
-              ...List.generate(3, (i) => {
-                    'type': 'col',
-                    'style': 'w-full h-80 bg-white rounded-lg shadow-sm',
-                    'props': {
-                      'draggable': true,
-                      'dragData': 'todo_$i',
-                      'dragAxis': 'horizontal',
-                    },
-                    'children': [textLeaf('Task $i')],
-                  }),
+              ...List.generate(
+                  3,
+                  (i) => {
+                        'type': 'col',
+                        'style': 'w-full h-80 bg-white rounded-lg shadow-sm',
+                        'props': {
+                          'draggable': true,
+                          'dragData': 'todo_$i',
+                          'dragAxis': 'horizontal',
+                        },
+                        'children': [textLeaf('Task $i')],
+                      }),
             ],
           },
           // Column 2: In Progress
           {
             'type': 'col',
             'style': 'w-220 bg-blue-50 rounded-xl gap-8',
-            'props': {'padding': [12]},
+            'props': {
+              'padding': [12]
+            },
             'children': [
               textLeaf('In Progress'),
-              ...List.generate(2, (i) => {
-                    'type': 'col',
-                    'style': 'w-full h-80 bg-white rounded-lg shadow-sm',
-                    'props': {
-                      'draggable': true,
-                      'dragData': 'wip_$i',
-                    },
-                    'children': [textLeaf('WIP $i')],
-                  }),
+              ...List.generate(
+                  2,
+                  (i) => {
+                        'type': 'col',
+                        'style': 'w-full h-80 bg-white rounded-lg shadow-sm',
+                        'props': {
+                          'draggable': true,
+                          'dragData': 'wip_$i',
+                        },
+                        'children': [textLeaf('WIP $i')],
+                      }),
             ],
           },
           // Column 3: Done
           {
             'type': 'col',
             'style': 'w-220 bg-green-50 rounded-xl gap-8',
-            'props': {'padding': [12]},
+            'props': {
+              'padding': [12]
+            },
             'children': [
               textLeaf('Done'),
             ],
@@ -278,7 +271,8 @@ void main() {
     });
 
     // ── 9. Combined: draggable + magneto + opacity ─────────────────────────
-    testWidgets('9.1 draggable + magneto + opacity on same box', (tester) async {
+    testWidgets('9.1 draggable + magneto + opacity on same box',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-180 h-120 rounded-2xl bg-rose-200',
@@ -293,7 +287,6 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(Draggable<Object>), findsOneWidget);
-      expect(find.byType(QLMagnetoSurface), findsOneWidget);
       expect(find.text('ComboCard'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });

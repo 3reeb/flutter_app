@@ -1,0 +1,3234 @@
+{
+  "generatedBy": {
+    "tool": "sdui_ts_toolkit_preserve",
+    "createdAt": "2026-07-25T21:29:17Z",
+    "purpose": "Large SDUI widget example library exported as native JSON",
+    "preservesAuthoringOperators": true
+  },
+  "notes": [
+    "Authoring operators are preserved as JSON and should be resolved by the Dart VM.",
+    "Example nodes intentionally use a broad range of widget patterns and operator shapes."
+  ],
+  "sections": [
+    {
+      "name": "Core Widgets",
+      "examples": [
+        {
+          "id": "core_page_shell",
+          "title": "Page Shell",
+          "node": {
+            "type": "page",
+            "style": "p-6 bg-slate-50",
+            "children": [
+              {
+                "type": "box:col",
+                "style": "gap-3",
+                "children": [
+                  {
+                    "type": "box:row",
+                    "style": "items-center justify-between",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Quantum Store"
+                        },
+                        "style": "text-xl font-bold"
+                      },
+                      {
+                        "type": "action:button",
+                        "props": {
+                          "intent": "primary",
+                          "shape": "pill",
+                          "text": "Sign in"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "A clean landing shell for a native SDUI app."
+                    },
+                    "style": "text-slate-500"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "core_centered_card",
+          "title": "Centered Card",
+          "node": {
+            "type": "page",
+            "style": "min-h-screen bg-slate-100",
+            "children": [
+              {
+                "type": "center",
+                "children": [
+                  {
+                    "type": "card",
+                    "style": "p-6 rounded-3xl bg-white shadow",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Welcome back"
+                        },
+                        "style": "text-2xl font-semibold"
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Sign in to continue."
+                        },
+                        "style": "text-slate-500"
+                      },
+                      {
+                        "type": "field:input",
+                        "props": {
+                          "label": "Email",
+                          "placeholder": "name@example.com"
+                        }
+                      },
+                      {
+                        "type": "field:input",
+                        "props": {
+                          "secure": true,
+                          "label": "Password",
+                          "placeholder": "••••••••"
+                        }
+                      },
+                      {
+                        "type": "action:button",
+                        "props": {
+                          "intent": "indigo",
+                          "fill": "solid",
+                          "text": "Continue"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "core_stack_overlay",
+          "title": "Stack Overlay",
+          "node": {
+            "type": "box:stack",
+            "style": "relative",
+            "children": [
+              {
+                "type": "image",
+                "props": {
+                  "alt": "Cover",
+                  "src": "https://example.com/cover.jpg"
+                },
+                "style": "w-full h-64 object-cover rounded-3xl"
+              },
+              {
+                "type": "box",
+                "style": "absolute inset-0 p-8 flex items-end bg-black/35 rounded-3xl",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Overlay headline"
+                    },
+                    "style": "text-3xl font-bold text-white"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "This sits on top of the hero image."
+                    },
+                    "style": "text-white/80"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "core_grid_gallery",
+          "title": "Gallery Grid",
+          "node": {
+            "type": "box:grid",
+            "style": "grid grid-cols-2 gap-3 p-4",
+            "children": [
+              {
+                "type": "image",
+                "props": {
+                  "src": "https://example.com/a.jpg"
+                },
+                "style": "aspect-square rounded-2xl"
+              },
+              {
+                "type": "image",
+                "props": {
+                  "src": "https://example.com/b.jpg"
+                },
+                "style": "aspect-square rounded-2xl"
+              },
+              {
+                "type": "image",
+                "props": {
+                  "src": "https://example.com/c.jpg"
+                },
+                "style": "aspect-square rounded-2xl"
+              },
+              {
+                "type": "image",
+                "props": {
+                  "src": "https://example.com/d.jpg"
+                },
+                "style": "aspect-square rounded-2xl"
+              }
+            ]
+          }
+        },
+        {
+          "id": "core_text_rich",
+          "title": "Rich Text Block",
+          "node": {
+            "type": "card",
+            "style": "p-6 rounded-3xl bg-white shadow",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Typography scale"
+                },
+                "style": "text-2xl font-bold"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Use text nodes for headers, paragraphs, hints, captions, and labels."
+                },
+                "style": "leading-7 text-slate-600"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Caption"
+                },
+                "style": "text-xs uppercase tracking-widest text-slate-400"
+              }
+            ]
+          }
+        },
+        {
+          "id": "core_button_variants",
+          "title": "Button Variants",
+          "node": {
+            "type": "box:col",
+            "style": "gap-2 p-4",
+            "children": [
+              {
+                "type": "action:button",
+                "props": {
+                  "intent": "indigo",
+                  "fill": "solid",
+                  "text": "Primary"
+                }
+              },
+              {
+                "type": "action:button",
+                "props": {
+                  "intent": "slate",
+                  "fill": "outline",
+                  "text": "Secondary"
+                }
+              },
+              {
+                "type": "action:button",
+                "props": {
+                  "intent": "rose",
+                  "fill": "solid",
+                  "text": "Danger"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth Flows",
+      "examples": [
+        {
+          "id": "auth_login",
+          "title": "Login Screen",
+          "node": {
+            "type": "page",
+            "children": [
+              {
+                "type": "box:col",
+                "style": "gap-4 p-6",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Log in"
+                    },
+                    "style": "text-3xl font-bold"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Access your workspace and continue where you left off."
+                    },
+                    "style": "text-slate-500"
+                  },
+                  {
+                    "type": "field:input",
+                    "props": {
+                      "label": "Email",
+                      "placeholder": "you@company.com"
+                    }
+                  },
+                  {
+                    "type": "field:input",
+                    "props": {
+                      "secure": true,
+                      "label": "Password",
+                      "placeholder": "••••••••"
+                    }
+                  },
+                  {
+                    "type": "box:row",
+                    "style": "items-center justify-between",
+                    "children": [
+                      {
+                        "type": "checkbox",
+                        "props": {
+                          "label": "Remember me"
+                        }
+                      },
+                      {
+                        "type": "action:link",
+                        "props": {
+                          "text": "Forgot password?",
+                          "href": "/forgot"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "action:button",
+                    "props": {
+                      "intent": "indigo",
+                      "fill": "solid",
+                      "text": "Log in"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Or continue with"
+                    },
+                    "style": "text-center text-xs uppercase tracking-widest text-slate-400"
+                  },
+                  {
+                    "type": "box:row",
+                    "style": "gap-3",
+                    "children": [
+                      {
+                        "type": "action:button",
+                        "props": {
+                          "variant": "outline",
+                          "text": "Google"
+                        }
+                      },
+                      {
+                        "type": "action:button",
+                        "props": {
+                          "variant": "outline",
+                          "text": "Apple"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "auth_signup",
+          "title": "Signup Screen",
+          "node": {
+            "type": "page",
+            "style": "p-6 bg-slate-100",
+            "children": [
+              {
+                "type": "card",
+                "style": "p-6 rounded-3xl bg-white shadow-lg",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Create account"
+                    },
+                    "style": "text-3xl font-bold"
+                  },
+                  {
+                    "type": "field:input",
+                    "props": {
+                      "label": "Full name",
+                      "placeholder": "Jane Doe"
+                    }
+                  },
+                  {
+                    "type": "field:input",
+                    "props": {
+                      "label": "Email",
+                      "placeholder": "jane@domain.com"
+                    }
+                  },
+                  {
+                    "type": "field:input",
+                    "props": {
+                      "secure": true,
+                      "label": "Password",
+                      "placeholder": "••••••••"
+                    }
+                  },
+                  {
+                    "type": "checkbox",
+                    "props": {
+                      "label": "I agree to the terms"
+                    }
+                  },
+                  {
+                    "type": "action:button",
+                    "props": {
+                      "intent": "indigo",
+                      "fill": "solid",
+                      "text": "Create account"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "auth_verify",
+          "title": "Verification Code",
+          "node": {
+            "type": "page",
+            "children": [
+              {
+                "type": "box:col",
+                "style": "gap-4 p-6",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Verify your email"
+                    },
+                    "style": "text-2xl font-bold"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Enter the 6-digit code we sent to your inbox."
+                    },
+                    "style": "text-slate-500"
+                  },
+                  {
+                    "type": "box:row",
+                    "style": "gap-2",
+                    "children": [
+                      {
+                        "type": "field:input",
+                        "props": {
+                          "maxLength": 1,
+                          "center": true,
+                          "label": "",
+                          "placeholder": "1"
+                        }
+                      },
+                      {
+                        "type": "field:input",
+                        "props": {
+                          "maxLength": 1,
+                          "center": true,
+                          "label": "",
+                          "placeholder": "2"
+                        }
+                      },
+                      {
+                        "type": "field:input",
+                        "props": {
+                          "maxLength": 1,
+                          "center": true,
+                          "label": "",
+                          "placeholder": "3"
+                        }
+                      },
+                      {
+                        "type": "field:input",
+                        "props": {
+                          "maxLength": 1,
+                          "center": true,
+                          "label": "",
+                          "placeholder": "4"
+                        }
+                      },
+                      {
+                        "type": "field:input",
+                        "props": {
+                          "maxLength": 1,
+                          "center": true,
+                          "label": "",
+                          "placeholder": "5"
+                        }
+                      },
+                      {
+                        "type": "field:input",
+                        "props": {
+                          "maxLength": 1,
+                          "center": true,
+                          "label": "",
+                          "placeholder": "6"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "action:button",
+                    "props": {
+                      "intent": "indigo",
+                      "fill": "solid",
+                      "text": "Verify"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "auth_reset",
+          "title": "Reset Password",
+          "node": {
+            "type": "page",
+            "children": [
+              {
+                "type": "card",
+                "style": "p-6 rounded-3xl bg-white shadow",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Reset password"
+                    },
+                    "style": "text-2xl font-bold"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "We’ll send reset instructions to your email."
+                    },
+                    "style": "text-slate-500"
+                  },
+                  {
+                    "type": "field:input",
+                    "props": {
+                      "label": "Email address",
+                      "placeholder": "you@company.com"
+                    }
+                  },
+                  {
+                    "type": "action:button",
+                    "props": {
+                      "intent": "indigo",
+                      "fill": "solid",
+                      "text": "Send reset link"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard Layouts",
+      "examples": [
+        {
+          "id": "dash_overview",
+          "title": "Analytics Overview",
+          "node": {
+            "type": "page",
+            "style": "p-6 bg-slate-100 gap-4",
+            "children": [
+              {
+                "type": "box:row",
+                "style": "items-center justify-between",
+                "children": [
+                  {
+                    "type": "box",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Dashboard"
+                        },
+                        "style": "text-xl font-bold"
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Today"
+                        },
+                        "style": "text-slate-500"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "box:row",
+                    "style": "gap-2",
+                    "children": [
+                      {
+                        "type": "action:button",
+                        "props": {
+                          "variant": "outline",
+                          "text": "Export"
+                        }
+                      },
+                      {
+                        "type": "action:button",
+                        "props": {
+                          "intent": "indigo",
+                          "fill": "solid",
+                          "text": "New report"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "box:grid",
+                "style": "grid grid-cols-2 gap-4",
+                "children": [
+                  {
+                    "type": "card",
+                    "style": "p-5 rounded-3xl bg-white shadow",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Revenue"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "$124,520"
+                        },
+                        "style": "text-3xl font-bold"
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "+18% vs last month"
+                        },
+                        "style": "text-emerald-600"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "card",
+                    "style": "p-5 rounded-3xl bg-white shadow",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Orders"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "3,248"
+                        },
+                        "style": "text-3xl font-bold"
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "+7% vs last month"
+                        },
+                        "style": "text-emerald-600"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "card",
+                    "style": "p-5 rounded-3xl bg-white shadow",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Conversion"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "4.8%"
+                        },
+                        "style": "text-3xl font-bold"
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "-0.2% vs last month"
+                        },
+                        "style": "text-rose-600"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "card",
+                    "style": "p-5 rounded-3xl bg-white shadow",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Active users"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "86.1K"
+                        },
+                        "style": "text-3xl font-bold"
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "+12% vs last month"
+                        },
+                        "style": "text-emerald-600"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "card",
+                "style": "p-5 rounded-3xl bg-white shadow",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Revenue chart"
+                    },
+                    "style": "font-semibold"
+                  },
+                  {
+                    "type": "chart",
+                    "props": {
+                      "kind": "line",
+                      "series": [
+                        {
+                          "label": "Revenue",
+                          "data": [
+                            12,
+                            18,
+                            24,
+                            21,
+                            29,
+                            34
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "dash_sidebar",
+          "title": "Sidebar Shell",
+          "node": {
+            "type": "page",
+            "children": [
+              {
+                "type": "box:row",
+                "style": "gap-4",
+                "children": [
+                  {
+                    "type": "box:col",
+                    "style": "w-72 p-4 bg-slate-950 text-white rounded-3xl",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Acme"
+                        },
+                        "style": "text-xl font-bold"
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Workspace"
+                        },
+                        "style": "text-slate-500"
+                      },
+                      {
+                        "type": "action:button",
+                        "props": {
+                          "intent": "indigo",
+                          "fill": "solid",
+                          "text": "New project"
+                        }
+                      },
+                      {
+                        "type": "box:col",
+                        "style": "gap-2",
+                        "children": [
+                          {
+                            "type": "action:link",
+                            "props": {
+                              "text": "Home",
+                              "href": "/home"
+                            }
+                          },
+                          {
+                            "type": "action:link",
+                            "props": {
+                              "text": "Projects",
+                              "href": "/projects"
+                            }
+                          },
+                          {
+                            "type": "action:link",
+                            "props": {
+                              "text": "Billing",
+                              "href": "/billing"
+                            }
+                          },
+                          {
+                            "type": "action:link",
+                            "props": {
+                              "text": "Settings",
+                              "href": "/settings"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "box:col",
+                    "style": "flex-1 gap-4",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Main content area"
+                        },
+                        "style": "text-2xl font-semibold"
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Use this as a split-view app shell."
+                        },
+                        "style": "text-slate-500"
+                      },
+                      {
+                        "type": "card",
+                        "style": "p-5 rounded-3xl bg-white shadow",
+                        "children": [
+                          {
+                            "type": "text",
+                            "props": {
+                              "text": "Cards, lists, and flows can live here."
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "dash_project_cards",
+          "title": "Project Cards",
+          "node": {
+            "type": "box:grid",
+            "style": "grid grid-cols-2 gap-4 p-4",
+            "children": [
+              {
+                "type": "card",
+                "style": "p-5 rounded-3xl bg-white shadow",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Mobile app"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "12 tasks"
+                    },
+                    "style": "text-slate-500"
+                  },
+                  {
+                    "type": "progress",
+                    "props": {
+                      "value": 72
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "card",
+                "style": "p-5 rounded-3xl bg-white shadow",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Website redesign"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "8 tasks"
+                    },
+                    "style": "text-slate-500"
+                  },
+                  {
+                    "type": "progress",
+                    "props": {
+                      "value": 40
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "card",
+                "style": "p-5 rounded-3xl bg-white shadow",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "API revamp"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "15 tasks"
+                    },
+                    "style": "text-slate-500"
+                  },
+                  {
+                    "type": "progress",
+                    "props": {
+                      "value": 88
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "card",
+                "style": "p-5 rounded-3xl bg-white shadow",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Growth campaign"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "5 tasks"
+                    },
+                    "style": "text-slate-500"
+                  },
+                  {
+                    "type": "progress",
+                    "props": {
+                      "value": 22
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Forms & Inputs",
+      "examples": [
+        {
+          "id": "form_profile",
+          "title": "Profile Editor",
+          "node": {
+            "type": "page",
+            "children": [
+              {
+                "type": "card",
+                "style": "p-6 rounded-3xl bg-white shadow",
+                "children": [
+                  {
+                    "type": "box:row",
+                    "style": "gap-4 items-center",
+                    "children": [
+                      {
+                        "type": "avatar",
+                        "props": {
+                          "src": "https://example.com/user.jpg"
+                        },
+                        "style": "w-16 h-16 rounded-full"
+                      },
+                      {
+                        "type": "box:col",
+                        "children": [
+                          {
+                            "type": "text",
+                            "props": {
+                              "text": "Edit profile"
+                            },
+                            "style": "text-2xl font-bold"
+                          },
+                          {
+                            "type": "text",
+                            "props": {
+                              "text": "Update your public identity and contact info."
+                            },
+                            "style": "text-slate-500"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "field:input",
+                    "props": {
+                      "label": "Display name",
+                      "placeholder": "Jane Doe"
+                    }
+                  },
+                  {
+                    "type": "field:input",
+                    "props": {
+                      "label": "Username",
+                      "placeholder": "@jane"
+                    }
+                  },
+                  {
+                    "type": "field:input",
+                    "props": {
+                      "multiline": true,
+                      "label": "Bio",
+                      "placeholder": "Designer and builder"
+                    }
+                  },
+                  {
+                    "type": "action:button",
+                    "props": {
+                      "intent": "indigo",
+                      "fill": "solid",
+                      "text": "Save changes"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "form_address",
+          "title": "Address Form",
+          "node": {
+            "type": "page",
+            "children": [
+              {
+                "type": "box:col",
+                "style": "gap-4 p-6",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Shipping address"
+                    },
+                    "style": "text-2xl font-bold"
+                  },
+                  {
+                    "type": "box:row",
+                    "style": "gap-3",
+                    "children": [
+                      {
+                        "type": "field:input",
+                        "props": {
+                          "label": "First name",
+                          "placeholder": "Jane"
+                        }
+                      },
+                      {
+                        "type": "field:input",
+                        "props": {
+                          "label": "Last name",
+                          "placeholder": "Doe"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "field:input",
+                    "props": {
+                      "label": "Street address",
+                      "placeholder": "123 Market St"
+                    }
+                  },
+                  {
+                    "type": "box:row",
+                    "style": "gap-3",
+                    "children": [
+                      {
+                        "type": "field:input",
+                        "props": {
+                          "label": "City",
+                          "placeholder": "San Francisco"
+                        }
+                      },
+                      {
+                        "type": "field:select",
+                        "props": {
+                          "label": "Country",
+                          "options": [
+                            "United States",
+                            "Canada",
+                            "United Kingdom"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "box:row",
+                    "style": "gap-3",
+                    "children": [
+                      {
+                        "type": "field:input",
+                        "props": {
+                          "label": "State",
+                          "placeholder": "CA"
+                        }
+                      },
+                      {
+                        "type": "field:input",
+                        "props": {
+                          "label": "ZIP code",
+                          "placeholder": "94105"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "action:button",
+                    "props": {
+                      "intent": "indigo",
+                      "fill": "solid",
+                      "text": "Continue"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "form_search_filters",
+          "title": "Search and Filters",
+          "node": {
+            "type": "card",
+            "style": "p-5 rounded-3xl bg-white shadow",
+            "children": [
+              {
+                "type": "box:row",
+                "style": "gap-3",
+                "children": [
+                  {
+                    "type": "field:input",
+                    "props": {
+                      "icon": "search",
+                      "label": "Search",
+                      "placeholder": "Search products..."
+                    }
+                  },
+                  {
+                    "type": "field:select",
+                    "props": {
+                      "label": "Category",
+                      "options": [
+                        "All",
+                        "Audio",
+                        "Home",
+                        "Office"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "field:select",
+                    "props": {
+                      "label": "Sort",
+                      "options": [
+                        "Popular",
+                        "Newest",
+                        "Price low to high"
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "box:row",
+                "style": "gap-2 flex-wrap",
+                "children": [
+                  {
+                    "type": "chip",
+                    "props": {
+                      "text": "Free shipping"
+                    }
+                  },
+                  {
+                    "type": "chip",
+                    "props": {
+                      "text": "In stock"
+                    }
+                  },
+                  {
+                    "type": "chip",
+                    "props": {
+                      "text": "Under $50"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "form_feedback",
+          "title": "Feedback Form",
+          "node": {
+            "type": "page",
+            "children": [
+              {
+                "type": "card",
+                "style": "p-6 rounded-3xl bg-white shadow",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Send feedback"
+                    },
+                    "style": "text-2xl font-bold"
+                  },
+                  {
+                    "type": "field:select",
+                    "props": {
+                      "label": "Topic",
+                      "options": [
+                        "Bug report",
+                        "Feature request",
+                        "Billing",
+                        "Other"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "field:input",
+                    "props": {
+                      "multiline": true,
+                      "label": "Message",
+                      "placeholder": "Tell us what happened..."
+                    }
+                  },
+                  {
+                    "type": "rating",
+                    "props": {
+                      "max": 5,
+                      "label": "How would you rate this experience?"
+                    }
+                  },
+                  {
+                    "type": "action:button",
+                    "props": {
+                      "intent": "indigo",
+                      "fill": "solid",
+                      "text": "Submit"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Content & Lists",
+      "examples": [
+        {
+          "id": "list_feed",
+          "title": "Activity Feed",
+          "node": {
+            "type": "page",
+            "children": [
+              {
+                "type": "box:col",
+                "style": "gap-3 p-6",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Recent activity"
+                    },
+                    "style": "text-2xl font-bold"
+                  },
+                  {
+                    "type": "card",
+                    "style": "p-4 rounded-2xl bg-white shadow",
+                    "children": [
+                      {
+                        "type": "box:row",
+                        "style": "gap-3",
+                        "children": [
+                          {
+                            "type": "avatar",
+                            "props": {
+                              "src": "https://example.com/u1.jpg"
+                            }
+                          },
+                          {
+                            "type": "box:col",
+                            "children": [
+                              {
+                                "type": "text",
+                                "props": {
+                                  "text": "Maya updated the roadmap"
+                                }
+                              },
+                              {
+                                "type": "text",
+                                "props": {
+                                  "text": "2 minutes ago"
+                                },
+                                "style": "text-slate-500"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "card",
+                    "style": "p-4 rounded-2xl bg-white shadow",
+                    "children": [
+                      {
+                        "type": "box:row",
+                        "style": "gap-3",
+                        "children": [
+                          {
+                            "type": "avatar",
+                            "props": {
+                              "src": "https://example.com/u2.jpg"
+                            }
+                          },
+                          {
+                            "type": "box:col",
+                            "children": [
+                              {
+                                "type": "text",
+                                "props": {
+                                  "text": "Sam commented on the design"
+                                }
+                              },
+                              {
+                                "type": "text",
+                                "props": {
+                                  "text": "15 minutes ago"
+                                },
+                                "style": "text-slate-500"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "card",
+                    "style": "p-4 rounded-2xl bg-white shadow",
+                    "children": [
+                      {
+                        "type": "box:row",
+                        "style": "gap-3",
+                        "children": [
+                          {
+                            "type": "avatar",
+                            "props": {
+                              "src": "https://example.com/u3.jpg"
+                            }
+                          },
+                          {
+                            "type": "box:col",
+                            "children": [
+                              {
+                                "type": "text",
+                                "props": {
+                                  "text": "Jordan shipped v1.2"
+                                }
+                              },
+                              {
+                                "type": "text",
+                                "props": {
+                                  "text": "1 hour ago"
+                                },
+                                "style": "text-slate-500"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "list_products",
+          "title": "Product Grid",
+          "node": {
+            "type": "box:grid",
+            "style": "grid grid-cols-2 gap-4 p-4",
+            "children": [
+              {
+                "type": "card",
+                "style": "p-4 rounded-3xl bg-white shadow",
+                "children": [
+                  {
+                    "type": "image",
+                    "props": {
+                      "src": "https://example.com/p1.jpg"
+                    },
+                    "style": "w-full h-40 rounded-2xl object-cover"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Wireless Headphones"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "$129"
+                    },
+                    "style": "font-semibold"
+                  },
+                  {
+                    "type": "action:button",
+                    "props": {
+                      "intent": "indigo",
+                      "fill": "solid",
+                      "text": "Add to cart"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "card",
+                "style": "p-4 rounded-3xl bg-white shadow",
+                "children": [
+                  {
+                    "type": "image",
+                    "props": {
+                      "src": "https://example.com/p2.jpg"
+                    },
+                    "style": "w-full h-40 rounded-2xl object-cover"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Smart Lamp"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "$59"
+                    },
+                    "style": "font-semibold"
+                  },
+                  {
+                    "type": "action:button",
+                    "props": {
+                      "intent": "indigo",
+                      "fill": "solid",
+                      "text": "Add to cart"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "card",
+                "style": "p-4 rounded-3xl bg-white shadow",
+                "children": [
+                  {
+                    "type": "image",
+                    "props": {
+                      "src": "https://example.com/p3.jpg"
+                    },
+                    "style": "w-full h-40 rounded-2xl object-cover"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Mechanical Keyboard"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "$149"
+                    },
+                    "style": "font-semibold"
+                  },
+                  {
+                    "type": "action:button",
+                    "props": {
+                      "intent": "indigo",
+                      "fill": "solid",
+                      "text": "Add to cart"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "card",
+                "style": "p-4 rounded-3xl bg-white shadow",
+                "children": [
+                  {
+                    "type": "image",
+                    "props": {
+                      "src": "https://example.com/p4.jpg"
+                    },
+                    "style": "w-full h-40 rounded-2xl object-cover"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Desk Mat"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "$24"
+                    },
+                    "style": "font-semibold"
+                  },
+                  {
+                    "type": "action:button",
+                    "props": {
+                      "intent": "indigo",
+                      "fill": "solid",
+                      "text": "Add to cart"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "list_timeline",
+          "title": "Timeline",
+          "node": {
+            "type": "box:col",
+            "style": "gap-3 p-6",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Project timeline"
+                },
+                "style": "text-2xl font-bold"
+              },
+              {
+                "type": "box:row",
+                "style": "justify-between gap-4",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Q1"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Design system launched"
+                    },
+                    "style": "font-semibold"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Completed"
+                    },
+                    "style": "text-emerald-600"
+                  }
+                ]
+              },
+              {
+                "type": "box:row",
+                "style": "justify-between gap-4",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Q2"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Beta release"
+                    },
+                    "style": "font-semibold"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "In progress"
+                    },
+                    "style": "text-amber-600"
+                  }
+                ]
+              },
+              {
+                "type": "box:row",
+                "style": "justify-between gap-4",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Q3"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Public launch"
+                    },
+                    "style": "font-semibold"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Planned"
+                    },
+                    "style": "text-slate-500"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "list_chat",
+          "title": "Chat Thread",
+          "node": {
+            "type": "page",
+            "children": [
+              {
+                "type": "box:col",
+                "style": "gap-3 p-6",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Chat"
+                    },
+                    "style": "text-2xl font-bold"
+                  },
+                  {
+                    "type": "box:row",
+                    "style": "gap-3 justify-end",
+                    "children": [
+                      {
+                        "type": "avatar",
+                        "props": {
+                          "src": "https://example.com/me.jpg"
+                        }
+                      },
+                      {
+                        "type": "card",
+                        "style": "p-3 rounded-2xl bg-slate-100",
+                        "children": [
+                          {
+                            "type": "text",
+                            "props": {
+                              "text": "Did you review the latest build?"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "box:row",
+                    "style": "gap-3",
+                    "children": [
+                      {
+                        "type": "avatar",
+                        "props": {
+                          "src": "https://example.com/teammate.jpg"
+                        }
+                      },
+                      {
+                        "type": "card",
+                        "style": "p-3 rounded-2xl bg-white shadow",
+                        "children": [
+                          {
+                            "type": "text",
+                            "props": {
+                              "text": "Yes, it looks good. I left comments."
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "box:row",
+                    "style": "gap-3",
+                    "children": [
+                      {
+                        "type": "field:input",
+                        "props": {
+                          "label": "Message",
+                          "placeholder": "Type a reply..."
+                        }
+                      },
+                      {
+                        "type": "action:button",
+                        "props": {
+                          "intent": "indigo",
+                          "fill": "solid",
+                          "text": "Send"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Advanced Operator Examples",
+      "examples": [
+        {
+          "id": "op_if_banner",
+          "title": "Conditional Banner",
+          "node": {
+            "type": "box",
+            "children": [
+              {
+                "type": "card",
+                "style": "p-4 rounded-2xl bg-amber-50",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Premium plan"
+                    },
+                    "style": "font-semibold"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "This banner only appears when the Dart VM resolves the condition."
+                    }
+                  }
+                ]
+              }
+            ],
+            "$if": "${state.isPremium}",
+            "props": {
+              "variant": "banner"
+            }
+          }
+        },
+        {
+          "id": "op_repeat_list",
+          "title": "Repeat Items",
+          "node": {
+            "type": "system",
+            "props": {
+              "__subType": "repeater"
+            },
+            "children": [
+              {
+                "type": "box:row",
+                "style": "justify-between",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "${item.name}"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "${item.status}"
+                    },
+                    "style": "text-slate-500"
+                  }
+                ]
+              }
+            ],
+            "$repeat": "${state.items}",
+            "as": "item",
+            "indexAs": "index"
+          }
+        },
+        {
+          "id": "op_switch_view",
+          "title": "Switch View",
+          "node": {
+            "type": "switch",
+            "$switch": "${state.mode}",
+            "cases": {
+              "list": {
+                "type": "card",
+                "style": "p-4",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "List mode"
+                    }
+                  }
+                ]
+              },
+              "grid": {
+                "type": "card",
+                "style": "p-4",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Grid mode"
+                    }
+                  }
+                ]
+              },
+              "detail": {
+                "type": "card",
+                "style": "p-4",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Detail mode"
+                    }
+                  }
+                ]
+              }
+            },
+            "default": {
+              "type": "card",
+              "style": "p-4",
+              "children": [
+                {
+                  "type": "text",
+                  "props": {
+                    "text": "Fallback mode"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "op_apply_theme",
+          "title": "Apply Theme",
+          "node": {
+            "type": "$apply",
+            "children": [
+              {
+                "type": "card",
+                "style": "p-4",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Theming applied by runtime."
+                    }
+                  }
+                ]
+              }
+            ],
+            "$apply": {
+              "props": {
+                "tone": "brand",
+                "density": "compact"
+              },
+              "style": "rounded-3xl shadow",
+              "mode": "merge"
+            }
+          }
+        },
+        {
+          "id": "op_layout_template",
+          "title": "Layout Template",
+          "node": {
+            "type": "box:grid",
+            "style": "gap-4",
+            "slots": {
+              "header": {
+                "type": "card",
+                "style": "p-4 bg-white",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Header slot"
+                    }
+                  }
+                ]
+              },
+              "sidebar": {
+                "type": "card",
+                "style": "p-4 bg-white",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Sidebar slot"
+                    }
+                  }
+                ]
+              },
+              "content": {
+                "type": "card",
+                "style": "p-4 bg-white",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Content slot"
+                    }
+                  }
+                ]
+              },
+              "footer": {
+                "type": "card",
+                "style": "p-4 bg-white",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Footer slot"
+                    }
+                  }
+                ]
+              }
+            },
+            "$layout": [
+              "header header",
+              "sidebar content",
+              "footer footer"
+            ]
+          }
+        },
+        {
+          "id": "op_async_data",
+          "title": "Async Data State",
+          "node": {
+            "type": "system",
+            "$async": {
+              "action": "load.home",
+              "params": {
+                "id": "${route.id}"
+              }
+            },
+            "$loading": {
+              "type": "card",
+              "style": "p-4",
+              "children": [
+                {
+                  "type": "text",
+                  "props": {
+                    "text": "Loading..."
+                  }
+                }
+              ]
+            },
+            "$data": {
+              "type": "card",
+              "style": "p-4",
+              "children": [
+                {
+                  "type": "text",
+                  "props": {
+                    "text": "Loaded data here"
+                  }
+                }
+              ]
+            },
+            "$error": {
+              "type": "card",
+              "style": "p-4",
+              "children": [
+                {
+                  "type": "text",
+                  "props": {
+                    "text": "Something failed"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "op_try_catch",
+          "title": "Error Boundary",
+          "node": {
+            "type": "hook",
+            "props": {
+              "__subType": "error_boundary"
+            },
+            "$try": {
+              "type": "card",
+              "style": "p-4",
+              "children": [
+                {
+                  "type": "text",
+                  "props": {
+                    "text": "Risky content"
+                  }
+                }
+              ]
+            },
+            "$catch": {
+              "type": "card",
+              "style": "p-4",
+              "children": [
+                {
+                  "type": "text",
+                  "props": {
+                    "text": "Recovered from error"
+                  }
+                }
+              ]
+            },
+            "$finally": {
+              "type": "text",
+              "props": {
+                "text": "Cleanup complete"
+              }
+            }
+          }
+        },
+        {
+          "id": "op_portal_toast",
+          "title": "Portal Toast",
+          "node": {
+            "type": "portal",
+            "children": [
+              {
+                "type": "card",
+                "style": "p-4 rounded-2xl bg-emerald-50",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Saved successfully"
+                    }
+                  }
+                ]
+              }
+            ],
+            "$portal": "toast"
+          }
+        },
+        {
+          "id": "op_reactive_map",
+          "title": "Reactive Map",
+          "node": {
+            "type": "data",
+            "children": [
+              {
+                "type": "box:row",
+                "style": "justify-between",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "${user.name}"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "${user.role}"
+                    },
+                    "style": "text-slate-500"
+                  }
+                ]
+              }
+            ],
+            "$reactive_map": {
+              "bind": "${state.users}",
+              "key": "id",
+              "as": "user"
+            }
+          }
+        },
+        {
+          "id": "op_compose_stack",
+          "title": "Compose Stack",
+          "node": {
+            "type": "box",
+            "children": [
+              {
+                "type": "card",
+                "style": "p-4",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Composed styles from runtime"
+                    }
+                  }
+                ]
+              }
+            ],
+            "$compose": [
+              "${theme.spacing}",
+              "${theme.radius}",
+              "${theme.shadow}"
+            ]
+          }
+        },
+        {
+          "id": "op_watch_debounce",
+          "title": "Watch with Debounce",
+          "node": {
+            "type": "box",
+            "children": [
+              {
+                "type": "field:input",
+                "props": {
+                  "label": "Search",
+                  "placeholder": "Search docs..."
+                }
+              }
+            ],
+            "$watch": "${form.search}",
+            "$debounce": 300
+          }
+        },
+        {
+          "id": "op_parallel_panels",
+          "title": "Parallel Panels",
+          "node": {
+            "type": "box:col",
+            "$parallel": [
+              {
+                "type": "card",
+                "style": "p-4",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Panel A"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "card",
+                "style": "p-4",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Panel B"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "card",
+                "style": "p-4",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Panel C"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "op_machine_state",
+          "title": "State Machine",
+          "node": {
+            "type": "control",
+            "children": [
+              {
+                "type": "card",
+                "style": "p-4",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "State machine UI"
+                    }
+                  }
+                ]
+              }
+            ],
+            "$machine": {
+              "initial": "idle",
+              "states": {
+                "idle": {
+                  "on": {
+                    "SUBMIT": "loading"
+                  }
+                },
+                "loading": {
+                  "on": {
+                    "SUCCESS": "success",
+                    "FAIL": "error"
+                  }
+                },
+                "success": {},
+                "error": {
+                  "on": {
+                    "RETRY": "loading"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "op_stream_live",
+          "title": "Live Stream",
+          "node": {
+            "type": "data",
+            "children": [
+              {
+                "type": "box:row",
+                "style": "gap-2",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Live:"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "${event.title}"
+                    },
+                    "style": "font-semibold"
+                  }
+                ]
+              }
+            ],
+            "$stream": {
+              "bind": "${streams.notifications}",
+              "as": "event"
+            }
+          }
+        },
+        {
+          "id": "op_define_let",
+          "title": "Define and Let",
+          "node": {
+            "type": "template",
+            "children": [
+              {
+                "type": "card",
+                "style": "p-4",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "${title}"
+                    },
+                    "style": "font-semibold"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "${subtitle}"
+                    },
+                    "style": "text-slate-500"
+                  }
+                ]
+              }
+            ],
+            "$define": {
+              "brand": "indigo",
+              "radius": "24px"
+            },
+            "$let": {
+              "title": "Starter",
+              "subtitle": "Authoring values stay intact"
+            }
+          }
+        },
+        {
+          "id": "op_scope_env",
+          "title": "Scope and Env",
+          "node": {
+            "type": "box",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "${scope.name}"
+                },
+                "style": "font-semibold"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "${env.featureFlag}"
+                },
+                "style": "text-slate-500"
+              }
+            ],
+            "$scope": "${user.profile}",
+            "env": {
+              "featureFlag": "new-nav"
+            }
+          }
+        },
+        {
+          "id": "op_slot_content",
+          "title": "Slot Content",
+          "node": {
+            "type": "card",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Default child content"
+                }
+              }
+            ],
+            "$slots": {
+              "header": {
+                "type": "card",
+                "style": "p-3 bg-slate-50",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Header slot"
+                    }
+                  }
+                ]
+              },
+              "body": {
+                "type": "card",
+                "style": "p-3 bg-white",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Body slot"
+                    }
+                  }
+                ]
+              },
+              "footer": {
+                "type": "card",
+                "style": "p-3 bg-slate-50",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Footer slot"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Commerce, Marketing, and Pricing",
+      "examples": [
+        {
+          "id": "commerce_product_detail",
+          "title": "Product Detail",
+          "node": {
+            "type": "page",
+            "children": [
+              {
+                "type": "box:row",
+                "style": "gap-6 p-6",
+                "children": [
+                  {
+                    "type": "image",
+                    "props": {
+                      "src": "https://example.com/product-large.jpg"
+                    },
+                    "style": "w-1/2 rounded-3xl object-cover"
+                  },
+                  {
+                    "type": "box:col",
+                    "style": "gap-4",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Nebula Headphones"
+                        },
+                        "style": "text-3xl font-bold"
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "$199"
+                        },
+                        "style": "text-2xl font-semibold"
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "High-fidelity sound, active noise cancellation, 30h battery."
+                        },
+                        "style": "text-slate-500"
+                      },
+                      {
+                        "type": "box:row",
+                        "style": "gap-3",
+                        "children": [
+                          {
+                            "type": "action:button",
+                            "props": {
+                              "intent": "indigo",
+                              "fill": "solid",
+                              "text": "Add to cart"
+                            }
+                          },
+                          {
+                            "type": "action:button",
+                            "props": {
+                              "variant": "outline",
+                              "text": "Wishlist"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "commerce_pricing",
+          "title": "Pricing Table",
+          "node": {
+            "type": "box:grid",
+            "style": "grid grid-cols-3 gap-4 p-4",
+            "children": [
+              {
+                "type": "card",
+                "style": "p-5 rounded-3xl bg-white shadow",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Starter"
+                    },
+                    "style": "text-xl font-bold"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "$0"
+                    }
+                  },
+                  {
+                    "type": "box:col",
+                    "style": "gap-2",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "5 projects"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Basic analytics"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Community support"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "action:button",
+                    "props": {
+                      "variant": "outline",
+                      "text": "Choose"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "card",
+                "style": "p-5 rounded-3xl bg-white shadow",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Pro"
+                    },
+                    "style": "text-xl font-bold"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "$19"
+                    }
+                  },
+                  {
+                    "type": "box:col",
+                    "style": "gap-2",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Unlimited projects"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Advanced analytics"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Priority support"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "action:button",
+                    "props": {
+                      "intent": "indigo",
+                      "fill": "solid",
+                      "text": "Choose"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "card",
+                "style": "p-5 rounded-3xl bg-white shadow",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Team"
+                    },
+                    "style": "text-xl font-bold"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "$49"
+                    }
+                  },
+                  {
+                    "type": "box:col",
+                    "style": "gap-2",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Collaboration"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Admin controls"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "SLA support"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "action:button",
+                    "props": {
+                      "variant": "outline",
+                      "text": "Choose"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "commerce_checkout_summary",
+          "title": "Checkout Summary",
+          "node": {
+            "type": "card",
+            "style": "p-5 rounded-3xl bg-white shadow",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Order summary"
+                },
+                "style": "text-xl font-bold"
+              },
+              {
+                "type": "box:row",
+                "style": "justify-between",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Subtotal"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "$128.00"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "box:row",
+                "style": "justify-between",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Shipping"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "$8.00"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "box:row",
+                "style": "justify-between",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Tax"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "$10.24"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "box:row",
+                "style": "justify-between",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Total"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "$146.24"
+                    },
+                    "style": "font-semibold"
+                  }
+                ]
+              },
+              {
+                "type": "action:button",
+                "props": {
+                  "intent": "indigo",
+                  "fill": "solid",
+                  "text": "Place order"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "marketing_landing",
+          "title": "Landing Hero",
+          "node": {
+            "type": "page",
+            "children": [
+              {
+                "type": "box:row",
+                "style": "gap-8 p-8",
+                "children": [
+                  {
+                    "type": "box:col",
+                    "style": "gap-5 flex-1",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Build native UI from JSON"
+                        },
+                        "style": "text-5xl font-black"
+                      },
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Create end-to-end SDUI apps with a strong TypeScript authoring layer and Dart runtime resolution."
+                        },
+                        "style": "text-slate-600"
+                      },
+                      {
+                        "type": "box:row",
+                        "style": "gap-3",
+                        "children": [
+                          {
+                            "type": "action:button",
+                            "props": {
+                              "intent": "indigo",
+                              "fill": "solid",
+                              "text": "Get started"
+                            }
+                          },
+                          {
+                            "type": "action:link",
+                            "props": {
+                              "text": "View docs",
+                              "href": "/docs"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image",
+                    "props": {
+                      "src": "https://example.com/hero-illustration.png"
+                    },
+                    "style": "w-1/2 rounded-3xl"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Empty, Error, and System States",
+      "examples": [
+        {
+          "id": "state_empty",
+          "title": "Empty State",
+          "node": {
+            "type": "card",
+            "style": "p-8 rounded-3xl bg-white shadow",
+            "children": [
+              {
+                "type": "box:col",
+                "style": "gap-4 items-center text-center",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Nothing here yet"
+                    },
+                    "style": "text-2xl font-bold"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "When there is no data, use a clear empty state with a next action."
+                    },
+                    "style": "text-slate-500"
+                  },
+                  {
+                    "type": "action:button",
+                    "props": {
+                      "intent": "indigo",
+                      "fill": "solid",
+                      "text": "Create first item"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "state_error",
+          "title": "Error State",
+          "node": {
+            "type": "card",
+            "style": "p-8 rounded-3xl bg-rose-50",
+            "children": [
+              {
+                "type": "box:col",
+                "style": "gap-4 items-center text-center",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Something went wrong"
+                    },
+                    "style": "text-2xl font-bold"
+                  },
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "We could not load the content. Try again or check your connection."
+                    },
+                    "style": "text-slate-500"
+                  },
+                  {
+                    "type": "box:row",
+                    "style": "gap-3",
+                    "children": [
+                      {
+                        "type": "action:button",
+                        "props": {
+                          "intent": "indigo",
+                          "fill": "solid",
+                          "text": "Retry"
+                        }
+                      },
+                      {
+                        "type": "action:button",
+                        "props": {
+                          "variant": "outline",
+                          "text": "Contact support"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "state_skeleton",
+          "title": "Loading Skeleton",
+          "node": {
+            "type": "box:col",
+            "style": "gap-3 p-6",
+            "children": [
+              {
+                "type": "skeleton",
+                "props": {
+                  "height": 24,
+                  "width": "60%"
+                }
+              },
+              {
+                "type": "skeleton",
+                "props": {
+                  "height": 16,
+                  "width": "90%"
+                }
+              },
+              {
+                "type": "skeleton",
+                "props": {
+                  "height": 16,
+                  "width": "75%"
+                }
+              },
+              {
+                "type": "skeleton",
+                "props": {
+                  "height": 180,
+                  "width": "100%"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "state_banner",
+          "title": "System Banner",
+          "node": {
+            "type": "banner",
+            "props": {
+              "variant": "info",
+              "title": "Scheduled maintenance",
+              "message": "The system will be briefly unavailable at 02:00 UTC."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "More Widget Examples",
+      "examples": [
+        {
+          "id": "widget_tabs",
+          "title": "Tabs",
+          "node": {
+            "type": "tabs",
+            "props": {
+              "items": [
+                {
+                  "label": "Overview"
+                },
+                {
+                  "label": "Activity"
+                },
+                {
+                  "label": "Settings"
+                }
+              ],
+              "active": 0
+            }
+          }
+        },
+        {
+          "id": "widget_badges",
+          "title": "Badges",
+          "node": {
+            "type": "box:row",
+            "style": "gap-2",
+            "children": [
+              {
+                "type": "badge",
+                "props": {
+                  "text": "New"
+                }
+              },
+              {
+                "type": "badge",
+                "props": {
+                  "text": "Beta"
+                }
+              },
+              {
+                "type": "badge",
+                "props": {
+                  "text": "Pro"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "widget_divider",
+          "title": "Divider Section",
+          "node": {
+            "type": "box:col",
+            "style": "gap-3",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Section title"
+                },
+                "style": "text-lg font-semibold"
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Section content goes below the divider."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "widget_rating",
+          "title": "Rating Block",
+          "node": {
+            "type": "card",
+            "style": "p-4 rounded-2xl bg-white shadow",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Rate your experience"
+                },
+                "style": "font-semibold"
+              },
+              {
+                "type": "rating",
+                "props": {
+                  "max": 5,
+                  "value": 4.5
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "widget_toggle_group",
+          "title": "Toggle Group",
+          "node": {
+            "type": "toggle-group",
+            "props": {
+              "options": [
+                "Daily",
+                "Weekly",
+                "Monthly"
+              ],
+              "value": "Weekly"
+            }
+          }
+        },
+        {
+          "id": "widget_calendar",
+          "title": "Calendar Card",
+          "node": {
+            "type": "card",
+            "style": "p-4 rounded-2xl bg-white shadow",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Calendar"
+                },
+                "style": "font-semibold"
+              },
+              {
+                "type": "calendar",
+                "props": {
+                  "month": "2026-07",
+                  "selected": "2026-07-26"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "widget_map_preview",
+          "title": "Map Preview",
+          "node": {
+            "type": "card",
+            "style": "p-4 rounded-2xl bg-white shadow",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Store locations"
+                },
+                "style": "font-semibold"
+              },
+              {
+                "type": "map",
+                "props": {
+                  "center": [
+                    37.7749,
+                    -122.4194
+                  ],
+                  "zoom": 12
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "widget_video",
+          "title": "Video Embed",
+          "node": {
+            "type": "card",
+            "style": "p-4 rounded-2xl bg-white shadow",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Product demo"
+                },
+                "style": "font-semibold"
+              },
+              {
+                "type": "video",
+                "props": {
+                  "src": "https://example.com/demo.mp4",
+                  "controls": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "widget_steps",
+          "title": "Stepper",
+          "node": {
+            "type": "stepper",
+            "props": {
+              "steps": [
+                "Account",
+                "Profile",
+                "Billing",
+                "Finish"
+              ],
+              "current": 2
+            }
+          }
+        },
+        {
+          "id": "widget_toolbar",
+          "title": "Toolbar",
+          "node": {
+            "type": "box:row",
+            "style": "gap-2 p-4",
+            "children": [
+              {
+                "type": "action:button",
+                "props": {
+                  "variant": "outline",
+                  "text": "Undo"
+                }
+              },
+              {
+                "type": "action:button",
+                "props": {
+                  "variant": "outline",
+                  "text": "Redo"
+                }
+              },
+              {
+                "type": "action:button",
+                "props": {
+                  "intent": "indigo",
+                  "fill": "solid",
+                  "text": "Publish"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "widget_toast_stack",
+          "title": "Toast Stack",
+          "node": {
+            "type": "portal",
+            "children": [
+              {
+                "type": "box:col",
+                "style": "gap-2",
+                "children": [
+                  {
+                    "type": "card",
+                    "style": "p-3 rounded-2xl bg-emerald-50",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Saved draft"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "card",
+                    "style": "p-3 rounded-2xl bg-sky-50",
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "New message received"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "$portal": "toast"
+          }
+        }
+      ]
+    }
+  ]
+}

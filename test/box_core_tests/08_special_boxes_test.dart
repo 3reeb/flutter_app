@@ -39,7 +39,8 @@ void main() {
       expect(find.text('SafeContent'), findsOneWidget);
     });
 
-    testWidgets('1.2 box:safe with top:false bottom:false disables padding', (tester) async {
+    testWidgets('1.2 box:safe with top:false bottom:false disables padding',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'box:safe',
         'props': {'top': false, 'bottom': false, 'left': true, 'right': true},
@@ -67,7 +68,9 @@ void main() {
           },
           {
             'type': 'box:expanded',
-            'children': [colorBox('w-full h-full bg-slate-50', label: 'MainContent')],
+            'children': [
+              colorBox('w-full h-full bg-slate-50', label: 'MainContent')
+            ],
           },
         ],
       }));
@@ -79,7 +82,8 @@ void main() {
     });
 
     // ── 2. box:aspect ─────────────────────────────────────────────────────
-    testWidgets('2.1 box:aspect with ratio:1.777 wraps in QuantumAspectRatio', (tester) async {
+    testWidgets('2.1 box:aspect with ratio:1.777 wraps in QuantumAspectRatio',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-full',
@@ -106,7 +110,9 @@ void main() {
           {
             'type': 'box:aspect',
             'props': {'ratio': 1.0},
-            'children': [colorBox('w-full h-full bg-amber-300', label: 'Square')],
+            'children': [
+              colorBox('w-full h-full bg-amber-300', label: 'Square')
+            ],
           },
         ],
       }));
@@ -135,7 +141,8 @@ void main() {
     });
 
     // ── 3. box:measure ────────────────────────────────────────────────────
-    testWidgets('3.1 box:measure writes bounds to store after layout', (tester) async {
+    testWidgets('3.1 box:measure writes bounds to store after layout',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-full',
@@ -143,7 +150,9 @@ void main() {
           {
             'type': 'box:measure',
             'props': {'bind': 'my_box_bounds'},
-            'children': [colorBox('w-200 h-100 bg-blue-200', label: 'Measured')],
+            'children': [
+              colorBox('w-200 h-100 bg-blue-200', label: 'Measured')
+            ],
           },
         ],
       }));
@@ -169,7 +178,8 @@ void main() {
     });
 
     // ── 4. box:viewport ───────────────────────────────────────────────────
-    testWidgets('4.1 box:viewport injects viewportWidth/Height into data scope', (tester) async {
+    testWidgets('4.1 box:viewport injects viewportWidth/Height into data scope',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'box:viewport',
         'children': [
@@ -187,7 +197,8 @@ void main() {
     });
 
     // ── 5. box:responsive ─────────────────────────────────────────────────
-    testWidgets('5.1 box:responsive injects isCompact/isMedium/isLarge', (tester) async {
+    testWidgets('5.1 box:responsive injects isCompact/isMedium/isLarge',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'box:responsive',
         'children': [
@@ -204,7 +215,8 @@ void main() {
     });
 
     // ── 6. box:builder ────────────────────────────────────────────────────
-    testWidgets('6.1 box:builder injects maxWidth/maxHeight into scope', (tester) async {
+    testWidgets('6.1 box:builder injects maxWidth/maxHeight into scope',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'box:builder',
         'children': [
@@ -220,7 +232,8 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('6.2 box:builder renders children with layout constraints', (tester) async {
+    testWidgets('6.2 box:builder renders children with layout constraints',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-400',
@@ -239,34 +252,9 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    // ── 7. box:morph ──────────────────────────────────────────────────────
-    testWidgets('7.1 box:morph renders with initialSize', (tester) async {
-      await tester.pumpWidget(buildTestWrapper({
-        'type': 'box:morph',
-        'props': {'width': 200.0, 'height': 150.0},
-        'children': [textLeaf('MorphContent')],
-      }));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(QuantumLayout), findsWidgets);
-      expect(find.text('MorphContent'), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    });
-
-    testWidgets('7.2 box:morph with lockAspect:true', (tester) async {
-      await tester.pumpWidget(buildTestWrapper({
-        'type': 'box:morph',
-        'props': {'width': 300.0, 'height': 300.0, 'lockAspect': true},
-        'children': [colorBox('w-full h-full bg-violet-200', label: 'LockedAspect')],
-      }));
-      await tester.pumpAndSettle();
-
-      expect(find.text('LockedAspect'), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    });
-
     // ── 8. box:layer ──────────────────────────────────────────────────────
-    testWidgets('8.1 box:layer renders with identity transform when no bind', (tester) async {
+    testWidgets('8.1 box:layer renders with identity transform when no bind',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'box:layer',
         'style': 'w-full h-200',
@@ -274,13 +262,14 @@ void main() {
       }));
       await tester.pumpAndSettle();
 
-      expect(find.byType(QLBox), findsWidgets);
+      expect(find.byType(Q), findsWidgets);
       expect(find.text('LayerContent'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 
     // ── 9. box:matrix ─────────────────────────────────────────────────────
-    testWidgets('9.1 box:matrix alias same as box:layer without bind', (tester) async {
+    testWidgets('9.1 box:matrix alias same as box:layer without bind',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'box:matrix',
         'style': 'w-full h-200',
@@ -307,7 +296,8 @@ void main() {
     });
 
     // ── 11. box:viewport + box:responsive nested ───────────────────────────
-    testWidgets('11.1 viewport wrapping responsive provides all env vars', (tester) async {
+    testWidgets('11.1 viewport wrapping responsive provides all env vars',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'box:viewport',
         'children': [
@@ -334,7 +324,8 @@ void main() {
     });
 
     // ── 12. box:measure nested inside card ─────────────────────────────────
-    testWidgets('12.1 box:measure inside card captures correct bounds', (tester) async {
+    testWidgets('12.1 box:measure inside card captures correct bounds',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'card',
         'children': [

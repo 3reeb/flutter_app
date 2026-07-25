@@ -1949,6 +1949,114 @@ class _QLMacroSlotEmpty {
   const _QLMacroSlotEmpty();
 }
 
+// ───────────────────────────────────────────────────────────────────────
+//  QL AST INSPECTOR (O(1) Memoized Reactivity Checks)
+// ────────────────────────────────────────────────────────────────────────────
+abstract final class QLAstInspector {
+  // Cache prevents deep-traversing the same JSON maps repeatedly.
+  static final QLRuntimeCache<bool> _cache = QLRuntimeCache(
+      config:
+          const QLRuntimeCacheConfig(maxEntries: 4096, maxWeight: 512 * 1024));
+
+  static bool isReactive(dynamic target) {
+    if (target == null) return false;
+    if (target is String) return target.contains('{{');
+
+    if (target is Map) {
+      final int hash = QLStableHasher.of(target);
+      final bool? cached = _cache.get(hash);
+      if (cached != null) return cached;
+
+      bool reactive = false;
+      if (target['_isTokenized'] == true ||
+          target.containsKey(r'$bind') ||
+          target.containsKey('bind') ||
+          target.containsKey(r'$if') ||
+          target.containsKey(r'$repeat')) {
+        reactive = true;
+      } else {
+        for (final v in target.values) {
+          if (isReactive(v)) {
+            reactive = true;
+            break;
+          }
+        }
+      }
+      _cache.put(hash, reactive, weight: 64);
+      return reactive;
+    }
+
+    if (target is List) {
+      for (final v in target) {
+        if (isReactive(v)) return true;
+      }
+    }
+    return false;
+  }
+}
+
+// ───────────────────────────────────────────────────────────────────────
+//  QL PATH RESOLVER (Unified Fast-Path Data Fetching)
+// ────────────────────────────────────────────────────────────────────────────
+abstract final class QLPathResolver {
+  static dynamic read(String rawPath, BuildContext? ctx,
+      Map<String, dynamic> env, QLDataStore globalStore) {
+    if (rawPath.isEmpty) return null;
+    final strides = QLPathUtils.resolve(rawPath);
+    if (strides.isEmpty) return null;
+
+    final root = strides.first.toString();
+    dynamic current;
+
+    // 1. Resolve Root Scope natively via O(1) checks
+    final int char0 = root.codeUnitAt(0);
+
+    if (char0 == 64) {
+      // '@' Namespace
+      current = QLStoreRegistry.instance
+          .get(root.substring(1))
+          .get(strides.sublist(1));
+    } else if (root == 'state' || root == r'$state') {
+      final scope = ctx != null ? QLDataScope.readNode(ctx) : null;
+      current = (scope?.moduleStore ?? globalStore).get(strides.sublist(1));
+    } else if (root == r'$env') {
+      current = strides.length > 1 ? env[strides[1].toString()] : null;
+    } else if (root == r'$local') {
+      current = ctx != null
+          ? QLDataScope.readNode(ctx)?.localStore?.get(strides.sublist(1))
+          : null;
+    } else if (root == r'$route') {
+      current = env[r'$route'] ??
+          (ctx != null
+              ? QLDataScope.readNode(ctx)?.localData[r'$route']
+              : null);
+      for (int i = 1; i < strides.length && current != null; i++) {
+        current = (current is Map && strides[i] is String)
+            ? current[strides[i]]
+            : null;
+      }
+    } else if (env.containsKey(root)) {
+      current = env[root];
+      for (int i = 1; i < strides.length && current != null; i++) {
+        final key = strides[i];
+        if (current is Map && key is String)
+          current = current[key];
+        else if (current is List && key is int)
+          current = current[key];
+        else {
+          current = null;
+          break;
+        }
+      }
+    } else {
+      // Global Fallback
+      current = globalStore.get(strides);
+    }
+
+    return current;
+  }
+}
+
 abstract final class QLDataBinder {
   static dynamic resolveAOT(dynamic propValue, BuildContext? ctx,
       Map<String, dynamic> env, QLDataStore globalStore) {
@@ -1985,10 +2093,13 @@ abstract final class QLDataBinder {
     return propValue;
   }
 
+// Inside QLDataBinder
   static dynamic _processToken(Map token, BuildContext? ctx,
       Map<String, dynamic> env, QLDataStore globalStore) {
-    dynamic val =
-        _digToken(token['_bind'] as List<dynamic>, ctx, env, globalStore);
+    // 🚀 SINGLE UNIFIED PATH RESOLUTION
+    dynamic val = QLPathResolver.read(
+        (token['_bind'] as List).join('.'), ctx, env, globalStore);
+
     final List? pipes = token['pipes'] as List?;
     if (pipes != null) {
       for (final pipeDef in pipes) {
@@ -2000,8 +2111,7 @@ abstract final class QLDataBinder {
                     arg.startsWith('{{') &&
                     arg.endsWith('}}')) {
                   final innerToken = arg.substring(2, arg.length - 2).trim();
-                  return _digToken(QLPathUtils.resolve(innerToken), ctx, env,
-                              globalStore)
+                  return QLPathResolver.read(innerToken, ctx, env, globalStore)
                           ?.toString() ??
                       arg;
                 }
@@ -2015,81 +2125,9 @@ abstract final class QLDataBinder {
     }
     return val;
   }
-
-  static dynamic _digToken(List<dynamic> strides, BuildContext? ctx,
-      Map<String, dynamic> env, QLDataStore globalStore) {
-    if (strides.isEmpty) return null;
-    final String root = strides.first.toString();
-    if (root.isEmpty) return null;
-
-    final int char0 = root.codeUnitAt(0);
-
-    if (char0 == 64) {
-      final String namespace = root.substring(1);
-      final targetStore = QLStoreRegistry.instance.get(namespace);
-      return targetStore.get(strides.sublist(1));
-    }
-
-    if (root == 'state' || root == '\$state') {
-      final scope = ctx != null ? QLDataScope.readNode(ctx) : null;
-      final targetStore = scope?.moduleStore ?? globalStore;
-      return targetStore.get(strides.sublist(1));
-    }
-
-    if (root == '\$env') {
-      if (strides.length < 2) return null;
-      return env[strides[1].toString()];
-    }
-
-    if (root == '\$route') {
-      dynamic current = env['\$route'];
-      if (current == null && ctx != null)
-        current = QLDataScope.readNode(ctx)?.localData['\$route'];
-
-      for (int i = 1; i < strides.length && current != null; i++) {
-        final key = strides[i];
-        if (current is Map && key is String)
-          current = current[key];
-        else
-          return null;
-      }
-      return current;
-    }
-
-    if (root == '\$local') {
-      return ctx != null
-          ? QLDataScope.readNode(ctx)?.localStore?.get(strides.sublist(1))
-          : null;
-    }
-
-    if (env.containsKey(root)) {
-      dynamic current = env[root];
-      for (int i = 1; i < strides.length && current != null; i++) {
-        final key = strides[i];
-        if (current is Map && key is String)
-          current = current[key];
-        else if (current is List && key is int)
-          current = current[key];
-        else {
-          current = null;
-          break;
-        }
-      }
-      if (current != null) return current;
-    }
-
-    final directValue = globalStore.get(strides);
-    if (directValue != null) return directValue;
-
-    if (strides.length > 1 &&
-        (strides.first == 'state' || strides.first == '\$state')) {
-      return globalStore.get(strides.sublist(1));
-    }
-
-    return null;
-  }
 }
 
+// Note: Apply the exact same QLAstInspector.isReactive check to _MicroSliverPlugin and _MicroLayoutPlugin.
 abstract class QLPlugin {
   String get type;
   Map<String, dynamic> get defaultProps => const {};
@@ -5655,7 +5693,12 @@ class QuantumVM {
           actionName = actionMap.remove('action')?.toString();
         }
 
-        if (actionName == null || !_actions.containsKey(actionName)) continue;
+        if (actionName == null || !_actions.containsKey(actionName)) {
+          print('ACTION SKIP: actionName=$actionName, hasKey=${_actions.containsKey(actionName)}');
+          continue;
+        }
+        
+        print('ACTION EXECUTING: $actionName');
 
         final Map<String, dynamic> payload = actionMap.map((k, v) => MapEntry(
             k, QLDataBinder.resolveAOT(v, ctx, pipelineEnv, contextStore)));
@@ -5765,22 +5808,11 @@ class QuantumVM {
     }
 
     String nodeType = node.type.toString();
-    
-    // Resolve alias early to ensure we hit the correct core
     final aliasDef = getAlias(nodeType);
-    if (aliasDef != null) {
-      nodeType = aliasDef['type'].toString();
-    }
+    if (aliasDef != null) nodeType = aliasDef['type'].toString();
 
     final String nodeBaseType =
         nodeType.contains(':') ? nodeType.split(':').first : nodeType;
-    final String nodeTypeSuffix =
-        nodeType.contains(':') ? nodeType.split(':').last : '';
-    final String nodeSubType =
-        node.props['__subType']?.toString().isNotEmpty == true
-            ? node.props['__subType'].toString()
-            : nodeTypeSuffix;
-
     final String renderType = nodeBaseType;
 
     final QLPlugin? plugin = _plugins[renderType];
@@ -5811,16 +5843,6 @@ class QuantumVM {
       );
     }
 
-    if (plugin == null &&
-        componentBuilder == null &&
-        !nativeTypes.contains(renderType)) {
-      debugPrint(
-          '🚨 [QuantumVM] Unsupported Node Type: ${node.type} at ${node.debugPath}');
-      return kDebugMode
-          ? ErrorWidget('Unknown Plugin: ${node.type}\nPath: ${node.debugPath}')
-          : const SizedBox.shrink();
-    }
-
     Widget content = const SizedBox.shrink();
 
     final String reactiveStyle =
@@ -5830,72 +5852,10 @@ class QuantumVM {
     final String baseStyle = node.style ?? '';
     final String resolvedStyle = '$baseStyle $reactiveStyle'.trim();
 
-    final bool isParentRow = renderType == 'row' || renderType == '->';
-    final bool isParentCol =
-        renderType == 'col' || renderType == 'column' || renderType == 'v';
-
     List<Widget> buildChildren() {
-      return node.children.map((c) {
-        Widget childWidget = renderWidget(ctx, c);
-        final String childReactiveStyle =
-            QLDataBinder.resolveAOT(c.props['style'], ctx, env, store)
-                    ?.toString() ??
-                '';
-        final String childBaseStyle = c.style ?? '';
-        final String childResolvedStyle =
-            '$childBaseStyle $childReactiveStyle'.trim();
-
-        if (childResolvedStyle.isNotEmpty) {
-          final QToken ptr = compileStyle(childResolvedStyle);
-
-          // 🚀 FIX: Hook into the new 4x32 Layout Flags
-          final int lFlags = QEngine.instance.mem.layoutFlags[ptr.id];
-
-          // 🚀 CRITICAL FIX: Replaced hardcoded 14/15 offsets with the safe QF32 constants
-          final bool childHasWFull =
-              QEngine.instance.mem.f32[ptr.fPtr + QF32.width] ==
-                  double.infinity;
-          final bool childHasHFull =
-              QEngine.instance.mem.f32[ptr.fPtr + QF32.height] ==
-                  double.infinity;
-
-          // 🚀 FIX: Use QLayoutFlags.expand
-          bool shouldFlex = (lFlags & QLayoutFlags.expand) != 0;
-          if (isParentRow && childHasWFull) shouldFlex = true;
-          if (isParentCol && childHasHFull) shouldFlex = true;
-
-          final String childType = c.type.toString();
-          final bool childLooksTextual = childType.startsWith('text') ||
-              childType == 'p' ||
-              childType == 'label' ||
-              childType == 'heading' ||
-              childType == 'title';
-
-          if ((c.props['scrollable'] == true || c.props['scroll'] == true) &&
-              childWidget is! Flexible &&
-              childWidget is! QuantumFlexible) {
-            childWidget = QuantumFlexible(
-              fit: FlexFit.loose,
-              child: childWidget,
-            );
-          }
-
-          if (shouldFlex ||
-              (isParentRow &&
-                  !childHasWFull &&
-                  childLooksTextual &&
-                  childWidget is! Flexible &&
-                  childWidget is! QuantumFlexible)) {
-            return QuantumFlexible(
-              fit: (isParentRow && childLooksTextual && !shouldFlex)
-                  ? FlexFit.loose
-                  : FlexFit.tight,
-              child: childWidget,
-            );
-          }
-        }
-        return childWidget;
-      }).toList();
+      return node.children
+          .map((c) => renderWidget(ctx, c))
+          .toList(growable: false);
     }
 
     if (plugin != null) {
@@ -5906,7 +5866,6 @@ class QuantumVM {
             store: store,
             workerPool: workerPool);
       }
-
       if (plugin is QLGraphicsCapability) {
         final drawFn = (plugin as QLGraphicsCapability)
             .buildFragment(QLContext(ctx, node, env, store), node, store);
@@ -5927,11 +5886,9 @@ class QuantumVM {
           (plugin as QLSliverCapability).buildSliver(ctx, node, store)
         ]);
       } else if (plugin is QLLayoutCapability) {
-        final children = buildChildren();
         content = (plugin as QLLayoutCapability)
-            .buildLayout(ctx, node, children, store);
+            .buildLayout(ctx, node, buildChildren(), store);
       }
-
       if (plugin is QLSensorCapability) {
         content = (plugin as QLSensorCapability).buildSensor(
             QLContext(ctx, node, env, store), node, content, store);
@@ -5941,28 +5898,42 @@ class QuantumVM {
     } else {
       final children = buildChildren();
 
-      if (renderType == 'grid') {
+      // 🚀 EXTRACT TAP & TEXT NATIVELY
+      final QLContext nodeCtx = QLContext(ctx, node, env, store);
+      final VoidCallback? tapHandler = nodeCtx.action('onClick') ??
+          nodeCtx.action('onTap') ??
+          nodeCtx.action('action');
+      final String? nodeText =
+          QLDataBinder.resolveAOT(node.props['text'], ctx, env, store)
+              ?.toString();
+
+      if (renderType == 'grid' || renderType == 'masonry') {
         final layout = node.props['layout'] as Map? ?? {};
-        final cols = node.props['gridCols'] ?? layout['cols'] ?? '1fr';
+        final cols = node.props['gridCols'] ?? layout['cols'] ?? '1fr 1fr';
         final rows = node.props['gridRows'] ?? layout['rows'] ?? 'auto';
-        final gap = (node.props['gap'] ?? layout['gap'] ?? 0).toDouble();
+        final dynamic gapProp =
+            QLDataBinder.resolveAOT(node.props['gap'], ctx, env, store) ??
+                layout['gap'];
+        final num gap = gapProp is num
+            ? gapProp
+            : (num.tryParse(gapProp?.toString() ?? '') ?? 0);
 
-        Widget gridWidget = QuantumGrid(
-            columns: cols.toString(),
-            rows: rows.toString(),
-            columnGap: gap,
-            rowGap: gap,
-            children: children);
-
-        if (node.props['scrollable'] == true) {
-          gridWidget = SingleChildScrollView(child: gridWidget);
-        }
-
-        content = QuantumLayoutScope(layoutType: 'grid', child: gridWidget);
-        if (resolvedStyle.isNotEmpty) {
-          content = QLBox(style: resolvedStyle, child: content);
-        }
+        content = Q(
+          '$renderType grid-cols-$cols grid-rows-$rows $resolvedStyle',
+          gap: gap > 0 ? gap : null,
+          text: nodeText,
+          onTap: tapHandler,
+          children: children.isEmpty ? null : children,
+          suppressParentData: true,
+        );
       } else if (renderType == 'grid_item') {
+        Widget inner = children.firstOrNull ?? const SizedBox.shrink();
+        if (tapHandler != null) {
+          inner = GestureDetector(
+              onTap: tapHandler,
+              behavior: HitTestBehavior.opaque,
+              child: inner);
+        }
         content = QuantumItem(
           rowStart: (node.props['rowStart'] as num?)?.toInt() ?? 0,
           rowEnd: (node.props['rowEnd'] as num?)?.toInt() ?? 0,
@@ -5973,7 +5944,7 @@ class QuantumVM {
           zIndex: (node.props['zIndex'] as num?)?.toInt() ?? 0,
           alignSelf: QAlign.stretch,
           justifySelf: QAlign.stretch,
-          child: children.firstOrNull ?? const SizedBox.shrink(),
+          child: inner,
         );
       } else if (renderType == 'empty') {
         content = const SizedBox.shrink();
@@ -5987,102 +5958,50 @@ class QuantumVM {
         if (renderType == 'center')
           combinedStyle = 'flex-center $combinedStyle';
 
-        final String justify = QLDataBinder.resolveAOT(node.props['justify'], ctx, env, store)?.toString() ?? '';
-        final String items = QLDataBinder.resolveAOT(node.props['items'], ctx, env, store)?.toString() ?? '';
-        final dynamic clipProp = QLDataBinder.resolveAOT(node.props['clip'], ctx, env, store);
-        final bool clip = clipProp == true || clipProp == 'true';
-        final dynamic gapProp = QLDataBinder.resolveAOT(node.props['gap'], ctx, env, store);
-        final num gap = gapProp is num ? gapProp : (num.tryParse(gapProp?.toString() ?? '') ?? 0);
+        final String justify =
+            QLDataBinder.resolveAOT(node.props['justify'], ctx, env, store)
+                    ?.toString() ??
+                '';
+        final String items =
+            QLDataBinder.resolveAOT(node.props['items'], ctx, env, store)
+                    ?.toString() ??
+                '';
+        final bool clip =
+            QLDataBinder.resolveAOT(node.props['clip'], ctx, env, store) ==
+                true;
+        final dynamic gapProp =
+            QLDataBinder.resolveAOT(node.props['gap'], ctx, env, store);
+        final num gap = gapProp is num
+            ? gapProp
+            : (num.tryParse(gapProp?.toString() ?? '') ?? 0);
 
-        if (justify.isNotEmpty) combinedStyle = '$combinedStyle justify-$justify';
+        if (justify.isNotEmpty)
+          combinedStyle = '$combinedStyle justify-$justify';
         if (items.isNotEmpty) combinedStyle = '$combinedStyle items-$items';
         if (clip) combinedStyle = '$combinedStyle overflow-hidden';
-        if (gap > 0) combinedStyle = '$combinedStyle gap-${gap.toInt()}';
 
-        content =
-            Q(combinedStyle, children: children, suppressParentData: true);
+        content = Q(combinedStyle,
+            text: nodeText,
+            gap: gap > 0 ? gap : null,
+            onTap: tapHandler,
+            children: children.isEmpty ? null : children,
+            suppressParentData: true);
       }
     }
 
-    if (node.props['scrollable'] == true) {
-      final Axis scrollDirection = (renderType == 'row' || renderType == '->')
-          ? Axis.horizontal
-          : Axis.vertical;
-      final Widget scrollChild = content;
-
-      content = QuantumFlexible(
-        fit: FlexFit.loose,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final QuantumScrollScope? existingScrollScope =
-                QuantumScrollScope.of(context);
-            final bool sameAxisScrollViewport =
-                existingScrollScope?.axis == scrollDirection;
-            final bool boundedMain = scrollDirection == Axis.vertical
-                ? constraints.maxHeight.isFinite
-                : constraints.maxWidth.isFinite;
-            final BoxConstraints viewportConstraints =
-                scrollDirection == Axis.vertical
-                    ? BoxConstraints(
-                        minHeight: boundedMain ? constraints.maxHeight : 0.0,
-                        maxHeight: boundedMain
-                            ? constraints.maxHeight
-                            : MediaQuery.sizeOf(context).height,
-                      )
-                    : BoxConstraints(
-                        minWidth: boundedMain ? constraints.maxWidth : 0.0,
-                        maxWidth: boundedMain
-                            ? constraints.maxWidth
-                            : MediaQuery.sizeOf(context).width,
-                      );
-            final Widget boundedChild = ConstrainedBox(
-              constraints: viewportConstraints,
-              child: scrollChild,
-            );
-            final Widget scrollShell = ClipRect(
-              child: SingleChildScrollView(
-                scrollDirection: scrollDirection,
-                primary: false,
-                physics: const BouncingScrollPhysics(),
-                child: boundedChild,
-              ),
-            );
-            if (sameAxisScrollViewport) {
-              return scrollShell;
-            }
-            return QuantumScrollScope(
-              axis: scrollDirection,
-              child: scrollShell,
-            );
-          },
-        ),
-      );
-    }
-
-    if ((plugin != null || componentBuilder != null) &&
-        resolvedStyle.isNotEmpty) {
-      content =
-          QLBox(style: resolvedStyle, child: content, suppressParentData: true);
-    }
-
-    if (renderType != 'grid_item' &&
-        (node.props.containsKey('colSpan') ||
-            node.props.containsKey('rowSpan') ||
-            node.props.containsKey('colStart') ||
-            node.props.containsKey('rowStart') ||
-            node.props.containsKey('zIndex'))) {
-      content = QuantumItem(
-        rowStart: (node.props['rowStart'] as num?)?.toInt() ?? 0,
-        rowEnd: (node.props['rowEnd'] as num?)?.toInt() ?? 0,
-        colStart: (node.props['colStart'] as num?)?.toInt() ?? 0,
-        colEnd: (node.props['colEnd'] as num?)?.toInt() ?? 0,
-        rowSpan: (node.props['rowSpan'] as num?)?.toInt() ?? 1,
-        colSpan: (node.props['colSpan'] as num?)?.toInt() ?? 1,
-        zIndex: (node.props['zIndex'] as num?)?.toInt() ?? 0,
-        alignSelf: QAlign.stretch,
-        justifySelf: QAlign.stretch,
-        child: content,
-      );
+    // 🚀 UNIVERSAL PLUGIN TAP FALLBACK
+    if (plugin != null && renderType != 'action') {
+      final QLContext nodeCtx = QLContext(ctx, node, env, store);
+      final VoidCallback? tapHandler = nodeCtx.action('onClick') ??
+          nodeCtx.action('onTap') ??
+          nodeCtx.action('action');
+      if (tapHandler != null) {
+        content = GestureDetector(
+          onTap: tapHandler,
+          behavior: HitTestBehavior.opaque,
+          child: content,
+        );
+      }
     }
 
     final String? nodeId = node.props['id'] ?? node.props['key'];
@@ -6128,7 +6047,13 @@ class _QuantumVMRootState extends State<QuantumVMRoot>
   }
 
   @override
-  Widget build(BuildContext context) => widget.child;
+  Widget build(BuildContext context) {
+    // 🚀 FOREVER FIX: One AnimatedBuilder for the entire app!
+    return AnimatedBuilder(
+      animation: QEngine.instance.tick,
+      builder: (context, child) => widget.child,
+    );
+  }
 }
 
 class _QLHeadlessComputeNode extends StatefulWidget {
@@ -6250,13 +6175,21 @@ class QLContext {
 
   VoidCallback? action(String eventKey, {Map<String, dynamic>? localPayload}) {
     List<dynamic>? actions = node.props[eventKey] as List<dynamic>?;
+
+    // 🚀 FALLBACK LOGIC: If looking for onClick, also check onTap and action.
     if (actions == null) {
       final eventsMap = node.props['events'];
       if (eventsMap is Map) actions = eventsMap[eventKey] as List<dynamic>?;
     }
+
+    if (actions == null && eventKey == 'onClick') {
+      actions = node.props['onTap'] as List<dynamic>? ??
+          node.props['action'] as List<dynamic>?;
+    }
+
     if (actions == null) return null;
 
-    return () => QuantumVM.instance.triggerActions(actions, flutterContext,
+    return () => QuantumVM.instance.triggerActions(actions!, flutterContext,
         env: {...env, ...?localPayload});
   }
 
@@ -6660,6 +6593,49 @@ extension QuantumVMMicroPlugin on QuantumVM {
       );
 }
 
+// ADD THIS HELPER JUST ABOVE THE PLUGINS IF NOT ALREADY THERE
+// 🚀 BULLETPROOF STATIC CHECKER
+bool _nodeHasTokens(dynamic target) {
+  if (target == null) return false;
+  if (target is String) return target.contains('{{');
+  if (target is Map) {
+    if (target['_isTokenized'] == true) return true;
+    if (target.containsKey(r'$bind') || target.containsKey('bind')) return true;
+    for (final v in target.values) {
+      if (_nodeHasTokens(v)) return true;
+    }
+  }
+  if (target is List) {
+    for (final v in target) {
+      if (_nodeHasTokens(v)) return true;
+    }
+  }
+  return false;
+}
+
+// 🚀 THE ULTIMATE STATIC CHECKER
+bool _nodeIsReactive(dynamic target) {
+  if (target == null) return false;
+  if (target is String) return target.contains('{{');
+  if (target is Map) {
+    if (target['_isTokenized'] == true) return true;
+    if (target.containsKey(r'$bind') ||
+        target.containsKey('bind') ||
+        target.containsKey(r'$if') ||
+        target.containsKey(r'$repeat')) return true;
+    for (final v in target.values) {
+      if (_nodeIsReactive(v)) return true;
+    }
+  }
+  if (target is List) {
+    for (final v in target) {
+      if (_nodeIsReactive(v)) return true;
+    }
+  }
+  return false;
+}
+
+// Inside your MicroPlugins (quantum_vm.dart):
 class _MicroWidgetPlugin extends QLPlugin implements QLWidgetCapability {
   @override
   final String type;
@@ -6667,11 +6643,21 @@ class _MicroWidgetPlugin extends QLPlugin implements QLWidgetCapability {
   final Map<String, dynamic> defaultProps;
   final Widget Function(QLContext ctx) builder;
   _MicroWidgetPlugin(this.type, this.builder, this.defaultProps);
+
   @override
-  Widget buildWidget(BuildContext ctx, QLBlueprint node, QLDataStore store) =>
-      _QLAutoReactiveNode(node, builder, isSliver: false);
+  Widget buildWidget(BuildContext ctx, QLBlueprint node, QLDataStore store) {
+    // 🚀 O(1) MEMOIZED CHECK: Kills recursive AST crawling
+    if (!QLAstInspector.isReactive(node.props) &&
+        !QLAstInspector.isReactive(node.style) &&
+        !QLAstInspector.isReactive(node.type)) {
+      return builder(QLContext(
+          ctx, node, QLDataScope.ofNode(ctx)?.localData ?? const {}, store));
+    }
+    return _QLAutoReactiveNode(node, builder, isSliver: false);
+  }
 }
 
+// Apply the exact same _nodeIsReactive check to _MicroSliverPlugin and _MicroLayoutPlugin!
 class _MicroSliverPlugin extends QLPlugin implements QLSliverCapability {
   @override
   final String type;
@@ -6679,9 +6665,15 @@ class _MicroSliverPlugin extends QLPlugin implements QLSliverCapability {
   final Map<String, dynamic> defaultProps;
   final Widget Function(QLContext ctx) builder;
   _MicroSliverPlugin(this.type, this.builder, this.defaultProps);
+
   @override
-  Widget buildSliver(BuildContext ctx, QLBlueprint node, QLDataStore store) =>
-      _QLAutoReactiveNode(node, builder, isSliver: true);
+  Widget buildSliver(BuildContext ctx, QLBlueprint node, QLDataStore store) {
+    if (!_nodeHasTokens(node.props) && !_nodeHasTokens(node.style)) {
+      return builder(QLContext(
+          ctx, node, QLDataScope.ofNode(ctx)?.localData ?? const {}, store));
+    }
+    return _QLAutoReactiveNode(node, builder, isSliver: true);
+  }
 }
 
 class _MicroLayoutPlugin extends QLPlugin implements QLLayoutCapability {
@@ -6691,12 +6683,14 @@ class _MicroLayoutPlugin extends QLPlugin implements QLLayoutCapability {
   final Map<String, dynamic> defaultProps;
   final Widget Function(QLContext ctx, List<Widget> children) builder;
   _MicroLayoutPlugin(this.type, this.builder, this.defaultProps);
+
   @override
   Widget buildLayout(BuildContext ctx, QLBlueprint node, List<Widget> children,
       QLDataStore store) {
-    final Map<String, dynamic> env =
-        QLDataScope.ofNode(ctx)?.localData ?? const {};
-    return builder(QLContext(ctx, node, env, store), children);
+    return builder(
+        QLContext(
+            ctx, node, QLDataScope.ofNode(ctx)?.localData ?? const {}, store),
+        children);
   }
 }
 

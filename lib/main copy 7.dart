@@ -1,8 +1,10 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'quantum.dart';
 
 void main() {
+  // QuantumVM.instance.initialize();
   bootQuantumApp(
     QuantumAppConfig(
       appName: 'Quantum Omega Kitchen Sink',
@@ -31,7 +33,9 @@ void main() {
             'nav.push': (env) =>
                 LambdaActionPlugin((payload, store, ctx) async {
                   final path = payload['path']?.toString();
-                  if (path != null) env.router.pushPath(path);
+                  if (path != null && path.isNotEmpty) {
+                    await env.router.pushPath(path);
+                  }
                   return null;
                 }),
             'nav.pop': (env) => LambdaActionPlugin((payload, store, ctx) async {
@@ -71,6 +75,13 @@ void main() {
                 path: '/kinematics', schemaBuilder: _kinematicsRoute),
             QLRouteBuilder.localJson(
                 path: '/theming', schemaBuilder: _themingRoute),
+            // ── Vercel Render API bridge — DO NOT REMOVE ─────────────────────
+            // POST /api/render sends Puppeteer here to capture an offscreen PNG.
+            QLRoute(
+              path: '/export',
+              builder: (context, info) =>
+                  QuantumExportBridgePage(routeInfo: info),
+            ),
           ],
         ),
       ],
@@ -84,12 +95,13 @@ void main() {
 
 Map<String, dynamic> _homeRoute(QLRouteInfo info) => {
       'type': 'col',
-      'style': 'w-full h-full bg-slate-50',
+      'style':
+          'w-full bg-slate-50', // 🚀 Removed h-full to let content flow naturally
       'props': {'scrollable': true},
       'children': [
         {
           'type': 'col',
-          'style': 'p-24 gap-16',
+          'style': 'p-24 gap-16 w-full', // 🚀 Added w-full
           'children': [
             {
               'type': 'text:h1',
@@ -105,6 +117,7 @@ Map<String, dynamic> _homeRoute(QLRouteInfo info) => {
             {
               'type': 'grid',
               'props': {'gridCols': '1fr 1fr', 'gap': 12},
+              'style': '', // 🚀 Explicitly force grid to take full width
               'children': [
                 _navCard('Flex & Flow', '/flex', 'Rows, Cols, Wrap', 'blue'),
                 _navCard('Grid & Masonry', '/grid', 'Hardware Grid, Auto-Fit',
@@ -129,7 +142,6 @@ Map<String, dynamic> _homeRoute(QLRouteInfo info) => {
         }
       ]
     };
-
 // ════════════════════════════════════════════════════════════════════════════
 // 2. KINEMATICS & HARDWARE ROUTE
 // ════════════════════════════════════════════════════════════════════════════
@@ -531,9 +543,8 @@ Map<String, dynamic> _txt(String t, {String? style}) => {
 Map<String, dynamic> _navCard(
         String title, String path, String subtitle, String color) =>
     {
-      'type': 'action:button',
+      'type': 'surface', // 🚀 CHANGED from 'action:button' to 'surface'
       'props': {
-        'text': title,
         'fill': 'surface',
         'depth': 'raised',
         'scale': 'fluid',
@@ -541,6 +552,7 @@ Map<String, dynamic> _navCard(
           {'action': 'nav.push', 'path': path}
         ]
       },
+
       'style':
           'h-100 items-start px-20 py-16 gap-4 border-t-4 border-$color-500',
       'children': [
@@ -555,7 +567,6 @@ Map<String, dynamic> _navCard(
         },
       ]
     };
-
 Map<String, dynamic> _btn(String text, String color,
         {String? action, Map<String, dynamic>? payload}) =>
     {
@@ -901,3 +912,520 @@ Map<String, dynamic> _formsRoute(QLRouteInfo info) =>
         ]
       })
     ]);
+
+// ════════════════════════════════════════════════════════════════════════════
+// QUANTUM WIDGET IMAGE EXPORTER — USAGE EXAMPLES
+// ════════════════════════════════════════════════════════════════════════════
+//
+// Every class below is a self-contained Flutter widget demonstrating a
+// different pattern for QuantumWidgetImageExporter.
+//
+// Pre-requisite: the widget must live inside a MaterialApp (or WidgetsApp)
+// so that an Overlay ancestor is present. Any screen in your Quantum app
+// already satisfies this.
+//
+// Import (quantum.dart re-exports everything):
+//   import 'quantum.dart';
+//
+// ════════════════════════════════════════════════════════════════════════════
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EXAMPLE 1 — Minimal one-liner export
+// ─────────────────────────────────────────────────────────────────────────────
+/// Simplest possible usage: compile a schema and display the captured PNG.
+class ExampleSimpleExport extends StatefulWidget {
+  const ExampleSimpleExport({super.key});
+  @override
+  State<ExampleSimpleExport> createState() => _ExampleSimpleExportState();
+}
+
+class _ExampleSimpleExportState extends State<ExampleSimpleExport> {
+  // Any valid QuantumVM JSON schema — replace with your own.
+  static const Map<String, dynamic> _schema = {
+    'type': 'col',
+    'style': 'p-24 gap-12 bg-white rounded-xl shadow-lg',
+    'children': [
+      {
+        'type': 'text:h2',
+        'props': {'text': '🚀 Quantum Export'},
+      },
+      {
+        'type': 'text:p',
+        'style': 'text-slate-500',
+        'props': {'text': 'This was rendered offscreen and captured as PNG.'},
+      },
+      {
+        'type': 'row',
+        'style': 'gap-8',
+        'children': [
+          {'type': 'box', 'style': 'w-40 h-40 rounded-full bg-indigo-500'},
+          {'type': 'box', 'style': 'w-40 h-40 rounded-full bg-pink-500'},
+          {'type': 'box', 'style': 'w-40 h-40 rounded-full bg-amber-400'},
+        ],
+      },
+    ],
+  };
+
+  QuantumExportResult? _result;
+  bool _loading = false;
+  String? _error;
+
+  Future<void> _runExport() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      // ── THE WHOLE API IS ONE CALL ──────────────────────────────────────────
+      final result = await QuantumWidgetImageExporter.export(
+        json: _schema,
+        context: context,
+        // All config fields are optional — these are the defaults:
+        config: const QuantumExportConfig(
+          width: 390, // logical dp width of the offscreen viewport
+          pixelRatio: 3.0, // → output image is 1170px wide
+          background: Colors.white,
+        ),
+      );
+      // ──────────────────────────────────────────────────────────────────────
+      setState(() => _result = result);
+      debugPrint('✅ Export done: $result');
+    } catch (e) {
+      setState(() => _error = e.toString());
+    } finally {
+      setState(() => _loading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Example 1 — Simple Export')),
+      body: Column(
+        children: [
+          if (_loading) const LinearProgressIndicator(),
+          if (_error != null)
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text('Error: $_error',
+                  style: const TextStyle(color: Colors.red)),
+            ),
+          if (_result != null)
+            Expanded(
+              child: Column(
+                children: [
+                  Text(
+                    '${_result!.pixelWidth}×${_result!.pixelHeight}px  '
+                    '· ${(_result!.pngBytes.length / 1024).toStringAsFixed(1)} KB  '
+                    '· ${_result!.elapsed.inMilliseconds}ms',
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  Expanded(
+                    child: InteractiveViewer(
+                      child: Image.memory(_result!.pngBytes),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _loading ? null : _runExport,
+        label: const Text('Export PNG'),
+        icon: const Icon(Icons.camera_alt),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EXAMPLE 2 — Inject store data so {{binding}} tokens resolve
+// ─────────────────────────────────────────────────────────────────────────────
+class ExampleExportWithData extends StatelessWidget {
+  const ExampleExportWithData({super.key});
+
+  static const Map<String, dynamic> _productCardSchema = {
+    'type': 'col',
+    'style': 'w-full bg-white rounded-2xl shadow-xl overflow-hidden',
+    'children': [
+      {
+        'type': 'box',
+        'style': 'w-full h-200 bg-indigo-600',
+        'children': [
+          {
+            'type': 'text:h1',
+            'style': 'text-white text-center pt-80',
+            'props': {'text': '{{product.name}}'},
+          },
+        ],
+      },
+      {
+        'type': 'col',
+        'style': 'p-20 gap-8',
+        'children': [
+          {
+            'type': 'text:p',
+            'style': 'text-slate-600',
+            'props': {'text': '{{product.description}}'},
+          },
+          {
+            'type': 'text:h3',
+            'style': 'text-indigo-600',
+            'props': {'text': r'${{product.price | currency}}'},
+          },
+        ],
+      },
+    ],
+  };
+
+  Future<void> _exportProductCard(BuildContext ctx) async {
+    final result = await QuantumWidgetImageExporter.export(
+      json: _productCardSchema,
+      context: ctx,
+      config: QuantumExportConfig(
+        width: 390,
+        height: 480,
+        pixelRatio: 2.0,
+        background: Colors.white,
+        // storeData seeds the ephemeral QLDataStore so {{ }} tokens resolve.
+        storeData: {
+          'product': {
+            'name': 'Quantum Pro X',
+            'description': 'The most advanced SDUI engine on the planet.',
+            'price': 99.99,
+          },
+        },
+      ),
+    );
+    debugPrint('Product card: $result');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: () => _exportProductCard(context),
+      icon: const Icon(Icons.card_membership),
+      label: const Text('Export Product Card with Data'),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EXAMPLE 3 — Fixed-size 1200×630 Open Graph / social preview image
+// ─────────────────────────────────────────────────────────────────────────────
+class ExampleOgImageExport extends StatelessWidget {
+  const ExampleOgImageExport({super.key});
+
+  static const Map<String, dynamic> _ogSchema = {
+    'type': 'stack',
+    'style': 'w-full h-full',
+    'children': [
+      {
+        'type': 'box',
+        'style':
+            'absolute inset-0 bg-gradient-to-r from-indigo-900 to-purple-800',
+      },
+      {
+        'type': 'col',
+        'style': 'absolute inset-0 justify-center items-center gap-16 p-48',
+        'children': [
+          {
+            'type': 'text:h1',
+            'style': 'text-white text-center text-5xl font-bold',
+            'props': {'text': '⚡ Quantum SDUI'},
+          },
+          {
+            'type': 'text:p',
+            'style': 'text-indigo-200 text-center text-2xl',
+            'props': {
+              'text': 'Server-Driven UI that renders at the speed of thought.',
+            },
+          },
+        ],
+      },
+    ],
+  };
+
+  Future<void> _exportOgImage(BuildContext ctx) async {
+    final result = await QuantumWidgetImageExporter.export(
+      json: _ogSchema,
+      context: ctx,
+      config: const QuantumExportConfig(
+        width: 1200,
+        height: 630,
+        pixelRatio: 1.0, // Already 1200px wide — 1× is plenty
+        background: Colors.black,
+        timeout: Duration(seconds: 20),
+      ),
+    );
+    debugPrint('OG image: ${result.pixelWidth}×${result.pixelHeight}px '
+        '${(result.pngBytes.length / 1024).toStringAsFixed(0)} KB');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: () => _exportOgImage(context),
+      icon: const Icon(Icons.image),
+      label: const Text('Export 1200×630 OG Image'),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EXAMPLE 4 — Batch export: multiple schemas in a single call
+// ─────────────────────────────────────────────────────────────────────────────
+class ExampleBatchExport extends StatelessWidget {
+  const ExampleBatchExport({super.key});
+
+  static final List<Map<String, dynamic>> _schemas = [
+    {
+      'type': 'col',
+      'style': 'p-24 bg-red-100 items-center',
+      'children': [
+        {
+          'type': 'text:h2',
+          'props': {'text': 'Card A'}
+        },
+      ],
+    },
+    {
+      'type': 'col',
+      'style': 'p-24 bg-green-100 items-center',
+      'children': [
+        {
+          'type': 'text:h2',
+          'props': {'text': 'Card B'}
+        },
+      ],
+    },
+    {
+      'type': 'col',
+      'style': 'p-24 bg-blue-100 items-center',
+      'children': [
+        {
+          'type': 'text:h2',
+          'props': {'text': 'Card C'}
+        },
+      ],
+    },
+  ];
+
+  Future<void> _runBatch(BuildContext ctx) async {
+    // exportBatch runs sequentially to avoid raster thread overload.
+    final results = await QuantumWidgetImageExporter.exportBatch(
+      schemas: _schemas,
+      context: ctx,
+      config: const QuantumExportConfig(width: 390, height: 200),
+    );
+    for (final r in results) debugPrint('  → $r');
+    debugPrint('Batch done: ${results.length} images');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: () => _runBatch(context),
+      icon: const Icon(Icons.burst_mode),
+      label: const Text('Batch Export 3 Cards'),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EXAMPLE 5 — exportAsWidget: skip the Uint8List and get an Image directly
+// ─────────────────────────────────────────────────────────────────────────────
+class ExampleExportAsWidget extends StatefulWidget {
+  const ExampleExportAsWidget({super.key});
+  @override
+  State<ExampleExportAsWidget> createState() => _ExampleExportAsWidgetState();
+}
+
+class _ExampleExportAsWidgetState extends State<ExampleExportAsWidget> {
+  static const Map<String, dynamic> _badgeSchema = {
+    'type': 'col',
+    'style': 'items-center gap-8 p-20 bg-amber-400 rounded-full',
+    'children': [
+      {
+        'type': 'text',
+        'style': 'text-4xl',
+        'props': {'text': '🏆'}
+      },
+      {
+        'type': 'text:label',
+        'style': 'text-white font-bold',
+        'props': {'text': 'Champion'},
+      },
+    ],
+  };
+
+  Image? _image;
+  bool _loading = false;
+
+  Future<void> _export() async {
+    setState(() => _loading = true);
+    // One call: compile + capture + return a ready-to-use Flutter Image widget.
+    final img = await QuantumWidgetImageExporter.exportAsWidget(
+      json: _badgeSchema,
+      context: context,
+      config: const QuantumExportConfig(
+        width: 160,
+        height: 160,
+        pixelRatio: 4.0,
+      ),
+      fit: BoxFit.contain,
+    );
+    setState(() {
+      _image = img;
+      _loading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (_loading) const CircularProgressIndicator(),
+        if (_image != null) SizedBox(width: 160, height: 160, child: _image!),
+        ElevatedButton(
+          onPressed: _loading ? null : _export,
+          child: const Text('Render Badge → Flutter Image widget'),
+        ),
+      ],
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EXAMPLE 6 — Live playground: type JSON → see the captured PNG
+// ─────────────────────────────────────────────────────────────────────────────
+class QuantumExporterPlayground extends StatefulWidget {
+  const QuantumExporterPlayground({super.key});
+  @override
+  State<QuantumExporterPlayground> createState() =>
+      _QuantumExporterPlaygroundState();
+}
+
+class _QuantumExporterPlaygroundState extends State<QuantumExporterPlayground> {
+  static const _defaultJson = '{\n'
+      '  "type": "col",\n'
+      '  "style": "p-24 gap-12 bg-white rounded-2xl shadow-xl",\n'
+      '  "children": [\n'
+      '    { "type": "text:h2", "props": { "text": "Hello from SDUI!" } },\n'
+      '    { "type": "text:p",  "props": { "text": "Edit me and press Export." } },\n'
+      '    { "type": "box", "style": "w-full h-4 bg-indigo-500 rounded" }\n'
+      '  ]\n'
+      '}';
+
+  late final TextEditingController _ctrl =
+      TextEditingController(text: _defaultJson);
+  QuantumExportResult? _result;
+  bool _loading = false;
+  String? _error;
+
+  Future<void> _export() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      final Map<String, dynamic> parsed =
+          Map<String, dynamic>.from(jsonDecode(_ctrl.text) as Map);
+
+      final result = await QuantumWidgetImageExporter.export(
+        json: parsed,
+        context: context,
+        config: const QuantumExportConfig(
+          width: 390,
+          pixelRatio: 2.0,
+          background: Colors.white,
+        ),
+      );
+      setState(() => _result = result);
+    } catch (e) {
+      setState(() => _error = e.toString());
+    } finally {
+      setState(() => _loading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Quantum Exporter Playground')),
+      body: Row(
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: TextField(
+                      controller: _ctrl,
+                      maxLines: null,
+                      expands: true,
+                      style: const TextStyle(
+                          fontFamily: 'monospace', fontSize: 12),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'SDUI JSON',
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: ElevatedButton.icon(
+                    onPressed: _loading ? null : _export,
+                    icon: _loading
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.play_arrow),
+                    label: const Text('Export →'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const VerticalDivider(width: 1),
+          Expanded(
+            child: Center(
+              child: _error != null
+                  ? Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        'Error:\n$_error',
+                        style: const TextStyle(
+                            color: Colors.red, fontFamily: 'monospace'),
+                      ),
+                    )
+                  : _result == null
+                      ? const Text('Press Export to render')
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '${_result!.pixelWidth}×${_result!.pixelHeight}  '
+                              '${(_result!.pngBytes.length / 1024).toStringAsFixed(1)} KB  '
+                              '${_result!.elapsed.inMilliseconds}ms',
+                              style: const TextStyle(fontSize: 11),
+                            ),
+                            const SizedBox(height: 8),
+                            InteractiveViewer(
+                              child: Image.memory(_result!.pngBytes),
+                            ),
+                          ],
+                        ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

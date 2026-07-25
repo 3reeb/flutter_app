@@ -49,9 +49,12 @@ class _PendingTemplateDef {
 abstract final class QTemplateEngine {
   /// Fully resolved, cached template definitions (keyed by alias.hashCode).
   static final Map<int, TemplateDef> _registry = <int, TemplateDef>{};
+
   /// Raw definitions waiting for lazy inheritance resolution.
-  static final Map<int, _PendingTemplateDef> _pending = <int, _PendingTemplateDef>{};
+  static final Map<int, _PendingTemplateDef> _pending =
+      <int, _PendingTemplateDef>{};
   static final Map<int, String> _aliasNames = <int, String>{};
+
   /// Guards against circular inheritance chains during resolution.
   static final Set<int> _resolving = <int>{};
   static bool _frozen = false;
@@ -89,10 +92,10 @@ abstract final class QTemplateEngine {
 
     try {
       // Recursively resolve base first so the full chain is ready.
-      final TemplateDef? base =
-          (pending.extendsAlias != null && pending.extendsAlias!.trim().isNotEmpty)
-              ? getDef(pending.extendsAlias!.trim())
-              : null;
+      final TemplateDef? base = (pending.extendsAlias != null &&
+              pending.extendsAlias!.trim().isNotEmpty)
+          ? getDef(pending.extendsAlias!.trim())
+          : null;
 
       final Map<String, dynamic> mergedDefaultSlots = pending.mergeWithBase
           ? _deepMergeMap(base?.defaultSlots, pending.defaultSlots)
@@ -110,16 +113,18 @@ abstract final class QTemplateEngine {
           ? _deepMergeMap(base?.hero, pending.hero)
           : Map<String, dynamic>.from(pending.hero);
 
-      final Map<String, Map<String, dynamic>> mergedVariants = pending.mergeWithBase
-          ? _deepMergeVariantMap(base?.variants, pending.variants)
-          : _cloneVariantMap(pending.variants);
+      final Map<String, Map<String, dynamic>> mergedVariants =
+          pending.mergeWithBase
+              ? _deepMergeVariantMap(base?.variants, pending.variants)
+              : _cloneVariantMap(pending.variants);
 
       final Map<String, dynamic> mergedInitialState = pending.mergeWithBase
           ? _deepMergeMap(base?.initialState, pending.initialState)
           : Map<String, dynamic>.from(pending.initialState);
 
       final QNativeTemplateBuilder? resolvedNativeBuilder =
-          pending.nativeBuilder ?? (pending.mergeWithBase ? base?.nativeBuilder : null);
+          pending.nativeBuilder ??
+              (pending.mergeWithBase ? base?.nativeBuilder : null);
 
       Int32List binaryLayout;
       Map<int, String> hashToSlot;
@@ -599,15 +604,14 @@ class QTemplateContext {
   }) {
     final resolvedName = resolveSlotName(name) ?? name;
     if (!checkGuard(resolvedName)) return const SizedBox.shrink();
-
     if (nativeWidgetOverride != null) {
       final Map<String, dynamic> tAst = {};
       _mergeAst(tAst, def.transforms[resolvedName]);
       if (tAst['style'] != null) {
-        return QLBox(
-          style: tAst['style'],
+        return Q(
+          tAst['style'].toString(),
           suppressParentData: true,
-          child: nativeWidgetOverride,
+          children: [nativeWidgetOverride],
         );
       }
       return nativeWidgetOverride;

@@ -28,7 +28,6 @@ import 'dart:math' as math;
 // ────────────────────────────────────────────────────────────────────────────
 // Instead of every widget checking for styles, transforms, and gestures,
 // this compiler-inlineable pipeline flattens the tree dynamically.
-
 extension QLPipeline on Widget {
   @pragma('vm:prefer-inline')
   Widget apply({
@@ -42,162 +41,67 @@ extension QLPipeline on Widget {
   }) {
     Widget tree = this;
 
-    // 1. Geometry Clipping
     if (clip != Clip.none) {
       tree = ClipRect(clipBehavior: clip, child: tree);
     }
 
-    // 2. Styling & Spatial Transform (Zero-allocation via QLBox/Q routing)
-    if (style != null || transform3D != null || opacity != null) {
-      tree = QLBox(
-        style: style,
-        transform3D: transform3D,
-        opacity: opacity,
-        child: tree,
-      );
-    }
-
-    // 3. Multi-Modal Interaction & Semantic Flattening
-    if (onTap != null || semantics != null || interactiveScale) {
-      tree = Semantics(
-        label: semantics,
-        button: onTap != null,
-        child: onTap != null || interactiveScale
-            ? QLSensor(
-                onTap: onTap,
-                scaleOnHover: interactiveScale,
-                scaleOnTap: interactiveScale,
-                child: tree,
-              )
-            : tree,
-      );
-    }
-
-    return tree;
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────── §2 ─
-//  UNIVERSAL PRIMITIVE WRAPPER (QLBox)
-// ────────────────────────────────────────────────────────────────────────────
-// Bridges `Q` (Theme Engine Strings) and `QLNode` (Reactive Hardware Matrices).
-
-class QLBox extends StatelessWidget {
-  final String? style;
-  final QLSignal<Matrix4>? transform3D;
-  final QLSignal<double>? opacity;
-  final QLSignal<double>? width;
-  final QLSignal<double>? height;
-  final QLSignal<Color>? bg;
-  final QLSignal<double>? radius;
-  final Widget? child;
-  final bool suppressParentData; // 🚀 ADDED
-
-  const QLBox({
-    super.key,
-    this.style,
-    this.transform3D,
-    this.opacity,
-    this.width,
-    this.height,
-    this.bg,
-    this.radius,
-    this.child,
-    this.suppressParentData = false, // 🚀 ADDED
-  });
-
-  /// Factory for semantic clarity when applying theme engine strings
-  const factory QLBox.styled(
-    String style, {
-    Key? key,
-    QLSignal<Matrix4>? transform3D,
-    QLSignal<double>? opacity,
-    Widget? child,
-  }) = _QLBoxStyled;
-
-  Widget build(BuildContext context) {
-    Widget tree = child ?? const SizedBox.shrink();
-
-    if (transform3D != null ||
+    // 🚀 THE FIX: Let Q handle the tap and scale completely. Do not double-wrap.
+    if (style != null ||
+        transform3D != null ||
         opacity != null ||
-        width != null ||
-        height != null ||
-        bg != null ||
-        radius != null) {
-      // If pure layout/color signals exist, we map them directly to QLNode
-      QLSignal<BoxDecoration>? decorationSignal;
-      if (bg != null || radius != null) {
-        decorationSignal = QLSignal<BoxDecoration>(
-          BoxDecoration(
-            color: bg?.value,
-            borderRadius:
-                radius != null ? BorderRadius.circular(radius!.value) : null,
-          ),
-        );
+        onTap != null ||
+        interactiveScale) {
+      // If interactiveScale is requested imperatively, inject it into the style string!
+      final String mergedStyle =
+          '${style ?? ''} ${interactiveScale ? 'interactive' : ''}'.trim();
 
-        // Smart Listener Binding: Only update the complex object if the raw primitives change
-        void syncDecoration() {
-          decorationSignal!.value = BoxDecoration(
-            color: bg?.value,
-            borderRadius:
-                radius != null ? BorderRadius.circular(radius!.value) : null,
-          );
-        }
-
-        bg?.addListener(syncDecoration);
-        radius?.addListener(syncDecoration);
-      }
-
-      tree = QLNode(
-        config: QLNodeConfig(
-            transform: transform3D,
-            opacity: opacity,
-            width: width,
-            height: height,
-            decoration: null), // Update based on your decoration setup
-        child: tree,
+      tree = Q(
+        mergedStyle,
+        transform3D: transform3D,
+        opacitySignal: opacity,
+        onTap: onTap,
+        suppressParentData: true,
+        children: [tree],
       );
     }
-    if (style != null && style!.isNotEmpty) {
-      // 🚀 THE FIX: Pass `suppressParentData` through dynamically so Q can expand safely!
-      tree =
-          Q(style!, children: [tree], suppressParentData: suppressParentData);
+
+    if (semantics != null) {
+      tree = Semantics(label: semantics, button: onTap != null, child: tree);
     }
 
     return tree;
   }
 }
 
-class _QLBoxStyled extends QLBox {
-  const _QLBoxStyled(
-    String style, {
-    super.key,
-    super.transform3D,
-    super.opacity,
-    super.child,
-  }) : super(style: style);
-}
-
-// ─────────────────────────────────────────────────────────────────────── §3 ─
-//  UNIVERSAL SENSOR (Zero-GC Multi-Touch, Physics, & Haptics)
+// ───────────────────────────────────────────────────────────────────────
+//  UNIVERSAL SENSOR (Zero-GC Multi-Touch, 3D Tilt, & Physics)
 // ────────────────────────────────────────────────────────────────────────────
-
 class QLSensor extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
-  final void Function(QLPointerEvent)? onPointer;
+  final void Function(Offset)? onContextMenu;
+  final ValueChanged<bool>? onHoverChange; // 🚀 ADD THIS
+
+  // Interaction Flags
   final bool scaleOnHover;
   final bool scaleOnTap;
+  final bool enable3DTilt;
+  final bool enableMagneticPull;
+  final double tiltIntensity;
 
   const QLSensor({
     super.key,
     required this.child,
     this.onTap,
     this.onLongPress,
-    this.onPointer,
+    this.onContextMenu,
+    this.onHoverChange, // 🚀 ADD THIS
     this.scaleOnHover = false,
     this.scaleOnTap = false,
+    this.enable3DTilt = false,
+    this.enableMagneticPull = false,
+    this.tiltIntensity = 1.0,
   });
 
   @override
@@ -206,84 +110,119 @@ class QLSensor extends StatefulWidget {
 
 class _QLSensorState extends State<QLSensor>
     with SingleTickerProviderStateMixin {
-  late final QLIntegratorRK4 _rk4;
-  late final Ticker _ticker;
-  late final QLSignal<Matrix4> _transform;
-
-  double _targetScale = 1.0;
+  late final QLBehaviorAnimator _anim;
   bool _isHovered = false;
-  bool _isPressed = false;
-  int _lastTickMs = 0;
 
   @override
   void initState() {
     super.initState();
-    _transform = QLSignal<Matrix4>(Matrix4.identity());
-
-    if (widget.scaleOnHover || widget.scaleOnTap) {
-      _rk4 = QLIntegratorRK4(2); // 1D System: [Scale Pos, Scale Vel]
-      _rk4.state[0] = 1.0;
-      _ticker = createTicker(_tick);
-    }
-  }
-
-  @pragma('vm:prefer-inline')
-  void _derivativeFunc(Float64List state, Float64List derivatives) {
-    // Highly responsive snappy spring
-    derivatives[0] = state[1];
-    derivatives[1] = 600.0 * (_targetScale - state[0]) - 35.0 * state[1];
-  }
-
-  void _tick(Duration elapsed) {
-    final int newTick =
-        QLPhysicsTicker.step(elapsed, _lastTickMs, _rk4, _derivativeFunc);
-    if (newTick == -1) return;
-    _lastTickMs = newTick;
-
-    final double s = _rk4.state[0];
-    _transform.update((m) {
-      m.storage.setAll(0, Matrix4.identity().storage); // Fast Identity reset
-      if (s != 1.0) m.scale(s, s, 1.0);
-    });
-
-    if ((s - _targetScale).abs() < 0.01 && _rk4.state[1].abs() < 0.1) {
-      _ticker.stop();
-    }
-  }
-
-  void _setScale(double target) {
-    if (!widget.scaleOnHover && !widget.scaleOnTap) return;
-    _targetScale = target;
-    if (!_ticker.isActive) {
-      _lastTickMs = 0;
-      _ticker.start();
-    }
-  }
-
-  void _handlePointer(QLPointerEvent e) {
-    widget.onPointer?.call(e);
+    // 🚀 SINGLE-TICKER ENGINE: Connects to the SoA Timeline automatically
+    _anim = QLBehaviorAnimator(
+      vsync: this,
+      hoverScale: widget.scaleOnHover ? 0.98 : 1.0,
+      pressScale: widget.scaleOnTap ? 0.94 : 1.0,
+    );
   }
 
   @override
   void dispose() {
-    if (widget.scaleOnHover || widget.scaleOnTap) _ticker.dispose();
-    _transform.dispose();
+    _anim.dispose();
     super.dispose();
+  }
+
+  void _onHoverMove(PointerEvent event) {
+    if (!widget.enable3DTilt && !widget.enableMagneticPull) return;
+    if (!mounted || !_isHovered) return;
+
+    final box = context.findRenderObject() as RenderBox?;
+    if (box == null) return;
+
+    final local = box.globalToLocal(event.position);
+    final centerW = box.size.width * 0.5;
+    final centerH = box.size.height * 0.5;
+
+    // Normalized device coordinates (-1.0 to 1.0)
+    final nx = QLSafe.finite((local.dx - centerW) / centerW);
+    final ny = QLSafe.finite((local.dy - centerH) / centerH);
+
+    _anim.onHoverMove(nx, ny,
+        tiltIntensity: widget.tiltIntensity,
+        magnetic: widget.enableMagneticPull);
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool hasPhysics = widget.scaleOnHover ||
+        widget.scaleOnTap ||
+        widget.enable3DTilt ||
+        widget.enableMagneticPull;
+
     Widget tree = widget.child;
 
-    if (widget.scaleOnHover || widget.scaleOnTap) {
-      // Binds natively to QLBox GPU transform layer without rebuilding the subtree
+    if (hasPhysics) {
       tree = AnimatedBuilder(
-        animation: _transform,
+        animation: Listenable.merge([
+          _anim.scaleSignal,
+          _anim.tiltXSignal,
+          _anim.tiltYSignal,
+          _anim.translateXSignal,
+          _anim.translateYSignal
+        ]),
         builder: (context, child) => Transform(
-          transform: _transform.value,
+          transform: _anim.buildTransformMatrix(),
           alignment: Alignment.center,
           child: child,
         ),
+        child: tree,
+      );
+    }
+
+    // 🚀 FIX 1: Move execution to onTap so it doesn't fail if the finger slips!
+    Widget gestureNode;
+    if (widget.onTap != null ||
+        widget.onLongPress != null ||
+        widget.onContextMenu != null) {
+      gestureNode = GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTapDown: (_) {
+          if (widget.scaleOnTap) _anim.onPressDown();
+        },
+        onTapUp: (_) {
+          if (widget.scaleOnTap) _anim.onPressUp();
+        },
+        onTapCancel: () {
+          if (widget.scaleOnTap) _anim.onPressCancel();
+        },
+        onTap: () {
+          print('QLSENSOR ONTAP FIRED, has onTap=${widget.onTap != null}');
+          if (widget.onTap != null) {
+            HapticFeedback.lightImpact();
+            widget.onTap!();
+          }
+        },
+        onLongPress: widget.onLongPress != null
+            ? () {
+                HapticFeedback.selectionClick();
+                widget.onLongPress!();
+              }
+            : null,
+        onSecondaryTapDown: widget.onContextMenu != null
+            ? (details) => widget.onContextMenu!(details.globalPosition)
+            : null,
+        child: tree,
+      );
+    } else {
+      gestureNode = Listener(
+        behavior: HitTestBehavior.translucent,
+        onPointerDown: (_) {
+          if (widget.scaleOnTap) _anim.onPressDown();
+        },
+        onPointerUp: (_) {
+          if (widget.scaleOnTap) _anim.onPressUp();
+        },
+        onPointerCancel: (_) {
+          if (widget.scaleOnTap) _anim.onPressCancel();
+        },
         child: tree,
       );
     }
@@ -293,55 +232,31 @@ class _QLSensorState extends State<QLSensor>
           widget.onTap != null ? SystemMouseCursors.click : MouseCursor.defer,
       onEnter: (_) {
         _isHovered = true;
-        if (widget.scaleOnHover && !_isPressed) _setScale(0.96);
+        if (widget.scaleOnHover) _anim.onHoverEnter();
+        widget.onHoverChange?.call(true);
       },
       onExit: (_) {
         _isHovered = false;
-        if (widget.scaleOnHover && !_isPressed) _setScale(1.0);
+        _anim.onHoverExit();
+        widget.onHoverChange?.call(false);
       },
-      child: QLOmniSensor(
-        onTouchUpdate: _handlePointer,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTapDown: (_) {
-            _isPressed = true;
-            if (widget.scaleOnTap) _setScale(0.94);
-          },
-          onTapUp: (_) {
-            _isPressed = false;
-            _setScale(_isHovered && widget.scaleOnHover ? 0.96 : 1.0);
-            HapticFeedback.lightImpact();
-            widget.onTap?.call();
-          },
-          onTapCancel: () {
-            _isPressed = false;
-            _setScale(_isHovered && widget.scaleOnHover ? 0.96 : 1.0);
-          },
-          onLongPress: widget.onLongPress != null
-              ? () {
-                  HapticFeedback.selectionClick();
-                  widget.onLongPress!();
-                }
-              : null,
-          child: tree,
-        ),
-      ),
+      onHover: _onHoverMove,
+      child: gestureNode,
     );
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────── §4 ─
-//  POLYMORPHIC SPATIAL ENGINE (Row, Column, O(1) Adaptive Grid)
+// ───────────────────────────────────────────────────────────────────────
+//  POLYMORPHIC SPATIAL ENGINE (QLSpace -> QuantumLayout)
 // ────────────────────────────────────────────────────────────────────────────
-// Directly bridges into `QuantumGrid` (the Neutron Star Layout Engine).
 
 class QLSpace extends StatelessWidget {
-  final QFlowDirection flow;
+  final QLayoutType layoutType;
   final List<Widget> children;
   final double gap;
   final QAlign main;
   final QAlign cross;
-  final double? adaptiveBreakpoint; // Auto Row->Col transition
+  final double? adaptiveBreakpoint;
 
   // Pipeline Modifiers
   final String? style;
@@ -351,7 +266,7 @@ class QLSpace extends StatelessWidget {
 
   const QLSpace._({
     super.key,
-    required this.flow,
+    required this.layoutType,
     required this.children,
     this.gap = 0.0,
     this.main = QAlign.start,
@@ -363,7 +278,6 @@ class QLSpace extends StatelessWidget {
     this.onTap,
   });
 
-  /// Pure Horizontal Macro
   const factory QLSpace.row({
     Key? key,
     required List<Widget> children,
@@ -376,7 +290,6 @@ class QLSpace extends StatelessWidget {
     VoidCallback? onTap,
   }) = _QLRow;
 
-  /// Pure Vertical Macro
   const factory QLSpace.column({
     Key? key,
     required List<Widget> children,
@@ -389,7 +302,6 @@ class QLSpace extends StatelessWidget {
     VoidCallback? onTap,
   }) = _QLColumn;
 
-  /// Ultra-Smart Responsive Macro (Auto Row->Col) - Evaluates constraints, NOT global screens.
   const factory QLSpace.adaptive({
     Key? key,
     required List<Widget> children,
@@ -400,46 +312,30 @@ class QLSpace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 🚀 ARCHITECT FIX: Dynamic Track Resolution
-    // Provide the grid with exact primary-axis bounds to prevent premature wrapping.
-    // 'repeat(N, auto)' is parsed and cached O(1) natively by QParser.
-    final int count = children.length;
-    final String dynamicTracks = count > 0 ? 'repeat($count, auto)' : 'auto';
-
     if (adaptiveBreakpoint != null) {
-      // Local Constraint Evaluation prevents global DOM invalidations on window resize.
       return LayoutBuilder(builder: (context, constraints) {
-        final QFlowDirection resolvedFlow =
-            constraints.maxWidth < adaptiveBreakpoint!
-                ? QFlowDirection.column
-                : QFlowDirection.row;
+        final resolvedType = constraints.maxWidth < adaptiveBreakpoint!
+            ? QLayoutType.col
+            : QLayoutType.row;
 
-        return QuantumGrid(
-          flow: resolvedFlow,
-          // Uncap the primary axis to allow infinite non-wrapping flow
-          columns: resolvedFlow == QFlowDirection.row ? dynamicTracks : '1fr',
-          rows: resolvedFlow == QFlowDirection.column ? dynamicTracks : 'auto',
-          columnGap: gap,
-          rowGap: gap,
-          alignItems: cross,
-          justifyItems: main,
-          children: children,
-        ).apply(
+        return _buildLayout(resolvedType).apply(
             style: style, transform3D: transform3D, clip: clip, onTap: onTap);
       });
     }
 
-    return QuantumGrid(
-      flow: flow,
-      // Uncap the primary axis to allow infinite non-wrapping flow
-      columns: flow == QFlowDirection.row ? dynamicTracks : '1fr',
-      rows: flow == QFlowDirection.column ? dynamicTracks : 'auto',
+    return _buildLayout(layoutType).apply(
+        style: style, transform3D: transform3D, clip: clip, onTap: onTap);
+  }
+
+  Widget _buildLayout(QLayoutType type) {
+    // 🚀 UNIFIED BRIDGING: Always delegates to the core Engine
+    return QuantumLayout(
+      layoutType: type,
       columnGap: gap,
       rowGap: gap,
-      alignItems: cross,
-      justifyItems: main,
+      // Pass cross/main mappings to QuantumLayout equivalents (handled inside layout engine)
       children: children,
-    ).apply(style: style, transform3D: transform3D, clip: clip, onTap: onTap);
+    );
   }
 }
 
@@ -454,7 +350,7 @@ class _QLRow extends QLSpace {
     super.transform3D,
     super.clip,
     super.onTap,
-  }) : super._(flow: QFlowDirection.row);
+  }) : super._(layoutType: QLayoutType.row);
 }
 
 class _QLColumn extends QLSpace {
@@ -468,7 +364,7 @@ class _QLColumn extends QLSpace {
     super.transform3D,
     super.clip,
     super.onTap,
-  }) : super._(flow: QFlowDirection.column);
+  }) : super._(layoutType: QLayoutType.col);
 }
 
 class _QLAdaptive extends QLSpace {
@@ -478,9 +374,8 @@ class _QLAdaptive extends QLSpace {
     required double breakpoint,
     super.gap = 16.0,
     super.style,
-  }) : super._(flow: QFlowDirection.row, adaptiveBreakpoint: breakpoint);
+  }) : super._(layoutType: QLayoutType.row, adaptiveBreakpoint: breakpoint);
 }
-
 // ─────────────────────────────────────────────────────────────────────── §5 ─
 //  ZERO-COPY VIEWPORT (The OMEGA Virtualized Engine)
 // ────────────────────────────────────────────────────────────────────────────
@@ -617,12 +512,11 @@ class _QLViewportState<T> extends State<QLViewport<T>> {
       );
     }
 
-
     Widget viewport = CustomScrollView(
       controller: _ctrl,
       shrinkWrap: false,
-      physics: const BouncingScrollPhysics(
-          parent: AlwaysScrollableScrollPhysics()),
+      physics:
+          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       scrollDirection: widget.scrollDirection,
       slivers: [
         if (widget.gap > 0 && widget.gridCols == null)
@@ -639,54 +533,6 @@ class _QLViewportState<T> extends State<QLViewport<T>> {
       );
     }
     return viewport;
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────── §6 ─
-//  UNIVERSAL TOUCH & CONTEXT ENGINE
-// ────────────────────────────────────────────────────────────────────────────
-
-class QLTouch extends StatelessWidget {
-  final Widget child;
-  final VoidCallback? onTap;
-  final VoidCallback? onLongPress;
-  final void Function(Offset)? onContextMenu;
-  final String? style;
-  final bool interactiveScaling;
-
-  const QLTouch({
-    super.key,
-    required this.child,
-    this.onTap,
-    this.onLongPress,
-    this.onContextMenu,
-    this.style,
-    this.interactiveScaling = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Widget tree = child.apply(
-      style: style,
-      onTap: onTap,
-      interactiveScale: interactiveScaling,
-    );
-
-    if (onLongPress != null || onContextMenu != null) {
-      tree = GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onLongPress: () {
-          HapticFeedback.selectionClick();
-          onLongPress?.call();
-        },
-        onSecondaryTapDown: onContextMenu != null
-            ? (details) => onContextMenu!(details.globalPosition)
-            : null,
-        child: tree,
-      );
-    }
-
-    return tree;
   }
 }
 
@@ -731,10 +577,10 @@ class QLDivider extends StatelessWidget {
       // If we are in a Row, it acts as a vertical line (Width = thickness).
       final bool isColumn = constraints.maxHeight == double.infinity;
 
-      return QLBox(
-        bg: QLSignal<Color>(color),
-        width: isColumn ? null : QLSignal<double>(thickness),
-        height: isColumn ? QLSignal<double>(thickness) : null,
+      return Container(
+        color: color,
+        width: isColumn ? double.infinity : thickness,
+        height: isColumn ? thickness : double.infinity,
       );
     });
   }
@@ -897,7 +743,11 @@ class _QLCarouselState extends State<QLCarousel> {
                 ..setEntry(3, 2, 0.001) // Deep perspective
                 ..scale(scale, scale, 1.0);
 
-              return QLBox(transform3D: QLSignal(tx), child: child);
+              return Transform(
+                transform: tx,
+                alignment: Alignment.center,
+                child: child,
+              );
             },
             child: widget.children[index],
           );
@@ -966,93 +816,63 @@ class QLSwipeAction extends StatefulWidget {
   State<QLSwipeAction> createState() => _QLSwipeActionState();
 }
 
-class _QLSwipeActionState extends State<QLSwipeAction>
-    with SingleTickerProviderStateMixin {
-  late final QLIntegratorRK4 _rk4;
-  late final Ticker _ticker;
-  final QLSignal<Matrix4> _transform = QLSignal(Matrix4.identity());
-
-  double _dragDx = 0.0;
-  double _targetDx = 0.0;
-  int _lastTickMs = 0;
+// ───────────────────────────────────────────────────────────────────────
+//  QL SPRING MORPH (Timeline-Driven Dynamic Island)
+// ────────────────────────────────────────────────────────────────────────────
+class _QLSpringMorphState extends State<QLSpringMorph>
+    with SingleTickerProviderStateMixin, QLTimelineMixin {
+  late QLSignal<double> _w, _h, _r;
 
   @override
-  void initState() {
-    super.initState();
-    _rk4 = QLIntegratorRK4(2);
-    _ticker = createTicker(_tick);
-  }
-
-  @pragma('vm:prefer-inline')
-  void _derivativeFunc(Float64List state, Float64List derivatives) {
-    derivatives[0] = state[1];
-    derivatives[1] = 400.0 * (_targetDx - state[0]) - 30.0 * state[1];
-  }
-
-  void _tick(Duration elapsed) {
-    final int newTick =
-        QLPhysicsTicker.step(elapsed, _lastTickMs, _rk4, _derivativeFunc);
-    if (newTick == -1) return;
-    _lastTickMs = newTick;
-
-    _transform.update((m) {
-      m.storage.setAll(0, _identityStorage);
-      m.storage[12] = _rk4.state[0];
-    });
-
-    if ((_rk4.state[0] - _targetDx).abs() < 0.5 && _rk4.state[1].abs() < 0.5) {
-      _ticker.stop();
-    }
-  }
-
-  void _onPointerMove(PointerEvent e) {
-    if (!_ticker.isActive) {
-      _dragDx = (_dragDx + e.delta.dx).clamp(-widget.actionWidth * 1.5, 0.0);
-      _transform.update((m) {
-        m.storage.setAll(0, _identityStorage);
-        m.storage[12] = _dragDx;
-      });
-    }
-  }
-
-  void _onPointerUp(PointerEvent e) {
-    if (_dragDx < -(widget.actionWidth * 0.6)) {
-      _targetDx = -widget.actionWidth;
-      if (_dragDx < -(widget.actionWidth * 1.2)) widget.onTriggered?.call();
-    } else {
-      _targetDx = 0.0;
-    }
-
-    _rk4.state[0] = _dragDx;
-    _rk4.state[1] = e is PointerUpEvent ? 0.0 : -500.0;
-    _lastTickMs = 0;
-    _ticker.start();
+  void initTimeline() {
+    _w = timeline.spring(
+        id: 'w',
+        initial: widget.targetWidth,
+        target: widget.targetWidth,
+        stiffness: 400,
+        damping: 28);
+    _h = timeline.spring(
+        id: 'h',
+        initial: widget.targetHeight,
+        target: widget.targetHeight,
+        stiffness: 400,
+        damping: 28);
+    _r = timeline.spring(
+        id: 'r',
+        initial: widget.targetRadius,
+        target: widget.targetRadius,
+        stiffness: 400,
+        damping: 28);
   }
 
   @override
-  void dispose() {
-    _ticker.dispose();
-    _transform.dispose();
-    super.dispose();
+  void didUpdateWidget(QLSpringMorph old) {
+    super.didUpdateWidget(old);
+    if (old.targetWidth != widget.targetWidth ||
+        old.targetHeight != widget.targetHeight ||
+        old.targetRadius != widget.targetRadius) {
+      timeline.updateSpringTarget('w', widget.targetWidth);
+      timeline.updateSpringTarget('h', widget.targetHeight);
+      timeline.updateSpringTarget('r', widget.targetRadius);
+      timeline.play();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(child: widget.background),
-        Listener(
-          onPointerMove: _onPointerMove,
-          onPointerUp: _onPointerUp,
-          onPointerCancel: _onPointerUp,
-          behavior: HitTestBehavior.opaque,
-          child: QLBox(transform3D: _transform, child: widget.child),
+    return AnimatedBuilder(
+      animation: Listenable.merge([_w, _h, _r]),
+      builder: (ctx, child) => SizedBox(
+        width: _w.value,
+        height: _h.value,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(_r.value),
+          child: Q(widget.style ?? '', children: [widget.child]),
         ),
-      ],
+      ),
     );
   }
 }
-
 // ─────────────────────────────────────────────────────────────────────── §4 ─
 //  QL ACCORDION (Zero-Layout Expandable Height)
 // ────────────────────────────────────────────────────────────────────────────
@@ -1067,57 +887,33 @@ class QLAccordion extends StatefulWidget {
   State<QLAccordion> createState() => _QLAccordionState();
 }
 
+// ───────────────────────────────────────────────────────────────────────
+//  QL ACCORDION (Timeline-Driven Expandable Height)
+// ────────────────────────────────────────────────────────────────────────────
 class _QLAccordionState extends State<QLAccordion>
-    with SingleTickerProviderStateMixin {
-  late final QLIntegratorRK4 _rk4;
-  late final Ticker _ticker;
-  final QLSignal<double> _heightFactor = QLSignal(0.0);
-
-  double _target = 0.0;
-  int _lastTickMs = 0;
+    with SingleTickerProviderStateMixin, QLTimelineMixin {
+  late QLSignal<double> _heightFactor;
 
   @override
-  void initState() {
-    super.initState();
-    _target = widget.isExpanded.value ? 1.0 : 0.0;
-    _heightFactor.setSilent(_target);
-
-    _rk4 = QLIntegratorRK4(2);
-    _rk4.state[0] = _target;
-
-    _ticker = createTicker(_tick);
+  void initTimeline() {
+    final target = widget.isExpanded.value ? 1.0 : 0.0;
+    _heightFactor = timeline.spring(
+        id: 'h',
+        initial: target,
+        target: target,
+        stiffness: 350.0,
+        damping: 26.0);
     widget.isExpanded.addListener(_onStateChange);
   }
 
   void _onStateChange() {
-    _target = widget.isExpanded.value ? 1.0 : 0.0;
-    _lastTickMs = 0;
-    if (!_ticker.isActive) _ticker.start();
-  }
-
-  @pragma('vm:prefer-inline')
-  void _derivativeFunc(Float64List state, Float64List derivatives) {
-    derivatives[0] = state[1];
-    derivatives[1] = 350.0 * (_target - state[0]) - 26.0 * state[1];
-  }
-
-  void _tick(Duration elapsed) {
-    final int newTick =
-        QLPhysicsTicker.step(elapsed, _lastTickMs, _rk4, _derivativeFunc);
-    if (newTick == -1) return;
-    _lastTickMs = newTick;
-    _heightFactor.value = _rk4.state[0].clamp(0.0, 1.0);
-
-    if ((_rk4.state[0] - _target).abs() < 0.01 && _rk4.state[1].abs() < 0.1) {
-      _ticker.stop();
-    }
+    timeline.updateSpringTarget('h', widget.isExpanded.value ? 1.0 : 0.0);
+    timeline.play();
   }
 
   @override
   void dispose() {
     widget.isExpanded.removeListener(_onStateChange);
-    _ticker.dispose();
-    _heightFactor.dispose();
     super.dispose();
   }
 
@@ -1126,7 +922,7 @@ class _QLAccordionState extends State<QLAccordion>
     return AnimatedBuilder(
       animation: _heightFactor,
       builder: (context, child) {
-        if (_heightFactor.value == 0.0) return const SizedBox.shrink();
+        if (_heightFactor.value <= 0.001) return const SizedBox.shrink();
         return ClipRect(
           child: Align(
             alignment: Alignment.topCenter,
@@ -1164,98 +960,57 @@ class QLSpringMorph extends StatefulWidget {
   State<QLSpringMorph> createState() => _QLSpringMorphState();
 }
 
-class _QLSpringMorphState extends State<QLSpringMorph>
-    with SingleTickerProviderStateMixin {
-  late final QLIntegratorRK4 _rk4;
-  late final Ticker _ticker;
-
-  final QLSignal<double> _w = QLSignal(0.0);
-  final QLSignal<double> _h = QLSignal(0.0);
-  final QLSignal<double> _r = QLSignal(0.0);
-  int _lastTickMs = 0;
+// ───────────────────────────────────────────────────────────────────────
+//  QL SWIPE ACTION (Timeline-Driven Slide-to-Reveal)
+// ────────────────────────────────────────────────────────────────────────────
+class _QLSwipeActionState extends State<QLSwipeAction>
+    with SingleTickerProviderStateMixin, QLTimelineMixin {
+  late QLSignal<double> _dx;
 
   @override
-  void initState() {
-    super.initState();
-    _w.setSilent(widget.targetWidth);
-    _h.setSilent(widget.targetHeight);
-    _r.setSilent(widget.targetRadius);
-
-    _rk4 = QLIntegratorRK4(6);
-    _rk4.state[0] = widget.targetWidth;
-    _rk4.state[2] = widget.targetHeight;
-    _rk4.state[4] = widget.targetRadius;
-
-    _ticker = createTicker(_tick);
+  void initTimeline() {
+    _dx = timeline.spring(
+        id: 'dx', initial: 0.0, target: 0.0, stiffness: 400.0, damping: 30.0);
   }
 
-  @override
-  void didUpdateWidget(QLSpringMorph old) {
-    super.didUpdateWidget(old);
-    if (old.targetWidth != widget.targetWidth ||
-        old.targetHeight != widget.targetHeight ||
-        old.targetRadius != widget.targetRadius) {
-      _lastTickMs = 0;
-      if (!_ticker.isActive) _ticker.start();
+  void _onPointerMove(PointerEvent e) {
+    timeline.pause(); // Interrupt physics
+    final newDx =
+        (_dx.value + e.delta.dx).clamp(-widget.actionWidth * 1.5, 0.0);
+    timeline.setSpringPosition('dx', newDx);
+    _dx.value = newDx; // Force immediate update
+  }
+
+  void _onPointerUp(PointerEvent e) {
+    double targetDx = 0.0;
+    if (_dx.value < -(widget.actionWidth * 0.6)) {
+      targetDx = -widget.actionWidth;
+      if (_dx.value < -(widget.actionWidth * 1.2)) widget.onTriggered?.call();
     }
-  }
-
-  @pragma('vm:prefer-inline')
-  void _derivativeFunc(Float64List state, Float64List derivatives) {
-    const double k = 400.0;
-    const double d = 28.0;
-
-    derivatives[0] = state[1];
-    derivatives[1] = k * (widget.targetWidth - state[0]) - d * state[1];
-    derivatives[2] = state[3];
-    derivatives[3] = k * (widget.targetHeight - state[2]) - d * state[3];
-    derivatives[4] = state[5];
-    derivatives[5] = k * (widget.targetRadius - state[4]) - d * state[5];
-  }
-
-  void _tick(Duration elapsed) {
-    final int newTick =
-        QLPhysicsTicker.step(elapsed, _lastTickMs, _rk4, _derivativeFunc);
-    if (newTick == -1) return;
-    _lastTickMs = newTick;
-
-    if (_w.value != _rk4.state[0]) _w.value = _rk4.state[0];
-    if (_h.value != _rk4.state[2]) _h.value = _rk4.state[2];
-    if (_r.value != _rk4.state[4]) _r.value = _rk4.state[4];
-// 🚀 FIX: Relax physics sleep threshold for `pumpAndSettle` compatibility
-    if ((_rk4.state[0] - widget.targetWidth).abs() < 0.5 &&
-        (_rk4.state[2] - widget.targetHeight).abs() < 0.5 &&
-        _rk4.state[1].abs() < 1.0) {
-      _ticker.stop();
-    }
-  }
-
-  @override
-  void dispose() {
-    _ticker.dispose();
-    _w.dispose();
-    _h.dispose();
-    _r.dispose();
-    super.dispose();
+    timeline.updateSpringTarget('dx', targetDx);
+    timeline.play();
   }
 
   @override
   Widget build(BuildContext context) {
-    return QLBox(
-      style: widget.style,
-      width: _w,
-      height: _h,
-      radius: _r,
-      child: ClipRRect(
-        child: AnimatedBuilder(
-          animation: _r,
-          builder: (ctx, child) => ClipRRect(
-            borderRadius: BorderRadius.circular(_r.value),
-            child: child,
+    return Stack(
+      children: [
+        Positioned.fill(child: widget.background),
+        Listener(
+          onPointerMove: _onPointerMove,
+          onPointerUp: _onPointerUp,
+          onPointerCancel: _onPointerUp,
+          behavior: HitTestBehavior.opaque,
+          child: AnimatedBuilder(
+            animation: _dx,
+            builder: (ctx, child) => Transform.translate(
+              offset: Offset(_dx.value, 0),
+              child: child,
+            ),
+            child: widget.child,
           ),
-          child: widget.child,
         ),
-      ),
+      ],
     );
   }
 }
@@ -1320,7 +1075,12 @@ class _QLStickyLayerState extends State<QLStickyLayer> {
   Widget build(BuildContext context) {
     return QuantumItem(
       zIndex: 999, // Boost above grid items
-      child: QLBox(transform3D: _transform, child: widget.child),
+      child: AnimatedBuilder(
+        animation: _transform,
+        builder: (ctx, child) =>
+            Transform(transform: _transform.value, child: child),
+        child: widget.child,
+      ),
     );
   }
 }
@@ -1518,14 +1278,18 @@ class _QLSliderState extends State<QLSlider> {
                   alignment: Alignment.centerLeft,
                   children: [
                     widget.inactiveTrack,
-                    QLBox(
-                      width: _activeWidth,
+                    AnimatedBuilder(
+                      animation: _activeWidth,
+                      builder: (ctx, child) =>
+                          SizedBox(width: _activeWidth.value, child: child),
                       child: widget.activeTrack,
                     ),
                     Positioned(
                       left: 0,
-                      child: QLBox(
-                        transform3D: _thumbTransform,
+                      child: AnimatedBuilder(
+                        animation: _thumbTransform,
+                        builder: (ctx, child) => Transform(
+                            transform: _thumbTransform.value, child: child),
                         child: FractionalTranslation(
                           translation: const Offset(-0.5, 0.0),
                           child: widget.thumb,
@@ -1624,8 +1388,10 @@ class _QLMatrixTableState extends State<QLMatrixTable> {
       behavior: HitTestBehavior.opaque,
       onPanUpdate: _onPan,
       child: ClipRect(
-        child: QLBox(
-          transform3D: _subPixelMatrix, // Applies GPU translation
+        child: AnimatedBuilder(
+          animation: _subPixelMatrix,
+          builder: (ctx, child) =>
+              Transform(transform: _subPixelMatrix.value, child: child),
           child: AnimatedBuilder(
             animation: Listenable.merge([_scrollX, _scrollY]),
             builder: (context, _) {

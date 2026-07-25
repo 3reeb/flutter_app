@@ -1,12 +1,18 @@
+// ════════════════════════════════════════════════════════════════════════════
+// QUANTUM OMNI REGISTRY — TEXT ENGINE
+// Part of quantum_omni_registry.dart
+// ════════════════════════════════════════════════════════════════════════════
+
 part of '../quantum_omni_registry.dart';
 
-// Moved from quantum_omni_registry.dart: _buildText
+// ─────────────────────────────────────────────────────────────────────────────
+// §1 — CORE TEXT BUILDER
+// ─────────────────────────────────────────────────────────────────────────────
 
 Widget _buildText(QLContext rawCtx) {
   final ctx = _AliasContext(rawCtx);
   final String subType = ctx.resolvedSubType(fallback: 'p');
 
-  // 🚀 FIX: Removed hardcoded light-mode slate colors so text inherits parent cascading colors in Dark Mode
   String styleStr = '';
   if (subType == 'h1')
     styleStr = 'text-3xl font-bold';
@@ -19,7 +25,6 @@ Widget _buildText(QLContext rawCtx) {
   else
     styleStr = 'text-md';
 
-  // 🚀 FIX: Merge both Hiccup node styles and Map style properties to resolve custom text colors
   final String nodeStyle = ctx.node.style ?? '';
   final String propStyle = ctx.string('style');
   final String combinedStyle = '$nodeStyle $propStyle'.trim();
@@ -31,15 +36,17 @@ Widget _buildText(QLContext rawCtx) {
   final QToken ptr = QEngine.instance.compiler.compile(styleStr);
   final QSimdArena mem = QEngine.instance.mem;
 
-  // 🚀 FIX: Use 4x32 textFlags instead of deprecated single flags array
   final int tFlags = mem.textFlags[ptr.id];
   final int fPtr = ptr.fPtr;
   final int cPtr = ptr.cPtr;
 
+  // 🚀 FIX: Removed hardcoded 0xFF0F172A.
+  // If memory is 0, it falls back to null, allowing native Dark Mode & DefaultTextStyle inheritance to work flawlessly!
+  final int rawColor = mem.c32[cPtr + QC32.text];
+  final Color? textColor = rawColor != 0 ? Color(rawColor) : null;
+
   final TextStyle ts = TextStyle(
-    color: Color(mem.c32[cPtr + QC32.text] != 0
-        ? mem.c32[cPtr + QC32.text]
-        : 0xFF0F172A),
+    color: textColor,
     fontSize: mem.f32[fPtr + QF32.fontSize] > 0
         ? mem.f32[fPtr + QF32.fontSize]
         : 14.0,
@@ -49,7 +56,6 @@ Widget _buildText(QLContext rawCtx) {
     fontStyle: (tFlags & QTextFlags.fontItalic) != 0
         ? FontStyle.italic
         : FontStyle.normal,
-    // 🚀 NEW: Support underline & strike-through mapped from the new compiler
     decoration: (tFlags & QTextFlags.underline) != 0
         ? TextDecoration.underline
         : ((tFlags & QTextFlags.strikeThrough) != 0
@@ -74,6 +80,7 @@ Widget _buildText(QLContext rawCtx) {
   final int? maxLines =
       ctx.node.props.containsKey('maxLines') ? ctx.integer('maxLines') : null;
   final String overflowMode = ctx.string('overflow', fallback: '');
+
   final TextOverflow? explicitOverflow = switch (overflowMode) {
     'clip' => TextOverflow.clip,
     'fade' => TextOverflow.fade,
@@ -81,6 +88,12 @@ Widget _buildText(QLContext rawCtx) {
     'ellipsis' => TextOverflow.ellipsis,
     _ => null,
   };
+
+  // 🚀 THE FIX FOR TEXT CLICKS: Ensure text elements correctly capture taps if placed on them!
+  final VoidCallback? tapAction =
+      ctx.action('onClick') ?? ctx.action('onTap') ?? ctx.action('action');
+
+  Widget textWidget;
 
   if (ctx.children.isNotEmpty) {
     final span = TextSpan(
@@ -91,63 +104,86 @@ Widget _buildText(QLContext rawCtx) {
           .toList(),
     );
     if (isSelectable) {
-      return SelectableText.rich(
+      textWidget = SelectableText.rich(
         span,
         textAlign: align,
         maxLines: maxLines,
         textWidthBasis: TextWidthBasis.parent,
-        // 🚀 FIX: Ensures OS copy/paste menus appear natively
         contextMenuBuilder: (context, editableTextState) =>
             AdaptiveTextSelectionToolbar.editableText(
                 editableTextState: editableTextState),
       );
+    } else {
+      textWidget = Text.rich(
+        span,
+        textAlign: align,
+        softWrap: softWrap,
+        maxLines: maxLines,
+        overflow: explicitOverflow ??
+            ((tFlags & QTextFlags.textEllipsis) != 0
+                ? TextOverflow.ellipsis
+                : (softWrap ? null : TextOverflow.clip)),
+      );
     }
-    return Text.rich(
-      span,
-      textAlign: align,
-      softWrap: softWrap,
-      maxLines: maxLines,
-      overflow: explicitOverflow ??
-          ((tFlags & QTextFlags.textEllipsis) != 0
-              ? TextOverflow.ellipsis
-              : (softWrap ? null : TextOverflow.clip)),
+  } else {
+    final String content = ctx.string('text', fallback: ctx.string('value'));
+    if (isSelectable) {
+      textWidget = SelectableText(
+        content,
+        style: ts,
+        textAlign: align,
+        maxLines: maxLines,
+        textWidthBasis: TextWidthBasis.parent,
+        contextMenuBuilder: (context, editableTextState) =>
+            AdaptiveTextSelectionToolbar.editableText(
+                editableTextState: editableTextState),
+      );
+    } else {
+      textWidget = Text(
+        content,
+        style: ts,
+        textAlign: align,
+        softWrap: softWrap,
+        maxLines: maxLines,
+        overflow: explicitOverflow ??
+            ((tFlags & QTextFlags.textEllipsis) != 0
+                ? TextOverflow.ellipsis
+                : null),
+      );
+    }
+  }
+
+  // Inject gesture detector ONLY if action exists, flattening the tree.
+  if (tapAction != null) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: tapAction,
+      child: textWidget,
     );
   }
 
-  final String content = ctx.string('text', fallback: ctx.string('value'));
-  if (isSelectable) {
-    return SelectableText(
-      content,
-      style: ts,
-      textAlign: align,
-      maxLines: maxLines,
-      textWidthBasis: TextWidthBasis.parent,
-      contextMenuBuilder: (context, editableTextState) =>
-          AdaptiveTextSelectionToolbar.editableText(
-              editableTextState: editableTextState),
-    );
-  }
-
-  return Text(
-    content,
-    style: ts,
-    textAlign: align,
-    softWrap: softWrap,
-    maxLines: maxLines,
-    overflow: explicitOverflow ??
-        ((tFlags & QTextFlags.textEllipsis) != 0
-            ? TextOverflow.ellipsis
-            : null),
-  );
+  return textWidget;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// §2 — ALIAS REGISTRATION
+// ─────────────────────────────────────────────────────────────────────────────
+
 void _registerTextAliases(QuantumVM vm) {
-  vm.defineAlias('text', 'text', description: 'Base text alias.', tags: const ['text']);
-  vm.defineAlias('p', 'text:p', description: 'Paragraph alias.', tags: const ['text']);
-  vm.defineAlias('h1', 'text:h1', description: 'Heading 1 alias.', tags: const ['text']);
-  vm.defineAlias('h2', 'text:h2', description: 'Heading 2 alias.', tags: const ['text']);
-  vm.defineAlias('h3', 'text:h3', description: 'Heading 3 alias.', tags: const ['text']);
-  vm.defineAlias('label', 'text:label', description: 'Label alias.', tags: const ['text']);
-  vm.defineAlias('code', 'text:code', description: 'Code alias.', tags: const ['text']);
-  vm.defineAlias('rich', 'text:rich', description: 'Rich text alias.', tags: const ['text']);
+  vm.defineAlias('text', 'text',
+      description: 'Base text alias.', tags: const ['text']);
+  vm.defineAlias('p', 'text:p',
+      description: 'Paragraph alias.', tags: const ['text']);
+  vm.defineAlias('h1', 'text:h1',
+      description: 'Heading 1 alias.', tags: const ['text']);
+  vm.defineAlias('h2', 'text:h2',
+      description: 'Heading 2 alias.', tags: const ['text']);
+  vm.defineAlias('h3', 'text:h3',
+      description: 'Heading 3 alias.', tags: const ['text']);
+  vm.defineAlias('label', 'text:label',
+      description: 'Label alias.', tags: const ['text']);
+  vm.defineAlias('code', 'text:code',
+      description: 'Code alias.', tags: const ['text']);
+  vm.defineAlias('rich', 'text:rich',
+      description: 'Rich text alias.', tags: const ['text']);
 }

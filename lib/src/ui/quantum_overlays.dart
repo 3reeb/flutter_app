@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +14,7 @@ import '../../quantum.dart';
 // menus, popovers, toasts, floating windows, and anchored inline editors.
 //
 // Notes:
-// - This file assumes your project already provides QLSignal, QLBox, QLDataScope,
+// - This file assumes your project already provides QLSignal, Q, QLDataScope,
 //   QEngine, and the rest of the Quantum ecosystem.
 // - The implementation prefers explicit state, typed node lookups, and predictable
 //   lifecycles over "magical" traversal.
@@ -92,7 +91,7 @@ class QLSpatialConfig {
   final QLBackgroundEffect bgEffect;
   final Duration? timeout;
   // NOTE: Style is intentionally absent. The overlay engine handles spatial
-  // logic only. Callers must style their own builder widget using Q() or QLBox().
+  // logic only. Callers must style their own builder widget using Q() .
   final int? ecsImposterId;
   final QLSheetEdge sheetEdge;
   final Alignment? sheetAlignment;
@@ -220,7 +219,8 @@ class QLSpatialConfig {
     bool enableDrag = true,
     List<double> snapPoints = const [0.5, 1.0],
     QLBackgroundEffect effect = QLBackgroundEffect.zoomBack,
-    BoxConstraints constraints = const BoxConstraints(maxWidth: 800, maxHeight: 720),
+    BoxConstraints constraints =
+        const BoxConstraints(maxWidth: 800, maxHeight: 720),
     QLSheetEdge edge = QLSheetEdge.bottom,
     Alignment? sheetAlignment,
     EdgeInsetsGeometry sheetPadding = EdgeInsets.zero,
@@ -291,7 +291,8 @@ class QLSpatialConfig {
     bool dismissible = true,
     bool enableDrag = true,
     QLSheetEdge edge = QLSheetEdge.left,
-    BoxConstraints constraints = const BoxConstraints(maxWidth: 420, maxHeight: 720),
+    BoxConstraints constraints =
+        const BoxConstraints(maxWidth: 420, maxHeight: 720),
     bool useSafeArea = true,
     double bgZoomDepth = 0.06,
     Alignment? sheetAlignment,
@@ -363,7 +364,8 @@ class QLSpatialConfig {
   factory QLSpatialConfig.notification({
     Alignment position = Alignment.topCenter,
     Duration duration = const Duration(seconds: 4),
-    BoxConstraints constraints = const BoxConstraints(maxWidth: 420, maxHeight: 720),
+    BoxConstraints constraints =
+        const BoxConstraints(maxWidth: 420, maxHeight: 720),
     bool closeOnOutsideTap = false,
   }) {
     return QLSpatialConfig(
@@ -380,7 +382,8 @@ class QLSpatialConfig {
   factory QLSpatialConfig.toast({
     Alignment position = Alignment.topCenter,
     Duration duration = const Duration(seconds: 3),
-    BoxConstraints constraints = const BoxConstraints(maxWidth: 420, maxHeight: 720),
+    BoxConstraints constraints =
+        const BoxConstraints(maxWidth: 420, maxHeight: 720),
   }) {
     return QLSpatialConfig.notification(
       position: position,
@@ -832,7 +835,6 @@ class _QLOverlayRootState extends State<QLOverlayRoot> {
                     child: child,
                   ),
                   // AnimatedBuilder + ClipRRect for animated corner radius.
-                  // Pure Flutter — no QLBox or theme engine dependency.
                   child: AnimatedBuilder(
                     animation: QuantumOverlay.instance._bgRadius,
                     builder: (ctx, child) => ClipRRect(
@@ -934,11 +936,21 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
       case QLTransitionMode.slideUp:
         return QLTransitionPresets.sheet;
       case QLTransitionMode.slideDown:
-        return QLTransitionPreset(fromScale: 1.0, fromOpacity: 0.0, fromTranslate: const Offset(0, -1), curve: QLSprings.sheet, duration: const Duration(milliseconds: 420));
+        return QLTransitionPreset(
+            fromScale: 1.0,
+            fromOpacity: 0.0,
+            fromTranslate: const Offset(0, -1),
+            curve: QLSprings.sheet,
+            duration: const Duration(milliseconds: 420));
       case QLTransitionMode.slideLeft:
         return QLTransitionPresets.drawer;
       case QLTransitionMode.slideRight:
-        return QLTransitionPreset(fromScale: 1.0, fromOpacity: 0.0, fromTranslate: const Offset(1, 0), curve: QLSprings.sheet, duration: const Duration(milliseconds: 380));
+        return QLTransitionPreset(
+            fromScale: 1.0,
+            fromOpacity: 0.0,
+            fromTranslate: const Offset(1, 0),
+            curve: QLSprings.sheet,
+            duration: const Duration(milliseconds: 380));
       case QLTransitionMode.popover:
         return QLTransitionPresets.menu;
       case QLTransitionMode.windowDrop:
@@ -1171,7 +1183,7 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
 
     if (_mode == QLInteractionMode.resize) {
       _applyResize(dx, dy);
-      if (mounted) setState((){});
+      if (mounted) setState(() {});
       _calcBounds();
       return;
     }
@@ -1195,7 +1207,7 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
         break;
     }
 
-    if (mounted) setState((){});
+    if (mounted) setState(() {});
     _calcBounds();
   }
 
@@ -1312,7 +1324,7 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
 
     _mode = QLInteractionMode.none;
     _resizeEdge = QLResizeEdge.none;
-    if (mounted) setState((){});
+    if (mounted) setState(() {});
   }
 
   @override
@@ -1356,10 +1368,18 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
 
         if (_sheetOvershoot != 0.0) {
           switch (c.sheetEdge) {
-            case QLSheetEdge.bottom: m.storage[13] += _sheetOvershoot; break;
-            case QLSheetEdge.top: m.storage[13] -= _sheetOvershoot; break;
-            case QLSheetEdge.left: m.storage[12] -= _sheetOvershoot; break;
-            case QLSheetEdge.right: m.storage[12] += _sheetOvershoot; break;
+            case QLSheetEdge.bottom:
+              m.storage[13] += _sheetOvershoot;
+              break;
+            case QLSheetEdge.top:
+              m.storage[13] -= _sheetOvershoot;
+              break;
+            case QLSheetEdge.left:
+              m.storage[12] -= _sheetOvershoot;
+              break;
+            case QLSheetEdge.right:
+              m.storage[12] += _sheetOvershoot;
+              break;
           }
         }
 
@@ -1385,7 +1405,8 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
           builder: (ctx, viewportConstraints) {
             final Size screenSize = MediaQuery.sizeOf(ctx);
             final BoxConstraints effectiveConstraints =
-                _effectiveConstraints(c, screenSize).enforce(viewportConstraints);
+                _effectiveConstraints(c, screenSize)
+                    .enforce(viewportConstraints);
 
             return ConstrainedBox(
               constraints: effectiveConstraints,
@@ -1425,8 +1446,8 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
     Widget innerChild = KeyedSubtree(key: _contentKey, child: content);
 
     if (c.showDragHandle) {
-      final handleColor =
-          Colors.white.withValues(alpha: c.dragHandleOpacity.clamp(0.0, 1.0).toDouble());
+      final handleColor = Colors.white
+          .withValues(alpha: c.dragHandleOpacity.clamp(0.0, 1.0).toDouble());
       innerChild = Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -1437,8 +1458,8 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
               height: c.dragHandleHeight.clamp(2.0, 12.0).toDouble(),
               decoration: BoxDecoration(
                 color: handleColor,
-                borderRadius:
-                    BorderRadius.circular(c.dragHandleHeight.clamp(2.0, 12.0).toDouble()),
+                borderRadius: BorderRadius.circular(
+                    c.dragHandleHeight.clamp(2.0, 12.0).toDouble()),
               ),
             ),
           ),
@@ -1452,7 +1473,8 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
       innerChild = Padding(padding: c.sheetPadding, child: innerChild);
     }
 
-    if (c.sheetBorderRadius != BorderRadius.zero || c.clipBehavior != Clip.none) {
+    if (c.sheetBorderRadius != BorderRadius.zero ||
+        c.clipBehavior != Clip.none) {
       innerChild = ClipRRect(
         borderRadius: c.sheetBorderRadius,
         clipBehavior: c.clipBehavior,
@@ -1473,7 +1495,8 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
         c.transition == QLTransitionMode.slideLeft ||
         c.transition == QLTransitionMode.slideRight;
     if (sheetIsVertical || sheetIsHorizontal) {
-      final Axis scrollAxis = sheetIsHorizontal ? Axis.horizontal : Axis.vertical;
+      final Axis scrollAxis =
+          sheetIsHorizontal ? Axis.horizontal : Axis.vertical;
       innerChild = QuantumScrollScope(
         axis: scrollAxis,
         child: ClipRect(
@@ -1519,7 +1542,8 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
           left: _x, top: _y, width: _w, height: _h, child: innerChild);
     } else {
       return Positioned.fill(
-          child: Align(alignment: c.sheetAlignment ?? c.anchor, child: innerChild));
+          child: Align(
+              alignment: c.sheetAlignment ?? c.anchor, child: innerChild));
     }
   }
 }
@@ -1576,7 +1600,8 @@ extension QuantumOverlayContextExt on BuildContext {
     bool enableDrag = true,
     List<double> snapPoints = const [0.5, 1.0],
     QLBackgroundEffect effect = QLBackgroundEffect.zoomBack,
-    BoxConstraints constraints = const BoxConstraints(maxWidth: 800, maxHeight: 720),
+    BoxConstraints constraints =
+        const BoxConstraints(maxWidth: 800, maxHeight: 720),
     QLSheetEdge edge = QLSheetEdge.bottom,
     Alignment? sheetAlignment,
     EdgeInsetsGeometry sheetPadding = EdgeInsets.zero,
@@ -1623,7 +1648,8 @@ extension QuantumOverlayContextExt on BuildContext {
     bool dismissible = true,
     bool enableDrag = true,
     QLSheetEdge edge = QLSheetEdge.left,
-    BoxConstraints constraints = const BoxConstraints(maxWidth: 420, maxHeight: 720),
+    BoxConstraints constraints =
+        const BoxConstraints(maxWidth: 420, maxHeight: 720),
     Alignment? sheetAlignment,
     EdgeInsetsGeometry sheetPadding = EdgeInsets.zero,
     BorderRadius sheetBorderRadius = BorderRadius.zero,

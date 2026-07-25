@@ -350,7 +350,8 @@ abstract final class QLHydration {
   /// previously *looked* like it read the DOM via an empty try/catch that
   /// always "succeeded" without doing anything -- that was misleading and
   /// has been removed).
-  static Map<String, dynamic>? Function()? domPropsReader = readQuantumHydrationProps;
+  static Map<String, dynamic>? Function()? domPropsReader =
+      readQuantumHydrationProps;
 
   /// Checks if pure HTML server props exist in the Web DOM and parses them.
   static void hydrateFromDom() {
@@ -760,13 +761,12 @@ class QLRouterDelegate extends RouterDelegate<QLRouteInfo>
     return Navigator(
       key: navigatorKey,
       observers: [TelemetryNavigatorObserver()],
-      pages: controller.stack.asMap().entries.map((entry) {
-        final int index = entry.key;
-        final QLRouteInfo info = entry.value;
+      pages: controller.stack.map((info) {
         final match = controller._trie.search(info.path);
 
         return _QLHardwarePage(
-          key: ValueKey('${info.path}_$index'),
+          // 🚀 FIX 2: ObjectKey guarantees a 100% unique key for every single push!
+          key: ObjectKey(info),
           name: info.path,
           child: controller.resolveWidget(context, info),
           transition:
@@ -775,7 +775,12 @@ class QLRouterDelegate extends RouterDelegate<QLRouteInfo>
               const Duration(milliseconds: 380),
         );
       }).toList(),
-      onDidRemovePage: (page) => controller.pop(),
+      // 🚀 FIX 3: Stop the double-pop corruption!
+      onPopPage: (route, result) {
+        if (!route.didPop(result)) return false;
+        controller.pop();
+        return true;
+      },
     );
   }
 }
@@ -957,9 +962,16 @@ class _QLZeroRebuildTransitionState extends State<_QLZeroRebuildTransition> {
 
   @override
   Widget build(BuildContext context) {
-    return QLBox(
-      transform3D: _transform,
-      opacity: _opacity,
+    return AnimatedBuilder(
+      animation: Listenable.merge([_transform, _opacity]),
+      builder: (ctx, child) => Opacity(
+        opacity: _opacity.value.clamp(0.0, 1.0),
+        child: Transform(
+          transform: _transform.value,
+          alignment: Alignment.center,
+          child: child,
+        ),
+      ),
       child: widget.child,
     );
   }

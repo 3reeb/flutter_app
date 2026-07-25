@@ -1,5 +1,10 @@
 import 'dart:typed_data';
 
-void downloadImage(Uint8List bytes, String filename) {
-  throw UnsupportedError('Cannot download on this platform');
+Future<String> downloadText(String content, String filename,
+    {String mimeType = 'application/json'}) async {
+  throw UnsupportedError('File export is not supported on this platform.');
+}
+
+Future<String> downloadImage(Uint8List bytes, String filename) async {
+  throw UnsupportedError('Image export is not supported on this platform.');
 }

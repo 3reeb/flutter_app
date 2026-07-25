@@ -1326,43 +1326,6 @@ void _registerRichDesignSystemTemplates(QuantumVM vm) {
   vm.defineAlias('rich_list', 'template:rich_list');
   vm.defineAlias('rich_table', 'template:rich_table');
 }
-
-// ── IMPLICIT BEHAVIOR INJECTOR ──
-Widget _applyImplicitBehaviors(QLContext ctx, Widget child) {
-  Widget node = child;
-  if (ctx.prop('dragData') != null) {
-    node =
-        QLPortalDrag(data: ctx.string('dragData'), feedback: node, child: node);
-  }
-  if (ctx.prop('onDrop') != null) {
-    node = DragTarget<Object>(
-      onWillAcceptWithDetails: (_) => true,
-      onAcceptWithDetails: (d) =>
-          ctx.action('onDrop', localPayload: {'dragData': d.data})?.call(),
-      builder: (_, cand, __) =>
-          Opacity(opacity: cand.isNotEmpty ? 0.7 : 1.0, child: node),
-    );
-  }
-  if (ctx.boolean('magneto')) {
-    node = QLMagnetoSurface(
-      enable3DTilt: true,
-      tiltIntensity: ctx.number('magnetoIntensity', fallback: 1.0),
-      child: node,
-    );
-  }
-  if (ctx.string('heroId').isNotEmpty) {
-    node = Hero(tag: ctx.string('heroId'), child: node);
-  }
-  return node;
-}
-
-// ════════════════════════════════════════════════════════════════════════════
-// CORE 1: BOX (Layouts, Constraints & Post-Layout Telemetry)
-// ════════════════════════════════════════════════════════════════════════════
-// ════════════════════════════════════════════════════════════════════════════
-// CORE 1: BOX (Layouts, Constraints & Post-Layout Telemetry)
-// ════════════════════════════════════════════════════════════════════════════
-
 // ---- template instance / registrations ----
 
 Widget _buildTemplate(QLContext rawCtx) {
@@ -3071,27 +3034,68 @@ void _registerGeneralBuiltInTemplates(QuantumVM vm) {
 }
 
 void _registerTemplateAliases(QuantumVM vm) {
-  vm.defineAlias('menu', 'template:nested_menu', description: 'Menu template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('menu_item', 'template:menu_item', description: 'Menu item template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('list', 'template:rich_list', description: 'List template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('table', 'template:rich_table', description: 'Table template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('avatars', 'template:avatar_group', description: 'Avatars template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('avatar_group', 'template:avatar_group', description: 'Avatar group template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('categories', 'template:category_browser', description: 'Categories template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('category_browser', 'template:category_browser', description: 'Category browser template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('rich_shell', 'template:rich_shell', description: 'Rich shell template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('rich_list', 'template:rich_list', description: 'Rich list template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('rich_table', 'template:rich_table', description: 'Rich table template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('tabs', 'template:tabs', description: 'Template tabs alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('data_shell', 'template:collection_shell', description: 'Data shell template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('wizard', 'template:stepper', description: 'Wizard template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('empty_state', 'template:state_surface', description: 'Empty state template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('error_state', 'template:state_surface', description: 'Error state template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('profile_card', 'template:profile_card', description: 'Profile card template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('flow_shell', 'template:flow_shell', description: 'Flow shell template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('hero_bridge', 'template:hero_bridge', description: 'Hero bridge template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('tabs_shell', 'template:tabs', description: 'Tabs shell template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('carousel_shell', 'template:carousel', description: 'Carousel shell template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('canvas_shell', 'template:stage_shell', description: 'Canvas shell template alias.', tags: const ['template', 'alias']);
-  vm.defineAlias('search_shell', 'template:search_panel', description: 'Search shell template alias.', tags: const ['template', 'alias']);
+  vm.defineAlias('menu', 'template:nested_menu',
+      description: 'Menu template alias.', tags: const ['template', 'alias']);
+  vm.defineAlias('menu_item', 'template:menu_item',
+      description: 'Menu item template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('list', 'template:rich_list',
+      description: 'List template alias.', tags: const ['template', 'alias']);
+  vm.defineAlias('table', 'template:rich_table',
+      description: 'Table template alias.', tags: const ['template', 'alias']);
+  vm.defineAlias('avatars', 'template:avatar_group',
+      description: 'Avatars template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('avatar_group', 'template:avatar_group',
+      description: 'Avatar group template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('categories', 'template:category_browser',
+      description: 'Categories template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('category_browser', 'template:category_browser',
+      description: 'Category browser template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('rich_shell', 'template:rich_shell',
+      description: 'Rich shell template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('rich_list', 'template:rich_list',
+      description: 'Rich list template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('rich_table', 'template:rich_table',
+      description: 'Rich table template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('tabs', 'template:tabs',
+      description: 'Template tabs alias.', tags: const ['template', 'alias']);
+  vm.defineAlias('data_shell', 'template:collection_shell',
+      description: 'Data shell template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('wizard', 'template:stepper',
+      description: 'Wizard template alias.', tags: const ['template', 'alias']);
+  vm.defineAlias('empty_state', 'template:state_surface',
+      description: 'Empty state template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('error_state', 'template:state_surface',
+      description: 'Error state template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('profile_card', 'template:profile_card',
+      description: 'Profile card template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('flow_shell', 'template:flow_shell',
+      description: 'Flow shell template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('hero_bridge', 'template:hero_bridge',
+      description: 'Hero bridge template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('tabs_shell', 'template:tabs',
+      description: 'Tabs shell template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('carousel_shell', 'template:carousel',
+      description: 'Carousel shell template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('canvas_shell', 'template:stage_shell',
+      description: 'Canvas shell template alias.',
+      tags: const ['template', 'alias']);
+  vm.defineAlias('search_shell', 'template:search_panel',
+      description: 'Search shell template alias.',
+      tags: const ['template', 'alias']);
 }

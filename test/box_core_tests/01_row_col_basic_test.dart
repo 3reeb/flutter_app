@@ -32,7 +32,8 @@ void main() {
     tearDown(boxCoreTearDown);
 
     // ── 1. Alias resolution ────────────────────────────────────────────────
-    testWidgets('1.1 "row" alias resolves to box:row and renders Flex(horizontal)',
+    testWidgets(
+        '1.1 "row" alias resolves to box:row and renders Flex(horizontal)',
         (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'row',
@@ -46,7 +47,8 @@ void main() {
       expect(find.text('C'), findsOneWidget);
     });
 
-    testWidgets('1.2 "col" alias resolves to box:col and renders Flex(vertical)',
+    testWidgets(
+        '1.2 "col" alias resolves to box:col and renders Flex(vertical)',
         (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
@@ -69,7 +71,7 @@ void main() {
       }));
       await tester.pumpAndSettle();
 
-      final colFinder = find.byWidgetPredicate((w) => w is QLBox);
+      final colFinder = find.byWidgetPredicate((w) => w is Q);
       expect(colFinder, findsWidgets);
     });
 
@@ -129,7 +131,11 @@ void main() {
         'type': 'row',
         'style': 'min-w-0 min-h-0',
         'children': [
-          {'type': 'box:col', 'style': 'min-w-0', 'children': [textLeaf('Safe')]},
+          {
+            'type': 'box:col',
+            'style': 'min-w-0',
+            'children': [textLeaf('Safe')]
+          },
         ],
       }));
       await tester.pumpAndSettle();
@@ -137,7 +143,8 @@ void main() {
     });
 
     // ── 3. Props: gap, justify, items ──────────────────────────────────────
-    testWidgets('3.1 prop gap:20 applies spacing between children', (tester) async {
+    testWidgets('3.1 prop gap:20 applies spacing between children',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-full',
@@ -150,7 +157,8 @@ void main() {
       expect(find.text('P3'), findsOneWidget);
     });
 
-    testWidgets('3.2 prop justify:space-between spreads children', (tester) async {
+    testWidgets('3.2 prop justify:space-between spreads children',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'row',
         'style': 'w-full h-60',
@@ -176,7 +184,8 @@ void main() {
     });
 
     // ── 4. Width / Height props ───────────────────────────────────────────
-    testWidgets('4.1 width:300 height:150 creates bounded SizedBox', (tester) async {
+    testWidgets('4.1 width:300 height:150 creates bounded SizedBox',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'bg-blue-500',
@@ -204,7 +213,8 @@ void main() {
     });
 
     // ── 5. Constrained box ────────────────────────────────────────────────
-    testWidgets('5.1 constrained:true with maxWidth/maxHeight enforces box constraints',
+    testWidgets(
+        '5.1 constrained:true with maxWidth/maxHeight enforces box constraints',
         (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
@@ -241,7 +251,8 @@ void main() {
     });
 
     // ── 6. Fractional sizing ──────────────────────────────────────────────
-    testWidgets('6.1 fractional:true with widthFactor:0.5 uses half parent width',
+    testWidgets(
+        '6.1 fractional:true with widthFactor:0.5 uses half parent width',
         (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
@@ -335,7 +346,8 @@ void main() {
       expect(tapped, isFalse);
     });
 
-    testWidgets('9.3 absorbPointer:true swallows pointer events', (tester) async {
+    testWidgets('9.3 absorbPointer:true swallows pointer events',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-full',
@@ -360,7 +372,8 @@ void main() {
     });
 
     // ── 10. Semantics ─────────────────────────────────────────────────────
-    testWidgets('10.1 semanticLabel adds Semantics widget with label', (tester) async {
+    testWidgets('10.1 semanticLabel adds Semantics widget with label',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-full',
@@ -373,7 +386,8 @@ void main() {
     });
 
     // ── 11. Nested row-in-col ─────────────────────────────────────────────
-    testWidgets('11.1 row nested inside col renders correct 2D layout', (tester) async {
+    testWidgets('11.1 row nested inside col renders correct 2D layout',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-full gap-8',
@@ -396,7 +410,8 @@ void main() {
       expect(find.text('Row2Col2'), findsOneWidget);
     });
 
-    testWidgets('11.2 col nested inside row — sidebar + content pattern', (tester) async {
+    testWidgets('11.2 col nested inside row — sidebar + content pattern',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'row',
         'style': 'w-full h-full min-w-0',
@@ -430,7 +445,8 @@ void main() {
     });
 
     // ── 12. Scrollable row / col ──────────────────────────────────────────
-    testWidgets('12.1 col with scrollable:true wraps in scroll viewport', (tester) async {
+    testWidgets('12.1 col with scrollable:true wraps in scroll viewport',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-full',
@@ -447,7 +463,8 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('12.2 row with scrollable:true wraps in horizontal scroll', (tester) async {
+    testWidgets('12.2 row with scrollable:true wraps in horizontal scroll',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'row',
         'style': 'h-80 items-center',
@@ -464,7 +481,8 @@ void main() {
     });
 
     // ── 13. Deep nesting stress test ──────────────────────────────────────
-    testWidgets('13.1 10-level deep nesting renders without stack overflow', (tester) async {
+    testWidgets('13.1 10-level deep nesting renders without stack overflow',
+        (tester) async {
       Map<String, dynamic> buildNested(int depth, String label) {
         if (depth == 0) return textLeaf(label);
         final type = depth.isEven ? 'col' : 'row';
@@ -487,7 +505,8 @@ void main() {
     });
 
     // ── 14. Dynamic sizes driven by store ─────────────────────────────────
-    testWidgets('14.1 width/height driven by store data — reactive sizing', (tester) async {
+    testWidgets('14.1 width/height driven by store data — reactive sizing',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper(
         {
           'type': 'col',
@@ -543,7 +562,8 @@ void main() {
     });
 
     // ── 16. Multiple style tokens combined ────────────────────────────────
-    testWidgets('16.1 combined style: w-full h-200 items-start justify-between gap-8',
+    testWidgets(
+        '16.1 combined style: w-full h-200 items-start justify-between gap-8',
         (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'row',
@@ -598,7 +618,8 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('17.3 asymmetric padding [top, right, bottom, left]', (tester) async {
+    testWidgets('17.3 asymmetric padding [top, right, bottom, left]',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'col',
         'style': 'w-full',
@@ -614,7 +635,8 @@ void main() {
     });
 
     // ── 18. Complex combination: sidebar layout with nested scrollable col ─
-    testWidgets('18.1 sidebar + scrollable content — real-world pattern', (tester) async {
+    testWidgets('18.1 sidebar + scrollable content — real-world pattern',
+        (tester) async {
       await tester.pumpWidget(buildTestWrapper({
         'type': 'row',
         'style': 'w-full h-full min-w-0',
@@ -623,7 +645,9 @@ void main() {
           {
             'type': 'col',
             'style': 'w-200 h-full bg-slate-800 gap-4',
-            'props': {'padding': [16]},
+            'props': {
+              'padding': [16]
+            },
             'children': List.generate(
               5,
               (i) => {
@@ -640,7 +664,10 @@ void main() {
               {
                 'type': 'col',
                 'style': 'w-full h-full',
-                'props': {'scrollable': true, 'padding': [24]},
+                'props': {
+                  'scrollable': true,
+                  'padding': [24]
+                },
                 'children': List.generate(
                   20,
                   (i) => {
