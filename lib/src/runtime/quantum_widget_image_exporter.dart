@@ -389,24 +389,22 @@ class _OffscreenCaptureHostState extends State<_OffscreenCaptureHost> {
             ),
     );
 
-    // Offstage so it never shows on screen; positioned at (0,0) in the Overlay.
+    // Positioned far off-screen so it never shows on screen, but still paints.
     return Positioned(
-      left: 0,
-      top: 0,
-      child: Offstage(
-        child: RepaintBoundary(
-          key: widget.repaintKey,
-          child: MediaQuery(
-            // Override device pixel ratio so captures are always crisp at the
-            // requested pixelRatio regardless of the host device's DPR.
-            data: MediaQuery.of(context).copyWith(
-              size: Size(logicalWidth, logicalHeight ?? 10000),
-              devicePixelRatio: widget.config.pixelRatio,
-            ),
-            child: ColoredBox(
-              color: widget.config.background,
-              child: sized,
-            ),
+      left: -10000,
+      top: -10000,
+      child: RepaintBoundary(
+        key: widget.repaintKey,
+        child: MediaQuery(
+          // Override device pixel ratio so captures are always crisp at the
+          // requested pixelRatio regardless of the host device's DPR.
+          data: MediaQuery.of(context).copyWith(
+            size: Size(logicalWidth, logicalHeight ?? 10000),
+            devicePixelRatio: widget.config.pixelRatio,
+          ),
+          child: ColoredBox(
+            color: widget.config.background,
+            child: sized,
           ),
         ),
       ),
