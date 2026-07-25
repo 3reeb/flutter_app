@@ -1745,6 +1745,10 @@ class _QState extends State<Q> {
             ? Clip.hardEdge
             : Clip.none;
 
+    if (clipBehavior != Clip.none && dec == null) {
+      dec = const BoxDecoration();
+    }
+
     Widget node = child;
 
     final QuantumScrollScope? scrollScope = QuantumScrollScope.of(context);
@@ -1770,7 +1774,7 @@ class _QState extends State<Q> {
               ? (insideHorizontalScroll
                   ? null
                   : (constraints.hasBoundedWidth ? constraints.maxWidth : null))
-              : w;
+              : (w >= 0 ? w : null);
 
           final double? safeH = (h == double.infinity)
               ? (insideVerticalScroll
@@ -1778,7 +1782,7 @@ class _QState extends State<Q> {
                   : (constraints.hasBoundedHeight
                       ? constraints.maxHeight
                       : null))
-              : h;
+              : (h >= 0 ? h : null);
 
           return AnimatedContainer(
             duration: const Duration(milliseconds: 200),

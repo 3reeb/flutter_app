@@ -52,7 +52,8 @@ Widget _buildData(QLContext rawCtx) {
     final String bindKey = ctx.string('bind');
     final String asKey = ctx.string('as', fallback: 'item');
     final QLSignal sig = ctx.store.signal(bindKey);
-    final QLBlueprint? template = ctx.node.slots['item'] ?? ctx.node.children.firstOrNull;
+    final QLBlueprint? template =
+        ctx.node.slots['item'] ?? ctx.node.children.firstOrNull;
     return AnimatedBuilder(
       animation: sig,
       builder: (c, _) {
@@ -66,7 +67,9 @@ Widget _buildData(QLContext rawCtx) {
             items.length,
             (i) => QLDataScope(
               localData: {...ctx.env, asKey: items[i], 'index': i},
-              child: Builder(builder: (ic) => QuantumVM.instance.renderWidget(ic, template)),
+              child: Builder(
+                  builder: (ic) =>
+                      QuantumVM.instance.renderWidget(ic, template)),
             ),
           ),
         );
@@ -80,7 +83,8 @@ Widget _buildData(QLContext rawCtx) {
     final String keyAttr = ctx.string('key', fallback: 'id');
     final String asKey = ctx.string('as', fallback: 'item');
     final QLSignal sig = ctx.store.signal(bindKey);
-    final QLBlueprint? template = ctx.node.slots['item'] ?? ctx.node.children.firstOrNull;
+    final QLBlueprint? template =
+        ctx.node.slots['item'] ?? ctx.node.children.firstOrNull;
     return AnimatedBuilder(
       animation: sig,
       builder: (c, _) {
@@ -90,12 +94,16 @@ Widget _buildData(QLContext rawCtx) {
         return Q(
           'col w-full',
           children: items.map((item) {
-            final keyVal = item is Map ? item[keyAttr]?.toString() : item.hashCode.toString();
+            final keyVal = item is Map
+                ? item[keyAttr]?.toString()
+                : item.hashCode.toString();
             return KeyedSubtree(
               key: ValueKey(keyVal ?? item.hashCode),
               child: QLDataScope(
                 localData: {...ctx.env, asKey: item},
-                child: Builder(builder: (ic) => QuantumVM.instance.renderWidget(ic, template)),
+                child: Builder(
+                    builder: (ic) =>
+                        QuantumVM.instance.renderWidget(ic, template)),
               ),
             );
           }).toList(),
@@ -110,8 +118,10 @@ Widget _buildData(QLContext rawCtx) {
     final int start = ctx.integer('start', fallback: 0);
     final int limit = ctx.integer('limit', fallback: 20);
     final String asKey = ctx.string('as', fallback: 'item');
-    final sliced = items.sublist(start.clamp(0, items.length), (start + limit).clamp(0, items.length));
-    final QLBlueprint? template = ctx.node.slots['item'] ?? ctx.node.children.firstOrNull;
+    final sliced = items.sublist(
+        start.clamp(0, items.length), (start + limit).clamp(0, items.length));
+    final QLBlueprint? template =
+        ctx.node.slots['item'] ?? ctx.node.children.firstOrNull;
     if (template == null) return Q('col w-full', children: ctx.children);
     return Q(
       'col w-full',
@@ -119,7 +129,8 @@ Widget _buildData(QLContext rawCtx) {
         sliced.length,
         (i) => QLDataScope(
           localData: {...ctx.env, asKey: sliced[i], 'index': start + i},
-          child: Builder(builder: (c) => QuantumVM.instance.renderWidget(c, template)),
+          child: Builder(
+              builder: (c) => QuantumVM.instance.renderWidget(c, template)),
         ),
       ),
     );
@@ -130,7 +141,11 @@ Widget _buildData(QLContext rawCtx) {
     final String cursorKey = ctx.string('cursorKey', fallback: 'nextCursor');
     final dynamic nextCursor = ctx.store.get(cursorKey);
     return QLDataScope(
-      localData: {...ctx.env, r'$hasMore': nextCursor != null, r'$nextCursor': nextCursor},
+      localData: {
+        ...ctx.env,
+        r'$hasMore': nextCursor != null,
+        r'$nextCursor': nextCursor
+      },
       child: Q('col w-full', children: ctx.children),
     );
   }
@@ -139,14 +154,19 @@ Widget _buildData(QLContext rawCtx) {
   if (subType == 'realtime') {
     final String channel = ctx.string('channel');
     final String asKey = ctx.string('as', fallback: 'event');
-    return QLDataScope(localData: {...ctx.env, asKey: {}}, child: Q('col w-full', children: ctx.children)); // Uses QLChannelHub internally
+    return QLDataScope(
+        localData: {...ctx.env, asKey: {}},
+        child: Q('col w-full',
+            children: ctx.children)); // Uses QLChannelHub internally
   }
 
   // ── data:paginated ──────────────────────────────────────────────────────────
   if (subType == 'paginated') {
     final String action = ctx.string('action');
     final int pageSize = ctx.integer('pageSize', fallback: 20);
-    return Q('col w-full', children: ctx.children); // Wraps data:list with intersection observer for prefetch
+    return Q('col w-full',
+        children: ctx
+            .children); // Wraps data:list with intersection observer for prefetch
   }
 
   // ── data:virtual_scroll ─────────────────────────────────────────────────────
@@ -154,7 +174,8 @@ Widget _buildData(QLContext rawCtx) {
     final String bindKey = ctx.string('bind');
     final double itemHeight = ctx.number('itemHeight', fallback: 50.0);
     final QLSignal sig = ctx.store.signal(bindKey);
-    final QLBlueprint? template = ctx.node.slots['item'] ?? ctx.node.children.firstOrNull;
+    final QLBlueprint? template =
+        ctx.node.slots['item'] ?? ctx.node.children.firstOrNull;
     if (template == null) return const SizedBox.shrink();
     return AnimatedBuilder(
       animation: sig,
@@ -164,8 +185,13 @@ Widget _buildData(QLContext rawCtx) {
           itemCount: items.length,
           itemExtent: itemHeight > 0 ? itemHeight : null,
           itemBuilder: (ctx2, i) => QLDataScope(
-            localData: {...ctx.env, ctx.string('as', fallback: 'item'): items[i], 'index': i},
-            child: Builder(builder: (ic) => QuantumVM.instance.renderWidget(ic, template)),
+            localData: {
+              ...ctx.env,
+              ctx.string('as', fallback: 'item'): items[i],
+              'index': i
+            },
+            child: Builder(
+                builder: (ic) => QuantumVM.instance.renderWidget(ic, template)),
           ),
         );
       },
@@ -175,7 +201,8 @@ Widget _buildData(QLContext rawCtx) {
   // ── data:aggregate ──────────────────────────────────────────────────────────
   if (subType == 'aggregate') {
     final List<dynamic> sources = ctx.list('sources');
-    return Q('col w-full', children: ctx.children); // Merges signals, re-renders on any change
+    return Q('col w-full',
+        children: ctx.children); // Merges signals, re-renders on any change
   }
 
   // ── data:timeline ───────────────────────────────────────────────────────────
@@ -185,7 +212,8 @@ Widget _buildData(QLContext rawCtx) {
 
   // ── data:infinite ───────────────────────────────────────────────────────────
   if (subType == 'infinite') {
-    return Q('col w-full', children: ctx.children); // Bidirectional infinite scroll
+    return Q('col w-full',
+        children: ctx.children); // Bidirectional infinite scroll
   }
 
   // STANDARD DATA LOGIC
@@ -237,7 +265,7 @@ Widget _buildData(QLContext rawCtx) {
                             .renderWidget(innerCtx, itemTemplate)))),
           );
         } else if (subType == 'table') {
-          return Q('col w-full h-full', children: [
+          return Q('col min-w-0 min-h-0', children: [
             if (ctx.slot('header') != null) ctx.slot('header')!,
             QuantumFlexible(
                 child: QLViewport<Widget>.builder(
@@ -275,6 +303,8 @@ Widget _buildData(QLContext rawCtx) {
 // ════════════════════════════════════════════════════════════════════════════
 
 void _registerDataAliases(QuantumVM vm) {
-  vm.defineAlias('sliver_plane', 'data:sliver_plane', description: 'Sliver plane alias.', tags: const ['data', 'alias']);
-  vm.defineAlias('sliver', 'data:sliver', description: 'Sliver alias.', tags: const ['data', 'alias']);
+  vm.defineAlias('sliver_plane', 'data:sliver_plane',
+      description: 'Sliver plane alias.', tags: const ['data', 'alias']);
+  vm.defineAlias('sliver', 'data:sliver',
+      description: 'Sliver alias.', tags: const ['data', 'alias']);
 }

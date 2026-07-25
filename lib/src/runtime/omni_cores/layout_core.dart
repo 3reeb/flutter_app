@@ -8,7 +8,7 @@ Widget _buildLayout(QLContext rawCtx) {
       fallback: ctx.string('layoutId', fallback: ctx.string('id')));
 
   if (layoutId.isEmpty) {
-    return Q('col w-full h-full', children: ctx.children);
+    return Q('col min-w-0 min-h-0', children: ctx.children);
   }
 
   final layoutDef = QMatrixLayoutRegistry.get(layoutId);
@@ -948,23 +948,44 @@ Widget _buildDecorationRichText(QLContext rawCtx) {
 }
 
 void _registerLayoutAliases(QuantumVM vm) {
-  vm.defineAlias('workspace_layout', 'layout:workspace', description: 'Workspace layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('page_layout', 'layout:page', description: 'Page layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('app_layout', 'layout:app_shell', description: 'App layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('shell_layout', 'layout:app_shell', description: 'Shell layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('split_layout', 'layout:split_shell', description: 'Split layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('feed_layout', 'layout:feed_shell', description: 'Feed layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('form_layout', 'layout:form_shell', description: 'Form layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('modal_layout', 'layout:modal_shell', description: 'Modal layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('timeline_layout', 'layout:timeline_shell', description: 'Timeline layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('dashboard_layout', 'layout:workspace', description: 'Dashboard layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('document_layout', 'layout:page', description: 'Document layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('presentation_layout', 'layout:page', description: 'Presentation layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('vscode_layout', 'layout:workspace', description: 'VS Code style layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('studio_layout', 'layout:workspace', description: 'Studio layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('kanban_layout', 'layout:workspace', description: 'Kanban layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('social_layout', 'layout:feed_shell', description: 'Social layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('commerce_layout', 'layout:workspace', description: 'Commerce layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('erp_layout', 'layout:workspace', description: 'ERP layout alias.', tags: const ['layout', 'alias']);
-  vm.defineAlias('ai_layout', 'layout:workspace', description: 'AI layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('workspace_layout', 'layout:workspace',
+      description: 'Workspace layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('page_layout', 'layout:page',
+      description: 'Page layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('app_layout', 'layout:app_shell',
+      description: 'App layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('shell_layout', 'layout:app_shell',
+      description: 'Shell layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('split_layout', 'layout:split_shell',
+      description: 'Split layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('feed_layout', 'layout:feed_shell',
+      description: 'Feed layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('form_layout', 'layout:form_shell',
+      description: 'Form layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('modal_layout', 'layout:modal_shell',
+      description: 'Modal layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('timeline_layout', 'layout:timeline_shell',
+      description: 'Timeline layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('dashboard_layout', 'layout:workspace',
+      description: 'Dashboard layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('document_layout', 'layout:page',
+      description: 'Document layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('presentation_layout', 'layout:page',
+      description: 'Presentation layout alias.',
+      tags: const ['layout', 'alias']);
+  vm.defineAlias('vscode_layout', 'layout:workspace',
+      description: 'VS Code style layout alias.',
+      tags: const ['layout', 'alias']);
+  vm.defineAlias('studio_layout', 'layout:workspace',
+      description: 'Studio layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('kanban_layout', 'layout:workspace',
+      description: 'Kanban layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('social_layout', 'layout:feed_shell',
+      description: 'Social layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('commerce_layout', 'layout:workspace',
+      description: 'Commerce layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('erp_layout', 'layout:workspace',
+      description: 'ERP layout alias.', tags: const ['layout', 'alias']);
+  vm.defineAlias('ai_layout', 'layout:workspace',
+      description: 'AI layout alias.', tags: const ['layout', 'alias']);
 }

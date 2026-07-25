@@ -32,6 +32,11 @@ extension QLContextSubtype on QLContext {
       final String suffix = nodeType.split(':').last;
       if (suffix.isNotEmpty) return suffix;
     }
+    
+    if (nodeType == 'row' || nodeType == 'col' || nodeType == 'wrap' || nodeType == 'stack' || nodeType == 'grid' || nodeType == 'masonry') {
+      return nodeType;
+    }
+    
     return fallback;
   }
 }

@@ -10,7 +10,7 @@ Widget _buildCanvas(QLContext rawCtx) {
   if (subType == 'draw') {
     return _QLProceduralCanvasNode(
       commands: ctx.list('commands'),
-      child: Q('col w-full h-full', children: ctx.children),
+      child: Q('col min-w-0 min-h-0', children: ctx.children),
     );
   }
 
@@ -62,7 +62,7 @@ Widget _buildCanvas(QLContext rawCtx) {
               (s) => Float32List(0),
             ),
           ),
-          child: Q('col w-full h-full', children: ctx.children),
+          child: Q('col min-w-0 min-h-0', children: ctx.children),
         );
       },
     );
@@ -201,7 +201,7 @@ class _QLProceduralCanvasNodeState extends State<_QLProceduralCanvasNode> {
       final cmd = widget.commands[i];
       if (cmd is! List || cmd.isEmpty) continue;
       final type = cmd[0].toString();
-      
+
       try {
         _iData[i * 2 + 1] = cmd.length > 4
             ? QLParserUtils.parseColor(
@@ -277,5 +277,6 @@ class _QLProceduralPainter extends CustomPainter {
 }
 
 void _registerCanvasAliases(QuantumVM vm) {
-  vm.defineAlias('shader', 'canvas:shader', description: 'Canvas shader alias.', tags: const ['canvas', 'alias']);
+  vm.defineAlias('shader', 'canvas:shader',
+      description: 'Canvas shader alias.', tags: const ['canvas', 'alias']);
 }

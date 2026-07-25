@@ -437,6 +437,7 @@ void registerOmniComponents(QuantumVM vm) {
   _registerBoxAliases(vm);
   _registerActionAliases(vm);
   _registerFieldAliases(vm);
+  _registerTextAliases(vm);
   _registerMediaAliases(vm);
   _registerDataAliases(vm);
   _registerPortalAliases(vm);

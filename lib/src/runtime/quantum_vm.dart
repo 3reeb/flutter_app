@@ -1014,8 +1014,8 @@ abstract final class QLCompiler {
 
     if (out['type'] == 'box:split') {
       out['style'] = out['style'] == null
-          ? 'w-full h-full'
-          : '${out['style']} w-full h-full';
+          ? 'min-w-0 min-h-0'
+          : '${out['style']} min-w-0 min-h-0';
     }
 
     return out;
@@ -5764,7 +5764,14 @@ class QuantumVM {
       }
     }
 
-    final String nodeType = node.type.toString();
+    String nodeType = node.type.toString();
+    
+    // Resolve alias early to ensure we hit the correct core
+    final aliasDef = getAlias(nodeType);
+    if (aliasDef != null) {
+      nodeType = aliasDef['type'].toString();
+    }
+
     final String nodeBaseType =
         nodeType.contains(':') ? nodeType.split(':').first : nodeType;
     final String nodeTypeSuffix =
@@ -5773,23 +5780,8 @@ class QuantumVM {
         node.props['__subType']?.toString().isNotEmpty == true
             ? node.props['__subType'].toString()
             : nodeTypeSuffix;
-    final Set<String> structuralSubTypes = <String>{
-      'row',
-      'col',
-      'column',
-      '->',
-      'v',
-      'wrap',
-      'center',
-      'stack',
-      'grid',
-      'grid_item',
-      'empty',
-    };
-    final String renderType =
-        nodeBaseType == 'box' && structuralSubTypes.contains(nodeSubType)
-            ? nodeSubType
-            : nodeBaseType;
+
+    final String renderType = nodeBaseType;
 
     final QLPlugin? plugin = _plugins[renderType];
     final _QLComponentDefinition? nativeComponent =
@@ -5994,6 +5986,18 @@ class QuantumVM {
         if (renderType == 'wrap') combinedStyle = 'wrap $combinedStyle';
         if (renderType == 'center')
           combinedStyle = 'flex-center $combinedStyle';
+
+        final String justify = QLDataBinder.resolveAOT(node.props['justify'], ctx, env, store)?.toString() ?? '';
+        final String items = QLDataBinder.resolveAOT(node.props['items'], ctx, env, store)?.toString() ?? '';
+        final dynamic clipProp = QLDataBinder.resolveAOT(node.props['clip'], ctx, env, store);
+        final bool clip = clipProp == true || clipProp == 'true';
+        final dynamic gapProp = QLDataBinder.resolveAOT(node.props['gap'], ctx, env, store);
+        final num gap = gapProp is num ? gapProp : (num.tryParse(gapProp?.toString() ?? '') ?? 0);
+
+        if (justify.isNotEmpty) combinedStyle = '$combinedStyle justify-$justify';
+        if (items.isNotEmpty) combinedStyle = '$combinedStyle items-$items';
+        if (clip) combinedStyle = '$combinedStyle overflow-hidden';
+        if (gap > 0) combinedStyle = '$combinedStyle gap-${gap.toInt()}';
 
         content =
             Q(combinedStyle, children: children, suppressParentData: true);

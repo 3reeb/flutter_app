@@ -140,3 +140,14 @@ Widget _buildText(QLContext rawCtx) {
             : null),
   );
 }
+
+void _registerTextAliases(QuantumVM vm) {
+  vm.defineAlias('text', 'text', description: 'Base text alias.', tags: const ['text']);
+  vm.defineAlias('p', 'text:p', description: 'Paragraph alias.', tags: const ['text']);
+  vm.defineAlias('h1', 'text:h1', description: 'Heading 1 alias.', tags: const ['text']);
+  vm.defineAlias('h2', 'text:h2', description: 'Heading 2 alias.', tags: const ['text']);
+  vm.defineAlias('h3', 'text:h3', description: 'Heading 3 alias.', tags: const ['text']);
+  vm.defineAlias('label', 'text:label', description: 'Label alias.', tags: const ['text']);
+  vm.defineAlias('code', 'text:code', description: 'Code alias.', tags: const ['text']);
+  vm.defineAlias('rich', 'text:rich', description: 'Rich text alias.', tags: const ['text']);
+}

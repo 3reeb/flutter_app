@@ -58,6 +58,8 @@ export 'src/runtime/quantum_vm.dart';
 export 'src/runtime/quantum_vm_init.dart';
 export 'src/runtime/quantum_template_engine.dart';
 export 'src/runtime/quantum_workspace_engine.dart';
+export 'src/runtime/quantum_widget_image_exporter.dart';
+export 'src/runtime/quantum_export_web_bridge.dart';
 
 // App
 export 'src/app/quantum_app_entry.dart';

@@ -146,12 +146,13 @@ Widget _buildHook(QLContext rawCtx) {
   Widget buildBody(BuildContext buildContext) {
     final Map<String, dynamic> env =
         QLDataScope.readNode(buildContext)?.localData ?? ctx.env;
-    final effective = _AliasContext(QLContext(buildContext, ctx.node, env, ctx.store));
+    final effective =
+        _AliasContext(QLContext(buildContext, ctx.node, env, ctx.store));
 
     final Widget child = effective.slot('child') ??
         (effective.children.isEmpty
             ? const SizedBox.shrink()
-            : Q('col w-full h-full', children: effective.children));
+            : Q('col min-w-0 min-h-0', children: effective.children));
     return child;
   }
 
@@ -165,8 +166,9 @@ Widget _buildHook(QLContext rawCtx) {
   }
 
   if (subType == 'memo') {
-    final dynamic memoKey =
-        ctx.node.props['memoKey'] ?? ctx.node.props['key'] ?? ctx.node.props['memo'];
+    final dynamic memoKey = ctx.node.props['memoKey'] ??
+        ctx.node.props['key'] ??
+        ctx.node.props['memo'];
     return KeyedSubtree(
       key: ValueKey<String>(_hookSignature(memoKey)),
       child: child,
@@ -245,14 +247,18 @@ Widget _buildHook(QLContext rawCtx) {
 
   // hook:store
   if (subType == 'store') {
-    final String storeId = ctx.string('id', fallback: 'store_${ctx.node.hashCode}');
+    final String storeId =
+        ctx.string('id', fallback: 'store_${ctx.node.hashCode}');
     final Map<String, dynamic> initial = ctx.map('initialState');
     final QLDataStore scopedStore = QLStoreRegistry.instance.get(storeId);
     if (scopedStore.get('__init') == null) {
       initial.forEach((k, v) => scopedStore.set(k, v));
       scopedStore.set('__init', true);
     }
-    return QLDataScope(moduleStore: scopedStore, localData: {...ctx.env, '@$storeId': storeId}, child: Q('col w-full', children: ctx.children));
+    return QLDataScope(
+        moduleStore: scopedStore,
+        localData: {...ctx.env, '@$storeId': storeId},
+        child: Q('col w-full', children: ctx.children));
   }
 
   // hook:atom
@@ -261,7 +267,9 @@ Widget _buildHook(QLContext rawCtx) {
     final String as = ctx.string('as', fallback: key);
     final sig = ctx.store.signal(key);
     if (sig.value == null) sig.value = ctx.node.props['value'];
-    return QLDataScope(localData: {...ctx.env, as: sig}, child: Q('col w-full', children: ctx.children));
+    return QLDataScope(
+        localData: {...ctx.env, as: sig},
+        child: Q('col w-full', children: ctx.children));
   }
 
   // hook:slice
@@ -273,25 +281,36 @@ Widget _buildHook(QLContext rawCtx) {
     final sig = target.signal(path);
     return AnimatedBuilder(
       animation: sig,
-      builder: (context, _) => QLDataScope(localData: {...ctx.env, as: sig.value}, child: Q('col w-full', children: ctx.children)),
+      builder: (context, _) => QLDataScope(
+          localData: {...ctx.env, as: sig.value},
+          child: Q('col w-full', children: ctx.children)),
     );
   }
 
   // hook:ref
   if (subType == 'ref') {
     final String refId = ctx.string('id', fallback: 'ref_${ctx.node.hashCode}');
-    return _QLRefNode(refId: refId, initial: ctx.node.props['initial'], env: ctx.env, children: ctx.children);
+    return _QLRefNode(
+        refId: refId,
+        initial: ctx.node.props['initial'],
+        env: ctx.env,
+        children: ctx.children);
   }
 
   // hook:interval
   if (subType == 'interval') {
     final int ms = ctx.integer('ms', fallback: 1000);
-    final String? bindKey = ctx.string('bind').isNotEmpty ? ctx.string('bind') : null;
+    final String? bindKey =
+        ctx.string('bind').isNotEmpty ? ctx.string('bind') : null;
     return _QLIntervalNode(
-      ms: ms, bindKey: bindKey,
+      ms: ms,
+      bindKey: bindKey,
       actions: ctx.node.props['action'] as List<dynamic>?,
-      store: ctx.store, env: ctx.env,
-      child: ctx.children.isNotEmpty ? ctx.children.first : const SizedBox.shrink(),
+      store: ctx.store,
+      env: ctx.env,
+      child: ctx.children.isNotEmpty
+          ? ctx.children.first
+          : const SizedBox.shrink(),
     );
   }
 
@@ -301,12 +320,14 @@ Widget _buildHook(QLContext rawCtx) {
     final String as = ctx.string('as', fallback: 'value');
     final stream = QLPluginStreamRegistry.get(streamKey);
     if (stream == null) return Q('col w-full', children: ctx.children);
-    return _QLObservableNode(stream: stream, as: as, env: ctx.env, children: ctx.children);
+    return _QLObservableNode(
+        stream: stream, as: as, env: ctx.env, children: ctx.children);
   }
 
   // hook:error_boundary
   if (subType == 'error_boundary') {
-    final Widget? tryW = ctx.slot('try') ?? (ctx.children.isNotEmpty ? ctx.children.first : null);
+    final Widget? tryW = ctx.slot('try') ??
+        (ctx.children.isNotEmpty ? ctx.children.first : null);
     return _QLErrorBoundaryNode(
       tryChild: tryW ?? const SizedBox.shrink(),
       catchChild: ctx.slot('catch'),
@@ -318,37 +339,82 @@ Widget _buildHook(QLContext rawCtx) {
 }
 
 void _registerHookAliases(QuantumVM vm) {
-  vm.defineAlias('hook_lifecycle', 'hook:lifecycle', description: 'Lifecycle hook wrapper alias.', tags: const ['hook', 'alias']);
-  vm.defineAlias('hook_effect', 'hook:effect', description: 'Effect hook wrapper alias.', tags: const ['hook', 'alias']);
-  vm.defineAlias('hook_scope', 'hook:scope', description: 'Scoped local data hook alias.', tags: const ['hook', 'alias']);
-  vm.defineAlias('hook_bridge', 'hook:bridge', description: 'Bridge / data injection hook alias.', tags: const ['hook', 'alias']);
-  vm.defineAlias('hook_store', 'hook:store', description: 'Scoped store hook.', tags: const ['hook', 'alias']);
-  vm.defineAlias('hook_atom', 'hook:atom', description: 'Signal atom hook.', tags: const ['hook', 'alias']);
-  vm.defineAlias('hook_interval', 'hook:interval', description: 'Interval hook.', tags: const ['hook', 'alias']);
-  vm.defineAlias('hook_observable', 'hook:observable', description: 'Stream observable hook.', tags: const ['hook', 'alias']);
-  vm.defineAlias('error_boundary', 'hook:error_boundary', description: 'Error boundary.', tags: const ['hook', 'alias']);
+  vm.defineAlias('hook_lifecycle', 'hook:lifecycle',
+      description: 'Lifecycle hook wrapper alias.',
+      tags: const ['hook', 'alias']);
+  vm.defineAlias('hook_effect', 'hook:effect',
+      description: 'Effect hook wrapper alias.', tags: const ['hook', 'alias']);
+  vm.defineAlias('hook_scope', 'hook:scope',
+      description: 'Scoped local data hook alias.',
+      tags: const ['hook', 'alias']);
+  vm.defineAlias('hook_bridge', 'hook:bridge',
+      description: 'Bridge / data injection hook alias.',
+      tags: const ['hook', 'alias']);
+  vm.defineAlias('hook_store', 'hook:store',
+      description: 'Scoped store hook.', tags: const ['hook', 'alias']);
+  vm.defineAlias('hook_atom', 'hook:atom',
+      description: 'Signal atom hook.', tags: const ['hook', 'alias']);
+  vm.defineAlias('hook_interval', 'hook:interval',
+      description: 'Interval hook.', tags: const ['hook', 'alias']);
+  vm.defineAlias('hook_observable', 'hook:observable',
+      description: 'Stream observable hook.', tags: const ['hook', 'alias']);
+  vm.defineAlias('error_boundary', 'hook:error_boundary',
+      description: 'Error boundary.', tags: const ['hook', 'alias']);
 }
 
 // Ref node
 class _QLRefNode extends StatefulWidget {
-  final String refId; final dynamic initial; final Map<String, dynamic> env; final List<Widget> children;
-  const _QLRefNode({required this.refId, this.initial, required this.env, required this.children});
-  @override State<_QLRefNode> createState() => _QLRefNodeState();
+  final String refId;
+  final dynamic initial;
+  final Map<String, dynamic> env;
+  final List<Widget> children;
+  const _QLRefNode(
+      {required this.refId,
+      this.initial,
+      required this.env,
+      required this.children});
+  @override
+  State<_QLRefNode> createState() => _QLRefNodeState();
 }
+
 class _QLRefNodeState extends State<_QLRefNode> {
   late dynamic _value;
-  @override void initState() { super.initState(); _value = widget.initial; }
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.initial;
+  }
+
   dynamic read() => _value;
-  void write(dynamic v) { _value = v; }
-  @override Widget build(BuildContext context) => QLDataScope(localData: {...widget.env, widget.refId: this}, child: Q('col w-full', children: widget.children));
+  void write(dynamic v) {
+    _value = v;
+  }
+
+  @override
+  Widget build(BuildContext context) => QLDataScope(
+      localData: {...widget.env, widget.refId: this},
+      child: Q('col w-full', children: widget.children));
 }
 
 // Interval node
 class _QLIntervalNode extends StatefulWidget {
-  final int ms; final String? bindKey; final List<dynamic>? actions; final QLDataStore store; final Map<String, dynamic> env; final Widget child;
-  const _QLIntervalNode({required this.ms, this.bindKey, this.actions, required this.store, required this.env, required this.child});
-  @override State<_QLIntervalNode> createState() => _QLIntervalNodeState();
+  final int ms;
+  final String? bindKey;
+  final List<dynamic>? actions;
+  final QLDataStore store;
+  final Map<String, dynamic> env;
+  final Widget child;
+  const _QLIntervalNode(
+      {required this.ms,
+      this.bindKey,
+      this.actions,
+      required this.store,
+      required this.env,
+      required this.child});
+  @override
+  State<_QLIntervalNode> createState() => _QLIntervalNodeState();
 }
+
 class _QLIntervalNodeState extends State<_QLIntervalNode> {
   Timer? _timer;
   @override
@@ -356,51 +422,101 @@ class _QLIntervalNodeState extends State<_QLIntervalNode> {
     super.initState();
     _timer = Timer.periodic(Duration(milliseconds: widget.ms), (_) {
       if (!mounted) return;
-      if (widget.bindKey != null) { final cur = widget.store.get(widget.bindKey!) as int? ?? 0; widget.store.set(widget.bindKey!, cur + 1); }
-      if (widget.actions != null) QuantumVM.instance.triggerActions(widget.actions!, context, env: widget.env);
+      if (widget.bindKey != null) {
+        final cur = widget.store.get(widget.bindKey!) as int? ?? 0;
+        widget.store.set(widget.bindKey!, cur + 1);
+      }
+      if (widget.actions != null)
+        QuantumVM.instance
+            .triggerActions(widget.actions!, context, env: widget.env);
     });
   }
-  @override void dispose() { _timer?.cancel(); super.dispose(); }
-  @override Widget build(BuildContext context) => widget.child;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 // Observable (Stream) node
 class _QLObservableNode extends StatefulWidget {
-  final Stream<dynamic> stream; final String as; final Map<String, dynamic> env; final List<Widget> children;
-  const _QLObservableNode({required this.stream, required this.as, required this.env, required this.children});
-  @override State<_QLObservableNode> createState() => _QLObservableNodeState();
+  final Stream<dynamic> stream;
+  final String as;
+  final Map<String, dynamic> env;
+  final List<Widget> children;
+  const _QLObservableNode(
+      {required this.stream,
+      required this.as,
+      required this.env,
+      required this.children});
+  @override
+  State<_QLObservableNode> createState() => _QLObservableNodeState();
 }
+
 class _QLObservableNodeState extends State<_QLObservableNode> {
-  StreamSubscription? _sub; dynamic _latest;
-  @override void initState() { super.initState(); _sub = widget.stream.listen((v) { if (mounted) setState(() => _latest = v); }); }
-  @override void dispose() { _sub?.cancel(); super.dispose(); }
-  @override Widget build(BuildContext context) => QLDataScope(localData: {...widget.env, widget.as: _latest}, child: Q('col w-full', children: widget.children));
+  StreamSubscription? _sub;
+  dynamic _latest;
+  @override
+  void initState() {
+    super.initState();
+    _sub = widget.stream.listen((v) {
+      if (mounted) setState(() => _latest = v);
+    });
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => QLDataScope(
+      localData: {...widget.env, widget.as: _latest},
+      child: Q('col w-full', children: widget.children));
 }
 
 // Error Boundary node
 class _QLErrorBoundaryNode extends StatefulWidget {
-  final Widget tryChild; final Widget? catchChild, finallyChild;
-  const _QLErrorBoundaryNode({required this.tryChild, this.catchChild, this.finallyChild});
-  @override State<_QLErrorBoundaryNode> createState() => _QLErrorBoundaryNodeState();
+  final Widget tryChild;
+  final Widget? catchChild, finallyChild;
+  const _QLErrorBoundaryNode(
+      {required this.tryChild, this.catchChild, this.finallyChild});
+  @override
+  State<_QLErrorBoundaryNode> createState() => _QLErrorBoundaryNodeState();
 }
+
 class _QLErrorBoundaryNodeState extends State<_QLErrorBoundaryNode> {
   Object? _error;
   @override
   Widget build(BuildContext context) {
     Widget body = _error != null && widget.catchChild != null
         ? widget.catchChild!
-        : _QLErrorCatcher(onError: (e) { if (mounted) setState(() => _error = e); }, child: widget.tryChild);
+        : _QLErrorCatcher(
+            onError: (e) {
+              if (mounted) setState(() => _error = e);
+            },
+            child: widget.tryChild);
     if (widget.finallyChild == null) return body;
-    return Column(mainAxisSize: MainAxisSize.min, children: [body, widget.finallyChild!]);
-  }
-}
-class _QLErrorCatcher extends StatelessWidget {
-  final Widget child; final void Function(Object) onError;
-  const _QLErrorCatcher({required this.child, required this.onError});
-  @override
-  Widget build(BuildContext context) {
-    ErrorWidget.builder = (d) { onError(d.exception); return const SizedBox.shrink(); };
-    return child;
+    return Column(
+        mainAxisSize: MainAxisSize.min, children: [body, widget.finallyChild!]);
   }
 }
 
+class _QLErrorCatcher extends StatelessWidget {
+  final Widget child;
+  final void Function(Object) onError;
+  const _QLErrorCatcher({required this.child, required this.onError});
+  @override
+  Widget build(BuildContext context) {
+    ErrorWidget.builder = (d) {
+      onError(d.exception);
+      return const SizedBox.shrink();
+    };
+    return child;
+  }
+}

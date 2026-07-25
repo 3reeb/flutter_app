@@ -1,5 +1,21 @@
 {
   "buildCommand": "./build.sh",
   "outputDirectory": "build/web",
-  "framework": null
+  "framework": null,
+  "functions": {
+    "api/render.js": {
+      "memory": 3008,
+      "maxDuration": 60
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
 }

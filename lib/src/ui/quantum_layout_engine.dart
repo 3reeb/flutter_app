@@ -66,7 +66,8 @@ class QuantumScrollScope extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(QuantumScrollScope oldWidget) => axis != oldWidget.axis;
+  bool updateShouldNotify(QuantumScrollScope oldWidget) =>
+      axis != oldWidget.axis;
 }
 
 class QuantumLayout extends StatelessWidget {
@@ -1434,13 +1435,15 @@ class QuantumFlexible extends StatelessWidget {
     required FlexFit fitSeed,
   }) {
     if (depth > 16) {
-      return _QuantumFlexibleResolution(child: node, flex: flexSeed, fit: fitSeed);
+      return _QuantumFlexibleResolution(
+          child: node, flex: flexSeed, fit: fitSeed);
     }
     if (node is QuantumFlexible) {
       final int nextFlex = math.max(1, flexSeed * node.flex);
-      final FlexFit nextFit = fitSeed == FlexFit.loose || node.fit == FlexFit.loose
-          ? FlexFit.loose
-          : FlexFit.tight;
+      final FlexFit nextFit =
+          fitSeed == FlexFit.loose || node.fit == FlexFit.loose
+              ? FlexFit.loose
+              : FlexFit.tight;
       return _resolve(
         node.child,
         depth + 1,
@@ -1448,7 +1451,8 @@ class QuantumFlexible extends StatelessWidget {
         fitSeed: nextFit,
       );
     }
-    return _QuantumFlexibleResolution(child: node, flex: flexSeed, fit: fitSeed);
+    return _QuantumFlexibleResolution(
+        child: node, flex: flexSeed, fit: fitSeed);
   }
 
   @override
@@ -1508,7 +1512,8 @@ class QuantumAspectRatio extends StatelessWidget {
           // every scrollable QuantumVM renders (see quantum_vm.dart), so
           // this is available whenever the unbounded constraint actually
           // came from one of our own scroll wrappers.
-          final QuantumScrollScope? scrollScope = QuantumScrollScope.of(context);
+          final QuantumScrollScope? scrollScope =
+              QuantumScrollScope.of(context);
           if (scrollScope != null) {
             if (scrollScope.axis == Axis.vertical) {
               // Width should already be bounded by the scroll viewport's

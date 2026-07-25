@@ -12,7 +12,7 @@ Widget _buildSystem(QLContext rawCtx) {
       intervalMs: ctx.integer('interval', fallback: 1000),
       autoStart: ctx.boolean('autoStart', fallback: true),
       onTick: ctx.action('onTick'),
-      child: Q('col w-full h-full', children: ctx.children),
+      child: Q('col min-w-0 min-h-0', children: ctx.children),
     );
   }
 
@@ -31,7 +31,7 @@ Widget _buildSystem(QLContext rawCtx) {
       outputPath: bindOutput,
       sourceSig: ctx.store.signal(bindSource),
       size: size,
-      child: Q('col w-full h-full', children: ctx.children),
+      child: Q('col min-w-0 min-h-0', children: ctx.children),
     );
   }
 
@@ -42,7 +42,7 @@ Widget _buildSystem(QLContext rawCtx) {
       outputSig: ctx.store.signal(ctx.string('bindOutput')),
       stiffness: ctx.number('stiffness', fallback: 300.0),
       damping: ctx.number('damping', fallback: 24.0),
-      child: Q('col w-full h-full', children: ctx.children),
+      child: Q('col min-w-0 min-h-0', children: ctx.children),
     );
   }
   // 🚀 THE OMEGA MACRO: system:omega_macro / system:macro
@@ -106,7 +106,7 @@ Widget _buildSystem(QLContext rawCtx) {
           }
           return false;
         },
-        child: Q('col w-full h-full', children: ctx.children),
+        child: Q('col min-w-0 min-h-0', children: ctx.children),
       ),
     );
   }
@@ -116,13 +116,14 @@ Widget _buildSystem(QLContext rawCtx) {
     return _QLTickerNode(
       onTick: (dt) =>
           ctx.action('onTick', localPayload: {'deltaTime': dt})?.call(),
-      child: Q('col w-full h-full', children: ctx.children),
+      child: Q('col min-w-0 min-h-0', children: ctx.children),
     );
   }
 
   if (subType == 'repeater') {
-    final dynamic bindData = ctx.env[ctx.node.props['bind']] ?? ctx.store.get(ctx.string('bind'));
-    
+    final dynamic bindData =
+        ctx.env[ctx.node.props['bind']] ?? ctx.store.get(ctx.string('bind'));
+
     // Safely cast or default to empty list to avoid unexpected single-item rendering for objects
     List<dynamic> data = [];
     if (bindData is Iterable) {
@@ -170,20 +171,33 @@ Widget _buildSystem(QLContext rawCtx) {
   if (subType == 'async') {
     final String action = ctx.string('action');
     final Map<String, dynamic> params = ctx.map('params');
-    return _QLSystemAsyncNode(action: action, params: params, env: ctx.env, slots: ctx.node.slots, children: ctx.children);
+    return _QLSystemAsyncNode(
+        action: action,
+        params: params,
+        env: ctx.env,
+        slots: ctx.node.slots,
+        children: ctx.children);
   }
 
   // ── system:throttle / system:debounce — Event rate limiters ───────────────
   if (subType == 'throttle' || subType == 'debounce') {
     final int ms = ctx.integer('ms', fallback: 200);
-    return _QLSystemRateLimitNode(mode: subType, ms: ms, child: ctx.children.isNotEmpty ? ctx.children.first : const SizedBox.shrink());
+    return _QLSystemRateLimitNode(
+        mode: subType,
+        ms: ms,
+        child: ctx.children.isNotEmpty
+            ? ctx.children.first
+            : const SizedBox.shrink());
   }
 
   // ── system:geo — Hardware Geolocation provider ─────────────────────────────
   if (subType == 'geo') {
     final String asKey = ctx.string('as', fallback: 'geo');
     return QLDataScope(
-      localData: {...ctx.env, asKey: const {'lat': 0.0, 'lng': 0.0, 'altitude': 0.0, 'heading': 0.0}},
+      localData: {
+        ...ctx.env,
+        asKey: const {'lat': 0.0, 'lng': 0.0, 'altitude': 0.0, 'heading': 0.0}
+      },
       child: Q('col w-full', children: ctx.children),
     );
   }
@@ -191,23 +205,31 @@ Widget _buildSystem(QLContext rawCtx) {
   // ── system:haptic — Haptic Feedback trigger ───────────────────────────────
   if (subType == 'haptic') {
     final String feedbackType = ctx.string('type', fallback: 'selection');
-    if (feedbackType == 'light') HapticFeedback.lightImpact();
-    else if (feedbackType == 'medium') HapticFeedback.mediumImpact();
-    else if (feedbackType == 'heavy') HapticFeedback.heavyImpact();
-    else if (feedbackType == 'vibrate') HapticFeedback.vibrate();
-    else HapticFeedback.selectionClick();
+    if (feedbackType == 'light')
+      HapticFeedback.lightImpact();
+    else if (feedbackType == 'medium')
+      HapticFeedback.mediumImpact();
+    else if (feedbackType == 'heavy')
+      HapticFeedback.heavyImpact();
+    else if (feedbackType == 'vibrate')
+      HapticFeedback.vibrate();
+    else
+      HapticFeedback.selectionClick();
     return Q('col w-full', children: ctx.children);
   }
 
   // ── system:clipboard — System Clipboard access ────────────────────────────
   if (subType == 'clipboard') {
     final String textToCopy = ctx.string('copy');
-    if (textToCopy.isNotEmpty) Clipboard.setData(ClipboardData(text: textToCopy));
+    if (textToCopy.isNotEmpty)
+      Clipboard.setData(ClipboardData(text: textToCopy));
     return QLDataScope(
       localData: {
         ...ctx.env,
-        r'$copyToClipboard': (String t) => Clipboard.setData(ClipboardData(text: t)),
-        r'$readClipboard': () async => (await Clipboard.getData('text/plain'))?.text ?? '',
+        r'$copyToClipboard': (String t) =>
+            Clipboard.setData(ClipboardData(text: t)),
+        r'$readClipboard': () async =>
+            (await Clipboard.getData('text/plain'))?.text ?? '',
       },
       child: Q('col w-full', children: ctx.children),
     );
@@ -237,7 +259,8 @@ Widget _buildSystem(QLContext rawCtx) {
     return QLDataScope(
       localData: {
         ...ctx.env,
-        r'$share': (String text, String url) => print('Share: $text, $url'), // Hook to share plugin
+        r'$share': (String text, String url) =>
+            print('Share: $text, $url'), // Hook to share plugin
       },
       child: Q('col w-full', children: ctx.children),
     );
@@ -248,7 +271,11 @@ Widget _buildSystem(QLContext rawCtx) {
     return QLDataScope(
       localData: {
         ...ctx.env,
-        ctx.string('as', fallback: 'sensor'): const {'x': 0.0, 'y': 0.0, 'z': 0.0},
+        ctx.string('as', fallback: 'sensor'): const {
+          'x': 0.0,
+          'y': 0.0,
+          'z': 0.0
+        },
       },
       child: Q('col w-full', children: ctx.children),
     );
@@ -265,37 +292,69 @@ class _QLSystemAsyncNode extends StatefulWidget {
   final Map<String, dynamic> params, env;
   final Map<String, QLBlueprint> slots;
   final List<Widget> children;
-  const _QLSystemAsyncNode({required this.action, required this.params, required this.env, required this.slots, required this.children});
-  @override State<_QLSystemAsyncNode> createState() => _QLSystemAsyncNodeState();
+  const _QLSystemAsyncNode(
+      {required this.action,
+      required this.params,
+      required this.env,
+      required this.slots,
+      required this.children});
+  @override
+  State<_QLSystemAsyncNode> createState() => _QLSystemAsyncNodeState();
 }
+
 class _QLSystemAsyncNodeState extends State<_QLSystemAsyncNode> {
-  bool _loading = true; dynamic _data; Object? _error;
+  bool _loading = true;
+  dynamic _data;
+  Object? _error;
   @override
   void initState() {
     super.initState();
     _run();
   }
+
   void _run() async {
     try {
-      await QuantumVM.instance.triggerActions([{'action': widget.action, ...widget.params}], context, env: widget.env);
-      if (mounted) setState(() { _loading = false; _data = true; });
+      await QuantumVM.instance.triggerActions([
+        {'action': widget.action, ...widget.params}
+      ], context, env: widget.env);
+      if (mounted)
+        setState(() {
+          _loading = false;
+          _data = true;
+        });
     } catch (e) {
-      if (mounted) setState(() { _loading = false; _error = e; });
+      if (mounted)
+        setState(() {
+          _loading = false;
+          _error = e;
+        });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     if (_loading && widget.slots['loading'] != null) {
       return QuantumVM.instance.renderWidget(context, widget.slots['loading']!);
     }
     if (_error != null && widget.slots['error'] != null) {
-      return QLDataScope(localData: {...widget.env, r'$error': _error}, child: QuantumVM.instance.renderWidget(context, widget.slots['error']!));
+      return QLDataScope(
+          localData: {...widget.env, r'$error': _error},
+          child:
+              QuantumVM.instance.renderWidget(context, widget.slots['error']!));
     }
     if (_data != null && widget.slots['data'] != null) {
-      return QLDataScope(localData: {...widget.env, r'$data': _data}, child: QuantumVM.instance.renderWidget(context, widget.slots['data']!));
+      return QLDataScope(
+          localData: {...widget.env, r'$data': _data},
+          child:
+              QuantumVM.instance.renderWidget(context, widget.slots['data']!));
     }
     return QLDataScope(
-      localData: {...widget.env, r'$loading': _loading, r'$data': _data, r'$error': _error},
+      localData: {
+        ...widget.env,
+        r'$loading': _loading,
+        r'$data': _data,
+        r'$error': _error
+      },
       child: Q('col w-full', children: widget.children),
     );
   }
@@ -303,14 +362,25 @@ class _QLSystemAsyncNodeState extends State<_QLSystemAsyncNode> {
 
 // System Rate Limit Node (Throttle / Debounce)
 class _QLSystemRateLimitNode extends StatefulWidget {
-  final String mode; final int ms; final Widget child;
-  const _QLSystemRateLimitNode({required this.mode, required this.ms, required this.child});
-  @override State<_QLSystemRateLimitNode> createState() => _QLSystemRateLimitNodeState();
+  final String mode;
+  final int ms;
+  final Widget child;
+  const _QLSystemRateLimitNode(
+      {required this.mode, required this.ms, required this.child});
+  @override
+  State<_QLSystemRateLimitNode> createState() => _QLSystemRateLimitNodeState();
 }
+
 class _QLSystemRateLimitNodeState extends State<_QLSystemRateLimitNode> {
   Timer? _timer;
-  @override void dispose() { _timer?.cancel(); super.dispose(); }
-  @override Widget build(BuildContext context) => widget.child;
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 // ── 7. SYSTEM LIFECYCLE & VSYNC TIMERS ──
@@ -519,8 +589,12 @@ class _QLKineticPipeNodeState extends State<_QLKineticPipeNode>
 }
 
 void _registerSystemAliases(QuantumVM vm) {
-  vm.defineAlias('sync_scroll', 'system:sync_scroll', description: 'Sync scroll alias.', tags: const ['system', 'alias']);
-  vm.defineAlias('worker', 'system:worker', description: 'Worker alias.', tags: const ['system', 'alias']);
-  vm.defineAlias('ticker', 'system:ticker', description: 'Ticker alias.', tags: const ['system', 'alias']);
-  vm.defineAlias('omega_macro', 'system:omega_macro', description: 'Omega macro alias.', tags: const ['system', 'alias']);
+  vm.defineAlias('sync_scroll', 'system:sync_scroll',
+      description: 'Sync scroll alias.', tags: const ['system', 'alias']);
+  vm.defineAlias('worker', 'system:worker',
+      description: 'Worker alias.', tags: const ['system', 'alias']);
+  vm.defineAlias('ticker', 'system:ticker',
+      description: 'Ticker alias.', tags: const ['system', 'alias']);
+  vm.defineAlias('omega_macro', 'system:omega_macro',
+      description: 'Omega macro alias.', tags: const ['system', 'alias']);
 }

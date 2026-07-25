@@ -6,7 +6,7 @@ Widget _buildBox(QLContext rawCtx) {
   final ctx = _AliasContext(rawCtx);
   final String subType = ctx.resolvedSubType(fallback: 'col');
 
-  Widget _q(Widget child) => Q('col w-full h-full', children: [child]);
+  Widget _q(Widget child) => Q('col min-w-0 min-h-0', children: [child]);
 
   Matrix4 _matrix4FromDynamic(dynamic v) {
     if (v is Matrix4) return v;
@@ -96,7 +96,7 @@ Widget _buildBox(QLContext rawCtx) {
     );
 
     return QLBox(
-      style: 'w-full h-full ${ctx.node.style ?? ''}',
+      style: 'min-w-0 min-h-0 ${ctx.node.style ?? ''}',
       suppressParentData: true,
       child: splitWidget,
     );
@@ -107,7 +107,7 @@ Widget _buildBox(QLContext rawCtx) {
     return QuantumFlexible(
       flex: ctx.integer('flex', fallback: 1),
       fit: subType == 'expanded' ? FlexFit.tight : FlexFit.loose,
-      child: Q('col w-full h-full', children: ctx.children),
+      child: Q('col min-w-0 min-h-0', children: ctx.children),
     );
   }
 
@@ -130,14 +130,14 @@ Widget _buildBox(QLContext rawCtx) {
       bottom: ctx.boolean('bottom', fallback: true),
       left: ctx.boolean('left', fallback: true),
       right: ctx.boolean('right', fallback: true),
-      child: Q('col w-full h-full', children: ctx.children),
+      child: Q('col min-w-0 min-h-0', children: ctx.children),
     );
   }
 
   if (subType == 'aspect') {
     return QuantumAspectRatio(
       ratio: ctx.number('ratio', fallback: 1.0),
-      child: Q('col w-full h-full', children: ctx.children),
+      child: Q('col min-w-0 min-h-0', children: ctx.children),
     );
   }
 
@@ -148,7 +148,7 @@ Widget _buildBox(QLContext rawCtx) {
       delegate: QuantumStickyDelegate(
         minHeight: ctx.number('minHeight', fallback: 60),
         maxHeight: ctx.number('maxHeight', fallback: 200),
-        child: Q('col w-full h-full', children: ctx.children),
+        child: Q('col min-w-0 min-h-0', children: ctx.children),
       ),
     );
   }
@@ -170,7 +170,7 @@ Widget _buildBox(QLContext rawCtx) {
     return _QLMeasureNode(
       bindTarget: bindTarget,
       store: ctx.store,
-      child: Q('col w-full h-full $style', children: ctx.children),
+      child: Q('col min-w-0 min-h-0 $style', children: ctx.children),
     );
   }
 
@@ -182,7 +182,7 @@ Widget _buildBox(QLContext rawCtx) {
           'maxWidth': constraints.maxWidth,
           'maxHeight': constraints.maxHeight,
         },
-        child: Q('col w-full h-full', children: ctx.children),
+        child: Q('col min-w-0 min-h-0', children: ctx.children),
       );
     });
   }
@@ -229,7 +229,7 @@ Widget _buildBox(QLContext rawCtx) {
       disabled: ctx.boolean('disabled'),
     );
     return Q(
-      '$shellStyle col w-full h-full ${ctx.node.style ?? ''}',
+      '$shellStyle col min-w-0 min-h-0 ${ctx.node.style ?? ''}',
       padding: ctx.list('padding'),
       margin: ctx.list('margin'),
       gap: ctx.number('gap') > 0 ? ctx.number('gap') : null,
@@ -257,7 +257,7 @@ Widget _buildBox(QLContext rawCtx) {
                 .map((childNode) =>
                     QuantumVM.instance.renderWidget(innerCtx, childNode))
                 .toList(growable: false);
-            return Q('col w-full h-full', children: rebuiltChildren);
+            return Q('col min-w-0 min-h-0', children: rebuiltChildren);
           },
         ),
       );
@@ -272,7 +272,7 @@ Widget _buildBox(QLContext rawCtx) {
         'viewportWidth': size.width,
         'viewportHeight': size.height,
       },
-      child: Q('col w-full h-full', children: ctx.children),
+      child: Q('col min-w-0 min-h-0', children: ctx.children),
     );
   }
 
@@ -315,6 +315,9 @@ Widget _buildBox(QLContext rawCtx) {
   }
   if (ctx.boolean('clip')) {
     styles.add('overflow-hidden');
+  }
+  if (ctx.number('gap') > 0) {
+    styles.add('gap-${ctx.number('gap').toInt()}');
   }
   if (ctx.node.style != null && ctx.node.style!.isNotEmpty) {
     styles.add(ctx.node.style!);
@@ -678,12 +681,23 @@ class _RenderMeasureNode extends RenderProxyBox {
 // ════════════════════════════════════════════════════════════════════════════
 
 void _registerBoxAliases(QuantumVM vm) {
-  vm.defineAlias('row', 'box:row', description: 'Row layout alias.', tags: const ['box', 'layout', 'alias']);
-  vm.defineAlias('col', 'box:col', description: 'Column layout alias.', tags: const ['box', 'layout', 'alias']);
-  vm.defineAlias('stack', 'box:stack', description: 'Stack layout alias.', tags: const ['box', 'layout', 'alias']);
-  vm.defineAlias('wrap', 'box:wrap', description: 'Wrap layout alias.', tags: const ['box', 'layout', 'alias']);
-  vm.defineAlias('grid', 'box:grid', description: 'Grid layout alias.', tags: const ['box', 'layout', 'alias']);
-  vm.defineAlias('masonry', 'box:masonry', description: 'Masonry layout alias.', tags: const ['box', 'layout', 'alias']);
+  vm.defineAlias('row', 'box:row',
+      description: 'Row layout alias.', tags: const ['box', 'layout', 'alias']);
+  vm.defineAlias('col', 'box:col',
+      description: 'Column layout alias.',
+      tags: const ['box', 'layout', 'alias']);
+  vm.defineAlias('stack', 'box:stack',
+      description: 'Stack layout alias.',
+      tags: const ['box', 'layout', 'alias']);
+  vm.defineAlias('wrap', 'box:wrap',
+      description: 'Wrap layout alias.',
+      tags: const ['box', 'layout', 'alias']);
+  vm.defineAlias('grid', 'box:grid',
+      description: 'Grid layout alias.',
+      tags: const ['box', 'layout', 'alias']);
+  vm.defineAlias('masonry', 'box:masonry',
+      description: 'Masonry layout alias.',
+      tags: const ['box', 'layout', 'alias']);
   vm.defineAlias(
     'card',
     'box:card',
@@ -698,17 +712,34 @@ void _registerBoxAliases(QuantumVM vm) {
   vm.defineAlias(
     'split',
     'box:split',
-    defaultProps: const <String, dynamic>{'style': 'w-full h-full'},
+    defaultProps: const <String, dynamic>{'style': 'min-w-0 min-h-0'},
     description: 'Split layout alias.',
     tags: const ['box', 'layout', 'alias'],
   );
-  vm.defineAlias('morph', 'box:morph', description: 'Morphing container alias.', tags: const ['box', 'alias']);
-  vm.defineAlias('surface', 'box:surface', description: 'Surface container alias.', tags: const ['box', 'surface', 'alias']);
-  vm.defineAlias('shell', 'box:shell', description: 'Shell container alias.', tags: const ['box', 'shell', 'alias']);
-  vm.defineAlias('viewport', 'box:viewport', description: 'Viewport container alias.', tags: const ['box', 'viewport', 'alias']);
-  vm.defineAlias('responsive', 'box:responsive', description: 'Responsive container alias.', tags: const ['box', 'responsive', 'alias']);
-  vm.defineAlias('measure', 'box:measure', description: 'Layout measure alias.', tags: const ['box', 'measure', 'alias']);
-  vm.defineAlias('builder', 'box:builder', description: 'Builder container alias.', tags: const ['box', 'builder', 'alias']);
-  vm.defineAlias('layer', 'box:layer', description: 'Layer container alias.', tags: const ['box', 'layer', 'alias']);
-  vm.defineAlias('matrix', 'box:matrix', description: 'Matrix layout alias.', tags: const ['box', 'matrix', 'alias']);
+  vm.defineAlias('morph', 'box:morph',
+      description: 'Morphing container alias.', tags: const ['box', 'alias']);
+  vm.defineAlias('surface', 'box:surface',
+      description: 'Surface container alias.',
+      tags: const ['box', 'surface', 'alias']);
+  vm.defineAlias('shell', 'box:shell',
+      description: 'Shell container alias.',
+      tags: const ['box', 'shell', 'alias']);
+  vm.defineAlias('viewport', 'box:viewport',
+      description: 'Viewport container alias.',
+      tags: const ['box', 'viewport', 'alias']);
+  vm.defineAlias('responsive', 'box:responsive',
+      description: 'Responsive container alias.',
+      tags: const ['box', 'responsive', 'alias']);
+  vm.defineAlias('measure', 'box:measure',
+      description: 'Layout measure alias.',
+      tags: const ['box', 'measure', 'alias']);
+  vm.defineAlias('builder', 'box:builder',
+      description: 'Builder container alias.',
+      tags: const ['box', 'builder', 'alias']);
+  vm.defineAlias('layer', 'box:layer',
+      description: 'Layer container alias.',
+      tags: const ['box', 'layer', 'alias']);
+  vm.defineAlias('matrix', 'box:matrix',
+      description: 'Matrix layout alias.',
+      tags: const ['box', 'matrix', 'alias']);
 }

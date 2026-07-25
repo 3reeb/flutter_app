@@ -126,7 +126,7 @@ Widget _buildControl(QLContext rawCtx) {
             'flowHeroSignal': heroSig,
           },
           child: Builder(
-            builder: (_) => Q('col w-full h-full', children: ctx.children),
+            builder: (_) => Q('col min-w-0 min-h-0', children: ctx.children),
           ),
         ),
       ),
@@ -166,21 +166,27 @@ Widget _buildControl(QLContext rawCtx) {
       rollbackOn: ctx.string('rollbackOn', fallback: 'error'),
       env: ctx.env,
       store: ctx.store,
-      child: ctx.children.isNotEmpty ? ctx.children.first : const SizedBox.shrink(),
+      child: ctx.children.isNotEmpty
+          ? ctx.children.first
+          : const SizedBox.shrink(),
     );
   }
 
   // ── control:saga — Sequential side-effect runner ──────────────────────────
   if (subType == 'saga') {
     final List<dynamic> steps = ctx.list('steps');
-    QuantumVM.instance.registerAction('saga.$ctrlId.run',
+    QuantumVM.instance.registerAction(
+      'saga.$ctrlId.run',
       LambdaActionPlugin((p, s, c) async {
         for (final step in steps) {
           if (step is! Map) continue;
           final delay = (step['delay'] as num?)?.toInt() ?? 0;
           if (delay > 0) await Future.delayed(Duration(milliseconds: delay));
-          final actionList = step['action'] != null ? [step] : (step['actions'] as List? ?? []);
-          await QuantumVM.instance.triggerActions(actionList, null, env: {...ctx.env, ...p});
+          final actionList = step['action'] != null
+              ? [step]
+              : (step['actions'] as List? ?? []);
+          await QuantumVM.instance
+              .triggerActions(actionList, null, env: {...ctx.env, ...p});
         }
         return null;
       }),
@@ -222,7 +228,11 @@ class _QLMachineController {
   final QLSignal<String> stateSignal;
   Map<String, dynamic> context;
 
-  _QLMachineController({required this.id, required String initial, required this.states, Map<String, dynamic>? context})
+  _QLMachineController(
+      {required this.id,
+      required String initial,
+      required this.states,
+      Map<String, dynamic>? context})
       : stateSignal = QLSignal<String>(initial),
         context = context ?? {};
 
@@ -255,9 +265,13 @@ class _QLMachineController {
     final inv = node['invoke'];
     if (inv is! Map) return;
     final act = inv['action']?.toString() ?? '';
-    final params = inv['params'] is Map ? Map<String, dynamic>.from(inv['params'] as Map) : <String, dynamic>{};
+    final params = inv['params'] is Map
+        ? Map<String, dynamic>.from(inv['params'] as Map)
+        : <String, dynamic>{};
     params.addAll({r'$machineId': id, r'$state': state});
-    QuantumVM.instance.triggerActions([{'action': act, ...params}], null).then((_) {
+    QuantumVM.instance.triggerActions([
+      {'action': act, ...params}
+    ], null).then((_) {
       final done = inv['onDone']?.toString();
       if (done != null && states.containsKey(done)) stateSignal.value = done;
     }).catchError((_) {
@@ -274,25 +288,45 @@ class _QLMachineNode extends StatefulWidget {
   final String id, initial;
   final Map<String, dynamic> states, machineContext, env;
   final List<Widget> children;
-  const _QLMachineNode({required this.id, required this.initial, required this.states, required this.machineContext, required this.env, required this.children});
-  @override State<_QLMachineNode> createState() => _QLMachineNodeState();
+  const _QLMachineNode(
+      {required this.id,
+      required this.initial,
+      required this.states,
+      required this.machineContext,
+      required this.env,
+      required this.children});
+  @override
+  State<_QLMachineNode> createState() => _QLMachineNodeState();
 }
+
 class _QLMachineNodeState extends State<_QLMachineNode> {
   late _QLMachineController _ctrl;
   @override
   void initState() {
     super.initState();
-    _ctrl = _QLMachineController(id: widget.id, initial: widget.initial, states: widget.states, context: Map.from(widget.machineContext));
+    _ctrl = _QLMachineController(
+        id: widget.id,
+        initial: widget.initial,
+        states: widget.states,
+        context: Map.from(widget.machineContext));
     _QLMachineRegistry.instance.register(widget.id, _ctrl);
     QuantumVM.instance.registerAction('machine.${widget.id}.send',
-      LambdaActionPlugin((p, s, c) async {
-        final event = p['event']?.toString() ?? '';
-        final payload = Map<String, dynamic>.from(p)..remove('event')..remove('action');
-        _ctrl.send(event, payload: payload);
-        return null;
-      }));
+        LambdaActionPlugin((p, s, c) async {
+      final event = p['event']?.toString() ?? '';
+      final payload = Map<String, dynamic>.from(p)
+        ..remove('event')
+        ..remove('action');
+      _ctrl.send(event, payload: payload);
+      return null;
+    }));
   }
-  @override void dispose() { _QLMachineRegistry.instance.remove(widget.id); super.dispose(); }
+
+  @override
+  void dispose() {
+    _QLMachineRegistry.instance.remove(widget.id);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -301,12 +335,24 @@ class _QLMachineNodeState extends State<_QLMachineNode> {
         final cur = _ctrl.current;
         final stateNode = widget.states[cur];
         final renderDef = stateNode is Map ? stateNode['render'] : null;
-        Widget content = widget.children.isNotEmpty ? widget.children.first : const SizedBox.shrink();
+        Widget content = widget.children.isNotEmpty
+            ? widget.children.first
+            : const SizedBox.shrink();
         if (renderDef is Map) {
-          content = QuantumVM.instance.renderWidget(context, QLBlueprint.fromJson(Map<String, dynamic>.from(renderDef), path: 'machine.${widget.id}.$cur'));
+          content = QuantumVM.instance.renderWidget(
+              context,
+              QLBlueprint.fromJson(Map<String, dynamic>.from(renderDef),
+                  path: 'machine.${widget.id}.$cur'));
         }
         return QLDataScope(
-          localData: {...widget.env, r'$machineState': cur, r'$machineId': widget.id, r'$machineContext': _ctrl.context, r'$send': 'machine.${widget.id}.send', r'$can': (String e) => _ctrl.can(e)},
+          localData: {
+            ...widget.env,
+            r'$machineState': cur,
+            r'$machineId': widget.id,
+            r'$machineContext': _ctrl.context,
+            r'$send': 'machine.${widget.id}.send',
+            r'$can': (String e) => _ctrl.can(e)
+          },
           child: content,
         );
       },
@@ -319,23 +365,40 @@ class _QLOptimisticNode extends StatefulWidget {
   final Map<String, dynamic> optimisticData, env;
   final QLDataStore store;
   final Widget child;
-  const _QLOptimisticNode({required this.action, required this.optimisticData, required this.rollbackOn, required this.env, required this.store, required this.child});
-  @override State<_QLOptimisticNode> createState() => _QLOptimisticNodeState();
+  const _QLOptimisticNode(
+      {required this.action,
+      required this.optimisticData,
+      required this.rollbackOn,
+      required this.env,
+      required this.store,
+      required this.child});
+  @override
+  State<_QLOptimisticNode> createState() => _QLOptimisticNodeState();
 }
+
 class _QLOptimisticNodeState extends State<_QLOptimisticNode> {
   Map<String, dynamic>? _snapshot;
   void _apply() {
-    _snapshot = {for (final k in widget.optimisticData.keys) k: widget.store.get(k)};
+    _snapshot = {
+      for (final k in widget.optimisticData.keys) k: widget.store.get(k)
+    };
     widget.optimisticData.forEach((k, v) => widget.store.set(k, v));
   }
-  void _rollback() { _snapshot?.forEach((k, v) => widget.store.set(k, v)); _snapshot = null; }
+
+  void _rollback() {
+    _snapshot?.forEach((k, v) => widget.store.set(k, v));
+    _snapshot = null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
         _apply();
         try {
-          await QuantumVM.instance.triggerActions([{'action': widget.action}], context, env: widget.env);
+          await QuantumVM.instance.triggerActions([
+            {'action': widget.action}
+          ], context, env: widget.env);
         } catch (_) {
           if (widget.rollbackOn == 'error') _rollback();
         }
@@ -349,23 +412,41 @@ class _QLLocalReducerNode extends StatefulWidget {
   final String reducerId;
   final Map<String, dynamic> initialState, actions, env;
   final List<Widget> children;
-  const _QLLocalReducerNode({required this.reducerId, required this.initialState, required this.actions, required this.env, required this.children});
-  @override State<_QLLocalReducerNode> createState() => _QLLocalReducerNodeState();
+  const _QLLocalReducerNode(
+      {required this.reducerId,
+      required this.initialState,
+      required this.actions,
+      required this.env,
+      required this.children});
+  @override
+  State<_QLLocalReducerNode> createState() => _QLLocalReducerNodeState();
 }
+
 class _QLLocalReducerNodeState extends State<_QLLocalReducerNode> {
   late QLSignal<Map<String, dynamic>> _state;
-  @override void initState() { super.initState(); _state = QLSignal<Map<String, dynamic>>(Map.from(widget.initialState)); }
+  @override
+  void initState() {
+    super.initState();
+    _state = QLSignal<Map<String, dynamic>>(Map.from(widget.initialState));
+  }
+
   Future<void> dispatch(String type, Map<String, dynamic> payload) async {
     final acts = widget.actions[type] as List<dynamic>?;
     if (acts == null) return;
-    await QuantumVM.instance.triggerActions(acts, context, env: {...widget.env, r'$state': _state.value, r'$payload': payload});
+    await QuantumVM.instance.triggerActions(acts, context,
+        env: {...widget.env, r'$state': _state.value, r'$payload': payload});
   }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _state,
       builder: (_, __) => QLDataScope(
-        localData: {...widget.env, r'$state': _state.value, r'$dispatch': dispatch},
+        localData: {
+          ...widget.env,
+          r'$state': _state.value,
+          r'$dispatch': dispatch
+        },
         child: Q('col w-full', children: widget.children),
       ),
     );
@@ -377,14 +458,29 @@ class _QLLocalReducerNodeState extends State<_QLLocalReducerNode> {
 // ════════════════════════════════════════════════════════════════════════════
 
 void _registerControlAliases(QuantumVM vm) {
-  vm.defineAlias('flow', 'control:flow', description: 'Flow control alias.', tags: const ['control', 'alias']);
-  vm.defineAlias('workflow', 'control:flow', description: 'Workflow alias for flow control.', tags: const ['control', 'alias']);
-  vm.defineAlias('form_scope', 'control:form_scope', description: 'Form scope alias.', tags: const ['control', 'alias']);
-  vm.defineAlias('tabs', 'control:tabs', description: 'Tabs control alias.', tags: const ['control', 'alias']);
-  vm.defineAlias('segment', 'control:tabs', description: 'Segment alias for tabs control.', tags: const ['control', 'alias']);
-  vm.defineAlias('stepper', 'control:stepper', description: 'Stepper control alias.', tags: const ['control', 'alias']);
-  vm.defineAlias('accordion', 'control:accordion', description: 'Accordion control alias.', tags: const ['control', 'alias']);
-  vm.defineAlias('machine', 'control:machine', description: 'State machine control alias.', tags: const ['control', 'alias']);
-  vm.defineAlias('reducer', 'control:reducer', description: 'Reducer control alias.', tags: const ['control', 'alias']);
-  vm.defineAlias('optimistic', 'control:optimistic', description: 'Optimistic control alias.', tags: const ['control', 'alias']);
+  vm.defineAlias('flow', 'control:flow',
+      description: 'Flow control alias.', tags: const ['control', 'alias']);
+  vm.defineAlias('workflow', 'control:flow',
+      description: 'Workflow alias for flow control.',
+      tags: const ['control', 'alias']);
+  vm.defineAlias('form_scope', 'control:form_scope',
+      description: 'Form scope alias.', tags: const ['control', 'alias']);
+  vm.defineAlias('tabs', 'control:tabs',
+      description: 'Tabs control alias.', tags: const ['control', 'alias']);
+  vm.defineAlias('segment', 'control:tabs',
+      description: 'Segment alias for tabs control.',
+      tags: const ['control', 'alias']);
+  vm.defineAlias('stepper', 'control:stepper',
+      description: 'Stepper control alias.', tags: const ['control', 'alias']);
+  vm.defineAlias('accordion', 'control:accordion',
+      description: 'Accordion control alias.',
+      tags: const ['control', 'alias']);
+  vm.defineAlias('machine', 'control:machine',
+      description: 'State machine control alias.',
+      tags: const ['control', 'alias']);
+  vm.defineAlias('reducer', 'control:reducer',
+      description: 'Reducer control alias.', tags: const ['control', 'alias']);
+  vm.defineAlias('optimistic', 'control:optimistic',
+      description: 'Optimistic control alias.',
+      tags: const ['control', 'alias']);
 }

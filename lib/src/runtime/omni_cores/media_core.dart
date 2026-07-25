@@ -105,7 +105,8 @@ Widget _buildMedia(QLContext rawCtx) {
   if (subType == 'audio') {
     final String src = ctx.string('src');
     final bool autoPlay = ctx.boolean('autoPlay', fallback: false);
-    return _QLAudioPlayerNode(src: src, autoPlay: autoPlay, env: ctx.env, children: ctx.children);
+    return _QLAudioPlayerNode(
+        src: src, autoPlay: autoPlay, env: ctx.env, children: ctx.children);
   }
 
   // ── media:camera — Live camera feed / scanner ──────────────────────────────
@@ -115,7 +116,8 @@ Widget _buildMedia(QLContext rawCtx) {
       width: ctx.number('width', fallback: 300),
       height: ctx.number('height', fallback: 300),
       color: Colors.black,
-      child: const Center(child: Icon(Icons.camera_alt, color: Colors.white54, size: 48)),
+      child: const Center(
+          child: Icon(Icons.camera_alt, color: Colors.white54, size: 48)),
     );
   }
 
@@ -130,7 +132,8 @@ Widget _buildMedia(QLContext rawCtx) {
           children: [
             const CircularProgressIndicator(color: Colors.white),
             const SizedBox(height: 8),
-            Text('Streaming: $url', style: const TextStyle(color: Colors.white70, fontSize: 12)),
+            Text('Streaming: $url',
+                style: const TextStyle(color: Colors.white70, fontSize: 12)),
           ],
         ),
       ),
@@ -157,7 +160,8 @@ Widget _buildMedia(QLContext rawCtx) {
           children: [
             const Icon(Icons.video_call, color: Colors.white, size: 48),
             const SizedBox(height: 8),
-            Text('WebRTC: ${ctx.string('roomId')}', style: const TextStyle(color: Colors.white70)),
+            Text('WebRTC: ${ctx.string('roomId')}',
+                style: const TextStyle(color: Colors.white70)),
           ],
         ),
       ),
@@ -166,7 +170,9 @@ Widget _buildMedia(QLContext rawCtx) {
 
   // ── media:canvas_video ──────────────────────────────────────────────────────
   if (subType == 'canvas_video') {
-    final dynamic sig = ctx.string('bind').isNotEmpty ? ctx.store.signal(ctx.string('bind')) : null;
+    final dynamic sig = ctx.string('bind').isNotEmpty
+        ? ctx.store.signal(ctx.string('bind'))
+        : null;
     if (sig is QLSignal) {
       return QLAnimatedWidget<dynamic>(
         signal: sig,
@@ -175,8 +181,12 @@ Widget _buildMedia(QLContext rawCtx) {
           return RawImage(
             image: image, // Assumes image is dart:ui Image
             fit: ctx.string('fit') == 'contain' ? BoxFit.contain : BoxFit.cover,
-            width: ctx.number('width', fallback: -1) > 0 ? ctx.number('width') : null,
-            height: ctx.number('height', fallback: -1) > 0 ? ctx.number('height') : null,
+            width: ctx.number('width', fallback: -1) > 0
+                ? ctx.number('width')
+                : null,
+            height: ctx.number('height', fallback: -1) > 0
+                ? ctx.number('height')
+                : null,
           );
         },
       );
@@ -191,17 +201,30 @@ Widget _buildMedia(QLContext rawCtx) {
 // Audio Player Node
 // ─────────────────────────────────────────────────────────────────────────────
 class _QLAudioPlayerNode extends StatefulWidget {
-  final String src; final bool autoPlay; final Map<String, dynamic> env; final List<Widget> children;
-  const _QLAudioPlayerNode({required this.src, required this.autoPlay, required this.env, required this.children});
-  @override State<_QLAudioPlayerNode> createState() => _QLAudioPlayerNodeState();
+  final String src;
+  final bool autoPlay;
+  final Map<String, dynamic> env;
+  final List<Widget> children;
+  const _QLAudioPlayerNode(
+      {required this.src,
+      required this.autoPlay,
+      required this.env,
+      required this.children});
+  @override
+  State<_QLAudioPlayerNode> createState() => _QLAudioPlayerNodeState();
 }
+
 class _QLAudioPlayerNodeState extends State<_QLAudioPlayerNode> {
-  bool _playing = false; double _position = 0.0, _duration = 1.0;
-  @override Widget build(BuildContext context) {
+  bool _playing = false;
+  double _position = 0.0, _duration = 1.0;
+  @override
+  Widget build(BuildContext context) {
     return QLDataScope(
       localData: {
         ...widget.env,
-        r'$playing': _playing, r'$position': _position, r'$duration': _duration,
+        r'$playing': _playing,
+        r'$position': _position,
+        r'$duration': _duration,
         r'$play': () => setState(() => _playing = true),
         r'$pause': () => setState(() => _playing = false),
       },
@@ -211,13 +234,23 @@ class _QLAudioPlayerNodeState extends State<_QLAudioPlayerNode> {
 }
 
 class _QLAudioVisualizerNode extends StatefulWidget {
-  final String bind, mode; final Color color; final int count;
-  const _QLAudioVisualizerNode({required this.bind, required this.mode, required this.color, required this.count});
-  @override State<_QLAudioVisualizerNode> createState() => _QLAudioVisualizerNodeState();
+  final String bind, mode;
+  final Color color;
+  final int count;
+  const _QLAudioVisualizerNode(
+      {required this.bind,
+      required this.mode,
+      required this.color,
+      required this.count});
+  @override
+  State<_QLAudioVisualizerNode> createState() => _QLAudioVisualizerNodeState();
 }
+
 class _QLAudioVisualizerNodeState extends State<_QLAudioVisualizerNode> {
-  @override Widget build(BuildContext context) {
-    return const SizedBox(height: 50, child: Placeholder()); // Stubbed for brevity. 
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+        height: 50, child: Placeholder()); // Stubbed for brevity.
     // In full impl, this binds to the float64 array signal and draws in a CustomPaint.
   }
 }
@@ -302,7 +335,10 @@ class _RawPathPainter extends CustomPainter {
 }
 
 void _registerMediaAliases(QuantumVM vm) {
-  vm.defineAlias('image', 'media:image', description: 'Image media alias.', tags: const ['media', 'alias']);
-  vm.defineAlias('avatar', 'media:avatar', description: 'Avatar media alias.', tags: const ['media', 'alias']);
-  vm.defineAlias('video', 'media:video', description: 'Video media alias.', tags: const ['media', 'alias']);
+  vm.defineAlias('image', 'media:image',
+      description: 'Image media alias.', tags: const ['media', 'alias']);
+  vm.defineAlias('avatar', 'media:avatar',
+      description: 'Avatar media alias.', tags: const ['media', 'alias']);
+  vm.defineAlias('video', 'media:video',
+      description: 'Video media alias.', tags: const ['media', 'alias']);
 }

@@ -31,7 +31,10 @@ Widget _buildAction(QLContext rawCtx) {
     if (fn == null) return;
     try {
       final res = fn();
-      if (res is Future) res.catchError((e) { print('Async Action Error: $e'); });
+      if (res is Future)
+        res.catchError((e) {
+          print('Async Action Error: $e');
+        });
     } catch (e) {
       print('Action Error: $e');
     }
@@ -40,10 +43,16 @@ Widget _buildAction(QLContext rawCtx) {
   // 🚀 PRIMITIVE: action:gesture (Raw Multi-Touch without Widget Arena overhead)
   if (subType == 'gesture') {
     return _QLRawGestureNode(
-      onPan: ctx.action('onPan') == null ? null : () => _safeCall(ctx.action('onPan')),
-      onScale: ctx.action('onScale') == null ? null : () => _safeCall(ctx.action('onScale')),
-      onTap: ctx.action('onTap') == null ? null : () => _safeCall(ctx.action('onTap')),
-      child: Q('col w-full h-full', children: ctx.children),
+      onPan: ctx.action('onPan') == null
+          ? null
+          : () => _safeCall(ctx.action('onPan')),
+      onScale: ctx.action('onScale') == null
+          ? null
+          : () => _safeCall(ctx.action('onScale')),
+      onTap: ctx.action('onTap') == null
+          ? null
+          : () => _safeCall(ctx.action('onTap')),
+      child: Q('col min-w-0 min-h-0', children: ctx.children),
     );
   }
 
@@ -54,7 +63,7 @@ Widget _buildAction(QLContext rawCtx) {
 
     return _QLViewportNode(
       matrixSignal: matrixSig,
-      child: Q('col w-full h-full', children: ctx.children),
+      child: Q('col min-w-0 min-h-0', children: ctx.children),
     );
   }
 
@@ -75,7 +84,7 @@ Widget _buildAction(QLContext rawCtx) {
         _injectRawPointer(ctx, e, bindX, bindY, bindPressure);
         _safeCall(ctx.action('onRelease'));
       },
-      child: Q('col w-full h-full', children: ctx.children),
+      child: Q('col min-w-0 min-h-0', children: ctx.children),
     );
   }
 
@@ -102,7 +111,7 @@ Widget _buildAction(QLContext rawCtx) {
         }
         return KeyEventResult.ignored;
       },
-      child: Q('col w-full h-full', children: ctx.children),
+      child: Q('col min-w-0 min-h-0', children: ctx.children),
     );
   }
 
@@ -110,7 +119,8 @@ Widget _buildAction(QLContext rawCtx) {
       subType == 'double_tap' ||
       subType == 'hover') {
     return MouseRegion(
-      onEnter: subType == 'hover' ? (_) => _safeCall(ctx.action('onHover')) : null,
+      onEnter:
+          subType == 'hover' ? (_) => _safeCall(ctx.action('onHover')) : null,
       onExit:
           subType == 'hover' ? (_) => _safeCall(ctx.action('onUnhover')) : null,
       child: GestureDetector(
@@ -336,13 +346,25 @@ class _QLViewportNodeState extends State<_QLViewportNode> {
 }
 
 void _registerActionAliases(QuantumVM vm) {
-  vm.defineAlias('raw_pointer', 'action:raw_pointer', description: 'Raw pointer action alias.', tags: const ['action', 'input', 'alias']);
-  vm.defineAlias('pointer', 'action:pointer', description: 'Pointer action alias.', tags: const ['action', 'input', 'alias']);
-  vm.defineAlias('focus', 'action:focus', description: 'Focus action alias.', tags: const ['action', 'input', 'alias']);
-  vm.defineAlias('button', 'action:button', description: 'Button action alias.', tags: const ['action', 'alias']);
-  vm.defineAlias('tap', 'action:button', description: 'Tap alias for button action.', tags: const ['action', 'alias']);
-  vm.defineAlias('press', 'action:button', description: 'Press alias for button action.', tags: const ['action', 'alias']);
-  vm.defineAlias('hover_action', 'action:hover', description: 'Hover action alias.', tags: const ['action', 'alias']);
+  vm.defineAlias('raw_pointer', 'action:raw_pointer',
+      description: 'Raw pointer action alias.',
+      tags: const ['action', 'input', 'alias']);
+  vm.defineAlias('pointer', 'action:pointer',
+      description: 'Pointer action alias.',
+      tags: const ['action', 'input', 'alias']);
+  vm.defineAlias('focus', 'action:focus',
+      description: 'Focus action alias.',
+      tags: const ['action', 'input', 'alias']);
+  vm.defineAlias('button', 'action:button',
+      description: 'Button action alias.', tags: const ['action', 'alias']);
+  vm.defineAlias('tap', 'action:button',
+      description: 'Tap alias for button action.',
+      tags: const ['action', 'alias']);
+  vm.defineAlias('press', 'action:button',
+      description: 'Press alias for button action.',
+      tags: const ['action', 'alias']);
+  vm.defineAlias('hover_action', 'action:hover',
+      description: 'Hover action alias.', tags: const ['action', 'alias']);
   vm.defineAlias(
     'icon_button',
     'action:button',
@@ -353,14 +375,22 @@ void _registerActionAliases(QuantumVM vm) {
   vm.defineAlias(
     'chip',
     'action:chip',
-    defaultProps: const <String, dynamic>{'shape': 'pill', 'scale': 'sm', 'edge': 'hairline'},
+    defaultProps: const <String, dynamic>{
+      'shape': 'pill',
+      'scale': 'sm',
+      'edge': 'hairline'
+    },
     description: 'Chip action alias.',
     tags: const ['action', 'alias'],
   );
   vm.defineAlias(
     'badge',
     'action:badge',
-    defaultProps: const <String, dynamic>{'shape': 'pill', 'scale': 'xs', 'disabled': true},
+    defaultProps: const <String, dynamic>{
+      'shape': 'pill',
+      'scale': 'xs',
+      'disabled': true
+    },
     description: 'Badge action alias.',
     tags: const ['action', 'alias'],
   );

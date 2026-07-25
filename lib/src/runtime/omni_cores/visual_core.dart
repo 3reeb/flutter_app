@@ -27,7 +27,7 @@ Widget _buildVisual(QLContext rawCtx) {
       ctx.slot('child') ??
       (ctx.children.isEmpty
           ? const SizedBox.shrink()
-          : Q('col w-full h-full', children: ctx.children));
+          : Q('col min-w-0 min-h-0', children: ctx.children));
 
   if (subType == 'chart') {
     final String chartTypeName = ctx.string('chartType', fallback: 'line');
@@ -52,7 +52,8 @@ Widget _buildVisual(QLContext rawCtx) {
   }
 
   if (subType == 'animation') {
-    final String animationType = ctx.string('animationType', fallback: 'signal');
+    final String animationType =
+        ctx.string('animationType', fallback: 'signal');
     final QLContext animationCtx = QLContext(
       ctx.flutterContext,
       _visualCloneAs(
@@ -265,7 +266,7 @@ Widget _buildVisual(QLContext rawCtx) {
 
   if (subType == 'compose') {
     return Q(
-      ctx.string('layout', fallback: 'col w-full h-full'),
+      ctx.string('layout', fallback: 'col min-w-0 min-h-0'),
       children: ctx.children.isEmpty ? <Widget>[content] : ctx.children,
     );
   }
