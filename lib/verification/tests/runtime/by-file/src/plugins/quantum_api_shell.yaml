@@ -1,0 +1,528 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/plugins/quantum_api_shell.dart
+  docs_file: docs/src/plugins/quantum_api_shell.dart.md
+  source_entry:
+    line_count: 798
+    byte_count: 29650
+    class_count: 3
+    enum_count: 1
+    function_count: 0
+    category: transport
+    test_count: 10
+  scenario_count: 10
+source:
+  path: src/plugins/quantum_api_shell.dart
+  docs_path: docs/src/plugins/quantum_api_shell.dart.md
+  label: src/plugins/quantum_api_shell.dart
+scenarios:
+- uuid: 8631d07b-5580-5ce2-a4a0-a70d8a026652
+  file: lib/src/plugins/quantum_api_shell.dart
+  docs_file: docs/src/plugins/quantum_api_shell.dart.md
+  title: 'Quantum Api Shell: public contract remains stable under valid input'
+  slug: contract
+  category: transport
+  severity: critical
+  description: Verify that quantum api shell keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_api_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_api_shell.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: Import your existing engine files'
+    headings:
+    - '`src/plugins/quantum_api_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - contract
+  - quantum api shell
+- uuid: aa0350a2-435a-5d1a-b08d-f448609bf540
+  file: lib/src/plugins/quantum_api_shell.dart
+  docs_file: docs/src/plugins/quantum_api_shell.dart.md
+  title: 'Quantum Api Shell: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: transport
+  severity: critical
+  description: Verify that quantum api shell keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_api_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_api_shell.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: Import your existing engine files'
+    headings:
+    - '`src/plugins/quantum_api_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - invalid_input
+  - quantum api shell
+- uuid: 8ad280c1-5781-5e15-a7d6-4011c5aa13c3
+  file: lib/src/plugins/quantum_api_shell.dart
+  docs_file: docs/src/plugins/quantum_api_shell.dart.md
+  title: 'Quantum Api Shell: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: transport
+  severity: high
+  description: Verify that quantum api shell keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_api_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_api_shell.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: Import your existing engine files'
+    headings:
+    - '`src/plugins/quantum_api_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - reentrant
+  - quantum api shell
+- uuid: 9f8d4186-4bd8-5c27-bf07-9cdf8176f2e8
+  file: lib/src/plugins/quantum_api_shell.dart
+  docs_file: docs/src/plugins/quantum_api_shell.dart.md
+  title: 'Quantum Api Shell: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: transport
+  severity: high
+  description: Verify that quantum api shell keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_api_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_api_shell.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: Import your existing engine files'
+    headings:
+    - '`src/plugins/quantum_api_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - cleanup
+  - quantum api shell
+- uuid: 18aa3dfc-fd12-53d3-9a02-a5b104ecc534
+  file: lib/src/plugins/quantum_api_shell.dart
+  docs_file: docs/src/plugins/quantum_api_shell.dart.md
+  title: 'Quantum Api Shell: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: transport
+  severity: high
+  description: Verify that quantum api shell keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_api_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_api_shell.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: Import your existing engine files'
+    headings:
+    - '`src/plugins/quantum_api_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - performance
+  - quantum api shell
+- uuid: a9f11d50-d505-54e7-a0fb-7ca0dda1fbb1
+  file: lib/src/plugins/quantum_api_shell.dart
+  docs_file: docs/src/plugins/quantum_api_shell.dart.md
+  title: 'Quantum Api Shell: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: transport
+  severity: medium
+  description: Verify that quantum api shell keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_api_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_api_shell.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: Import your existing engine files'
+    headings:
+    - '`src/plugins/quantum_api_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - memory
+  - quantum api shell
+- uuid: 5d21b88b-39ce-5b23-9f17-8e4ac3bdef21
+  file: lib/src/plugins/quantum_api_shell.dart
+  docs_file: docs/src/plugins/quantum_api_shell.dart.md
+  title: 'Quantum Api Shell: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: transport
+  severity: medium
+  description: Verify that quantum api shell keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_api_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_api_shell.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: Import your existing engine files'
+    headings:
+    - '`src/plugins/quantum_api_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - docs_parity
+  - quantum api shell
+- uuid: fdd210a3-6139-5359-874e-f728073aa302
+  file: lib/src/plugins/quantum_api_shell.dart
+  docs_file: docs/src/plugins/quantum_api_shell.dart.md
+  title: 'Quantum Api Shell: offline, timeout, and partial-response conditions are handled safely'
+  slug: offline
+  category: transport
+  severity: medium
+  description: Verify that quantum api shell keeps its documented runtime behavior while handling offline conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_api_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_api_shell.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: Import your existing engine files'
+    headings:
+    - '`src/plugins/quantum_api_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - offline
+  - quantum api shell
+- uuid: 2d6b4e97-7c9e-567d-99aa-d8bb79eec345
+  file: lib/src/plugins/quantum_api_shell.dart
+  docs_file: docs/src/plugins/quantum_api_shell.dart.md
+  title: 'Quantum Api Shell: streaming request/response lifecycle closes cleanly'
+  slug: stream
+  category: transport
+  severity: medium
+  description: Verify that quantum api shell keeps its documented runtime behavior while handling stream conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_api_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_api_shell.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: Import your existing engine files'
+    headings:
+    - '`src/plugins/quantum_api_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - stream
+  - quantum api shell
+- uuid: a4299eab-4fa2-5a04-a805-228b5994084f
+  file: lib/src/plugins/quantum_api_shell.dart
+  docs_file: docs/src/plugins/quantum_api_shell.dart.md
+  title: 'Quantum Api Shell: retry and cancellation semantics do not duplicate work or leak sockets'
+  slug: retry
+  category: transport
+  severity: medium
+  description: Verify that quantum api shell keeps its documented runtime behavior while handling retry conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_api_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_api_shell.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: Import your existing engine files'
+    headings:
+    - '`src/plugins/quantum_api_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - retry
+  - quantum api shell

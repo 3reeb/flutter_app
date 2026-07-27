@@ -1,0 +1,572 @@
+file: lib/src/app/quantum_app_shell.dart
+docs_file: docs/src/app/quantum_app_shell.dart.md
+line_count: 697
+category: ui
+tests:
+- uuid: 2715a35b-898f-54a3-9bce-115e011f5150
+  file: lib/src/app/quantum_app_shell.dart
+  docs_file: docs/src/app/quantum_app_shell.dart.md
+  title: 'Quantum App Shell: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum app shell keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_shell.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: API CLIENT STUBS (To ensure standalone compilation)'
+    headings:
+    - '`src/app/quantum_app_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum app shell
+- uuid: 74f69a6b-c519-5b52-bc46-1fb006b595e2
+  file: lib/src/app/quantum_app_shell.dart
+  docs_file: docs/src/app/quantum_app_shell.dart.md
+  title: 'Quantum App Shell: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum app shell keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_shell.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: API CLIENT STUBS (To ensure standalone compilation)'
+    headings:
+    - '`src/app/quantum_app_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum app shell
+- uuid: cdc4a76f-03ec-5b52-aa15-5a375682379d
+  file: lib/src/app/quantum_app_shell.dart
+  docs_file: docs/src/app/quantum_app_shell.dart.md
+  title: 'Quantum App Shell: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum app shell keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_shell.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: API CLIENT STUBS (To ensure standalone compilation)'
+    headings:
+    - '`src/app/quantum_app_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum app shell
+- uuid: fa50c10f-ab24-52ac-92cc-80a2aa33933f
+  file: lib/src/app/quantum_app_shell.dart
+  docs_file: docs/src/app/quantum_app_shell.dart.md
+  title: 'Quantum App Shell: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum app shell keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_shell.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: API CLIENT STUBS (To ensure standalone compilation)'
+    headings:
+    - '`src/app/quantum_app_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum app shell
+- uuid: 96132b20-1e4b-56fa-a163-2cef2bee771a
+  file: lib/src/app/quantum_app_shell.dart
+  docs_file: docs/src/app/quantum_app_shell.dart.md
+  title: 'Quantum App Shell: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum app shell keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_shell.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: API CLIENT STUBS (To ensure standalone compilation)'
+    headings:
+    - '`src/app/quantum_app_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum app shell
+- uuid: 6865715e-0a0f-55c5-9de6-e26ce3da87f9
+  file: lib/src/app/quantum_app_shell.dart
+  docs_file: docs/src/app/quantum_app_shell.dart.md
+  title: 'Quantum App Shell: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum app shell keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_shell.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: API CLIENT STUBS (To ensure standalone compilation)'
+    headings:
+    - '`src/app/quantum_app_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum app shell
+- uuid: 124c5556-f36d-5825-b594-bd84964841e1
+  file: lib/src/app/quantum_app_shell.dart
+  docs_file: docs/src/app/quantum_app_shell.dart.md
+  title: 'Quantum App Shell: the runtime surface still matches the documented API
+    and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum app shell keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_shell.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: API CLIENT STUBS (To ensure standalone compilation)'
+    headings:
+    - '`src/app/quantum_app_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum app shell
+- uuid: 5c94fa66-c9c6-561f-8068-afb2cc471455
+  file: lib/src/app/quantum_app_shell.dart
+  docs_file: docs/src/app/quantum_app_shell.dart.md
+  title: 'Quantum App Shell: layout remains correct under narrow, wide, and constrained
+    bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum app shell keeps its documented runtime behavior
+    while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_shell.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: API CLIENT STUBS (To ensure standalone compilation)'
+    headings:
+    - '`src/app/quantum_app_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum app shell
+- uuid: 9f4645d7-105c-550f-930f-419f75e18945
+  file: lib/src/app/quantum_app_shell.dart
+  docs_file: docs/src/app/quantum_app_shell.dart.md
+  title: 'Quantum App Shell: semantics and accessibility output remain stable across
+    rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that quantum app shell keeps its documented runtime behavior
+    while handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_shell.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: API CLIENT STUBS (To ensure standalone compilation)'
+    headings:
+    - '`src/app/quantum_app_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - semantics
+  - quantum app shell
+- uuid: 66d1257c-071d-5c98-81d2-56d331365c16
+  file: lib/src/app/quantum_app_shell.dart
+  docs_file: docs/src/app/quantum_app_shell.dart.md
+  title: 'Quantum App Shell: gesture handling and hit testing stay correct during
+    interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that quantum app shell keeps its documented runtime behavior
+    while handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_shell.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_shell.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: API CLIENT STUBS (To ensure standalone compilation)'
+    headings:
+    - '`src/app/quantum_app_shell.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - gesture
+  - quantum app shell

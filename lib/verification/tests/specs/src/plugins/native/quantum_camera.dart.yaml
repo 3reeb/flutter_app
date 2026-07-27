@@ -1,0 +1,479 @@
+file: lib/src/plugins/native/quantum_camera.dart
+docs_file: docs/src/plugins/native/quantum_camera.dart.md
+line_count: 156
+category: plugin
+tests:
+- uuid: 36dd2d30-c20e-53ae-be23-05915f6915d2
+  file: lib/src/plugins/native/quantum_camera.dart
+  docs_file: docs/src/plugins/native/quantum_camera.dart.md
+  title: 'Quantum Camera: public contract remains stable under valid input'
+  slug: contract
+  category: plugin
+  severity: critical
+  description: Verify that quantum camera keeps its documented runtime behavior while
+    handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_camera.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_camera.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_camera.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - contract
+  - quantum camera
+- uuid: 9cc6f7f3-04a5-5a7f-8fa6-dbd51c3e0b1f
+  file: lib/src/plugins/native/quantum_camera.dart
+  docs_file: docs/src/plugins/native/quantum_camera.dart.md
+  title: 'Quantum Camera: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: plugin
+  severity: critical
+  description: Verify that quantum camera keeps its documented runtime behavior while
+    handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_camera.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_camera.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_camera.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - invalid_input
+  - quantum camera
+- uuid: eb6bde47-12e3-5a46-9344-a1d4d5a156aa
+  file: lib/src/plugins/native/quantum_camera.dart
+  docs_file: docs/src/plugins/native/quantum_camera.dart.md
+  title: 'Quantum Camera: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: plugin
+  severity: high
+  description: Verify that quantum camera keeps its documented runtime behavior while
+    handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_camera.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_camera.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_camera.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - reentrant
+  - quantum camera
+- uuid: f1a85905-181e-51e2-b87b-6ab9b9197ff8
+  file: lib/src/plugins/native/quantum_camera.dart
+  docs_file: docs/src/plugins/native/quantum_camera.dart.md
+  title: 'Quantum Camera: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: plugin
+  severity: high
+  description: Verify that quantum camera keeps its documented runtime behavior while
+    handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_camera.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_camera.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_camera.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - cleanup
+  - quantum camera
+- uuid: 41a7f0a1-74ca-51f3-8355-cf934913a73e
+  file: lib/src/plugins/native/quantum_camera.dart
+  docs_file: docs/src/plugins/native/quantum_camera.dart.md
+  title: 'Quantum Camera: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: plugin
+  severity: high
+  description: Verify that quantum camera keeps its documented runtime behavior while
+    handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_camera.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_camera.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_camera.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - performance
+  - quantum camera
+- uuid: 21ce177a-60e9-562c-81ba-caab360eaf4a
+  file: lib/src/plugins/native/quantum_camera.dart
+  docs_file: docs/src/plugins/native/quantum_camera.dart.md
+  title: 'Quantum Camera: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: plugin
+  severity: medium
+  description: Verify that quantum camera keeps its documented runtime behavior while
+    handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_camera.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_camera.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_camera.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - memory
+  - quantum camera
+- uuid: ac896e6c-6703-543c-b97f-2676cbad6ca5
+  file: lib/src/plugins/native/quantum_camera.dart
+  docs_file: docs/src/plugins/native/quantum_camera.dart.md
+  title: 'Quantum Camera: the runtime surface still matches the documented API and
+    headings'
+  slug: docs_parity
+  category: plugin
+  severity: medium
+  description: Verify that quantum camera keeps its documented runtime behavior while
+    handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_camera.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_camera.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_camera.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - docs_parity
+  - quantum camera
+- uuid: fd2ccaba-647b-56fd-aed8-4a4393c63216
+  file: lib/src/plugins/native/quantum_camera.dart
+  docs_file: docs/src/plugins/native/quantum_camera.dart.md
+  title: 'Quantum Camera: permission-denied and unavailable-plugin cases fall back
+    safely'
+  slug: permission
+  category: plugin
+  severity: medium
+  description: Verify that quantum camera keeps its documented runtime behavior while
+    handling permission conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_camera.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_camera.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_camera.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - permission
+  - quantum camera

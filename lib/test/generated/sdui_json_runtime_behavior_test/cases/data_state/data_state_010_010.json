@@ -1,0 +1,53 @@
+{
+  "__meta": {
+    "id": "ds-010-data-repeat-minimal",
+    "title": "Minimal data:repeat with bind/as/indexAs compiles correctly",
+    "description": "The repeat node must have __subType:repeat injected from the colon form. bind, as, and indexAs must all survive. The child template must stay under children.",
+    "tags": ["data_state", "data", "repeat"],
+    "allowBlank": false,
+    "priority": "critical"
+  },
+  "input": {
+    "type": "data:repeat",
+    "props": {
+      "bind": "${state.items}",
+      "as": "item",
+      "indexAs": "i"
+    },
+    "children": [
+      { "type": "text", "props": { "text": "${item.name}" } }
+    ]
+  },
+  "expected": {
+    "type": "data",
+    "props": {
+      "__subType": "repeat",
+      "bind": "${state.items}",
+      "as": "item",
+      "indexAs": "i"
+    },
+    "debugPath": "root",
+    "children": [
+      { "type": "text", "props": { "text": "${item.name}" }, "debugPath": "root[0]" }
+    ]
+  },
+  "runtimeAssertions": [
+    { "path": "type",                         "equals": "data" },
+    { "path": "props.__subType",              "equals": "repeat" },
+    { "path": "props.bind",                   "equals": "${state.items}" },
+    { "path": "props.bind",                   "contains": "state.items" },
+    { "path": "props.as",                     "equals": "item" },
+    { "path": "props.indexAs",                "equals": "i" },
+    { "path": "children.length",              "equals": 1 },
+    { "path": "children[0].type",             "equals": "text" },
+    { "path": "children[0].props.text",       "equals": "${item.name}" }
+  ],
+  "runtimeBehavior": {
+    "description":    "At runtime with state.items = [{name:'A'},{name:'B'},{name:'C'}], the runtime renders 3 instances of the child template. Each instance has item bound to the current element and i bound to the index. The child text resolves: item.name='A' → 'A', item.name='B' → 'B', etc.",
+    "exampleData":    [{"name": "A"}, {"name": "B"}, {"name": "C"}],
+    "renderedCount":  3,
+    "instance0":      { "item": { "name": "A" }, "i": 0, "text": "A" },
+    "instance1":      { "item": { "name": "B" }, "i": 1, "text": "B" },
+    "instance2":      { "item": { "name": "C" }, "i": 2, "text": "C" }
+  }
+}

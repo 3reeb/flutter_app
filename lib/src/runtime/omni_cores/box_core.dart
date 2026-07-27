@@ -97,7 +97,7 @@ Widget _buildBox(QLContext rawCtx) {
 
     // 🚀 THE FIX: Bypass intermediate QLBox. Pipe directly to Q.
     return Q(
-      'min-w-0 min-h-0 ${ctx.node.style ?? ''}',
+      mergeStyleTokens(['min-w-0 min-h-0', ctx.node.style]),
       suppressParentData: true,
       children: [splitWidget],
     );
@@ -166,7 +166,7 @@ Widget _buildBox(QLContext rawCtx) {
     return _QLMeasureNode(
       bindTarget: ctx.string('bind'),
       store: ctx.store,
-      child: Q('col min-w-0 min-h-0 ${ctx.string('style')}',
+      child: Q(mergeStyleTokens(['col min-w-0 min-h-0', ctx.string('style')]),
           children: ctx.children),
     );
   }
@@ -201,7 +201,7 @@ Widget _buildBox(QLContext rawCtx) {
 
     // 🚀 THE FIX: Eliminate QLBox. Directly inject signals to the engine via Q.
     return Q(
-      'col w-full h-full ${ctx.node.style ?? ''}',
+      mergeStyleTokens(['col w-full h-full', ctx.node.style]),
       transform3D: transformSig,
       opacitySignal: opacitySig,
       children: ctx.children,
@@ -221,11 +221,11 @@ Widget _buildBox(QLContext rawCtx) {
     );
     final VoidCallback? tapAction =
         ctx.action('onClick') ?? ctx.action('onTap') ?? ctx.action('action');
-    
+
     // Avoid console spam from repeated rebuilds; errors should surface in UI.
 
     return Q(
-      '$shellStyle col min-w-0 min-h-0 ${ctx.node.style ?? ''}',
+      mergeStyleTokens([shellStyle, 'col min-w-0 min-h-0', ctx.node.style]),
       padding: ctx.list('padding'),
       margin: ctx.list('margin'),
       gap: ctx.number('gap') > 0 ? ctx.number('gap') : null,

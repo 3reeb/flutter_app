@@ -1,0 +1,121 @@
+{
+  "__meta": {
+    "id": "nested-085-screen-085",
+    "title": "Mixed nested screen #085",
+    "description": "Grid layouts and repeaters should compose in a real nested screen.",
+    "tags": [
+      "nested",
+      "layout",
+      "repeat"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "box:col",
+    "children": [
+      {
+        "$layout": [
+          "a a",
+          "b ."
+        ],
+        "gap": 12,
+        "slots": {
+          "a": {
+            "type": "text",
+            "props": {
+              "text": "Grid A 085"
+            }
+          },
+          "b": {
+            "type": "text",
+            "props": {
+              "text": "Grid B 085"
+            }
+          }
+        }
+      },
+      {
+        "$repeat": "items.batch_1",
+        "type": "text",
+        "props": {
+          "text": "Repeat 085"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:col",
+    "props": {},
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "box:grid",
+        "props": {
+          "gridRows": "repeat(2, auto)",
+          "gridCols": "repeat(2, 1fr)",
+          "gap": 12
+        },
+        "debugPath": "root[0]",
+        "children": [
+          {
+            "type": "box:grid_item",
+            "props": {
+              "rowStart": 1,
+              "rowEnd": 2,
+              "colStart": 1,
+              "colEnd": 3
+            },
+            "debugPath": "root[0][0]",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Grid A 085"
+                },
+                "debugPath": "root[0][0][0]"
+              }
+            ]
+          },
+          {
+            "type": "box:grid_item",
+            "props": {
+              "rowStart": 2,
+              "rowEnd": 3,
+              "colStart": 1,
+              "colEnd": 2
+            },
+            "debugPath": "root[0][1]",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Grid B 085"
+                },
+                "debugPath": "root[0][1][0]"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "system",
+        "props": {
+          "__subType": "repeater",
+          "bind": "items.batch_1",
+          "as": "item",
+          "indexAs": "index"
+        },
+        "debugPath": "root[1]",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Repeat 085"
+            },
+            "debugPath": "root[1][0]"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,7 +1,11 @@
 # Quantum file documentation index
 
-This directory contains one markdown document per source file.
+This directory contains one markdown document per source file, plus a unified data-api reference.
 
+The schema, forms, and runtime docs were expanded to cover the new field types (`media`, `bigInt`, `smallInt`, `decimal`, `char`, `flags`), `hasMany` support, and the lazy/cache behavior that now flows across schema compilation, form controllers, data sources, and the VM.
+
+- [`UNIFIED_LOCAL_FIRST_DATA_API.md`](UNIFIED_LOCAL_FIRST_DATA_API.md)
+- [`PLUGIN_UNIFIED_DATA_ROUTING.md`](PLUGIN_UNIFIED_DATA_ROUTING.md)
 - [`main.dart`](main.dart.md)
 - [`quantum.config.dart`](quantum.config.dart.md)
 - [`quantum.dart`](quantum.dart.md)
@@ -95,6 +99,10 @@ This directory contains one markdown document per source file.
 - [`src/runtime/quantum_vm_init.dart`](src/runtime/quantum_vm_init.dart.md)
 - [`src/runtime/quantum_widget_image_exporter.dart`](src/runtime/quantum_widget_image_exporter.dart.md)
 - [`src/runtime/quantum_workspace_engine.dart`](src/runtime/quantum_workspace_engine.dart.md)
+- [`src/runtime/quantum_test_engine.dart`](src/runtime/quantum_test_engine.dart.md)
+- [`src/runtime/quantum_test_engine_shared.dart`](src/runtime/quantum_test_engine_shared.dart.md)
+- [`src/runtime/quantum_test_engine_io.dart`](src/runtime/quantum_test_engine_io.dart.md)
+- [`src/runtime/quantum_test_engine_stub.dart`](src/runtime/quantum_test_engine_stub.dart.md)
 - [`src/ui/internal/quantum_focus_sync.dart`](src/ui/internal/quantum_focus_sync.dart.md)
 - [`src/ui/quantum_animation_engine.dart`](src/ui/quantum_animation_engine.dart.md)
 - [`src/ui/quantum_behaviors.dart`](src/ui/quantum_behaviors.dart.md)
@@ -112,5 +120,6 @@ This directory contains one markdown document per source file.
 - [`src/ui/quantum_telemetry_engine.dart`](src/ui/quantum_telemetry_engine.dart.md)
 - [`src/ui/quantum_theme_engine.dart`](src/ui/quantum_theme_engine.dart.md)
 - SDUI_STUDIO_GUIDE.md — responsive paste/render/export workflow for the studio screen.
-
 - [`SDUI_EXAMPLES_AND_HEALTH.md`](SDUI_EXAMPLES_AND_HEALTH.md) — example registry, isolated health tests, and copyable error workflow.
+
+- [`docs/test-engine/QUANTUM_TEST_ENGINE.md`](test-engine/QUANTUM_TEST_ENGINE.md) — central YAML-driven test engine, manifest validation, and compact reporting.

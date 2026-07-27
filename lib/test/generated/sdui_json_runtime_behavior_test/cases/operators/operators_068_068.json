@@ -1,0 +1,47 @@
+{
+  "__meta": {
+    "id": "operators-068-reactive-map-068",
+    "title": "Reactive map compiles to data:diff #068",
+    "description": "The $reactive_map operator should emit a data:diff node.",
+    "tags": [
+      "operators",
+      "reactive",
+      "diff"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "$reactive_map": {
+      "bind": "items.list_0",
+      "key": "id",
+      "as": "item"
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Diff 068"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "data",
+    "props": {
+      "__subType": "diff",
+      "bind": "items.list_0",
+      "key": "id",
+      "as": "item"
+    },
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Diff 068"
+        },
+        "debugPath": "root[0]"
+      }
+    ]
+  }
+}

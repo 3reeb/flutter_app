@@ -1,0 +1,809 @@
+file: lib/src/ui/quantum_overlays.dart
+docs_file: docs/src/ui/quantum_overlays.dart.md
+line_count: 2472
+category: visual
+tests:
+- uuid: afdbd2a4-e77f-5841-90a0-99a0e06ef0d4
+  file: lib/src/ui/quantum_overlays.dart
+  docs_file: docs/src/ui/quantum_overlays.dart.md
+  title: 'Quantum Overlays: public contract remains stable under valid input'
+  slug: contract
+  category: visual
+  severity: critical
+  description: Verify that quantum overlays keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_overlays.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_overlays.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+      needed after decoupling.'
+    headings:
+    - '`src/ui/quantum_overlays.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - contract
+  - quantum overlays
+- uuid: ffc5a8c1-c811-5864-acc0-957d0ec4eec6
+  file: lib/src/ui/quantum_overlays.dart
+  docs_file: docs/src/ui/quantum_overlays.dart.md
+  title: 'Quantum Overlays: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: visual
+  severity: critical
+  description: Verify that quantum overlays keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_overlays.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_overlays.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+      needed after decoupling.'
+    headings:
+    - '`src/ui/quantum_overlays.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - invalid_input
+  - quantum overlays
+- uuid: 5f50055b-4082-5762-87e7-2b1d09219c18
+  file: lib/src/ui/quantum_overlays.dart
+  docs_file: docs/src/ui/quantum_overlays.dart.md
+  title: 'Quantum Overlays: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: visual
+  severity: high
+  description: Verify that quantum overlays keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_overlays.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_overlays.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+      needed after decoupling.'
+    headings:
+    - '`src/ui/quantum_overlays.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - reentrant
+  - quantum overlays
+- uuid: dcea3009-d716-525c-bd08-33d69be021df
+  file: lib/src/ui/quantum_overlays.dart
+  docs_file: docs/src/ui/quantum_overlays.dart.md
+  title: 'Quantum Overlays: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: visual
+  severity: high
+  description: Verify that quantum overlays keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_overlays.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_overlays.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+      needed after decoupling.'
+    headings:
+    - '`src/ui/quantum_overlays.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - cleanup
+  - quantum overlays
+- uuid: b291e1e1-cb8e-5e22-86e1-d9c5de13e021
+  file: lib/src/ui/quantum_overlays.dart
+  docs_file: docs/src/ui/quantum_overlays.dart.md
+  title: 'Quantum Overlays: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: visual
+  severity: high
+  description: Verify that quantum overlays keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_overlays.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_overlays.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+      needed after decoupling.'
+    headings:
+    - '`src/ui/quantum_overlays.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - performance
+  - quantum overlays
+- uuid: 04c89317-656e-565d-9eb3-bdf5613a1f87
+  file: lib/src/ui/quantum_overlays.dart
+  docs_file: docs/src/ui/quantum_overlays.dart.md
+  title: 'Quantum Overlays: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: visual
+  severity: medium
+  description: Verify that quantum overlays keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_overlays.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_overlays.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+      needed after decoupling.'
+    headings:
+    - '`src/ui/quantum_overlays.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - memory
+  - quantum overlays
+- uuid: c2424b57-1966-5601-9317-65fd6310c8a3
+  file: lib/src/ui/quantum_overlays.dart
+  docs_file: docs/src/ui/quantum_overlays.dart.md
+  title: 'Quantum Overlays: the runtime surface still matches the documented API and
+    headings'
+  slug: docs_parity
+  category: visual
+  severity: medium
+  description: Verify that quantum overlays keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_overlays.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_overlays.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+      needed after decoupling.'
+    headings:
+    - '`src/ui/quantum_overlays.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - docs_parity
+  - quantum overlays
+- uuid: 0e681672-03d0-5c7b-b871-ba1118635b7a
+  file: lib/src/ui/quantum_overlays.dart
+  docs_file: docs/src/ui/quantum_overlays.dart.md
+  title: 'Quantum Overlays: rendering remains correct for large, dense, and animated
+    content'
+  slug: render
+  category: visual
+  severity: medium
+  description: Verify that quantum overlays keeps its documented runtime behavior
+    while handling render conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_overlays.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_overlays.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+      needed after decoupling.'
+    headings:
+    - '`src/ui/quantum_overlays.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - render
+  - quantum overlays
+- uuid: c44021fc-1f05-5699-a410-9d8de61bed5d
+  file: lib/src/ui/quantum_overlays.dart
+  docs_file: docs/src/ui/quantum_overlays.dart.md
+  title: 'Quantum Overlays: pointer hover and selection feedback stay synchronized
+    with paint state'
+  slug: hover
+  category: visual
+  severity: medium
+  description: Verify that quantum overlays keeps its documented runtime behavior
+    while handling hover conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_overlays.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_overlays.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+      needed after decoupling.'
+    headings:
+    - '`src/ui/quantum_overlays.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - hover
+  - quantum overlays
+- uuid: b60e8d53-5393-5d68-9bff-7eebda6755bf
+  file: lib/src/ui/quantum_overlays.dart
+  docs_file: docs/src/ui/quantum_overlays.dart.md
+  title: 'Quantum Overlays: frame budget remains acceptable when the view is stressed'
+  slug: frame
+  category: visual
+  severity: medium
+  description: Verify that quantum overlays keeps its documented runtime behavior
+    while handling frame conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_overlays.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_overlays.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+      needed after decoupling.'
+    headings:
+    - '`src/ui/quantum_overlays.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - frame
+  - quantum overlays
+- uuid: 9a5e0a20-c790-5e30-b5a3-5ee907d3692f
+  file: lib/src/ui/quantum_overlays.dart
+  docs_file: docs/src/ui/quantum_overlays.dart.md
+  title: 'Quantum Overlays: snapshot/export paths preserve visual fidelity and do
+    not leak buffers'
+  slug: export
+  category: visual
+  severity: medium
+  description: Verify that quantum overlays keeps its documented runtime behavior
+    while handling export conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_overlays.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_overlays.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+      needed after decoupling.'
+    headings:
+    - '`src/ui/quantum_overlays.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - export
+  - quantum overlays
+- uuid: 06754399-d6ea-563b-81e4-c8ae51a305e9
+  file: lib/src/ui/quantum_overlays.dart
+  docs_file: docs/src/ui/quantum_overlays.dart.md
+  title: 'Quantum Overlays: overlay stacking preserves hit testing and z-order'
+  slug: overlay_order
+  category: visual
+  severity: medium
+  description: Verify that quantum overlays keeps its documented runtime behavior
+    while handling overlay order conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_overlays.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_overlays.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+      needed after decoupling.'
+    headings:
+    - '`src/ui/quantum_overlays.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - overlay_order
+  - quantum overlays
+- uuid: 13634f5f-1825-55e4-a449-e3e95e435d79
+  file: lib/src/ui/quantum_overlays.dart
+  docs_file: docs/src/ui/quantum_overlays.dart.md
+  title: 'Quantum Overlays: drag and resize gestures update bounds without jitter'
+  slug: drag_resize
+  category: visual
+  severity: medium
+  description: Verify that quantum overlays keeps its documented runtime behavior
+    while handling drag resize conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_overlays.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_overlays.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+      needed after decoupling.'
+    headings:
+    - '`src/ui/quantum_overlays.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - drag_resize
+  - quantum overlays
+- uuid: b7c78bb3-4a77-5aba-93d3-09528df56ccc
+  file: lib/src/ui/quantum_overlays.dart
+  docs_file: docs/src/ui/quantum_overlays.dart.md
+  title: 'Quantum Overlays: public contract remains stable under valid input'
+  slug: contract
+  category: visual
+  severity: medium
+  description: Verify that quantum overlays keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_overlays.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_overlays.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+      needed after decoupling.'
+    headings:
+    - '`src/ui/quantum_overlays.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - contract
+  - quantum overlays

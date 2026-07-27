@@ -1,0 +1,378 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/runtime/downloader_web.dart
+  docs_file: null
+  source_entry:
+    line_count: 35
+    byte_count: 891
+    class_count: 0
+    enum_count: 0
+    function_count: 2
+    category: runtime
+    test_count: 8
+  scenario_count: 8
+source:
+  path: src/runtime/downloader_web.dart
+  docs_path: null
+  label: src/runtime/downloader_web.dart
+scenarios:
+- uuid: ef378275-c87b-5400-b5ed-775a21947d9a
+  file: lib/src/runtime/downloader_web.dart
+  docs_file: null
+  title: 'Downloader Web: public contract remains stable under valid input'
+  slug: contract
+  category: runtime
+  severity: critical
+  description: Verify that downloader web keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/downloader_web.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - contract
+  - downloader web
+- uuid: d97cdef7-0d0f-5c36-8b37-9524f91e5d77
+  file: lib/src/runtime/downloader_web.dart
+  docs_file: null
+  title: 'Downloader Web: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: runtime
+  severity: critical
+  description: Verify that downloader web keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/downloader_web.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - invalid_input
+  - downloader web
+- uuid: 1a210507-f527-5314-85d6-9f7161881386
+  file: lib/src/runtime/downloader_web.dart
+  docs_file: null
+  title: 'Downloader Web: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: runtime
+  severity: high
+  description: Verify that downloader web keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/downloader_web.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - reentrant
+  - downloader web
+- uuid: c836b5b4-e7d4-59a6-848e-29c8328aded4
+  file: lib/src/runtime/downloader_web.dart
+  docs_file: null
+  title: 'Downloader Web: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: runtime
+  severity: high
+  description: Verify that downloader web keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/downloader_web.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - cleanup
+  - downloader web
+- uuid: 4cf30738-653b-579e-b691-29edac6f33e8
+  file: lib/src/runtime/downloader_web.dart
+  docs_file: null
+  title: 'Downloader Web: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: runtime
+  severity: high
+  description: Verify that downloader web keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/downloader_web.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - performance
+  - downloader web
+- uuid: 5eff8b4d-ceb8-56ed-ab61-e468829cde5c
+  file: lib/src/runtime/downloader_web.dart
+  docs_file: null
+  title: 'Downloader Web: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: runtime
+  severity: medium
+  description: Verify that downloader web keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/downloader_web.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - memory
+  - downloader web
+- uuid: d744f601-7a95-5566-a73e-f910801a48e1
+  file: lib/src/runtime/downloader_web.dart
+  docs_file: null
+  title: 'Downloader Web: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: runtime
+  severity: medium
+  description: Verify that downloader web keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/downloader_web.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - docs_parity
+  - downloader web
+- uuid: 97ca2a95-679f-53af-90fb-7b6e427f7a1b
+  file: lib/src/runtime/downloader_web.dart
+  docs_file: null
+  title: 'Downloader Web: registry and dispatch semantics remain correct under mixed workload'
+  slug: registry
+  category: runtime
+  severity: medium
+  description: Verify that downloader web keeps its documented runtime behavior while handling registry conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/downloader_web.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - registry
+  - downloader web

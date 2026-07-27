@@ -1,0 +1,558 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/plugins/adapters/quantum_firebase_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_firebase_adapters.dart.md
+  source_entry:
+    line_count: 838
+    byte_count: 29589
+    class_count: 4
+    enum_count: 0
+    function_count: 13
+    category: plugin
+    test_count: 10
+  scenario_count: 10
+source:
+  path: src/plugins/adapters/quantum_firebase_adapters.dart
+  docs_path: docs/src/plugins/adapters/quantum_firebase_adapters.dart.md
+  label: src/plugins/adapters/quantum_firebase_adapters.dart
+scenarios:
+- uuid: 0f4989cb-981e-59d6-9864-4f766dcca21e
+  file: lib/src/plugins/adapters/quantum_firebase_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_firebase_adapters.dart.md
+  title: 'Quantum Firebase Adapters: public contract remains stable under valid input'
+  slug: contract
+  category: plugin
+  severity: critical
+  description: Verify that quantum firebase adapters keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_firebase_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_firebase_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: import ''dart:io''; // <-- Add this import'
+    headings:
+    - '`src/plugins/adapters/quantum_firebase_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - contract
+  - quantum firebase adapters
+- uuid: eae6e25f-171d-5cf4-8f86-2d023d791ad3
+  file: lib/src/plugins/adapters/quantum_firebase_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_firebase_adapters.dart.md
+  title: 'Quantum Firebase Adapters: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: plugin
+  severity: critical
+  description: Verify that quantum firebase adapters keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_firebase_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_firebase_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: import ''dart:io''; // <-- Add this import'
+    headings:
+    - '`src/plugins/adapters/quantum_firebase_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - invalid_input
+  - quantum firebase adapters
+- uuid: 57d1d201-078c-58e7-897a-0d4e4da7cc31
+  file: lib/src/plugins/adapters/quantum_firebase_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_firebase_adapters.dart.md
+  title: 'Quantum Firebase Adapters: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: plugin
+  severity: high
+  description: Verify that quantum firebase adapters keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_firebase_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_firebase_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: import ''dart:io''; // <-- Add this import'
+    headings:
+    - '`src/plugins/adapters/quantum_firebase_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - reentrant
+  - quantum firebase adapters
+- uuid: c4937869-5caa-5cb6-b514-8156c5da3138
+  file: lib/src/plugins/adapters/quantum_firebase_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_firebase_adapters.dart.md
+  title: 'Quantum Firebase Adapters: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: plugin
+  severity: high
+  description: Verify that quantum firebase adapters keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_firebase_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_firebase_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: import ''dart:io''; // <-- Add this import'
+    headings:
+    - '`src/plugins/adapters/quantum_firebase_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - cleanup
+  - quantum firebase adapters
+- uuid: 26f08186-75e4-5504-8cb0-3ec279bd5e5a
+  file: lib/src/plugins/adapters/quantum_firebase_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_firebase_adapters.dart.md
+  title: 'Quantum Firebase Adapters: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: plugin
+  severity: high
+  description: Verify that quantum firebase adapters keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_firebase_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_firebase_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: import ''dart:io''; // <-- Add this import'
+    headings:
+    - '`src/plugins/adapters/quantum_firebase_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - performance
+  - quantum firebase adapters
+- uuid: 6412225b-24df-597f-a334-9db123c4c505
+  file: lib/src/plugins/adapters/quantum_firebase_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_firebase_adapters.dart.md
+  title: 'Quantum Firebase Adapters: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: plugin
+  severity: medium
+  description: Verify that quantum firebase adapters keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_firebase_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_firebase_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: import ''dart:io''; // <-- Add this import'
+    headings:
+    - '`src/plugins/adapters/quantum_firebase_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - memory
+  - quantum firebase adapters
+- uuid: 20b1f3da-c932-5297-94a8-1797f13b2f3a
+  file: lib/src/plugins/adapters/quantum_firebase_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_firebase_adapters.dart.md
+  title: 'Quantum Firebase Adapters: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: plugin
+  severity: medium
+  description: Verify that quantum firebase adapters keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_firebase_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_firebase_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: import ''dart:io''; // <-- Add this import'
+    headings:
+    - '`src/plugins/adapters/quantum_firebase_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - docs_parity
+  - quantum firebase adapters
+- uuid: fa7637cf-53e9-5483-9e83-4b34602e269e
+  file: lib/src/plugins/adapters/quantum_firebase_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_firebase_adapters.dart.md
+  title: 'Quantum Firebase Adapters: permission-denied and unavailable-plugin cases fall back safely'
+  slug: permission
+  category: plugin
+  severity: medium
+  description: Verify that quantum firebase adapters keeps its documented runtime behavior while handling permission conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_firebase_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_firebase_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: import ''dart:io''; // <-- Add this import'
+    headings:
+    - '`src/plugins/adapters/quantum_firebase_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - permission
+  - quantum firebase adapters
+- uuid: 20af1874-1e82-5e99-ba47-5e79eaa773a9
+  file: lib/src/plugins/adapters/quantum_firebase_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_firebase_adapters.dart.md
+  title: 'Quantum Firebase Adapters: bridge handoff and adapter selection are stable across platforms'
+  slug: bridge
+  category: plugin
+  severity: medium
+  description: Verify that quantum firebase adapters keeps its documented runtime behavior while handling bridge conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_firebase_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_firebase_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: import ''dart:io''; // <-- Add this import'
+    headings:
+    - '`src/plugins/adapters/quantum_firebase_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - bridge
+  - quantum firebase adapters
+- uuid: 42c9e1d0-96b1-5cf5-901d-5f420305ac60
+  file: lib/src/plugins/adapters/quantum_firebase_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_firebase_adapters.dart.md
+  title: 'Quantum Firebase Adapters: fallback adapters take over without data loss or duplicate events'
+  slug: fallback
+  category: plugin
+  severity: medium
+  description: Verify that quantum firebase adapters keeps its documented runtime behavior while handling fallback conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_firebase_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_firebase_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: import ''dart:io''; // <-- Add this import'
+    headings:
+    - '`src/plugins/adapters/quantum_firebase_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - fallback
+  - quantum firebase adapters

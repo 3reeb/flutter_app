@@ -1,0 +1,2280 @@
+{
+  "__meta": {
+    "id": "omni-cores-catalog",
+    "title": "Omni cores subtype and JSON key catalog",
+    "description": "Source-derived JSON contract for every file in src/runtime/omni_cores.",
+    "tags": [
+      "sdui",
+      "omni_cores",
+      "catalog",
+      "source-derived",
+      "runtime"
+    ],
+    "allowBlank": true
+  },
+  "cases": [
+    {
+      "id": "action-declaration-contract",
+      "title": "action_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/action_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildAction",
+            "subType == 'button'",
+            "subType == 'chip'",
+            "subType == 'double_tap'",
+            "subType == 'focus'",
+            "subType == 'gesture'",
+            "subType == 'hover'",
+            "subType == 'icon_button'",
+            "subType == 'long_press'",
+            "subType == 'pointer'",
+            "subType == 'raw_pointer'",
+            "subType == 'viewport'"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "action-subtype-catalog",
+      "title": "action_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/action_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": [
+            "button",
+            "chip",
+            "double_tap",
+            "focus",
+            "gesture",
+            "hover",
+            "icon_button",
+            "long_press",
+            "pointer",
+            "raw_pointer",
+            "viewport"
+          ]
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": [
+            "button",
+            "chip",
+            "double_tap",
+            "focus",
+            "gesture",
+            "hover",
+            "icon_button",
+            "long_press",
+            "pointer",
+            "raw_pointer",
+            "viewport"
+          ]
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildAction"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "action-runtime-snapshot",
+      "title": "action_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/action_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.action.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.action.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.action.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "action-source-integrity",
+      "title": "action_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/action_core.dart",
+      "sourceSha256": "8427addd136288f21911f05f0c219347adf341566a54695ab88cac9a3c1cd874",
+      "lineCountAtLeast": 337,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "8427addd136288f21911f05f0c219347adf341566a54695ab88cac9a3c1cd874"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 337
+        }
+      ]
+    },
+    {
+      "id": "animation-declaration-contract",
+      "title": "animation_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/animation_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildAnimation"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "animation-subtype-catalog",
+      "title": "animation_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/animation_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": []
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": []
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildAnimation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "animation-runtime-snapshot",
+      "title": "animation_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/animation_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.animation.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.animation.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.animation.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "animation-source-integrity",
+      "title": "animation_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/animation_core.dart",
+      "sourceSha256": "c856bb88d9aac7e1066825cd3abcb2d7201a45062052806c87628f80fddc648a",
+      "lineCountAtLeast": 514,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "c856bb88d9aac7e1066825cd3abcb2d7201a45062052806c87628f80fddc648a"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 514
+        }
+      ]
+    },
+    {
+      "id": "box-declaration-contract",
+      "title": "box_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/box_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildBox",
+            "_buildSmartScrollViewport",
+            "subType == 'aspect'",
+            "subType == 'builder'",
+            "subType == 'col'",
+            "subType == 'expanded'",
+            "subType == 'flexible'",
+            "subType == 'grid'",
+            "subType == 'layer'",
+            "subType == 'masonry'",
+            "subType == 'matrix'",
+            "subType == 'measure'",
+            "subType == 'morph'",
+            "subType == 'responsive'",
+            "subType == 'row'",
+            "subType == 'safe'",
+            "subType == 'scroll'",
+            "subType == 'shell'",
+            "subType == 'split'",
+            "subType == 'stack'",
+            "subType == 'sticky'",
+            "subType == 'surface'",
+            "subType == 'viewport'",
+            "subType == 'virtual_grid'",
+            "subType == 'wrap'"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "box-subtype-catalog",
+      "title": "box_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/box_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": [
+            "aspect",
+            "builder",
+            "col",
+            "expanded",
+            "flexible",
+            "grid",
+            "layer",
+            "masonry",
+            "matrix",
+            "measure",
+            "morph",
+            "responsive",
+            "row",
+            "safe",
+            "scroll",
+            "shell",
+            "split",
+            "stack",
+            "sticky",
+            "surface",
+            "viewport",
+            "virtual_grid",
+            "wrap"
+          ]
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": [
+            "aspect",
+            "builder",
+            "col",
+            "expanded",
+            "flexible",
+            "grid",
+            "layer",
+            "masonry",
+            "matrix",
+            "measure",
+            "morph",
+            "responsive",
+            "row",
+            "safe",
+            "scroll",
+            "shell",
+            "split",
+            "stack",
+            "sticky",
+            "surface",
+            "viewport",
+            "virtual_grid",
+            "wrap"
+          ]
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildBox",
+            "_buildSmartScrollViewport"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "box-runtime-snapshot",
+      "title": "box_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/box_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.box.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.box.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.box.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "box-source-integrity",
+      "title": "box_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/box_core.dart",
+      "sourceSha256": "cf9bfecea439451ed25257e137ce5f6f3350ed0404d9a5732577485d06954d1a",
+      "lineCountAtLeast": 719,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "cf9bfecea439451ed25257e137ce5f6f3350ed0404d9a5732577485d06954d1a"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 719
+        }
+      ]
+    },
+    {
+      "id": "canvas-declaration-contract",
+      "title": "canvas_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/canvas_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildCanvas",
+            "subType == 'draw'",
+            "subType == 'plot'",
+            "subType == 'shader'",
+            "subType == 'shape'"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canvas-subtype-catalog",
+      "title": "canvas_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/canvas_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": [
+            "draw",
+            "plot",
+            "shader",
+            "shape"
+          ]
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": [
+            "draw",
+            "plot",
+            "shader",
+            "shape"
+          ]
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildCanvas"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "canvas-runtime-snapshot",
+      "title": "canvas_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/canvas_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.canvas.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.canvas.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.canvas.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "canvas-source-integrity",
+      "title": "canvas_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/canvas_core.dart",
+      "sourceSha256": "7c7402f3038e65990f9cdde1a19aadbd20ad77dc59e9b66ec67d8bbc6c8743a8",
+      "lineCountAtLeast": 283,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "7c7402f3038e65990f9cdde1a19aadbd20ad77dc59e9b66ec67d8bbc6c8743a8"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 283
+        }
+      ]
+    },
+    {
+      "id": "chart-declaration-contract",
+      "title": "chart_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/chart_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildChart"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chart-subtype-catalog",
+      "title": "chart_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/chart_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": []
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": []
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildChart"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chart-runtime-snapshot",
+      "title": "chart_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/chart_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.chart.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.chart.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.chart.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "chart-source-integrity",
+      "title": "chart_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/chart_core.dart",
+      "sourceSha256": "d943caeeaf5b9e8400102abf33ca65b6c115d64c621edb9200637b902040a60c",
+      "lineCountAtLeast": 48,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "d943caeeaf5b9e8400102abf33ca65b6c115d64c621edb9200637b902040a60c"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 48
+        }
+      ]
+    },
+    {
+      "id": "collab-declaration-contract",
+      "title": "collab_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/collab_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildCollab",
+            "subType == 'awareness'",
+            "subType == 'cursor'",
+            "subType == 'lock'",
+            "subType == 'patch'",
+            "subType == 'presence'"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "collab-subtype-catalog",
+      "title": "collab_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/collab_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": [
+            "awareness",
+            "cursor",
+            "lock",
+            "patch",
+            "presence"
+          ]
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": [
+            "awareness",
+            "cursor",
+            "lock",
+            "patch",
+            "presence"
+          ]
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildCollab"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "collab-runtime-snapshot",
+      "title": "collab_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/collab_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.collab.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.collab.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.collab.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "collab-source-integrity",
+      "title": "collab_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/collab_core.dart",
+      "sourceSha256": "cdf8b7cb189476dd52b2260094c75a8760ec3191040f497ee20a83c34c41f326",
+      "lineCountAtLeast": 194,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "cdf8b7cb189476dd52b2260094c75a8760ec3191040f497ee20a83c34c41f326"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 194
+        }
+      ]
+    },
+    {
+      "id": "connect-declaration-contract",
+      "title": "connect_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/connect_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildConnect"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "connect-subtype-catalog",
+      "title": "connect_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/connect_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": []
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": []
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildConnect"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "connect-runtime-snapshot",
+      "title": "connect_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/connect_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.connect.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.connect.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.connect.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "connect-source-integrity",
+      "title": "connect_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/connect_core.dart",
+      "sourceSha256": "ccc4034f2ecaced80b990d9f51c10d012374912723ea44485bf3ec7df6f06a5b",
+      "lineCountAtLeast": 328,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "ccc4034f2ecaced80b990d9f51c10d012374912723ea44485bf3ec7df6f06a5b"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 328
+        }
+      ]
+    },
+    {
+      "id": "control-declaration-contract",
+      "title": "control_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/control_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildControl",
+            "subType == 'accordion'",
+            "subType == 'architecture'",
+            "subType == 'flow'",
+            "subType == 'form_scope'",
+            "subType == 'machine'",
+            "subType == 'optimistic'",
+            "subType == 'reducer'",
+            "subType == 'saga'",
+            "subType == 'stepper'",
+            "subType == 'tabs'",
+            "subType == 'tca'"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "control-subtype-catalog",
+      "title": "control_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/control_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": [
+            "accordion",
+            "architecture",
+            "flow",
+            "form_scope",
+            "machine",
+            "optimistic",
+            "reducer",
+            "saga",
+            "stepper",
+            "tabs",
+            "tca"
+          ]
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": [
+            "accordion",
+            "architecture",
+            "flow",
+            "form_scope",
+            "machine",
+            "optimistic",
+            "reducer",
+            "saga",
+            "stepper",
+            "tabs",
+            "tca"
+          ]
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildControl"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "control-runtime-snapshot",
+      "title": "control_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/control_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.control.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.control.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.control.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "control-source-integrity",
+      "title": "control_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/control_core.dart",
+      "sourceSha256": "fd19f1668268e3527dad009787b5fa6dc2494e77fc0c9d3752872b8ea26b5ea0",
+      "lineCountAtLeast": 487,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "fd19f1668268e3527dad009787b5fa6dc2494e77fc0c9d3752872b8ea26b5ea0"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 487
+        }
+      ]
+    },
+    {
+      "id": "data-declaration-contract",
+      "title": "data_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/data_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildData",
+            "subType == 'aggregate'",
+            "subType == 'cursor'",
+            "subType == 'diff'",
+            "subType == 'grid'",
+            "subType == 'infinite'",
+            "subType == 'kanban'",
+            "subType == 'masonry'",
+            "subType == 'paginated'",
+            "subType == 'realtime'",
+            "subType == 'repeat'",
+            "subType == 'slice'",
+            "subType == 'sliver'",
+            "subType == 'sliver_plane'",
+            "subType == 'stream'",
+            "subType == 'table'",
+            "subType == 'timeline'",
+            "subType == 'virtual_scroll'"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data-subtype-catalog",
+      "title": "data_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/data_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": [
+            "aggregate",
+            "cursor",
+            "diff",
+            "grid",
+            "infinite",
+            "kanban",
+            "masonry",
+            "paginated",
+            "realtime",
+            "repeat",
+            "slice",
+            "sliver",
+            "sliver_plane",
+            "stream",
+            "table",
+            "timeline",
+            "virtual_scroll"
+          ]
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": [
+            "aggregate",
+            "cursor",
+            "diff",
+            "grid",
+            "infinite",
+            "kanban",
+            "masonry",
+            "paginated",
+            "realtime",
+            "repeat",
+            "slice",
+            "sliver",
+            "sliver_plane",
+            "stream",
+            "table",
+            "timeline",
+            "virtual_scroll"
+          ]
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildData"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data-runtime-snapshot",
+      "title": "data_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/data_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.data.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.data.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.data.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "data-source-integrity",
+      "title": "data_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/data_core.dart",
+      "sourceSha256": "d2505ccf1f936fc6bd4533af35e593986b35fa53c77c7aee2641d389cc53d75a",
+      "lineCountAtLeast": 311,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "d2505ccf1f936fc6bd4533af35e593986b35fa53c77c7aee2641d389cc53d75a"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 311
+        }
+      ]
+    },
+    {
+      "id": "decoration-declaration-contract",
+      "title": "decoration_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/decoration_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildDecoration",
+            "_buildDecorationRichText",
+            "subType == 'badge'",
+            "subType == 'blur'",
+            "subType == 'border'",
+            "subType == 'gradient'",
+            "subType == 'rich'",
+            "subType == 'ripple'",
+            "subType == 'shadow'",
+            "subType == 'skeleton'",
+            "subType == 'span'",
+            "subType == 'text'"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decoration-subtype-catalog",
+      "title": "decoration_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/decoration_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": [
+            "badge",
+            "blur",
+            "border",
+            "gradient",
+            "rich",
+            "ripple",
+            "shadow",
+            "skeleton",
+            "span",
+            "text"
+          ]
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": [
+            "badge",
+            "blur",
+            "border",
+            "gradient",
+            "rich",
+            "ripple",
+            "shadow",
+            "skeleton",
+            "span",
+            "text"
+          ]
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildDecoration",
+            "_buildDecorationRichText"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decoration-runtime-snapshot",
+      "title": "decoration_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/decoration_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.decoration.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.decoration.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.decoration.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "decoration-source-integrity",
+      "title": "decoration_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/decoration_core.dart",
+      "sourceSha256": "4f67e027c057765ceb160c6b58f41c35982d51e3ab8c0797ece2c0427ec88e38",
+      "lineCountAtLeast": 219,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "4f67e027c057765ceb160c6b58f41c35982d51e3ab8c0797ece2c0427ec88e38"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 219
+        }
+      ]
+    },
+    {
+      "id": "field-declaration-contract",
+      "title": "field_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/field_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildField",
+            "subType == 'cell'",
+            "subType == 'email'",
+            "subType == 'multiline'",
+            "subType == 'number'",
+            "subType == 'password'",
+            "subType == 'radio'",
+            "subType == 'rich_text'",
+            "subType == 'search'",
+            "subType == 'slider'",
+            "subType == 'tel'",
+            "subType == 'textarea'",
+            "subType == 'toggle'",
+            "subType == 'url'"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "field-subtype-catalog",
+      "title": "field_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/field_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": [
+            "cell",
+            "email",
+            "multiline",
+            "number",
+            "password",
+            "radio",
+            "rich_text",
+            "search",
+            "slider",
+            "tel",
+            "textarea",
+            "toggle",
+            "url"
+          ]
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": [
+            "cell",
+            "email",
+            "multiline",
+            "number",
+            "password",
+            "radio",
+            "rich_text",
+            "search",
+            "slider",
+            "tel",
+            "textarea",
+            "toggle",
+            "url"
+          ]
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildField"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "field-runtime-snapshot",
+      "title": "field_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/field_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.field.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.field.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.field.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "field-source-integrity",
+      "title": "field_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/field_core.dart",
+      "sourceSha256": "5818df08d95de185a4a20883e9cac175d0da1bc640fd383d5f5da548052ea9cc",
+      "lineCountAtLeast": 521,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "5818df08d95de185a4a20883e9cac175d0da1bc640fd383d5f5da548052ea9cc"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 521
+        }
+      ]
+    },
+    {
+      "id": "hook-declaration-contract",
+      "title": "hook_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/hook_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildHook",
+            "subType == 'atom'",
+            "subType == 'bridge'",
+            "subType == 'change'",
+            "subType == 'delegate'",
+            "subType == 'effect'",
+            "subType == 'error_boundary'",
+            "subType == 'guard'",
+            "subType == 'interval'",
+            "subType == 'lifecycle'",
+            "subType == 'memo'",
+            "subType == 'mount'",
+            "subType == 'observable'",
+            "subType == 'ref'",
+            "subType == 'scope'",
+            "subType == 'slice'",
+            "subType == 'store'",
+            "json['type']",
+            "json['props']",
+            "json['debugPath']"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hook-subtype-catalog",
+      "title": "hook_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/hook_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": [
+            "atom",
+            "bridge",
+            "change",
+            "delegate",
+            "effect",
+            "error_boundary",
+            "guard",
+            "interval",
+            "lifecycle",
+            "memo",
+            "mount",
+            "observable",
+            "ref",
+            "scope",
+            "slice",
+            "store"
+          ]
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": [
+            "atom",
+            "bridge",
+            "change",
+            "delegate",
+            "effect",
+            "error_boundary",
+            "guard",
+            "interval",
+            "lifecycle",
+            "memo",
+            "mount",
+            "observable",
+            "ref",
+            "scope",
+            "slice",
+            "store"
+          ]
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildHook"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hook-runtime-snapshot",
+      "title": "hook_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/hook_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.hook.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.hook.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.hook.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "hook-source-integrity",
+      "title": "hook_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/hook_core.dart",
+      "sourceSha256": "0da38c2d3eecd874030ae54d104f5b22e4c7d56519cbbe4cd106f86806f51479",
+      "lineCountAtLeast": 523,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "0da38c2d3eecd874030ae54d104f5b22e4c7d56519cbbe4cd106f86806f51479"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 523
+        }
+      ]
+    },
+    {
+      "id": "layout-declaration-contract",
+      "title": "layout_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/layout_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildLayout",
+            "_buildDecorationPartSpan",
+            "_buildDecorationRichText"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "layout-subtype-catalog",
+      "title": "layout_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/layout_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": []
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": []
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildLayout",
+            "_buildDecorationPartSpan",
+            "_buildDecorationRichText"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "layout-runtime-snapshot",
+      "title": "layout_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/layout_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.layout.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.layout.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.layout.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "layout-source-integrity",
+      "title": "layout_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/layout_core.dart",
+      "sourceSha256": "e185ccde0604b99cacaa1433fe408bcf709eedfd52a33c3c380f5e1e30d2d2e1",
+      "lineCountAtLeast": 992,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "e185ccde0604b99cacaa1433fe408bcf709eedfd52a33c3c380f5e1e30d2d2e1"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 992
+        }
+      ]
+    },
+    {
+      "id": "media-declaration-contract",
+      "title": "media_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/media_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildMedia",
+            "subType == 'audio'",
+            "subType == 'audio_visualizer'",
+            "subType == 'avatar'",
+            "subType == 'camera'",
+            "subType == 'canvas_video'",
+            "subType == 'icon'",
+            "subType == 'path'",
+            "subType == 'stream'",
+            "subType == 'svg_path'",
+            "subType == 'video'",
+            "subType == 'webrtc'"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "media-subtype-catalog",
+      "title": "media_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/media_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": [
+            "audio",
+            "audio_visualizer",
+            "avatar",
+            "camera",
+            "canvas_video",
+            "icon",
+            "path",
+            "stream",
+            "svg_path",
+            "video",
+            "webrtc"
+          ]
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": [
+            "audio",
+            "audio_visualizer",
+            "avatar",
+            "camera",
+            "canvas_video",
+            "icon",
+            "path",
+            "stream",
+            "svg_path",
+            "video",
+            "webrtc"
+          ]
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildMedia"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "media-runtime-snapshot",
+      "title": "media_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/media_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.media.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.media.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.media.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "media-source-integrity",
+      "title": "media_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/media_core.dart",
+      "sourceSha256": "7919b46373fac7897dfec1c25b943ca419122e6e0ac790a83cfdbbf1e27b1a7d",
+      "lineCountAtLeast": 397,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "7919b46373fac7897dfec1c25b943ca419122e6e0ac790a83cfdbbf1e27b1a7d"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 397
+        }
+      ]
+    },
+    {
+      "id": "portal-declaration-contract",
+      "title": "portal_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/portal_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildPortal",
+            "subType == 'anchored_floating'",
+            "subType == 'context_menu'",
+            "subType == 'context_panel'",
+            "subType == 'drawer'",
+            "subType == 'dropdown'",
+            "subType == 'expandable_inline'",
+            "subType == 'flyout'",
+            "subType == 'menu'",
+            "subType == 'overlay'",
+            "subType == 'overlay_entry'",
+            "subType == 'popover'",
+            "subType == 'sheet'",
+            "subType == 'toast'",
+            "subType == 'window'"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "portal-subtype-catalog",
+      "title": "portal_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/portal_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": [
+            "anchored_floating",
+            "context_menu",
+            "context_panel",
+            "drawer",
+            "dropdown",
+            "expandable_inline",
+            "flyout",
+            "menu",
+            "overlay",
+            "overlay_entry",
+            "popover",
+            "sheet",
+            "toast",
+            "window"
+          ]
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": [
+            "anchored_floating",
+            "context_menu",
+            "context_panel",
+            "drawer",
+            "dropdown",
+            "expandable_inline",
+            "flyout",
+            "menu",
+            "overlay",
+            "overlay_entry",
+            "popover",
+            "sheet",
+            "toast",
+            "window"
+          ]
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildPortal"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "portal-runtime-snapshot",
+      "title": "portal_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/portal_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.portal.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.portal.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.portal.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "portal-source-integrity",
+      "title": "portal_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/portal_core.dart",
+      "sourceSha256": "68bebe0e8712094884a5357af01f34e0f567447985c156793fddf113dd350894",
+      "lineCountAtLeast": 759,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "68bebe0e8712094884a5357af01f34e0f567447985c156793fddf113dd350894"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 759
+        }
+      ]
+    },
+    {
+      "id": "stream-declaration-contract",
+      "title": "stream_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/stream_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildStream",
+            "subType == 'multiplex'",
+            "subType == 'ring'",
+            "subType == 'sse'",
+            "subType == 'tick'",
+            "subType == 'ws'"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stream-subtype-catalog",
+      "title": "stream_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/stream_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": [
+            "multiplex",
+            "ring",
+            "sse",
+            "tick",
+            "ws"
+          ]
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": [
+            "multiplex",
+            "ring",
+            "sse",
+            "tick",
+            "ws"
+          ]
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildStream"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stream-runtime-snapshot",
+      "title": "stream_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/stream_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.stream.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.stream.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.stream.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "stream-source-integrity",
+      "title": "stream_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/stream_core.dart",
+      "sourceSha256": "4622cc082c3e832acfda1fe2dfec6dff693cdbd3f8beb2df2352986e808cbd37",
+      "lineCountAtLeast": 181,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "4622cc082c3e832acfda1fe2dfec6dff693cdbd3f8beb2df2352986e808cbd37"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 181
+        }
+      ]
+    },
+    {
+      "id": "system-declaration-contract",
+      "title": "system_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/system_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildSystem",
+            "_buildSmartScrollViewport",
+            "subType == 'async'",
+            "subType == 'clipboard'",
+            "subType == 'data_pipe'",
+            "subType == 'debounce'",
+            "subType == 'download'",
+            "subType == 'geo'",
+            "subType == 'haptic'",
+            "subType == 'kinetic_pipe'",
+            "subType == 'macro'",
+            "subType == 'notification'",
+            "subType == 'omega_macro'",
+            "subType == 'repeater'",
+            "subType == 'sensor'",
+            "subType == 'share'",
+            "subType == 'store_provider'",
+            "subType == 'sync_scroll'",
+            "subType == 'throttle'",
+            "subType == 'ticker'",
+            "subType == 'timer'",
+            "subType == 'upload'",
+            "subType == 'worker'"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "system-subtype-catalog",
+      "title": "system_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/system_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": [
+            "async",
+            "clipboard",
+            "data_pipe",
+            "debounce",
+            "download",
+            "geo",
+            "haptic",
+            "kinetic_pipe",
+            "macro",
+            "notification",
+            "omega_macro",
+            "repeater",
+            "sensor",
+            "share",
+            "store_provider",
+            "sync_scroll",
+            "throttle",
+            "ticker",
+            "timer",
+            "upload",
+            "worker"
+          ]
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": [
+            "async",
+            "clipboard",
+            "data_pipe",
+            "debounce",
+            "download",
+            "geo",
+            "haptic",
+            "kinetic_pipe",
+            "macro",
+            "notification",
+            "omega_macro",
+            "repeater",
+            "sensor",
+            "share",
+            "store_provider",
+            "sync_scroll",
+            "throttle",
+            "ticker",
+            "timer",
+            "upload",
+            "worker"
+          ]
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildSystem",
+            "_buildSmartScrollViewport"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "system-runtime-snapshot",
+      "title": "system_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/system_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.system.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.system.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.system.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "system-source-integrity",
+      "title": "system_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/system_core.dart",
+      "sourceSha256": "137f8c0877b9c159f8789facf53a9131085d89b496bef11aaa38f9ed30694ec1",
+      "lineCountAtLeast": 601,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "137f8c0877b9c159f8789facf53a9131085d89b496bef11aaa38f9ed30694ec1"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 601
+        }
+      ]
+    },
+    {
+      "id": "template-declaration-contract",
+      "title": "template_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/template_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildTemplate",
+            "json['props']",
+            "json['children']",
+            "json['slots']",
+            "json['debugPath']"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "template-subtype-catalog",
+      "title": "template_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/template_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": []
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": []
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildTemplate"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "template-runtime-snapshot",
+      "title": "template_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/template_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.template.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.template.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.template.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "template-source-integrity",
+      "title": "template_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/template_core.dart",
+      "sourceSha256": "70c2785c566b09169529ec88485f68730df1c58091197880b80d9f9dc14f1021",
+      "lineCountAtLeast": 3102,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "70c2785c566b09169529ec88485f68730df1c58091197880b80d9f9dc14f1021"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 3102
+        }
+      ]
+    },
+    {
+      "id": "text-declaration-contract",
+      "title": "text_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/text_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildText",
+            "subType == 'code'",
+            "subType == 'h1'",
+            "subType == 'h2'",
+            "subType == 'h3'",
+            "subType == 'label'",
+            "subType == 'rich'"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "text-subtype-catalog",
+      "title": "text_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/text_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": [
+            "code",
+            "h1",
+            "h2",
+            "h3",
+            "label",
+            "rich"
+          ]
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": [
+            "code",
+            "h1",
+            "h2",
+            "h3",
+            "label",
+            "rich"
+          ]
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildText"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "text-runtime-snapshot",
+      "title": "text_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/text_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.text.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.text.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.text.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "text-source-integrity",
+      "title": "text_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/text_core.dart",
+      "sourceSha256": "b072c72ec8ba572ebc4657e12d7dba9d85e832e128487a85072c457fe248dda2",
+      "lineCountAtLeast": 190,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "b072c72ec8ba572ebc4657e12d7dba9d85e832e128487a85072c457fe248dda2"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 190
+        }
+      ]
+    },
+    {
+      "id": "visual-declaration-contract",
+      "title": "visual_core declaration contract",
+      "sourcePath": "lib/src/runtime/omni_cores/visual_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "_buildVisual",
+            "_buildAnimation",
+            "_buildBox",
+            "subType == 'action'",
+            "subType == 'animation'",
+            "subType == 'box'",
+            "subType == 'canvas'",
+            "subType == 'chart'",
+            "subType == 'compose'",
+            "subType == 'connect'",
+            "subType == 'control'",
+            "subType == 'data'",
+            "subType == 'decoration'",
+            "subType == 'delegate'",
+            "subType == 'field'",
+            "subType == 'layer'",
+            "subType == 'layout'",
+            "subType == 'media'",
+            "subType == 'overlay'",
+            "subType == 'portal'",
+            "subType == 'scene'",
+            "subType == 'shell'",
+            "subType == 'stack'",
+            "subType == 'surface'",
+            "subType == 'system'",
+            "subType == 'template'",
+            "subType == 'text'",
+            "json['type']",
+            "json['props']",
+            "json['debugPath']"
+          ]
+        },
+        {
+          "kind": "source_not_contains",
+          "values": [
+            "TODO",
+            "FIXME"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-subtype-catalog",
+      "title": "visual_core subtype catalog",
+      "sourcePath": "lib/src/runtime/omni_cores/visual_core.dart",
+      "assertions": [
+        {
+          "kind": "subtypes_exact",
+          "expected": [
+            "action",
+            "animation",
+            "box",
+            "canvas",
+            "chart",
+            "compose",
+            "connect",
+            "control",
+            "data",
+            "decoration",
+            "delegate",
+            "field",
+            "layer",
+            "layout",
+            "media",
+            "overlay",
+            "portal",
+            "scene",
+            "shell",
+            "stack",
+            "surface",
+            "system",
+            "template",
+            "text"
+          ]
+        },
+        {
+          "kind": "subtypes_contains",
+          "expected": [
+            "action",
+            "animation",
+            "box",
+            "canvas",
+            "chart",
+            "compose",
+            "connect",
+            "control",
+            "data",
+            "decoration",
+            "delegate",
+            "field",
+            "layer",
+            "layout",
+            "media",
+            "overlay",
+            "portal",
+            "scene",
+            "shell",
+            "stack",
+            "surface",
+            "system",
+            "template",
+            "text"
+          ]
+        },
+        {
+          "kind": "builder_contains",
+          "values": [
+            "_buildVisual",
+            "_buildAnimation",
+            "_buildBox"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-runtime-snapshot",
+      "title": "visual_core runtime snapshot contract",
+      "sourcePath": "lib/src/runtime/omni_cores/visual_core.dart",
+      "assertions": [
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.visual.subtypeCount"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.visual.fullTypes"
+        },
+        {
+          "kind": "snapshot_path_not_empty",
+          "path": "omniCores.visual.subtypes"
+        }
+      ]
+    },
+    {
+      "id": "visual-source-integrity",
+      "title": "visual_core source integrity",
+      "sourcePath": "lib/src/runtime/omni_cores/visual_core.dart",
+      "sourceSha256": "2669c85e7df18e269c132278a0c4e14637470f1e029afe518f2d044fcacd0f66",
+      "lineCountAtLeast": 309,
+      "assertions": [
+        {
+          "kind": "source_sha256_matches",
+          "values": [
+            "2669c85e7df18e269c132278a0c4e14637470f1e029afe518f2d044fcacd0f66"
+          ]
+        },
+        {
+          "kind": "line_count_at_least",
+          "value": 309
+        }
+      ]
+    },
+    {
+      "id": "template-routing-contract",
+      "title": "template_core routing contract",
+      "sourcePath": "src/runtime/omni_cores/template_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "subType == 'delegate'",
+            "subType == 'scope'",
+            "subType == 'effect'",
+            "subType == 'bridge'",
+            "subType == 'store'",
+            "subType == 'atom'",
+            "subType == 'slice'",
+            "subType == 'ref'"
+          ]
+        },
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "slots",
+            "defaultSlots",
+            "variants",
+            "transform"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "layout-routing-contract",
+      "title": "layout_core registry contract",
+      "sourcePath": "src/runtime/omni_cores/layout_core.dart",
+      "assertions": [
+        {
+          "kind": "source_contains_all",
+          "values": [
+            "layout",
+            "matrix",
+            "responsive",
+            "slot",
+            "debugPath"
+          ]
+        },
+        {
+          "kind": "source_contains_any",
+          "values": [
+            "registry",
+            "builder",
+            "delegate",
+            "resolve",
+            "measure"
+          ]
+        }
+      ]
+    }
+  ]
+}

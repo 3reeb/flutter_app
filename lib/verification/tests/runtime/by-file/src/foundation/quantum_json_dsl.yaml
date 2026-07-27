@@ -1,0 +1,678 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/foundation/quantum_json_dsl.dart
+  docs_file: docs/src/foundation/quantum_json_dsl.dart.md
+  source_entry:
+    line_count: 1125
+    byte_count: 43611
+    class_count: 3
+    enum_count: 0
+    function_count: 12
+    category: parser
+    test_count: 12
+  scenario_count: 12
+source:
+  path: src/foundation/quantum_json_dsl.dart
+  docs_path: docs/src/foundation/quantum_json_dsl.dart.md
+  label: src/foundation/quantum_json_dsl.dart
+scenarios:
+- uuid: 8b7f6102-f668-5b52-8bc4-2d8ffbc562d0
+  file: lib/src/foundation/quantum_json_dsl.dart
+  docs_file: docs/src/foundation/quantum_json_dsl.dart.md
+  title: 'Quantum Json Dsl: public contract remains stable under valid input'
+  slug: contract
+  category: parser
+  severity: critical
+  description: Verify that quantum json dsl keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_json_dsl.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_json_dsl.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async primitives, parsing utilities, data structures, math helpers, and error-handling machinery used everywhere else. Author-intent note: JSON-NATIVE COMPONENT & LAYOUT DEFINITION LAYER'
+    headings:
+    - '`src/foundation/quantum_json_dsl.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - contract
+  - quantum json dsl
+- uuid: 6939ce91-e1c2-560b-b218-bd239d7f4730
+  file: lib/src/foundation/quantum_json_dsl.dart
+  docs_file: docs/src/foundation/quantum_json_dsl.dart.md
+  title: 'Quantum Json Dsl: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: parser
+  severity: critical
+  description: Verify that quantum json dsl keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_json_dsl.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_json_dsl.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async primitives, parsing utilities, data structures, math helpers, and error-handling machinery used everywhere else. Author-intent note: JSON-NATIVE COMPONENT & LAYOUT DEFINITION LAYER'
+    headings:
+    - '`src/foundation/quantum_json_dsl.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - invalid_input
+  - quantum json dsl
+- uuid: c7ce1c54-f45e-577a-9ccd-3cdb12a99866
+  file: lib/src/foundation/quantum_json_dsl.dart
+  docs_file: docs/src/foundation/quantum_json_dsl.dart.md
+  title: 'Quantum Json Dsl: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: parser
+  severity: high
+  description: Verify that quantum json dsl keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_json_dsl.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_json_dsl.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async primitives, parsing utilities, data structures, math helpers, and error-handling machinery used everywhere else. Author-intent note: JSON-NATIVE COMPONENT & LAYOUT DEFINITION LAYER'
+    headings:
+    - '`src/foundation/quantum_json_dsl.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - reentrant
+  - quantum json dsl
+- uuid: 27336a56-04b6-5ab3-886f-92e526aadbc6
+  file: lib/src/foundation/quantum_json_dsl.dart
+  docs_file: docs/src/foundation/quantum_json_dsl.dart.md
+  title: 'Quantum Json Dsl: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: parser
+  severity: high
+  description: Verify that quantum json dsl keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_json_dsl.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_json_dsl.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async primitives, parsing utilities, data structures, math helpers, and error-handling machinery used everywhere else. Author-intent note: JSON-NATIVE COMPONENT & LAYOUT DEFINITION LAYER'
+    headings:
+    - '`src/foundation/quantum_json_dsl.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - cleanup
+  - quantum json dsl
+- uuid: 08988e92-ae11-55d0-b641-fdcab22194ff
+  file: lib/src/foundation/quantum_json_dsl.dart
+  docs_file: docs/src/foundation/quantum_json_dsl.dart.md
+  title: 'Quantum Json Dsl: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: parser
+  severity: high
+  description: Verify that quantum json dsl keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_json_dsl.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_json_dsl.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async primitives, parsing utilities, data structures, math helpers, and error-handling machinery used everywhere else. Author-intent note: JSON-NATIVE COMPONENT & LAYOUT DEFINITION LAYER'
+    headings:
+    - '`src/foundation/quantum_json_dsl.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - performance
+  - quantum json dsl
+- uuid: 82467fa6-a70b-5a9c-bb90-e2ee8dfc03ee
+  file: lib/src/foundation/quantum_json_dsl.dart
+  docs_file: docs/src/foundation/quantum_json_dsl.dart.md
+  title: 'Quantum Json Dsl: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: parser
+  severity: medium
+  description: Verify that quantum json dsl keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_json_dsl.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_json_dsl.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async primitives, parsing utilities, data structures, math helpers, and error-handling machinery used everywhere else. Author-intent note: JSON-NATIVE COMPONENT & LAYOUT DEFINITION LAYER'
+    headings:
+    - '`src/foundation/quantum_json_dsl.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - memory
+  - quantum json dsl
+- uuid: 8aefbe93-631a-58ef-9bd3-7a12d7e4b9a0
+  file: lib/src/foundation/quantum_json_dsl.dart
+  docs_file: docs/src/foundation/quantum_json_dsl.dart.md
+  title: 'Quantum Json Dsl: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: parser
+  severity: medium
+  description: Verify that quantum json dsl keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_json_dsl.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_json_dsl.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async primitives, parsing utilities, data structures, math helpers, and error-handling machinery used everywhere else. Author-intent note: JSON-NATIVE COMPONENT & LAYOUT DEFINITION LAYER'
+    headings:
+    - '`src/foundation/quantum_json_dsl.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - docs_parity
+  - quantum json dsl
+- uuid: 19f4f826-90b2-52ab-a326-991684ff37fd
+  file: lib/src/foundation/quantum_json_dsl.dart
+  docs_file: docs/src/foundation/quantum_json_dsl.dart.md
+  title: 'Quantum Json Dsl: malformed documents fail with actionable errors instead of silent corruption'
+  slug: malformed
+  category: parser
+  severity: medium
+  description: Verify that quantum json dsl keeps its documented runtime behavior while handling malformed conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_json_dsl.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_json_dsl.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async primitives, parsing utilities, data structures, math helpers, and error-handling machinery used everywhere else. Author-intent note: JSON-NATIVE COMPONENT & LAYOUT DEFINITION LAYER'
+    headings:
+    - '`src/foundation/quantum_json_dsl.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - malformed
+  - quantum json dsl
+- uuid: 3cb13fe0-fedf-5efb-9292-4f0ea1bd52c4
+  file: lib/src/foundation/quantum_json_dsl.dart
+  docs_file: docs/src/foundation/quantum_json_dsl.dart.md
+  title: 'Quantum Json Dsl: deeply nested content, aliases, or recursive structures stay bounded'
+  slug: nested
+  category: parser
+  severity: medium
+  description: Verify that quantum json dsl keeps its documented runtime behavior while handling nested conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_json_dsl.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_json_dsl.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async primitives, parsing utilities, data structures, math helpers, and error-handling machinery used everywhere else. Author-intent note: JSON-NATIVE COMPONENT & LAYOUT DEFINITION LAYER'
+    headings:
+    - '`src/foundation/quantum_json_dsl.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - nested
+  - quantum json dsl
+- uuid: 0b2a982c-3cc7-5c1a-b300-412808e40432
+  file: lib/src/foundation/quantum_json_dsl.dart
+  docs_file: docs/src/foundation/quantum_json_dsl.dart.md
+  title: 'Quantum Json Dsl: unicode, escaping, and BOM handling round-trip correctly'
+  slug: unicode
+  category: parser
+  severity: medium
+  description: Verify that quantum json dsl keeps its documented runtime behavior while handling unicode conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_json_dsl.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_json_dsl.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async primitives, parsing utilities, data structures, math helpers, and error-handling machinery used everywhere else. Author-intent note: JSON-NATIVE COMPONENT & LAYOUT DEFINITION LAYER'
+    headings:
+    - '`src/foundation/quantum_json_dsl.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - unicode
+  - quantum json dsl
+- uuid: a4dbabf8-3fba-5e80-8624-5d0e16ee88dd
+  file: lib/src/foundation/quantum_json_dsl.dart
+  docs_file: docs/src/foundation/quantum_json_dsl.dart.md
+  title: 'Quantum Json Dsl: duplicate keys or conflicting declarations are surfaced deterministically'
+  slug: duplicate
+  category: parser
+  severity: medium
+  description: Verify that quantum json dsl keeps its documented runtime behavior while handling duplicate conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_json_dsl.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_json_dsl.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async primitives, parsing utilities, data structures, math helpers, and error-handling machinery used everywhere else. Author-intent note: JSON-NATIVE COMPONENT & LAYOUT DEFINITION LAYER'
+    headings:
+    - '`src/foundation/quantum_json_dsl.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - duplicate
+  - quantum json dsl
+- uuid: 47c58de1-9849-5c0f-94c5-9a9b94b8cd39
+  file: lib/src/foundation/quantum_json_dsl.dart
+  docs_file: docs/src/foundation/quantum_json_dsl.dart.md
+  title: 'Quantum Json Dsl: schema parsing preserves field definitions and defaults'
+  slug: schema_fidelity
+  category: parser
+  severity: medium
+  description: Verify that quantum json dsl keeps its documented runtime behavior while handling schema fidelity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_json_dsl.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_json_dsl.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async primitives, parsing utilities, data structures, math helpers, and error-handling machinery used everywhere else. Author-intent note: JSON-NATIVE COMPONENT & LAYOUT DEFINITION LAYER'
+    headings:
+    - '`src/foundation/quantum_json_dsl.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - schema_fidelity
+  - quantum json dsl

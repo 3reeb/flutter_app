@@ -1,0 +1,220 @@
+schema_version: 2
+doc_kind: file-test-manifest
+file: lib/src/runtime/quantum_test_engine_shared.dart
+layer: runtime
+profile: runtime-core
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/runtime/quantum_test_engine_shared.dart
+  sha256: e3efcac4617e1e57459234c4519b9129ae46c0b4de7c7a3a1e7b7da7f451d45e
+  line_count: 683
+  imports:
+    - dart:convert
+    - package:flutter/foundation.dart
+  exports: []
+  parts: []
+  part_of: []
+  category: runtime
+  profile: runtime-core
+  large_profile: true
+  keywords:
+    - test
+    - yaml
+    - manifest
+    - report
+    - validation
+surface_summary:
+  classes_enums_typedefs_mixins_extensions_functions: &id001
+    - QuantumTestSourceMetadata
+    - QuantumTestRowSpec
+    - QuantumTestGroupSpec
+    - QuantumTestSupplementSpec
+    - QuantumTestManifest
+    - QuantumTestCaseSpec
+    - QuantumTestIssue
+    - QuantumTestResult
+    - QuantumTestReport
+    - QuantumTestContext
+    - QuantumTestStatus
+    - QuantumTestPhase
+    - QuantumTestExecutor
+  count: 13
+focus:
+  Shared manifest, row, result, issue, and report model used by generated tests
+  and tooling.
+coverage_targets:
+  - serialization
+  - validation
+  - redaction
+  - identity
+  - reporting
+  - compatibility
+test_dimensions:
+  input_shapes:
+    - "null"
+    - empty
+    - single-item
+    - multi-item
+    - legacy-shape
+    - malformed
+    - large-batch
+  execution_modes:
+    - cold
+    - warm
+    - cached
+    - lazy
+    - eager
+  outcomes:
+    - accept
+    - reject
+    - normalize
+    - reuse
+    - evict
+    - round-trip
+  measurement_axes:
+    - latency
+    - allocations
+    - error-path
+    - summary-size
+reusable_presets:
+  smoke_base:
+    purpose:
+      Prove the canonical public path works and stays stable across repeated
+      runs.
+    assertions:
+      - observable result is stable
+      - no hidden mutation
+      - no duplicate side effects
+  edge_base:
+    purpose: Prove malformed input fails explicitly or normalizes intentionally.
+    assertions:
+      - failure is explicit
+      - no silent coercion
+      - no stale state
+  perf_base:
+    purpose: Measure the hot path and bound allocations or repeated work.
+    assertions:
+      - warm path is not worse than cold path
+      - allocation growth stays bounded
+  integration_base:
+    purpose: Validate behavior across local imports and neighboring runtime layers.
+    assertions:
+      - boundary contract holds
+      - cross-file side effects remain stable
+groups:
+  - name: model-contract
+    description: Core data model shape and constructors.
+    rows:
+      - id: shared.model.001
+        purpose: Parse source metadata and preserve line counts, imports, and keywords.
+        target_symbols: *id001
+        setup: Construct metadata from YAML maps.
+        input: source_metadata map.
+        body: Deserialize and reserialize the structure.
+        expected: All metadata fields round-trip without loss.
+        assertions:
+          - imports preserved
+          - keywords preserved
+          - hash preserved
+        metrics:
+          - round-trip fidelity
+        risks:
+          - metadata drift
+        cleanup: None.
+      - id: shared.model.002
+        purpose: Parse row and group specifications with the original raw payload attached.
+        target_symbols: *id001
+        setup: Build a group map with nested rows.
+        input: group and row YAML nodes.
+        body: Deserialize rows, tags, assertions, and metrics.
+        expected: Nested rows are preserved and accessible.
+        assertions:
+          - rows parsed
+          - raw kept
+          - ids preserved
+        metrics:
+          - object count
+        risks:
+          - shape loss
+        cleanup: None.
+  - name: validation
+    description: Issue recording and strict validation helpers.
+    rows:
+      - id: shared.validation.001
+        purpose: Detect duplicate group names and duplicate row ids.
+        target_symbols: *id001
+        setup: Load a manifest with deliberate duplicates.
+        input: Duplicate names and ids.
+        body: Run validation.
+        expected: Duplicate issues are recorded with explicit paths.
+        assertions:
+          - duplicate groups flagged
+          - duplicate rows flagged
+        metrics:
+          - issue count
+        risks:
+          - silent collisions
+        cleanup: Reset issue buffers.
+      - id: shared.validation.002
+        purpose: Require group names, row ids, and source paths.
+        target_symbols: *id001
+        setup: Load malformed records missing required fields.
+        input: Missing structural fields.
+        body: Run strict validation.
+        expected: Errors are reported for the missing fields.
+        assertions:
+          - required fields flagged
+          - no false pass
+        metrics:
+          - validation latency
+        risks:
+          - invalid manifests passing
+        cleanup: None.
+  - name: reporting
+    description: Result and report serialization.
+    rows:
+      - id: shared.reporting.001
+        purpose: Serialize results in compact form without dumping giant diagnostics.
+        target_symbols: *id001
+        setup: Populate large detail maps and long strings.
+        input: Oversized debug payloads.
+        body: Convert to JSON.
+        expected: Only important details remain visible.
+        assertions:
+          - redaction applied
+          - identity preserved
+        metrics:
+          - payload size
+        risks:
+          - debug noise
+        cleanup: Discard temp objects.
+      - id: shared.reporting.002
+        purpose: Expose pass/fail counts and compact summaries for humans and automation.
+        target_symbols: *id001
+        setup: Build a mixed report.
+        input: Pass/fail result list.
+        body: Call the summary formatter.
+        expected: The summary is concise and stable.
+        assertions:
+          - summary stable
+          - counts correct
+        metrics:
+          - summary size
+        risks:
+          - inconsistent reports
+        cleanup: None.
+regeneration_triggers:
+  - public API shape changes
+  - source metadata changes
+  - row or group edits
+  - new imports or exports
+  - updated validation rules
+supplements: []
+notes:
+  - This manifest is intentionally rich enough to drive future generated Dart tests.
+  - The row descriptions are reusable templates, not happy-path-only examples.
+  - The shared test engine applies strict validation and compact reporting.
+profiles:
+  - runtime-core
+  - test-engine-core

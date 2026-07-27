@@ -1,0 +1,26 @@
+{
+  "__meta": {
+    "id": "action-002-button-disabled-binding",
+    "title": "Button disabled prop accepts state binding string",
+    "description": "disabled:'${state.loading}' must pass through verbatim. The renderer evaluates it at runtime. The VM must not try to evaluate the binding expression at compile time.",
+    "tags": ["action", "button", "disabled", "binding"],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "action:button",
+    "props": {
+      "text": "Submit",
+      "disabled": "${state.loading}"
+    }
+  },
+  "expected": {
+    "type": "action",
+    "props": {
+      "__subType": "button",
+      "text": "Submit",
+      "disabled": "${state.loading}"
+    },
+    "debugPath": "root"
+  }
+}

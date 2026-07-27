@@ -1,0 +1,690 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/app/config.dart
+  docs_file: docs/src/app/config.dart.md
+  source_entry:
+    line_count: 1326
+    byte_count: 41952
+    class_count: 20
+    enum_count: 2
+    function_count: 20
+    category: app
+    test_count: 12
+  scenario_count: 12
+source:
+  path: src/app/config.dart
+  docs_path: docs/src/app/config.dart.md
+  label: src/app/config.dart
+scenarios:
+- uuid: c6ce04fe-04dd-554f-a556-0478403b26b8
+  file: lib/src/app/config.dart
+  docs_file: docs/src/app/config.dart.md
+  title: 'Config: public contract remains stable under valid input'
+  slug: contract
+  category: app
+  severity: critical
+  description: Verify that config keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/config.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/config.dart.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: Single-source config schema for the Quantum framework.'
+    headings:
+    - '`src/app/config.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - contract
+  - config
+- uuid: 0f96ed2e-7963-59ed-8a6f-c8cd21db8933
+  file: lib/src/app/config.dart
+  docs_file: docs/src/app/config.dart.md
+  title: 'Config: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: app
+  severity: critical
+  description: Verify that config keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/config.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/config.dart.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: Single-source config schema for the Quantum framework.'
+    headings:
+    - '`src/app/config.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - invalid_input
+  - config
+- uuid: 2bbaa619-3fa4-5d97-a81e-d03c624e788d
+  file: lib/src/app/config.dart
+  docs_file: docs/src/app/config.dart.md
+  title: 'Config: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: app
+  severity: high
+  description: Verify that config keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/config.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/config.dart.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: Single-source config schema for the Quantum framework.'
+    headings:
+    - '`src/app/config.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - reentrant
+  - config
+- uuid: d7a001cf-c98c-51e2-bc67-d3917b3314e3
+  file: lib/src/app/config.dart
+  docs_file: docs/src/app/config.dart.md
+  title: 'Config: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: app
+  severity: high
+  description: Verify that config keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/config.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/config.dart.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: Single-source config schema for the Quantum framework.'
+    headings:
+    - '`src/app/config.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - cleanup
+  - config
+- uuid: 556eba25-d63a-52c1-b6e0-00d193e0b3c1
+  file: lib/src/app/config.dart
+  docs_file: docs/src/app/config.dart.md
+  title: 'Config: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: app
+  severity: high
+  description: Verify that config keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/config.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/config.dart.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: Single-source config schema for the Quantum framework.'
+    headings:
+    - '`src/app/config.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - performance
+  - config
+- uuid: d16218b6-0e9e-5220-a40a-226e34d0351a
+  file: lib/src/app/config.dart
+  docs_file: docs/src/app/config.dart.md
+  title: 'Config: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: app
+  severity: medium
+  description: Verify that config keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/config.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/config.dart.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: Single-source config schema for the Quantum framework.'
+    headings:
+    - '`src/app/config.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - memory
+  - config
+- uuid: 0c901b37-4fc3-58ac-ac9a-cdcde4871dc4
+  file: lib/src/app/config.dart
+  docs_file: docs/src/app/config.dart.md
+  title: 'Config: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: app
+  severity: medium
+  description: Verify that config keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/config.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/config.dart.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: Single-source config schema for the Quantum framework.'
+    headings:
+    - '`src/app/config.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - docs_parity
+  - config
+- uuid: 6d2fe49b-60fe-5185-a5ed-8de8f2e0e617
+  file: lib/src/app/config.dart
+  docs_file: docs/src/app/config.dart.md
+  title: 'Config: route assembly and navigation state stay consistent'
+  slug: route
+  category: app
+  severity: medium
+  description: Verify that config keeps its documented runtime behavior while handling route conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/config.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/config.dart.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: Single-source config schema for the Quantum framework.'
+    headings:
+    - '`src/app/config.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - route
+  - config
+- uuid: 69450d89-40f8-5efe-a379-4b0e61b0d3d1
+  file: lib/src/app/config.dart
+  docs_file: docs/src/app/config.dart.md
+  title: 'Config: modals, overlays, and exported flows preserve lifecycle state'
+  slug: modal
+  category: app
+  severity: medium
+  description: Verify that config keeps its documented runtime behavior while handling modal conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/config.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/config.dart.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: Single-source config schema for the Quantum framework.'
+    headings:
+    - '`src/app/config.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - modal
+  - config
+- uuid: 14cdc718-4512-5652-a973-f9f733435cfb
+  file: lib/src/app/config.dart
+  docs_file: docs/src/app/config.dart.md
+  title: 'Config: the app shell rebuilds without losing key runtime state'
+  slug: shell
+  category: app
+  severity: medium
+  description: Verify that config keeps its documented runtime behavior while handling shell conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/config.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/config.dart.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: Single-source config schema for the Quantum framework.'
+    headings:
+    - '`src/app/config.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - shell
+  - config
+- uuid: b7bbd140-a869-57ed-9693-d0d003c19495
+  file: lib/src/app/config.dart
+  docs_file: docs/src/app/config.dart.md
+  title: 'Config: startup sequence initializes dependencies in the right order'
+  slug: startup
+  category: app
+  severity: medium
+  description: Verify that config keeps its documented runtime behavior while handling startup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/config.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/config.dart.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: Single-source config schema for the Quantum framework.'
+    headings:
+    - '`src/app/config.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - startup
+  - config
+- uuid: f8fa20f3-8c52-55b0-bb6c-9d344d228c3b
+  file: lib/src/app/config.dart
+  docs_file: docs/src/app/config.dart.md
+  title: 'Config: public contract remains stable under valid input'
+  slug: contract
+  category: app
+  severity: medium
+  description: Verify that config keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/config.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/config.dart.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: Single-source config schema for the Quantum framework.'
+    headings:
+    - '`src/app/config.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - contract
+  - config

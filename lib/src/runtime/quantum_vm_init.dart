@@ -10,7 +10,6 @@
 
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
-
 // Ecosystem Integrations
 import '../ui/quantum_theme_engine.dart';
 import '../ui/quantum_components.dart';
@@ -22,8 +21,7 @@ import 'quantum_core_schema_registry.dart';
 import 'quantum_sdui_type_engine.dart';
 import 'quantum_vm.dart';
 import 'quantum_data_pipeline.dart';
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 class _BuiltInActionPlugin extends QLActionPlugin {
   final Future<dynamic> Function(
       Map<String, dynamic>, QLDataStore, BuildContext) func;

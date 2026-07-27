@@ -1,0 +1,558 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/plugins/adapters/quantum_universal_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_universal_adapters.dart.md
+  source_entry:
+    line_count: 910
+    byte_count: 30415
+    class_count: 7
+    enum_count: 2
+    function_count: 17
+    category: plugin
+    test_count: 10
+  scenario_count: 10
+source:
+  path: src/plugins/adapters/quantum_universal_adapters.dart
+  docs_path: docs/src/plugins/adapters/quantum_universal_adapters.dart.md
+  label: src/plugins/adapters/quantum_universal_adapters.dart
+scenarios:
+- uuid: ac0c3cc7-fc0b-5101-ac76-f9ddb94e9c86
+  file: lib/src/plugins/adapters/quantum_universal_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_universal_adapters.dart.md
+  title: 'Quantum Universal Adapters: public contract remains stable under valid input'
+  slug: contract
+  category: plugin
+  severity: critical
+  description: Verify that quantum universal adapters keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_universal_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_universal_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: Assuming these are imported from your previous files:'
+    headings:
+    - '`src/plugins/adapters/quantum_universal_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - contract
+  - quantum universal adapters
+- uuid: 3da68ab2-7e42-5542-b3d3-98f1cbd47840
+  file: lib/src/plugins/adapters/quantum_universal_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_universal_adapters.dart.md
+  title: 'Quantum Universal Adapters: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: plugin
+  severity: critical
+  description: Verify that quantum universal adapters keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_universal_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_universal_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: Assuming these are imported from your previous files:'
+    headings:
+    - '`src/plugins/adapters/quantum_universal_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - invalid_input
+  - quantum universal adapters
+- uuid: d15a36d1-6f41-5ccc-9644-687841ab2e34
+  file: lib/src/plugins/adapters/quantum_universal_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_universal_adapters.dart.md
+  title: 'Quantum Universal Adapters: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: plugin
+  severity: high
+  description: Verify that quantum universal adapters keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_universal_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_universal_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: Assuming these are imported from your previous files:'
+    headings:
+    - '`src/plugins/adapters/quantum_universal_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - reentrant
+  - quantum universal adapters
+- uuid: 6fdaf68f-afdc-586d-86f1-5862e91cb868
+  file: lib/src/plugins/adapters/quantum_universal_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_universal_adapters.dart.md
+  title: 'Quantum Universal Adapters: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: plugin
+  severity: high
+  description: Verify that quantum universal adapters keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_universal_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_universal_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: Assuming these are imported from your previous files:'
+    headings:
+    - '`src/plugins/adapters/quantum_universal_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - cleanup
+  - quantum universal adapters
+- uuid: d38edf92-ffc3-5363-be9a-cd79ffaeb897
+  file: lib/src/plugins/adapters/quantum_universal_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_universal_adapters.dart.md
+  title: 'Quantum Universal Adapters: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: plugin
+  severity: high
+  description: Verify that quantum universal adapters keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_universal_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_universal_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: Assuming these are imported from your previous files:'
+    headings:
+    - '`src/plugins/adapters/quantum_universal_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - performance
+  - quantum universal adapters
+- uuid: ee201fdc-623f-5fe9-81a6-38b30a0eaac7
+  file: lib/src/plugins/adapters/quantum_universal_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_universal_adapters.dart.md
+  title: 'Quantum Universal Adapters: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: plugin
+  severity: medium
+  description: Verify that quantum universal adapters keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_universal_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_universal_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: Assuming these are imported from your previous files:'
+    headings:
+    - '`src/plugins/adapters/quantum_universal_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - memory
+  - quantum universal adapters
+- uuid: b29827af-1224-5af8-93be-7d2d297e8e77
+  file: lib/src/plugins/adapters/quantum_universal_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_universal_adapters.dart.md
+  title: 'Quantum Universal Adapters: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: plugin
+  severity: medium
+  description: Verify that quantum universal adapters keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_universal_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_universal_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: Assuming these are imported from your previous files:'
+    headings:
+    - '`src/plugins/adapters/quantum_universal_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - docs_parity
+  - quantum universal adapters
+- uuid: d29469bd-5281-52de-a32c-26cb005c281d
+  file: lib/src/plugins/adapters/quantum_universal_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_universal_adapters.dart.md
+  title: 'Quantum Universal Adapters: permission-denied and unavailable-plugin cases fall back safely'
+  slug: permission
+  category: plugin
+  severity: medium
+  description: Verify that quantum universal adapters keeps its documented runtime behavior while handling permission conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_universal_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_universal_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: Assuming these are imported from your previous files:'
+    headings:
+    - '`src/plugins/adapters/quantum_universal_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - permission
+  - quantum universal adapters
+- uuid: 06c7a071-87d8-5ca9-b98a-b76bf9ec1016
+  file: lib/src/plugins/adapters/quantum_universal_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_universal_adapters.dart.md
+  title: 'Quantum Universal Adapters: bridge handoff and adapter selection are stable across platforms'
+  slug: bridge
+  category: plugin
+  severity: medium
+  description: Verify that quantum universal adapters keeps its documented runtime behavior while handling bridge conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_universal_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_universal_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: Assuming these are imported from your previous files:'
+    headings:
+    - '`src/plugins/adapters/quantum_universal_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - bridge
+  - quantum universal adapters
+- uuid: 5b6b7436-1746-5e87-92c5-fbc491e611a1
+  file: lib/src/plugins/adapters/quantum_universal_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_universal_adapters.dart.md
+  title: 'Quantum Universal Adapters: fallback adapters take over without data loss or duplicate events'
+  slug: fallback
+  category: plugin
+  severity: medium
+  description: Verify that quantum universal adapters keeps its documented runtime behavior while handling fallback conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_universal_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_universal_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: Assuming these are imported from your previous files:'
+    headings:
+    - '`src/plugins/adapters/quantum_universal_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - fallback
+  - quantum universal adapters

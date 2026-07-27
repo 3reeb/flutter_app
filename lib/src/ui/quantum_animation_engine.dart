@@ -31,9 +31,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  TYPED LERP SYSTEM (Zero-Allocation Interpolation)
 // ────────────────────────────────────────────────────────────────────────────

@@ -2,14 +2,11 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:typed_data';
-
 import 'package:flutter/foundation.dart';
-
 import 'quantum_data_state.dart';
 import '../foundation/quantum_primitives.dart';
 import '../foundation/quantum_core.dart';
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 enum QLPipelineMode { collection, single }
 
 enum QLExecutionMode { client, server, isolate, auto }
@@ -985,4 +982,147 @@ class QLPipelineRegistry {
         'pipelines':
             _pipelines.values.map((p) => p.snapshot()).toList(growable: false),
       };
+}
+
+
+class QLDataPipelineReadPlan {
+  final List<String> requested;
+  final List<String> satisfied;
+  final List<String> missing;
+
+  const QLDataPipelineReadPlan({
+    required this.requested,
+    required this.satisfied,
+    required this.missing,
+  });
+
+  bool get needsHydration => missing.isNotEmpty;
+
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'requested': requested,
+        'satisfied': satisfied,
+        'missing': missing,
+        'needsHydration': needsHydration,
+      };
+}
+
+extension QLDataPipelineSmartAccess on QLDataPipeline {
+  List<String> normalizeSelection(Iterable<String>? select) {
+    final raw = select?.map((e) => e.trim()).where((e) => e.isNotEmpty).toList(growable: false) ??
+        const <String>[];
+    if (raw.isEmpty) {
+      return schema.fieldPaths()
+          .where((path) {
+            final spec = schema.field(path);
+            return spec != null && !spec.isVirtual && !spec.isComputed;
+          })
+          .toList(growable: false);
+    }
+    return schema.expandSelection(raw);
+  }
+
+  QLDataPipelineReadPlan buildReadPlan(int realIdx, {Iterable<String>? select}) {
+    final requested = normalizeSelection(select);
+    final row = realIdx >= 0 && realIdx < _records.length ? _records[realIdx] : null;
+    final satisfied = <String>[];
+    final missing = <String>[];
+
+    if (row == null) {
+      return QLDataPipelineReadPlan(
+        requested: requested,
+        satisfied: satisfied,
+        missing: requested,
+      );
+    }
+
+    for (final path in requested) {
+      final idx = schema.getIndex(path);
+      if (idx >= 0 && row[idx] != null) {
+        satisfied.add(path);
+      } else {
+        missing.add(path);
+      }
+    }
+
+    return QLDataPipelineReadPlan(
+      requested: requested,
+      satisfied: satisfied,
+      missing: missing,
+    );
+  }
+
+  Map<String, dynamic> getProjectedMap(int realIdx, {Iterable<String>? select}) {
+    final map = getAsMap(realIdx);
+    final requested = normalizeSelection(select);
+    if (requested.isEmpty) return map;
+
+    final out = <String, dynamic>{};
+    for (final path in requested) {
+      final value = _readValueAt(map, path);
+      if (value != null) {
+        _writeProjectedValue(out, path, value);
+      }
+    }
+    return out;
+  }
+
+  bool hasProjectedFields(int realIdx, Iterable<String> select) {
+    final plan = buildReadPlan(realIdx, select: select);
+    return !plan.needsHydration;
+  }
+
+  Future<void> ensureSelection(String recordId, Iterable<String> select) async {
+    if (select.isEmpty || delegate == null) return;
+    await ensureFields(recordId, normalizeSelection(select));
+  }
+
+  dynamic _readValueAt(dynamic root, String path) {
+    final pathParts = QLPathUtils.resolve(path);
+    dynamic current = root;
+    for (final part in pathParts) {
+      if (current is Map) {
+        current = current[part.toString()];
+      } else if (current is List && part is int && part >= 0 && part < current.length) {
+        current = current[part];
+      } else {
+        return null;
+      }
+    }
+    return current;
+  }
+
+  void _writeProjectedValue(Map<String, dynamic> root, String path, dynamic value) {
+    final parts = QLPathUtils.resolve(path);
+    if (parts.isEmpty) return;
+    dynamic current = root;
+
+    for (int i = 0; i < parts.length - 1; i++) {
+      final part = parts[i];
+      final next = parts[i + 1];
+      if (current is Map) {
+        final key = part.toString();
+        current.putIfAbsent(key, () => next is int ? <dynamic>[] : <String, dynamic>{});
+        current = current[key];
+      } else if (current is List) {
+        final idx = part is int ? part : int.tryParse(part.toString()) ?? 0;
+        while (current.length <= idx) {
+          current.add(next is int ? <dynamic>[] : <String, dynamic>{});
+        }
+        current = current[idx];
+      } else {
+        return;
+      }
+    }
+
+    final last = parts.last;
+    if (current is Map) {
+      current[last.toString()] = value;
+    } else if (current is List) {
+      final idx = last is int ? last : int.tryParse(last.toString()) ?? 0;
+      while (current.length <= idx) {
+        current.add(null);
+      }
+      current[idx] = value;
+    }
+  }
 }

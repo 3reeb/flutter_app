@@ -1,0 +1,592 @@
+file: lib/src/platform/quantum_connect_engine.dart
+docs_file: docs/src/platform/quantum_connect_engine.dart.md
+line_count: 633
+category: ui
+tests:
+- uuid: 47d694cb-61e9-5733-8492-8cb05c19f0ac
+  file: lib/src/platform/quantum_connect_engine.dart
+  docs_file: docs/src/platform/quantum_connect_engine.dart.md
+  title: 'Quantum Connect Engine: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum connect engine keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/platform/quantum_connect_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/platform/quantum_connect_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: STATUS: newly written,
+      additive, NOT yet run through `flutter analyze` or'
+    headings:
+    - '`src/platform/quantum_connect_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum connect engine
+- uuid: 6d346c03-6660-5486-9f2b-d4189ad4ad58
+  file: lib/src/platform/quantum_connect_engine.dart
+  docs_file: docs/src/platform/quantum_connect_engine.dart.md
+  title: 'Quantum Connect Engine: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum connect engine keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/platform/quantum_connect_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/platform/quantum_connect_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: STATUS: newly written,
+      additive, NOT yet run through `flutter analyze` or'
+    headings:
+    - '`src/platform/quantum_connect_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum connect engine
+- uuid: 3a014072-170c-5726-b123-ca8f2935fe72
+  file: lib/src/platform/quantum_connect_engine.dart
+  docs_file: docs/src/platform/quantum_connect_engine.dart.md
+  title: 'Quantum Connect Engine: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum connect engine keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/platform/quantum_connect_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/platform/quantum_connect_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: STATUS: newly written,
+      additive, NOT yet run through `flutter analyze` or'
+    headings:
+    - '`src/platform/quantum_connect_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum connect engine
+- uuid: 4a0de33d-f490-5c3a-aa58-11b9a7bb048d
+  file: lib/src/platform/quantum_connect_engine.dart
+  docs_file: docs/src/platform/quantum_connect_engine.dart.md
+  title: 'Quantum Connect Engine: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum connect engine keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/platform/quantum_connect_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/platform/quantum_connect_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: STATUS: newly written,
+      additive, NOT yet run through `flutter analyze` or'
+    headings:
+    - '`src/platform/quantum_connect_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum connect engine
+- uuid: 00680e9e-534f-5323-9885-203ccc537c94
+  file: lib/src/platform/quantum_connect_engine.dart
+  docs_file: docs/src/platform/quantum_connect_engine.dart.md
+  title: 'Quantum Connect Engine: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum connect engine keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/platform/quantum_connect_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/platform/quantum_connect_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: STATUS: newly written,
+      additive, NOT yet run through `flutter analyze` or'
+    headings:
+    - '`src/platform/quantum_connect_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum connect engine
+- uuid: 89cb0c46-4841-54f7-a296-f3ef8b3153b2
+  file: lib/src/platform/quantum_connect_engine.dart
+  docs_file: docs/src/platform/quantum_connect_engine.dart.md
+  title: 'Quantum Connect Engine: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum connect engine keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/platform/quantum_connect_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/platform/quantum_connect_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: STATUS: newly written,
+      additive, NOT yet run through `flutter analyze` or'
+    headings:
+    - '`src/platform/quantum_connect_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum connect engine
+- uuid: 27d2a53a-8ef0-5777-beb6-7f0f0bf33033
+  file: lib/src/platform/quantum_connect_engine.dart
+  docs_file: docs/src/platform/quantum_connect_engine.dart.md
+  title: 'Quantum Connect Engine: the runtime surface still matches the documented
+    API and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum connect engine keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/platform/quantum_connect_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/platform/quantum_connect_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: STATUS: newly written,
+      additive, NOT yet run through `flutter analyze` or'
+    headings:
+    - '`src/platform/quantum_connect_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum connect engine
+- uuid: e09ce73c-e76d-549f-b962-29d54772f207
+  file: lib/src/platform/quantum_connect_engine.dart
+  docs_file: docs/src/platform/quantum_connect_engine.dart.md
+  title: 'Quantum Connect Engine: layout remains correct under narrow, wide, and constrained
+    bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum connect engine keeps its documented runtime behavior
+    while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/platform/quantum_connect_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/platform/quantum_connect_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: STATUS: newly written,
+      additive, NOT yet run through `flutter analyze` or'
+    headings:
+    - '`src/platform/quantum_connect_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum connect engine
+- uuid: ac112932-2b4d-5dde-90d4-8ccd61ce0e99
+  file: lib/src/platform/quantum_connect_engine.dart
+  docs_file: docs/src/platform/quantum_connect_engine.dart.md
+  title: 'Quantum Connect Engine: semantics and accessibility output remain stable
+    across rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that quantum connect engine keeps its documented runtime behavior
+    while handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/platform/quantum_connect_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/platform/quantum_connect_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: STATUS: newly written,
+      additive, NOT yet run through `flutter analyze` or'
+    headings:
+    - '`src/platform/quantum_connect_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - semantics
+  - quantum connect engine
+- uuid: 42cee534-a508-583e-8526-32d8610459ab
+  file: lib/src/platform/quantum_connect_engine.dart
+  docs_file: docs/src/platform/quantum_connect_engine.dart.md
+  title: 'Quantum Connect Engine: gesture handling and hit testing stay correct during
+    interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that quantum connect engine keeps its documented runtime behavior
+    while handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/platform/quantum_connect_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/platform/quantum_connect_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: STATUS: newly written,
+      additive, NOT yet run through `flutter analyze` or'
+    headings:
+    - '`src/platform/quantum_connect_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - gesture
+  - quantum connect engine

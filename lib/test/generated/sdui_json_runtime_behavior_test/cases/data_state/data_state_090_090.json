@@ -1,0 +1,24 @@
+{
+  "__meta": {
+    "id": "ds-090-paginated-missing-page-size",
+    "title": "data:paginated without pageSize must throw",
+    "description": "Paginated list without pageSize has no concept of a page boundary. The compiler must reject it to prevent a divide-by-zero in the pipeline.",
+    "tags": ["data_state", "data", "paginated", "guard"],
+    "allowBlank": false,
+    "priority": "critical"
+  },
+  "input": {
+    "type": "data:paginated",
+    "props": {
+      "bind": "${state.records}",
+      "page": 1
+    },
+    "children": [
+      { "type": "text", "props": { "text": "${item.name}" } }
+    ]
+  },
+  "expectError": {
+    "type": "FormatException",
+    "messageContains": "pageSize"
+  }
+}

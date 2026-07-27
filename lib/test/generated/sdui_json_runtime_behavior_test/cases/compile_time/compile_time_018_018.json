@@ -1,0 +1,60 @@
+{
+  "__meta": {
+    "id": "compile_time-018-switch-018",
+    "title": "Switch selects a concrete branch #018",
+    "description": "The $switch operator should compile only the matching branch.",
+    "tags": [
+      "compile-time",
+      "switch",
+      "branching"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "$switch": "alpha",
+    "cases": {
+      "alpha": {
+        "type": "text",
+        "props": {
+          "text": "Alpha 018"
+        }
+      },
+      "beta": {
+        "type": "box:row",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "B 018"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "eta 018"
+            }
+          }
+        ]
+      },
+      "gamma": {
+        "type": "text",
+        "props": {
+          "text": "Gamma 018"
+        }
+      }
+    },
+    "default": {
+      "type": "text",
+      "props": {
+        "text": "Default 018"
+      }
+    }
+  },
+  "expected": {
+    "type": "text",
+    "props": {
+      "text": "Alpha 018"
+    },
+    "debugPath": "root"
+  }
+}

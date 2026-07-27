@@ -1,0 +1,58 @@
+{
+  "__meta": {
+    "id": "state_and_pipeline-049-state-split-049",
+    "title": "Split layouts remain stateful #049",
+    "description": "A stateful split root should keep its guard styling and named debug path.",
+    "tags": [
+      "state",
+      "pipeline",
+      "split"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "name": "split_panel_049",
+    "state": {
+      "active": true,
+      "step": 49
+    },
+    "type": "box:split",
+    "style": "gap-6",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Primary 049"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "active": true,
+        "step": 49
+      }
+    },
+    "debugPath": "split_panel_049.store_provider",
+    "children": [
+      {
+        "type": "box:split",
+        "props": {},
+        "debugPath": "split_panel_049",
+        "style": "gap-6 min-w-0 min-h-0",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Primary 049"
+            },
+            "debugPath": "split_panel_049[0]"
+          }
+        ]
+      }
+    ]
+  }
+}

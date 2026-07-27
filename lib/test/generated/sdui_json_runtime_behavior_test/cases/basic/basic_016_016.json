@@ -1,0 +1,21 @@
+{
+  "__meta": {
+    "id": "basic-016-text-016",
+    "title": "Bare string compiles to text #016",
+    "description": "A bare SDUI string should compile to a text blueprint with a root debug path.",
+    "tags": [
+      "basic",
+      "text",
+      "normalization"
+    ],
+    "allowBlank": false
+  },
+  "input": "Basic text 016",
+  "expected": {
+    "type": "text",
+    "props": {
+      "text": "Basic text 016"
+    },
+    "debugPath": "root"
+  }
+}

@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../../platform/quantum_native_bridge.dart';
 import '../../foundation/quantum_async.dart';
-
 // ────────────────────────────────────────────────────────────────────────────
 // PRACTICAL PHOTOS MODELS
 // ────────────────────────────────────────────────────────────────────────────

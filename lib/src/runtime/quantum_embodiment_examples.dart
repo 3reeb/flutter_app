@@ -15,8 +15,7 @@
 
 // ignore_for_file: avoid_print
 
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 // ─────────────────────────────────────────────────────────────────────────────
 //  TOP-LEVEL RUNNER
 // ─────────────────────────────────────────────────────────────────────────────

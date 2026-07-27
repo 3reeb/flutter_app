@@ -1,0 +1,95 @@
+schema_version: 1
+doc_kind: runtime-execution-file-test-manifest
+file: lib/app/config
+source_path: app/config
+launch_mode: app_startup
+execution_only: true
+area: config
+test_doc_status: draft
+source_metadata:
+  sha256: 51a7b0af8f29a478c227b42aafeac7d01c046f6dfc8f50ab46f30b82515a94bf
+  line_count: 1323
+  imports:
+  - dart:async
+  - dart:convert
+  - dart:io
+  - package:crypto/crypto.dart
+  - package:flutter/material.dart
+  - package:flutter/foundation.dart
+  - ../foundation/quantum_yaml_engine.dart
+  - ../ui/quantum_navigation_engine.dart
+  - ../plugins/quantum_api_engine.dart
+  - ../plugins/quantum_api_shell.dart
+  - quantum_app_entry.dart
+  - quantum_app_shell.dart
+  - quantum_boot_schema.dart
+  - quantum_http_transport.dart
+  - quantum_file_router.dart
+  symbols:
+  - QuantumBuildDefines
+  - QuantumBuildOverlay
+  - QuantumConfigSourceResult
+  - QuantumConfigSourceContext
+  - QuantumConfigSource
+  - QuantumInlineConfigSource
+  - QuantumAssetConfigSource
+  - QuantumFileConfigSource
+  - QuantumHttpConfigSource
+  - QuantumCustomConfigSource
+  - QuantumConfigMergePolicy
+  - QuantumConfigSecurityPolicy
+  - QuantumConfigCachePolicy
+  - QuantumConfigThemeSection
+  - QuantumConfigRouterSection
+  - QuantumConfigVmSection
+  - QuantumConfigTelemetrySection
+  - QuantumConfigAppSection
+  - QuantumConfigApiSection
+  - QuantumConfigRemoteSourceSpec
+runtime_focus:
+- parse failure
+- malformed structure
+- deep nesting / alias loops
+- memory pressure
+test_cases:
+- id: case-1
+  title: null input
+  stimulus: null / missing input
+  runtime_failure_target: null_pointer_access
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-2
+  title: malformed input
+  stimulus: invalid / malformed payload
+  runtime_failure_target: parse_or_type_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-3
+  title: boundary input
+  stimulus: empty / oversized / zero-value edge case
+  runtime_failure_target: range_or_state_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-4
+  title: resource pressure
+  stimulus: large batch / repeated execution / allocation stress
+  runtime_failure_target: out_of_memory_or_allocation_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+assertions:
+  must_execute_live_code: true
+  must_capture_runtime_failure: true
+  must_not_use_static_verification: true
+  must_verify_cleanup: true

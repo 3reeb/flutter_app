@@ -1,0 +1,6 @@
+file: "quantum_test_engine_stub.dart"
+manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_test_engine_stub.yaml"
+total: 18
+passed: 13
+failed: 5
+sourcePath: "src/runtime/quantum_test_engine_stub.dart"

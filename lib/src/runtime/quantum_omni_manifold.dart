@@ -6,9 +6,7 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 // ── THE ISOLATE TASK (100% Unsimplified Math Projection Engine) ──
 class QLManifoldSpatialTask
     extends QLWorkerTask<Map<String, dynamic>, Map<String, dynamic>> {

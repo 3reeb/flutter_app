@@ -1,0 +1,15 @@
+case_template:
+  status: draft
+  type: unit
+  intensity: standard
+  purpose: ''
+  target_symbols: []
+  setup: ''
+  input: ''
+  body: ''
+  expected: ''
+  assertions: []
+  metrics: []
+  risks: []
+  cleanup: ''
+  notes: ''

@@ -1,0 +1,62 @@
+{
+  "__meta": {
+    "id": "action-010-gesture-on-tap",
+    "title": "action:gesture with onTap action ref compiles correctly",
+    "description": "A gesture wrapper must have __subType:gesture injected and carry the full onTap action descriptor object. The renderer attaches the callback using the descriptor.",
+    "tags": ["action", "gesture", "onTap"],
+    "allowBlank": false,
+    "priority": "critical"
+  },
+  "input": {
+    "type": "action:gesture",
+    "props": {
+      "onTap": { "type": "action", "name": "nav.push", "args": { "route": "/detail" } }
+    },
+    "children": [
+      {
+        "type": "box:row",
+        "style": "p-4",
+        "children": [
+          { "type": "text", "props": { "text": "Tap to navigate" } }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "type": "action",
+    "props": {
+      "__subType": "gesture",
+      "onTap": { "type": "action", "name": "nav.push", "args": { "route": "/detail" } }
+    },
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "box:row",
+        "props": {},
+        "debugPath": "root[0]",
+        "style": "p-4",
+        "children": [
+          { "type": "text", "props": { "text": "Tap to navigate" }, "debugPath": "root[0][0]" }
+        ]
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    { "path": "type",                          "equals": "action" },
+    { "path": "props.__subType",               "equals": "gesture" },
+    { "path": "props.onTap.type",              "equals": "action" },
+    { "path": "props.onTap.name",              "equals": "nav.push" },
+    { "path": "props.onTap.args.route",        "equals": "/detail" },
+    { "path": "children.length",               "equals": 1 },
+    { "path": "children[0].type",              "equals": "box:row" },
+    { "path": "children[0].children[0].props.text", "equals": "Tap to navigate" }
+  ],
+  "runtimeBehavior": {
+    "gesture":        "tap",
+    "description":    "When tapped, the runtime dispatches nav.push with args.route=/detail. The navigator pushes the /detail route onto the navigation stack. The child box:row remains visible and tappable after navigation.",
+    "event":          "onTap",
+    "dispatches":     "nav.push",
+    "args":           { "route": "/detail" },
+    "expectedResult": "Navigation stack has /detail pushed on top"
+  }
+}

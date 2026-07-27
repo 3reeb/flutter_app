@@ -1,0 +1,764 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/ui/quantum_theme_engine.dart
+  docs_file: docs/src/ui/quantum_theme_engine.dart.md
+  source_entry:
+    line_count: 2047
+    byte_count: 69810
+    class_count: 5
+    enum_count: 0
+    function_count: 20
+    category: ui
+    test_count: 14
+  scenario_count: 14
+source:
+  path: src/ui/quantum_theme_engine.dart
+  docs_path: docs/src/ui/quantum_theme_engine.dart.md
+  label: src/ui/quantum_theme_engine.dart
+scenarios:
+- uuid: e129d916-9a6b-56d4-8a77-49e1f4e426d2
+  file: lib/src/ui/quantum_theme_engine.dart
+  docs_file: docs/src/ui/quantum_theme_engine.dart.md
+  title: 'Quantum Theme Engine: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum theme engine keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_theme_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_theme_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)'
+    headings:
+    - '`src/ui/quantum_theme_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum theme engine
+- uuid: 99e1940e-e3d7-594a-9b3f-bf81857dd5f6
+  file: lib/src/ui/quantum_theme_engine.dart
+  docs_file: docs/src/ui/quantum_theme_engine.dart.md
+  title: 'Quantum Theme Engine: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum theme engine keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_theme_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_theme_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)'
+    headings:
+    - '`src/ui/quantum_theme_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum theme engine
+- uuid: fe0fb36b-d3e3-59f6-86fb-6eb050d1211f
+  file: lib/src/ui/quantum_theme_engine.dart
+  docs_file: docs/src/ui/quantum_theme_engine.dart.md
+  title: 'Quantum Theme Engine: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum theme engine keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_theme_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_theme_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)'
+    headings:
+    - '`src/ui/quantum_theme_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum theme engine
+- uuid: 0a6bf069-5438-54c4-8ec1-0aa09c22bb29
+  file: lib/src/ui/quantum_theme_engine.dart
+  docs_file: docs/src/ui/quantum_theme_engine.dart.md
+  title: 'Quantum Theme Engine: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum theme engine keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_theme_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_theme_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)'
+    headings:
+    - '`src/ui/quantum_theme_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum theme engine
+- uuid: d9e1fdb3-ef95-5587-9b72-6ab8f1c0b626
+  file: lib/src/ui/quantum_theme_engine.dart
+  docs_file: docs/src/ui/quantum_theme_engine.dart.md
+  title: 'Quantum Theme Engine: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum theme engine keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_theme_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_theme_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)'
+    headings:
+    - '`src/ui/quantum_theme_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum theme engine
+- uuid: db0d7fb3-905c-5bf6-afc3-20115c438c84
+  file: lib/src/ui/quantum_theme_engine.dart
+  docs_file: docs/src/ui/quantum_theme_engine.dart.md
+  title: 'Quantum Theme Engine: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum theme engine keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_theme_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_theme_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)'
+    headings:
+    - '`src/ui/quantum_theme_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum theme engine
+- uuid: bd968cdf-561f-5d46-ae4e-e0c5134705f6
+  file: lib/src/ui/quantum_theme_engine.dart
+  docs_file: docs/src/ui/quantum_theme_engine.dart.md
+  title: 'Quantum Theme Engine: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum theme engine keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_theme_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_theme_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)'
+    headings:
+    - '`src/ui/quantum_theme_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum theme engine
+- uuid: 99bb7903-7d69-575a-b51b-44d5a6bf1e53
+  file: lib/src/ui/quantum_theme_engine.dart
+  docs_file: docs/src/ui/quantum_theme_engine.dart.md
+  title: 'Quantum Theme Engine: layout remains correct under narrow, wide, and constrained bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum theme engine keeps its documented runtime behavior while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_theme_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_theme_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)'
+    headings:
+    - '`src/ui/quantum_theme_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum theme engine
+- uuid: c5c7b6f3-ee32-5730-8090-998ef8e3d692
+  file: lib/src/ui/quantum_theme_engine.dart
+  docs_file: docs/src/ui/quantum_theme_engine.dart.md
+  title: 'Quantum Theme Engine: semantics and accessibility output remain stable across rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that quantum theme engine keeps its documented runtime behavior while handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_theme_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_theme_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)'
+    headings:
+    - '`src/ui/quantum_theme_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - semantics
+  - quantum theme engine
+- uuid: f00f1f91-b417-5477-8002-a35535c0cab8
+  file: lib/src/ui/quantum_theme_engine.dart
+  docs_file: docs/src/ui/quantum_theme_engine.dart.md
+  title: 'Quantum Theme Engine: gesture handling and hit testing stay correct during interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that quantum theme engine keeps its documented runtime behavior while handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_theme_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_theme_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)'
+    headings:
+    - '`src/ui/quantum_theme_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - gesture
+  - quantum theme engine
+- uuid: e8d6dfff-af42-5079-a8be-29c96b5841d9
+  file: lib/src/ui/quantum_theme_engine.dart
+  docs_file: docs/src/ui/quantum_theme_engine.dart.md
+  title: 'Quantum Theme Engine: resize or drag interactions preserve geometry and state'
+  slug: resize
+  category: ui
+  severity: medium
+  description: Verify that quantum theme engine keeps its documented runtime behavior while handling resize conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_theme_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_theme_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)'
+    headings:
+    - '`src/ui/quantum_theme_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - resize
+  - quantum theme engine
+- uuid: 1d9d9654-f101-5d57-a04c-2568172cc00c
+  file: lib/src/ui/quantum_theme_engine.dart
+  docs_file: docs/src/ui/quantum_theme_engine.dart.md
+  title: 'Quantum Theme Engine: token lookup resolves the right colors and sizes'
+  slug: token_resolution
+  category: ui
+  severity: medium
+  description: Verify that quantum theme engine keeps its documented runtime behavior while handling token resolution conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_theme_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_theme_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)'
+    headings:
+    - '`src/ui/quantum_theme_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - token_resolution
+  - quantum theme engine
+- uuid: b4232f3c-e2e8-5b0d-aaa7-147898a2a48c
+  file: lib/src/ui/quantum_theme_engine.dart
+  docs_file: docs/src/ui/quantum_theme_engine.dart.md
+  title: 'Quantum Theme Engine: theme changes update descendants without stale caches'
+  slug: rebuild
+  category: ui
+  severity: medium
+  description: Verify that quantum theme engine keeps its documented runtime behavior while handling rebuild conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_theme_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_theme_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)'
+    headings:
+    - '`src/ui/quantum_theme_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - rebuild
+  - quantum theme engine
+- uuid: 610da508-92d3-5cc2-9c22-9be61cf51207
+  file: lib/src/ui/quantum_theme_engine.dart
+  docs_file: docs/src/ui/quantum_theme_engine.dart.md
+  title: 'Quantum Theme Engine: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: medium
+  description: Verify that quantum theme engine keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_theme_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_theme_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)'
+    headings:
+    - '`src/ui/quantum_theme_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum theme engine

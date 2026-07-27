@@ -1,0 +1,66 @@
+{
+  "__meta": {
+    "id": "widget-064-rotate-snap-angle",
+    "title": "Rotate widget with snap angle and free rotation boundary test",
+    "description": "A widget with snapAngle:0 allows free rotation without snapping. snapAngle:45 snaps to multiples of 45°. The compiled output must carry the exact angle value. Free rotation with no min/max is represented by omitting minAngle/maxAngle from props.",
+    "tags": ["widget", "rotate", "snap", "free-rotation"],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "box:row",
+    "props": {
+      "rotatable": true,
+      "angle": 0.0,
+      "snapAngle": 45.0,
+      "onRotateStart":  { "type": "action", "name": "rotate.start" },
+      "onRotateEnd":    { "type": "action", "name": "rotate.end", "args": { "emitAngle": true } },
+      "onRotateUpdate": { "type": "action", "name": "rotate.update" }
+    },
+    "children": [
+      { "type": "media", "props": { "__subType": "icon", "name": "mdi:rotate-right" } }
+    ]
+  },
+  "expected": {
+    "type": "box:row",
+    "props": {
+      "rotatable": true,
+      "angle": 0.0,
+      "snapAngle": 45.0,
+      "onRotateStart":  { "type": "action", "name": "rotate.start" },
+      "onRotateEnd":    { "type": "action", "name": "rotate.end", "args": { "emitAngle": true } },
+      "onRotateUpdate": { "type": "action", "name": "rotate.update" }
+    },
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "media",
+        "props": { "__subType": "icon", "name": "mdi:rotate-right" },
+        "debugPath": "root[0].mdi:rotate-right"
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    { "path": "props.rotatable",                   "equals": true },
+    { "path": "props.angle",                       "equals": 0.0 },
+    { "path": "props.snapAngle",                   "equals": 45.0 },
+    { "path": "props.onRotateStart.type",          "equals": "action" },
+    { "path": "props.onRotateStart.name",          "equals": "rotate.start" },
+    { "path": "props.onRotateEnd.name",            "equals": "rotate.end" },
+    { "path": "props.onRotateEnd.args.emitAngle",  "equals": true },
+    { "path": "props.onRotateUpdate.name",         "equals": "rotate.update" },
+    { "path": "children[0].type",                  "equals": "media" },
+    { "path": "children[0].props.__subType",       "equals": "icon" }
+  ],
+  "runtimeBehavior": {
+    "gesture":           "rotate",
+    "description":       "Rotating 60° snaps to 45°. Rotating 80° snaps to 90°. onRotateStart fires at gesture start. onRotateEnd fires with snapped angle value.",
+    "initialAngle":      0.0,
+    "snapAngle":         45.0,
+    "gestureAngle":      60.0,
+    "expectedAngle":     45.0,
+    "snapBehavior":      "nearest multiple of snapAngle",
+    "lifecycleEvents":   ["onRotateStart", "onRotateUpdate × N", "onRotateEnd"],
+    "onRotateEndPayload": { "angle": 45.0 }
+  }
+}

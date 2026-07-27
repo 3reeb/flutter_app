@@ -1,0 +1,83 @@
+schema_version: 1
+doc_kind: runtime-execution-file-test-manifest
+file: lib/runtime/quantum_sdui_test_engine_shared
+source_path: runtime/quantum_sdui_test_engine_shared
+launch_mode: app_startup
+execution_only: true
+area: quantum_sdui_test_engine_shared
+test_doc_status: draft
+source_metadata:
+  sha256: cda69ba4b3c9507a4cf1b4fbb4a7ad5e012579610612c65908ad9ef9de9cd851
+  line_count: 521
+  imports:
+  - dart:convert
+  - dart:math
+  - package:flutter/foundation.dart
+  - package:flutter/material.dart
+  symbols:
+  - QuantumSduiTestViewport
+  - QuantumSduiTestMeta
+  - QuantumSduiTestCase
+  - QuantumSduiRenderAnalysis
+  - QuantumSduiTestResult
+  - QuantumSduiTestReport
+  - QuantumSduiTestException
+  - QuantumSduiTestPhase
+  - toJson
+  - compileRoot
+  - toPrettyJson
+  - toString
+  - _toBool
+  - _toStringList
+  - _slugFromPath
+  - _parseColor
+  - _colorToHex
+  - _luma
+  - _stdDevFromBuckets
+runtime_focus:
+- missing test registration
+- malformed test payload
+- runtime assertion failure
+- timeout / cancellation
+test_cases:
+- id: case-1
+  title: null input
+  stimulus: null / missing input
+  runtime_failure_target: null_pointer_access
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-2
+  title: malformed input
+  stimulus: invalid / malformed payload
+  runtime_failure_target: parse_or_type_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-3
+  title: boundary input
+  stimulus: empty / oversized / zero-value edge case
+  runtime_failure_target: range_or_state_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-4
+  title: resource pressure
+  stimulus: large batch / repeated execution / allocation stress
+  runtime_failure_target: out_of_memory_or_allocation_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+assertions:
+  must_execute_live_code: true
+  must_capture_runtime_failure: true
+  must_not_use_static_verification: true
+  must_verify_cleanup: true

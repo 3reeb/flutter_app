@@ -26,13 +26,10 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-
 import 'quantum_primitives.dart';
-
 /// App-configurable observability hook for [QLErrorBoundary].
 ///
 /// By design, [QLErrorBoundary] does not surface its fallback UI / retry

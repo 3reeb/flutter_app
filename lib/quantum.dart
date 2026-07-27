@@ -24,7 +24,6 @@ export 'src/foundation/quantum_reactive_graph.dart';
 export 'src/foundation/quantum_render_scheduler.dart';
 export 'src/foundation/quantum_schema.dart';
 export 'src/foundation/quantum_yaml_engine.dart';
-
 // UI
 export 'src/ui/quantum_animation_engine.dart';
 export 'src/ui/quantum_behaviors.dart';
@@ -38,7 +37,6 @@ export 'src/ui/quantum_scene_layer.dart';
 export 'src/ui/quantum_shape_engine.dart';
 export 'src/ui/quantum_telemetry_engine.dart';
 export 'src/ui/quantum_theme_engine.dart';
-
 // Runtime
 export 'src/runtime/quantum_data_orchestrator.dart';
 export 'src/runtime/quantum_data_pipeline.dart';
@@ -58,25 +56,23 @@ export 'src/runtime/quantum_vm.dart';
 export 'src/runtime/quantum_vm_init.dart';
 export 'src/runtime/quantum_template_engine.dart';
 export 'src/runtime/quantum_workspace_engine.dart';
+export 'src/runtime/quantum_test_engine.dart';
+export 'src/runtime/quantum_test_engine_shared.dart';
 export 'src/runtime/quantum_widget_image_exporter.dart';
 export 'src/runtime/quantum_export_web_bridge.dart';
-
 // App
 export 'src/app/quantum_app_entry.dart';
 export 'src/app/quantum_boot_schema.dart';
 export 'src/app/quantum_app_shell.dart';
 export 'src/app/quantum_file_router.dart';
 export 'src/app/config.dart';
-
 // Platform
 export 'src/platform/quantum_connect_engine.dart';
 export 'src/platform/quantum_native_bridge.dart';
-
 // Features
 export 'src/features/charts/quantum_charts.dart';
 export 'src/features/media/quantum_image_engine.dart';
 export 'src/features/media/quantum_media_engine.dart';
-
 // Plugins
 export 'src/plugins/quantum_api_engine.dart';
 export 'src/plugins/quantum_api_shell.dart';

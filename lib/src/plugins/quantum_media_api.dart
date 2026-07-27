@@ -11,7 +11,6 @@ import 'dart:typed_data';
 import 'dart:collection';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
-
 import 'quantum_api_engine.dart'; // For LocalStore and VaultStreamException
 
 // =============================================================================

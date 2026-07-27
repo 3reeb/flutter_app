@@ -1,0 +1,450 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/plugins/native/quantum_microphone.dart
+  docs_file: docs/src/plugins/native/quantum_microphone.dart.md
+  source_entry:
+    line_count: 95
+    byte_count: 4253
+    class_count: 8
+    enum_count: 0
+    function_count: 0
+    category: plugin
+    test_count: 8
+  scenario_count: 8
+source:
+  path: src/plugins/native/quantum_microphone.dart
+  docs_path: docs/src/plugins/native/quantum_microphone.dart.md
+  label: src/plugins/native/quantum_microphone.dart
+scenarios:
+- uuid: 3e0f5dd7-e7e7-5e91-8c1c-57fc688b73b9
+  file: lib/src/plugins/native/quantum_microphone.dart
+  docs_file: docs/src/plugins/native/quantum_microphone.dart.md
+  title: 'Quantum Microphone: public contract remains stable under valid input'
+  slug: contract
+  category: plugin
+  severity: critical
+  description: Verify that quantum microphone keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_microphone.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_microphone.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level capability such as camera, calendar, location, microphone, phone, contacts, files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_microphone.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - contract
+  - quantum microphone
+- uuid: ac06bb1d-fca0-5d3b-9bf6-dd9e6a84af69
+  file: lib/src/plugins/native/quantum_microphone.dart
+  docs_file: docs/src/plugins/native/quantum_microphone.dart.md
+  title: 'Quantum Microphone: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: plugin
+  severity: critical
+  description: Verify that quantum microphone keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_microphone.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_microphone.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level capability such as camera, calendar, location, microphone, phone, contacts, files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_microphone.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - invalid_input
+  - quantum microphone
+- uuid: 8f9da010-3356-5a2c-a054-855e64c74cf6
+  file: lib/src/plugins/native/quantum_microphone.dart
+  docs_file: docs/src/plugins/native/quantum_microphone.dart.md
+  title: 'Quantum Microphone: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: plugin
+  severity: high
+  description: Verify that quantum microphone keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_microphone.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_microphone.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level capability such as camera, calendar, location, microphone, phone, contacts, files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_microphone.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - reentrant
+  - quantum microphone
+- uuid: 7286ba1a-9c96-58ae-92f0-1d1aeadc3aae
+  file: lib/src/plugins/native/quantum_microphone.dart
+  docs_file: docs/src/plugins/native/quantum_microphone.dart.md
+  title: 'Quantum Microphone: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: plugin
+  severity: high
+  description: Verify that quantum microphone keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_microphone.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_microphone.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level capability such as camera, calendar, location, microphone, phone, contacts, files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_microphone.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - cleanup
+  - quantum microphone
+- uuid: 9712a650-9cdd-5fa8-b9d3-01a0bff078e8
+  file: lib/src/plugins/native/quantum_microphone.dart
+  docs_file: docs/src/plugins/native/quantum_microphone.dart.md
+  title: 'Quantum Microphone: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: plugin
+  severity: high
+  description: Verify that quantum microphone keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_microphone.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_microphone.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level capability such as camera, calendar, location, microphone, phone, contacts, files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_microphone.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - performance
+  - quantum microphone
+- uuid: 387f14cb-5b8e-5f6e-a2ca-ecc13a256512
+  file: lib/src/plugins/native/quantum_microphone.dart
+  docs_file: docs/src/plugins/native/quantum_microphone.dart.md
+  title: 'Quantum Microphone: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: plugin
+  severity: medium
+  description: Verify that quantum microphone keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_microphone.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_microphone.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level capability such as camera, calendar, location, microphone, phone, contacts, files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_microphone.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - memory
+  - quantum microphone
+- uuid: 1c677ed6-81d7-5f46-85dc-f3146a43de33
+  file: lib/src/plugins/native/quantum_microphone.dart
+  docs_file: docs/src/plugins/native/quantum_microphone.dart.md
+  title: 'Quantum Microphone: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: plugin
+  severity: medium
+  description: Verify that quantum microphone keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_microphone.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_microphone.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level capability such as camera, calendar, location, microphone, phone, contacts, files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_microphone.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - docs_parity
+  - quantum microphone
+- uuid: 87ed88b2-5ec5-57c4-b562-9ef7e069cf6f
+  file: lib/src/plugins/native/quantum_microphone.dart
+  docs_file: docs/src/plugins/native/quantum_microphone.dart.md
+  title: 'Quantum Microphone: permission-denied and unavailable-plugin cases fall back safely'
+  slug: permission
+  category: plugin
+  severity: medium
+  description: Verify that quantum microphone keeps its documented runtime behavior while handling permission conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_microphone.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_microphone.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level capability such as camera, calendar, location, microphone, phone, contacts, files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_microphone.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - permission
+  - quantum microphone

@@ -1,13 +1,11 @@
 ﻿import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'src/runtime/quantum_sdui_test_engine_io.dart';
+import 'package:quantum_layout/src/runtime/quantum_sdui_test_engine_io.dart';
 import 'package:flutter/rendering.dart';
-import 'downloader.dart';
-import 'quantum.dart';
-
+import 'package:quantum_layout/downloader.dart';
+import 'package:quantum_layout/quantum.dart';
 void main() {
   bootQuantumApp(
     QuantumAppConfig(

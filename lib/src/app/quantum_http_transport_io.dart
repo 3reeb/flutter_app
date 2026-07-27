@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'quantum_http_transport.dart';
-
 QuantumHttpTransport createQuantumHttpTransport() => _IoQuantumHttpTransport();
 
 class _IoQuantumHttpTransport implements QuantumHttpTransport {

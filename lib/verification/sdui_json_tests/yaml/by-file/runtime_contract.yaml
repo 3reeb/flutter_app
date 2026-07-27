@@ -1,0 +1,166 @@
+__meta:
+  id: sdui-runtime-contract
+  title: SDUI runtime contract
+  description: Static contract checks for the SDUI runtime transport, type export, and JSON test engine.
+  tags:
+  - sdui
+  - runtime
+  - contract
+  - engine
+  allowBlank: true
+cases:
+- id: quantum-sdui-engine-contract
+  title: Quantum SDUI engine transport contract
+  sourcePath: lib/src/runtime/quantum_sdui_engine.dart
+  assertions:
+  - kind: source_contains_all
+    values:
+    - QuantumSduiException
+    - SduiEncryptedPayload
+    - SduiKeyStore
+    - SduiReplayGuard
+    - QuantumSduiEngine
+    - QuantumApiEngine
+    - QLSduiWidget
+  - kind: source_contains_all
+    values:
+    - AES-256-GCM
+    - HMAC-SHA256
+    - HKDF-SHA256
+    - nonce LRU-bounded Set
+    - Lazy blueprint compilation + LRU cache
+  - kind: source_not_contains
+    values:
+    - TODO
+    - FIXME
+- id: quantum-sdui-type-engine-contract
+  title: Quantum SDUI type export contract
+  sourcePath: lib/src/runtime/quantum_sdui_type_engine.dart
+  assertions:
+  - kind: source_contains_all
+    values:
+    - QuantumSduiTypeBundle
+    - QuantumSduiTypeEngine
+    - exportSnapshot
+    - exportJson
+    - exportTypeScriptBundle
+    - exportBundle
+    - omniCores
+    - dslOperators
+    - aliasRegistry
+    - orchestrator
+  - kind: source_not_contains
+    values:
+    - todo(
+    - FIXME
+  - kind: line_count_at_least
+    value: 220
+- id: quantum-sdui-test-engine-contract
+  title: Quantum SDUI JSON test engine contract
+  sourcePath: lib/src/runtime/quantum_sdui_test_engine_io.dart
+  assertions:
+  - kind: source_contains_all
+    values:
+    - discoverFolder
+    - loadCase
+    - runFolder
+    - runCase
+    - runAllRegistered
+    - saveLastReport
+    - _runRenderProbe
+    - _analyzeFrame
+    - _stripJsonWrapper
+  - kind: source_contains_any
+    values:
+    - rendered successfully
+    - Timed out after
+    - blank frame
+  - kind: source_not_contains
+    values:
+    - TODO
+    - FIXME
+- id: quantum-omni-registry-contract
+  title: Quantum omni registry contract
+  sourcePath: lib/src/runtime/quantum_omni_registry.dart
+  assertions:
+  - kind: source_contains_all
+    values:
+    - clearQuantumInputRegistry
+    - _resolveFieldController
+    - QDesignMatrix
+    - _AliasContext
+    - _standaloneFieldRegistry
+    - _dummyForms
+  - kind: source_contains_all
+    values:
+    - part 'omni_cores/box_core.dart';
+    - part 'omni_cores/media_core.dart';
+    - part 'omni_cores/control_core.dart';
+    - part 'omni_cores/visual_core.dart';
+  - kind: source_not_contains
+    values:
+    - TODO
+    - FIXME
+- id: quantum-sdui-type-snapshot-contract
+  title: Quantum SDUI type snapshot contract
+  sourcePath: lib/src/runtime/quantum_sdui_type_engine.dart
+  assertions:
+  - kind: snapshot_path_not_empty
+    path: omniCores.box.subtypeCount
+  - kind: snapshot_path_not_empty
+    path: omniCores.visual.subtypes
+  - kind: snapshot_path_not_empty
+    path: coreSchemas.schemas
+  - kind: snapshot_path_not_empty
+    path: themeConfig.tokens
+- id: quantum-vm-normalization-contract
+  title: Quantum VM normalization contract
+  sourcePath: src/runtime/quantum_vm.dart
+  assertions:
+  - kind: source_contains_all
+    values:
+    - _normalizeNode
+    - type.split(':')
+    - props['__subType']
+    - box:split
+  - kind: source_contains_all
+    values:
+    - name
+    - slot
+    - debugPath
+    - slots
+    - children
+- id: quantum-vm-operator-transform-contract
+  title: Quantum VM operator transform contract
+  sourcePath: src/runtime/quantum_vm.dart
+  assertions:
+  - kind: source_contains_all
+    values:
+    - $define
+    - $let
+    - $if
+    - $repeat
+    - $call
+    - $switch
+    - $async
+    - $stream
+    - $machine
+    - $portal
+    - $watch
+    - $try
+    - $layout
+    - $compose
+    - $apply
+    - $scope
+    - $spread
+    - $throttle
+    - $debounce
+    - $parallel
+    - $reactive_map
+    - $classes
+  - kind: source_contains_all
+    values:
+    - _injectCompileTimeStructurally
+    - _expandMacro
+    - _collectMacroSlots
+    - _tokenizeNodeProperties

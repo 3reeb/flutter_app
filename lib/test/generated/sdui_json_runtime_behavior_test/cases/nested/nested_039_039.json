@@ -1,0 +1,68 @@
+{
+  "__meta": {
+    "id": "nested-039-screen-039",
+    "title": "Mixed nested screen #039",
+    "description": "Switch selection should remain stable in nested data-driven screens.",
+    "tags": [
+      "nested",
+      "switch",
+      "branch"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "$switch": "mobile",
+    "cases": {
+      "mobile": {
+        "type": "box:row",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "M039"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "obile 039"
+            }
+          }
+        ]
+      },
+      "tablet": {
+        "type": "text",
+        "props": {
+          "text": "Tablet 039"
+        }
+      }
+    },
+    "default": {
+      "type": "text",
+      "props": {
+        "text": "Default 039"
+      }
+    }
+  },
+  "expected": {
+    "type": "box:row",
+    "props": {},
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "M039"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "obile 039"
+        },
+        "debugPath": "root[1]"
+      }
+    ]
+  }
+}

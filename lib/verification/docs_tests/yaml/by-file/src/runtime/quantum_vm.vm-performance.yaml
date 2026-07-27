@@ -1,0 +1,182 @@
+schema_version: 2
+doc_kind: file-test-supplement
+supplement_of: lib/src/runtime/quantum_vm.dart
+file: lib/src/runtime/quantum_vm.dart
+layer: runtime
+profile: vm-core
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/runtime/quantum_vm.dart
+  sha256: 232c6d99fdebb6e2692cb347c2ac99c43250ccd44a99613968c407a4aa0a0028
+  line_count: 7157
+  imports:
+    - dart:async
+    - dart:convert
+    - package:flutter/foundation.dart
+    - package:flutter/material.dart
+    - package:flutter/services.dart
+    - package:collection/collection.dart
+    - ../../quantum.dart
+  exports: []
+  parts:
+    - quantum_vm_components.dart
+  part_of: []
+  category: runtime
+  profile: vm-core
+  large_profile: true
+  keywords:
+    - media
+    - decimal
+    - char
+    - cache
+    - lazy
+    - projection
+    - registry
+    - slice
+    - orchestrator
+    - pipeline
+    - macro
+    - policy
+    - module
+    - token
+    - permission
+    - transport
+    - stream
+    - retry
+    - fallback
+    - platform
+    - native
+    - web
+    - io
+    - input
+groups:
+  - name: lazy-schema
+    description: deferred schema view and cache invalidation
+    rows:
+      - id: quantum_vm.lazy-schema.001
+        purpose: Exercise the `lazy-schema` branch under the normal public contract.
+        target_symbols: &id001
+          - QuantumSecurityException
+          - QLSchemaSlice
+          - QLLazySchemaView
+          - QLModuleAccessPolicy
+          - QLModuleRecord
+          - QLModuleRegistry
+          - QLRegistryEntry
+          - QuantumExtensionBundle
+        setup: Prepare a realistic fixture with the minimum data needed for this branch.
+        input: A focused input that triggers the main branch.
+        body: Run the public path for this branch and inspect outputs and side effects.
+        expected: The branch behaves deterministically and preserves its explicit invariants.
+        assertions:
+          - branch-specific invariants hold
+        metrics:
+          - branch latency
+          - side-effect count
+        risks:
+          - branch drift
+          - missing output
+        cleanup: Reset state and clear caches.
+      - id: quantum_vm.lazy-schema.002
+        purpose: Check the `lazy-schema` branch under a malformed or partial input.
+        target_symbols: *id001
+        setup: Use incomplete, malformed, or mixed-shape fixtures.
+        input: A malformed variant that still reaches the branch.
+        body: Run the same branch with the malformed input.
+        expected: The branch rejects or normalizes intentionally without silent corruption.
+        assertions:
+          - branch fails explicitly or normalizes intentionally
+        metrics:
+          - error localization
+        risks:
+          - partial mutation
+          - silent coercion
+        cleanup: Reset state and clear caches.
+      - id: quantum_vm.lazy-schema.003
+        purpose: Re-run the `lazy-schema` branch twice to prove stable repeated behavior.
+        target_symbols: *id001
+        setup: Prime state once, then repeat the same branch.
+        input: Repeated identical branch input.
+        body: Compare first and second execution results, cache hits, and event order.
+        expected: No duplicate side effect appears and the result stays stable.
+        assertions:
+          - repeatability holds
+          - no duplicate side effects
+        metrics:
+          - repeat latency
+          - cache-hit ratio
+        risks:
+          - double emit
+          - stale branch result
+        cleanup: Reset state and clear caches.
+  - name: performance
+    description: token parsing and repeated lookup overhead
+    rows:
+      - id: quantum_vm.performance.001
+        purpose: Profile the hot path for `src/runtime/quantum_vm.dart` with a large but realistic workload.
+        target_symbols: &id002
+          - QuantumSecurityException
+          - QLSchemaSlice
+          - QLLazySchemaView
+          - QLModuleAccessPolicy
+          - QLModuleRecord
+          - QLModuleRegistry
+          - QLRegistryEntry
+          - QuantumExtensionBundle
+        setup: Prepare a large input set with stable shape and repeated access patterns.
+        input: Large valid dataset and repeated reads.
+        body: Measure the primary operation repeatedly and compare cold vs warm behavior.
+        expected: Warm-path behavior improves or remains stable, with no hidden quadratic work.
+        assertions:
+          - warm path is faster or equal
+          - no repeated recomputation
+        metrics:
+          - wall time
+          - allocations
+          - cache hits
+        risks:
+          - quadratic scan
+          - unbounded copying
+          - hidden eager load
+        cleanup: Reset state and clear caches.
+      - id: quantum_vm.performance.002
+        purpose: Ensure cached or memoized work in `src/runtime/quantum_vm.dart` is invalidated precisely when input changes.
+        target_symbols: *id002
+        setup: Prime the cache, then change one field or dependency at a time.
+        input: Same input after one controlled mutation.
+        body: Read twice, mutate once, then read again.
+        expected: Only the changed branch recomputes; unrelated branches stay cached.
+        assertions:
+          - cache invalidates precisely
+          - unrelated work stays reused
+        metrics:
+          - recompute count
+          - cache-hit ratio
+        risks:
+          - stale cache
+          - over-invalidation
+        cleanup: Reset state and clear caches.
+      - id: quantum_vm.performance.003
+        purpose: Check that lazy materialization only happens on demand and not before the first access boundary.
+        target_symbols: *id002
+        setup: Prime a lazy fixture without touching the heavy branch.
+        input: A handle or metadata-only input before heavy data access.
+        body: Inspect the object, then touch the heavy branch once.
+        expected: No heavy work occurs before access, and the first access is explicit and measurable.
+        assertions:
+          - no eager load before access
+          - first access triggers exactly one load
+        metrics:
+          - first-access latency
+          - eager-load count
+        risks:
+          - hidden prefetch
+          - double fetch
+        cleanup: Reset state and clear caches.
+focus: module registry behavior, macro expansion, policy gating, token parsing, cache invalidation, and lazy schema views.
+expansion_mode: supplemental
+shared_templates:
+  - docs_tests/yaml/shared/case_template.yaml
+  - docs_tests/yaml/shared/group_catalog.yaml
+  - docs_tests/yaml/shared/axis_catalog.yaml

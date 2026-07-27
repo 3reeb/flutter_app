@@ -17,13 +17,10 @@
 
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import '../../quantum.dart';
-
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  ROUTE ENTRY — Describes a discovered file-based route
 // ────────────────────────────────────────────────────────────────────────────
@@ -446,10 +443,15 @@ class QuantumFileRouter {
     final QLSeoBuilder? seoBuilder = (info, props) {
       final cached = _pageConfigCache[entry.assetPath];
       final Map<String, dynamic> inheritedMeta = entry.inheritedMeta;
-      final String title = cached?.metaTitle ?? inheritedMeta['title']?.toString() ?? '';
-      final String description =
-          cached?.metaDescription ?? inheritedMeta['description']?.toString() ?? '';
-      if (title.isEmpty && description.isEmpty && inheritedMeta.isEmpty && cached == null) {
+      final String title =
+          cached?.metaTitle ?? inheritedMeta['title']?.toString() ?? '';
+      final String description = cached?.metaDescription ??
+          inheritedMeta['description']?.toString() ??
+          '';
+      if (title.isEmpty &&
+          description.isEmpty &&
+          inheritedMeta.isEmpty &&
+          cached == null) {
         return QLSeoConfig(
           title: '',
           description: '',
@@ -586,7 +588,8 @@ class _LazyPagePolicyMiddleware extends QLMiddleware {
   _LazyPagePolicyMiddleware(this.assetPath, {required this.loader});
 
   @override
-  FutureOr<QLRouteInfo?> process(QLRouteInfo info, BuildContext? context) async {
+  FutureOr<QLRouteInfo?> process(
+      QLRouteInfo info, BuildContext? context) async {
     final pageConfig = await loader(assetPath);
     if (pageConfig == null) return null;
 

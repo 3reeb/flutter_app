@@ -1,0 +1,480 @@
+file: lib/src/plugins/native/quantum_contacts.dart
+docs_file: docs/src/plugins/native/quantum_contacts.dart.md
+line_count: 71
+category: plugin
+tests:
+- uuid: fcd0900a-0320-560d-8554-aac623196c1d
+  file: lib/src/plugins/native/quantum_contacts.dart
+  docs_file: docs/src/plugins/native/quantum_contacts.dart.md
+  title: 'Quantum Contacts: public contract remains stable under valid input'
+  slug: contract
+  category: plugin
+  severity: critical
+  description: Verify that quantum contacts keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_contacts.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_contacts.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_contacts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - contract
+  - quantum contacts
+- uuid: ec4c2c8c-b58f-5fbe-bc5e-8af27406874d
+  file: lib/src/plugins/native/quantum_contacts.dart
+  docs_file: docs/src/plugins/native/quantum_contacts.dart.md
+  title: 'Quantum Contacts: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: plugin
+  severity: critical
+  description: Verify that quantum contacts keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_contacts.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_contacts.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_contacts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - invalid_input
+  - quantum contacts
+- uuid: 5dc2b602-19ea-52ff-a924-2c17e1c62563
+  file: lib/src/plugins/native/quantum_contacts.dart
+  docs_file: docs/src/plugins/native/quantum_contacts.dart.md
+  title: 'Quantum Contacts: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: plugin
+  severity: high
+  description: Verify that quantum contacts keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_contacts.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_contacts.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_contacts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - reentrant
+  - quantum contacts
+- uuid: fd470cad-991a-524c-b8f6-0cf2aca6b6d6
+  file: lib/src/plugins/native/quantum_contacts.dart
+  docs_file: docs/src/plugins/native/quantum_contacts.dart.md
+  title: 'Quantum Contacts: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: plugin
+  severity: high
+  description: Verify that quantum contacts keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_contacts.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_contacts.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_contacts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - cleanup
+  - quantum contacts
+- uuid: 94b4c8a6-1bc0-5142-901a-09e572796f2f
+  file: lib/src/plugins/native/quantum_contacts.dart
+  docs_file: docs/src/plugins/native/quantum_contacts.dart.md
+  title: 'Quantum Contacts: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: plugin
+  severity: high
+  description: Verify that quantum contacts keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_contacts.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_contacts.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_contacts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - performance
+  - quantum contacts
+- uuid: 6804f0f6-d502-58d0-b52b-23807f7a70f2
+  file: lib/src/plugins/native/quantum_contacts.dart
+  docs_file: docs/src/plugins/native/quantum_contacts.dart.md
+  title: 'Quantum Contacts: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: plugin
+  severity: medium
+  description: Verify that quantum contacts keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_contacts.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_contacts.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_contacts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - memory
+  - quantum contacts
+- uuid: 434efc48-14ec-5954-8b1c-85da7b7d4104
+  file: lib/src/plugins/native/quantum_contacts.dart
+  docs_file: docs/src/plugins/native/quantum_contacts.dart.md
+  title: 'Quantum Contacts: the runtime surface still matches the documented API and
+    headings'
+  slug: docs_parity
+  category: plugin
+  severity: medium
+  description: Verify that quantum contacts keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_contacts.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_contacts.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_contacts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - docs_parity
+  - quantum contacts
+- uuid: fb863ea3-5ba4-5c93-9a2a-e59cca6e1bf4
+  file: lib/src/plugins/native/quantum_contacts.dart
+  docs_file: docs/src/plugins/native/quantum_contacts.dart.md
+  title: 'Quantum Contacts: permission-denied and unavailable-plugin cases fall back
+    safely'
+  slug: permission
+  category: plugin
+  severity: medium
+  description: Verify that quantum contacts keeps its documented runtime behavior
+    while handling permission conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_contacts.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_contacts.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_contacts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - permission
+  - quantum contacts

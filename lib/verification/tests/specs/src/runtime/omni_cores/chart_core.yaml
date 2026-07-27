@@ -1,0 +1,453 @@
+file: lib/src/runtime/omni_cores/chart_core.dart
+docs_file: docs/src/runtime/omni_cores/chart_core.dart.md
+line_count: 48
+category: visual
+tests:
+- uuid: 5b3d377a-eaed-56a4-9817-608cae82861b
+  file: lib/src/runtime/omni_cores/chart_core.dart
+  docs_file: docs/src/runtime/omni_cores/chart_core.dart.md
+  title: 'Chart Core: public contract remains stable under valid input'
+  slug: contract
+  category: visual
+  severity: critical
+  description: Verify that chart core keeps its documented runtime behavior while
+    handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/chart_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/chart_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/chart_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - contract
+  - chart core
+- uuid: b6fae65f-8183-5e8d-805d-cf75b5e20ec5
+  file: lib/src/runtime/omni_cores/chart_core.dart
+  docs_file: docs/src/runtime/omni_cores/chart_core.dart.md
+  title: 'Chart Core: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: visual
+  severity: critical
+  description: Verify that chart core keeps its documented runtime behavior while
+    handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/chart_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/chart_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/chart_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - invalid_input
+  - chart core
+- uuid: 55d8730b-0dc3-5d00-bc05-b407661cf9ef
+  file: lib/src/runtime/omni_cores/chart_core.dart
+  docs_file: docs/src/runtime/omni_cores/chart_core.dart.md
+  title: 'Chart Core: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: visual
+  severity: high
+  description: Verify that chart core keeps its documented runtime behavior while
+    handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/chart_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/chart_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/chart_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - reentrant
+  - chart core
+- uuid: e73e7e9c-640c-51be-8a21-f3e4ba38227d
+  file: lib/src/runtime/omni_cores/chart_core.dart
+  docs_file: docs/src/runtime/omni_cores/chart_core.dart.md
+  title: 'Chart Core: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: visual
+  severity: high
+  description: Verify that chart core keeps its documented runtime behavior while
+    handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/chart_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/chart_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/chart_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - cleanup
+  - chart core
+- uuid: b3d6032b-6473-59d9-8d96-1bab200f127d
+  file: lib/src/runtime/omni_cores/chart_core.dart
+  docs_file: docs/src/runtime/omni_cores/chart_core.dart.md
+  title: 'Chart Core: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: visual
+  severity: high
+  description: Verify that chart core keeps its documented runtime behavior while
+    handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/chart_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/chart_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/chart_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - performance
+  - chart core
+- uuid: b97e7351-dd06-528b-bcef-3b7e9ee48934
+  file: lib/src/runtime/omni_cores/chart_core.dart
+  docs_file: docs/src/runtime/omni_cores/chart_core.dart.md
+  title: 'Chart Core: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: visual
+  severity: medium
+  description: Verify that chart core keeps its documented runtime behavior while
+    handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/chart_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/chart_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/chart_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - memory
+  - chart core
+- uuid: 41b62757-e88e-54a6-ae5e-81421c9c995b
+  file: lib/src/runtime/omni_cores/chart_core.dart
+  docs_file: docs/src/runtime/omni_cores/chart_core.dart.md
+  title: 'Chart Core: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: visual
+  severity: medium
+  description: Verify that chart core keeps its documented runtime behavior while
+    handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/chart_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/chart_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/chart_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - docs_parity
+  - chart core
+- uuid: 0247999b-6f1e-5f58-8bc7-a37df600feb0
+  file: lib/src/runtime/omni_cores/chart_core.dart
+  docs_file: docs/src/runtime/omni_cores/chart_core.dart.md
+  title: 'Chart Core: rendering remains correct for large, dense, and animated content'
+  slug: render
+  category: visual
+  severity: medium
+  description: Verify that chart core keeps its documented runtime behavior while
+    handling render conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/chart_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/chart_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/chart_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - render
+  - chart core

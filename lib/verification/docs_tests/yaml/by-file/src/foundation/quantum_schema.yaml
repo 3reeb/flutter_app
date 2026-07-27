@@ -1,0 +1,640 @@
+schema_version: 2
+doc_kind: file-test-manifest
+file: lib/src/foundation/quantum_schema.dart
+layer: foundation
+profile: schema-core
+test_doc_status: draft
+last_reviewed: '2026-07-26'
+source_metadata:
+  path: lib/src/foundation/quantum_schema.dart
+  sha256: 8c331d3f6ba80ced9a9564e22cece44a2405a3426b6e6830d55a2b0bafe056c5
+  line_count: 1433
+  imports:
+  - dart:collection
+  - dart:typed_data
+  - ../../quantum.dart
+  exports: []
+  parts: []
+  part_of: []
+  category: foundation
+  profile: schema-core
+  large_profile: true
+  keywords:
+  - media
+  - hasmany
+  - bigint
+  - smallint
+  - decimal
+  - char
+  - flags
+  - cache
+  - lazy
+  - projection
+  - registry
+  - policy
+  - stream
+  - native
+  - io
+  - json
+surface_summary:
+  classes_enums_typedefs_mixins_extensions_functions:
+  - QLBlockPayload
+  - QLSchemaFieldSpec
+  - QLSchemaBlueprint
+  - QLSchemaCompiler
+  - QLSchemaRegistry
+  - QLSchemaReadPlan
+  - QLSchemaRegistryInspector
+  - QLSchemaBlueprintSmartSelect
+  count: 8
+focus: field typing, projection, read-plan compilation, compatibility, serialization,
+  hasMany handling, and the extended scalar/media type matrix.
+coverage_targets:
+- public API
+- failure paths
+- performance
+- integration boundaries
+- regression traps
+- compatibility
+- lazy-load
+- cache
+- serialization
+test_dimensions:
+  input_shapes:
+  - 'null'
+  - empty
+  - single-item
+  - multi-item
+  - mixed-type
+  - legacy-shape
+  - malformed
+  - duplicate
+  - large-batch
+  execution_modes:
+  - cold
+  - warm
+  - cached
+  - invalidated
+  - lazy
+  - eager
+  - replayed
+  outcomes:
+  - accept
+  - reject
+  - normalize
+  - defer
+  - reuse
+  - evict
+  - round-trip
+  measurement_axes:
+  - latency
+  - allocations
+  - cache-hits
+  - recompute-count
+  - event-order
+reusable_presets:
+  smoke_base:
+    purpose: Prove the canonical public path works and stays stable across repeated
+      runs.
+    assertions:
+    - observable result is stable
+    - no hidden mutation
+    - no duplicate side effects
+  edge_base:
+    purpose: Prove malformed input fails explicitly or normalizes intentionally.
+    assertions:
+    - failure is explicit
+    - no silent coercion
+    - no stale state
+  perf_base:
+    purpose: Measure the hot path and bound allocations or repeated work.
+    assertions:
+    - warm path is not worse than cold path
+    - allocation growth stays bounded
+  integration_base:
+    purpose: Validate behavior across local imports and neighboring runtime layers.
+    assertions:
+    - boundary contract holds
+    - cross-file side effects remain stable
+groups:
+- name: smoke
+  description: basic compile and round-trip sanity
+  rows:
+  - id: quantum_schema.smoke.001
+    purpose: Prove the primary contract of `src/foundation/quantum_schema.dart` can
+      be created and exercised with canonical values.
+    target_symbols: &id001
+    - QLBlockPayload
+    - QLSchemaFieldSpec
+    - QLSchemaBlueprint
+    - QLSchemaCompiler
+    - QLSchemaRegistry
+    - QLSchemaReadPlan
+    - QLSchemaRegistryInspector
+    - QLSchemaBlueprintSmartSelect
+    setup: Build the minimal valid object graph or runtime context required by this
+      file.
+    input: Canonical values that stay within the most common public-path defaults.
+    body: Call the main entry path twice with the same state to verify repeatability
+      and reuse.
+    expected: The result is stable across repeated calls and no hidden mutation appears.
+    assertions:
+    - observable output matches the documented contract
+    - repeat call returns the same shape
+    - no unexpected extra work is visible
+    metrics:
+    - call count
+    - cache hits
+    - allocation delta
+    risks:
+    - silent eager load
+    - duplicate side effects
+    - state mutation on read
+    cleanup: Reset state and clear caches.
+  - id: quantum_schema.smoke.002
+    purpose: Confirm the file survives the smallest valid payload and the largest
+      documented trivial payload.
+    target_symbols: *id001
+    setup: Prepare one-item and small-batch fixtures.
+    input: A single item followed by a short repeated batch.
+    body: Execute the same path with one item, then with a small repeated batch.
+    expected: Both inputs are handled without shape loss or unexpected divergence.
+    assertions:
+    - one-item path works
+    - batch path works
+    - batch does not degrade shape
+    metrics:
+    - latency
+    - allocation count
+    risks:
+    - off-by-one handling
+    - shape drift on repeated values
+    cleanup: Reset state and clear caches.
+  - id: quantum_schema.smoke.003
+    purpose: Ensure the public API does not require hidden global state to produce
+      a valid result.
+    target_symbols: *id001
+    setup: Run in a clean process with no previously initialized caches or registries.
+    input: Fresh process state.
+    body: Invoke the same contract after process-style reset conditions.
+    expected: No hidden singleton is required for success.
+    assertions:
+    - no implicit global dependency
+    - fresh start still succeeds
+    metrics:
+    - startup cost
+    risks:
+    - state leakage across test cases
+    cleanup: Reset state and clear caches.
+- name: edges
+  description: invalid, empty, mixed, and duplicate input paths
+  rows:
+  - id: quantum_schema.edges.001
+    purpose: Reject `null`, empty, or missing inputs for `src/foundation/quantum_schema.dart`
+      in a controlled way.
+    target_symbols: &id002
+    - QLBlockPayload
+    - QLSchemaFieldSpec
+    - QLSchemaBlueprint
+    - QLSchemaCompiler
+    - QLSchemaRegistry
+    - QLSchemaReadPlan
+    - QLSchemaRegistryInspector
+    - QLSchemaBlueprintSmartSelect
+    setup: Prepare explicit null/empty fixtures and any required default context.
+    input: null, empty, and omitted values.
+    body: Pass malformed inputs through the normal entry path, not a special helper.
+    expected: The file responds with explicit failure or documented fallback, never
+      silent corruption.
+    assertions:
+    - null is handled intentionally
+    - empty input is not accepted as valid data
+    - failure mode is explicit
+    metrics:
+    - failure latency
+    - error count
+    risks:
+    - silent fallback
+    - implicit coercion
+    - crash without context
+    cleanup: Reset state and clear caches.
+  - id: quantum_schema.edges.002
+    purpose: Exercise malformed types and mixed shapes against the file-specific contract.
+    target_symbols: *id002
+    setup: Prepare values with wrong scalar types, mixed lists, and partially missing
+      nested fields.
+    input: A mixed-shape payload with the wrong scalar type in one branch.
+    body: Feed the malformed structure into the same contract path used by real callers.
+    expected: The contract either normalizes intentionally or rejects with a traceable
+      error.
+    assertions:
+    - wrong type does not pass silently
+    - mixed structures do not corrupt state
+    metrics:
+    - branch coverage
+    - error reporting
+    risks:
+    - silent coercion
+    - partial mutation
+    cleanup: Clear test fixtures and release observers.
+  - id: quantum_schema.edges.003
+    purpose: Check duplicate, repeated, and out-of-order data for stability and idempotence.
+    target_symbols: *id002
+    setup: Build duplicated and shuffled fixtures.
+    input: Duplicate entries and shuffled order.
+    body: Run the same operation more than once and compare observable state.
+    expected: Duplicate inputs do not produce duplicate side effects unless explicitly
+      required.
+    assertions:
+    - idempotence is preserved
+    - duplicate items do not duplicate state
+    metrics:
+    - duplicate suppression
+    - repeat-call stability
+    risks:
+    - double insert
+    - order sensitivity
+    cleanup: Reset state and clear caches.
+- name: type-matrix
+  description: bigInt, smallInt, decimal, char, flags, media, and hasMany combinations
+  rows:
+  - id: quantum_schema.type-matrix.001
+    purpose: Validate the scalar matrix for bigInt, smallInt, decimal, char, flags,
+      and media.
+    target_symbols: &id003
+    - QLBlockPayload
+    - QLSchemaFieldSpec
+    - QLSchemaBlueprint
+    - QLSchemaCompiler
+    - QLSchemaRegistry
+    - QLSchemaReadPlan
+    - QLSchemaRegistryInspector
+    - QLSchemaBlueprintSmartSelect
+    setup: Build a schema or controller fixture that contains every supported extended
+      scalar type.
+    input: A field collection that includes bigInt, smallInt, decimal, char, flags,
+      and media, plus hasMany variants.
+    body: Expand, parse, bind, and serialize each type through the normal public path.
+    expected: Every type keeps its distinct runtime shape and its metadata survives
+      round-trip behavior.
+    assertions:
+    - each extended scalar is accepted or rejected intentionally
+    - hasMany variants preserve list semantics
+    - media keeps metadata
+    metrics:
+    - per-type latency
+    - allocation pressure
+    - round-trip stability
+    risks:
+    - type coercion drift
+    - stringification loss
+    - list flattening
+    cleanup: Reset state and clear caches.
+  - id: quantum_schema.type-matrix.002
+    purpose: Verify mixed scalar collections and list semantics do not flatten or
+      coerce unexpectedly.
+    target_symbols: *id003
+    setup: Use mixed valid and invalid items with list-style payloads.
+    input: A hasMany list with mixed element states.
+    body: Attempt parse, bind, and serialize on the mixed list.
+    expected: Valid elements stay valid and invalid elements fail in a traceable way.
+    assertions:
+    - valid items stay intact
+    - invalid items are rejected explicitly
+    metrics:
+    - list scan cost
+    - failure localization
+    risks:
+    - silent partial acceptance
+    - loss of element boundaries
+    cleanup: Reset state and clear caches.
+  - id: quantum_schema.type-matrix.003
+    purpose: Check legacy aliases and field-name synonyms for backward compatibility.
+    target_symbols: *id003
+    setup: Use old names, alternate type labels, and legacy media keys.
+    input: Legacy field names and aliases.
+    body: Resolve the type through the same parser used by new callers.
+    expected: Legacy aliases map to the same canonical behavior or fail explicitly.
+    assertions:
+    - alias mapping is stable
+    - canonical behavior remains consistent
+    metrics:
+    - alias resolution time
+    risks:
+    - broken legacy input
+    - hidden renaming bug
+    cleanup: Reset state and clear caches.
+- name: projection
+  description: field selection and path narrowing behavior
+  rows:
+  - id: quantum_schema.projection.001
+    purpose: Exercise the `projection` branch under the normal public contract.
+    target_symbols: &id004
+    - QLBlockPayload
+    - QLSchemaFieldSpec
+    - QLSchemaBlueprint
+    - QLSchemaCompiler
+    - QLSchemaRegistry
+    - QLSchemaReadPlan
+    - QLSchemaRegistryInspector
+    - QLSchemaBlueprintSmartSelect
+    setup: Prepare a realistic fixture with the minimum data needed for this branch.
+    input: A focused input that triggers the main branch.
+    body: Run the public path for this branch and inspect outputs and side effects.
+    expected: The branch behaves deterministically and preserves its explicit invariants.
+    assertions:
+    - branch-specific invariants hold
+    metrics:
+    - branch latency
+    - side-effect count
+    risks:
+    - branch drift
+    - missing output
+    cleanup: Reset state and clear caches.
+  - id: quantum_schema.projection.002
+    purpose: Check the `projection` branch under a malformed or partial input.
+    target_symbols: *id004
+    setup: Use incomplete, malformed, or mixed-shape fixtures.
+    input: A malformed variant that still reaches the branch.
+    body: Run the same branch with the malformed input.
+    expected: The branch rejects or normalizes intentionally without silent corruption.
+    assertions:
+    - branch fails explicitly or normalizes intentionally
+    metrics:
+    - error localization
+    risks:
+    - partial mutation
+    - silent coercion
+    cleanup: Reset state and clear caches.
+  - id: quantum_schema.projection.003
+    purpose: Re-run the `projection` branch twice to prove stable repeated behavior.
+    target_symbols: *id004
+    setup: Prime state once, then repeat the same branch.
+    input: Repeated identical branch input.
+    body: Compare first and second execution results, cache hits, and event order.
+    expected: No duplicate side effect appears and the result stays stable.
+    assertions:
+    - repeatability holds
+    - no duplicate side effects
+    metrics:
+    - repeat latency
+    - cache-hit ratio
+    risks:
+    - double emit
+    - stale branch result
+    cleanup: Reset state and clear caches.
+- name: serialization
+  description: parse/serialize compatibility and legacy shapes
+  rows:
+  - id: quantum_schema.serialization.001
+    purpose: Round-trip lib/src/foundation/quantum_schema.dart structures through
+      parse and serialize paths.
+    target_symbols: &id005
+    - QLBlockPayload
+    - QLSchemaFieldSpec
+    - QLSchemaBlueprint
+    - QLSchemaCompiler
+    - QLSchemaRegistry
+    - QLSchemaReadPlan
+    - QLSchemaRegistryInspector
+    - QLSchemaBlueprintSmartSelect
+    setup: Construct a representative object with every stable field category.
+    input: A valid object that includes optional and required fields.
+    body: Serialize to a transport shape and parse it back.
+    expected: The result is equivalent and no data disappears.
+    assertions:
+    - round-trip equivalence
+    - no field loss
+    metrics:
+    - round-trip latency
+    risks:
+    - field drop
+    - shape mutation
+    cleanup: Reset state and clear caches.
+  - id: quantum_schema.serialization.002
+    purpose: Preserve ordering and canonicalization rules where ordering matters.
+    target_symbols: *id005
+    setup: Use deliberate key order and a mixed legacy/new field set.
+    input: Ordered data with key permutations.
+    body: Serialize multiple times and compare stable ordering or documented normalization.
+    expected: Ordering stays deterministic.
+    assertions:
+    - serialization order is stable
+    metrics:
+    - re-encode variability
+    risks:
+    - non-deterministic output
+    cleanup: Reset state and clear caches.
+  - id: quantum_schema.serialization.003
+    purpose: Check nullability and absent-field behavior explicitly.
+    target_symbols: *id005
+    setup: Omit optional fields and include explicit nulls where allowed.
+    input: Missing versus explicit-null payloads.
+    body: Serialize and parse both shapes.
+    expected: Absent and null are treated per contract and never conflated silently.
+    assertions:
+    - null is distinct from absent when required
+    metrics:
+    - branch coverage
+    risks:
+    - null/absent confusion
+    cleanup: Reset state and clear caches.
+- name: integration
+  description: registry and dependent file integration
+  rows:
+  - id: quantum_schema.integration.001
+    purpose: 'Prove `src/foundation/quantum_schema.dart` cooperates with its imported
+      neighbors: dart:collection, dart:typed_data, ../../quantum.dart.'
+    target_symbols: &id006
+    - QLBlockPayload
+    - QLSchemaFieldSpec
+    - QLSchemaBlueprint
+    - QLSchemaCompiler
+    - QLSchemaRegistry
+    - QLSchemaReadPlan
+    - QLSchemaRegistryInspector
+    - QLSchemaBlueprintSmartSelect
+    setup: Stub or pin the neighboring files or adapters that this file imports.
+    input: A real cross-file call path using the normal import graph.
+    body: Run the public contract end-to-end across the import boundary.
+    expected: The outcome matches the same contract when driven by the neighbor file.
+    assertions:
+    - import boundary stays stable
+    - contract survives neighboring-file execution
+    metrics:
+    - cross-file call count
+    - boundary latency
+    risks:
+    - mismatched contract
+    - boundary state leak
+    cleanup: Reset state and clear caches.
+  - id: quantum_schema.integration.002
+    purpose: Confirm the integration path handles fallback and partial availability
+      without breaking the caller.
+    target_symbols: *id006
+    setup: Disable one dependency path and keep at least one alternate route available.
+    input: A partially available dependency graph.
+    body: Exercise the fallback branch rather than the ideal branch.
+    expected: The fallback path remains deterministic and explicit.
+    assertions:
+    - fallback path is reachable
+    - partial availability is handled
+    metrics:
+    - retry count
+    - fallback selection time
+    risks:
+    - unexpected hard failure
+    - wrong branch selection
+    cleanup: Reset state and clear caches.
+  - id: quantum_schema.integration.003
+    purpose: Validate that repeated integration calls do not leak state or amplify
+      side effects.
+    target_symbols: *id006
+    setup: Invoke the same integration flow multiple times under the same fixture.
+    input: Repeated identical integration calls.
+    body: Run the same cross-file path twice and compare outputs and side effects.
+    expected: The second call is not worse than the first and does not allocate or
+      register extra work unless intended.
+    assertions:
+    - repeatability
+    - no duplicate registration
+    - no stale state
+    metrics:
+    - incremental allocations
+    - duplicate side-effect count
+    risks:
+    - listener leaks
+    - duplicate registrations
+    - stale snapshots
+    cleanup: Reset state and clear caches.
+- name: performance
+  description: hot-path compilation, linear selection, and low-copy behavior
+  rows:
+  - id: quantum_schema.performance.001
+    purpose: Profile the hot path for `src/foundation/quantum_schema.dart` with a
+      large but realistic workload.
+    target_symbols: &id007
+    - QLBlockPayload
+    - QLSchemaFieldSpec
+    - QLSchemaBlueprint
+    - QLSchemaCompiler
+    - QLSchemaRegistry
+    - QLSchemaReadPlan
+    - QLSchemaRegistryInspector
+    - QLSchemaBlueprintSmartSelect
+    setup: Prepare a large input set with stable shape and repeated access patterns.
+    input: Large valid dataset and repeated reads.
+    body: Measure the primary operation repeatedly and compare cold vs warm behavior.
+    expected: Warm-path behavior improves or remains stable, with no hidden quadratic
+      work.
+    assertions:
+    - warm path is faster or equal
+    - no repeated recomputation
+    metrics:
+    - wall time
+    - allocations
+    - cache hits
+    risks:
+    - quadratic scan
+    - unbounded copying
+    - hidden eager load
+    cleanup: Reset state and clear caches.
+  - id: quantum_schema.performance.002
+    purpose: Ensure cached or memoized work in `src/foundation/quantum_schema.dart`
+      is invalidated precisely when input changes.
+    target_symbols: *id007
+    setup: Prime the cache, then change one field or dependency at a time.
+    input: Same input after one controlled mutation.
+    body: Read twice, mutate once, then read again.
+    expected: Only the changed branch recomputes; unrelated branches stay cached.
+    assertions:
+    - cache invalidates precisely
+    - unrelated work stays reused
+    metrics:
+    - recompute count
+    - cache-hit ratio
+    risks:
+    - stale cache
+    - over-invalidation
+    cleanup: Reset state and clear caches.
+  - id: quantum_schema.performance.003
+    purpose: Check that lazy materialization only happens on demand and not before
+      the first access boundary.
+    target_symbols: *id007
+    setup: Prime a lazy fixture without touching the heavy branch.
+    input: A handle or metadata-only input before heavy data access.
+    body: Inspect the object, then touch the heavy branch once.
+    expected: No heavy work occurs before access, and the first access is explicit
+      and measurable.
+    assertions:
+    - no eager load before access
+    - first access triggers exactly one load
+    metrics:
+    - first-access latency
+    - eager-load count
+    risks:
+    - hidden prefetch
+    - double fetch
+    cleanup: Reset state and clear caches.
+- name: regression
+  description: silent data loss, stale field maps, and normalization drift
+  rows:
+  - id: quantum_schema.regression.001
+    purpose: Exercise the `regression` branch under the file-specific contract.
+    target_symbols: &id008
+    - QLBlockPayload
+    - QLSchemaFieldSpec
+    - QLSchemaBlueprint
+    - QLSchemaCompiler
+    - QLSchemaRegistry
+    - QLSchemaReadPlan
+    - QLSchemaRegistryInspector
+    - QLSchemaBlueprintSmartSelect
+    setup: Prepare a realistic fixture that targets this branch.
+    input: A representative valid input for the branch.
+    body: Run the branch using the public API.
+    expected: The output matches the documented contract.
+    assertions:
+    - branch contract holds
+    metrics:
+    - latency
+    risks:
+    - silent mismatch
+    cleanup: Reset state and clear caches.
+  - id: quantum_schema.regression.002
+    purpose: Exercise the `regression` branch with malformed or partial input.
+    target_symbols: *id008
+    setup: Prepare a malformed or partial variant.
+    input: Invalid or incomplete data.
+    body: Run the same public API path.
+    expected: The branch fails explicitly or normalizes intentionally.
+    assertions:
+    - failure is explicit
+    metrics:
+    - error path latency
+    risks:
+    - silent coercion
+    cleanup: Reset state and clear caches.
+  - id: quantum_schema.regression.003
+    purpose: Repeat the `regression` branch to prove stable behavior.
+    target_symbols: *id008
+    setup: Prime and repeat the same fixture.
+    input: Identical repeated input.
+    body: Compare output, side effects, and allocation behavior.
+    expected: Repeated execution stays stable and bounded.
+    assertions:
+    - repeatability
+    metrics:
+    - repeat latency
+    risks:
+    - duplicate side effects
+    cleanup: Reset state and clear caches.
+regeneration_triggers:
+- signature changes
+- import changes that affect behavior
+- serialization or cache logic changes
+- new branches, platform paths, or fallback rules
+supplements:
+- docs_tests/yaml/by-file/src/foundation/quantum_schema.schema-core.yaml
+- docs_tests/yaml/by-file/src/foundation/quantum_schema.schema-compat.yaml
+- docs_tests/yaml/by-file/src/foundation/quantum_schema.schema-performance.yaml

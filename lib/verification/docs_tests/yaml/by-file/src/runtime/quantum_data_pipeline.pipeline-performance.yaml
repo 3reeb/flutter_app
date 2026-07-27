@@ -1,0 +1,176 @@
+schema_version: 2
+doc_kind: file-test-supplement
+supplement_of: lib/src/runtime/quantum_data_pipeline.dart
+file: lib/src/runtime/quantum_data_pipeline.dart
+layer: runtime
+profile: data-pipeline-core
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/runtime/quantum_data_pipeline.dart
+  sha256: 8ab30404e7cddd3d0275516558c0f8b93bf107dde721c41c059996b7b779c432
+  line_count: 1132
+  imports:
+    - dart:async
+    - dart:collection
+    - dart:typed_data
+    - package:flutter/foundation.dart
+    - quantum_data_state.dart
+    - ../foundation/quantum_primitives.dart
+    - ../foundation/quantum_core.dart
+    - ../../quantum.dart
+  exports: []
+  parts: []
+  part_of: []
+  category: runtime
+  profile: data-pipeline-core
+  large_profile: true
+  keywords:
+    - flags
+    - cache
+    - projection
+    - registry
+    - pipeline
+    - hydration
+    - fallback
+    - io
+    - signal
+    - state
+    - async
+    - isolate
+    - json
+groups:
+  - name: edges
+    description: empty stage list, bad input, and exception handling
+    rows:
+      - id: quantum_data_pipeline.edges.001
+        purpose: Reject `null`, empty, or missing inputs for `src/runtime/quantum_data_pipeline.dart` in a controlled way.
+        target_symbols: &id001
+          - QLPrefetchConfig
+          - QLAggregateOp
+          - QLPipelineDelegate
+          - QLDataPipeline
+          - QLPipelineRegistry
+          - QLDataPipelineReadPlan
+          - QLPipelineMode
+          - QLExecutionMode
+        setup: Prepare explicit null/empty fixtures and any required default context.
+        input: null, empty, and omitted values.
+        body: Pass malformed inputs through the normal entry path, not a special helper.
+        expected: The file responds with explicit failure or documented fallback, never silent corruption.
+        assertions:
+          - null is handled intentionally
+          - empty input is not accepted as valid data
+          - failure mode is explicit
+        metrics:
+          - failure latency
+          - error count
+        risks:
+          - silent fallback
+          - implicit coercion
+          - crash without context
+        cleanup: Reset state and clear caches.
+      - id: quantum_data_pipeline.edges.002
+        purpose: Exercise malformed types and mixed shapes against the file-specific contract.
+        target_symbols: *id001
+        setup: Prepare values with wrong scalar types, mixed lists, and partially missing nested fields.
+        input: A mixed-shape payload with the wrong scalar type in one branch.
+        body: Feed the malformed structure into the same contract path used by real callers.
+        expected: The contract either normalizes intentionally or rejects with a traceable error.
+        assertions:
+          - wrong type does not pass silently
+          - mixed structures do not corrupt state
+        metrics:
+          - branch coverage
+          - error reporting
+        risks:
+          - silent coercion
+          - partial mutation
+        cleanup: Clear test fixtures and release observers.
+      - id: quantum_data_pipeline.edges.003
+        purpose: Check duplicate, repeated, and out-of-order data for stability and idempotence.
+        target_symbols: *id001
+        setup: Build duplicated and shuffled fixtures.
+        input: Duplicate entries and shuffled order.
+        body: Run the same operation more than once and compare observable state.
+        expected: Duplicate inputs do not produce duplicate side effects unless explicitly required.
+        assertions:
+          - idempotence is preserved
+          - duplicate items do not duplicate state
+        metrics:
+          - duplicate suppression
+          - repeat-call stability
+        risks:
+          - double insert
+          - order sensitivity
+        cleanup: Reset state and clear caches.
+  - name: performance
+    description: throughput and backpressure on large workloads
+    rows:
+      - id: quantum_data_pipeline.performance.001
+        purpose: Profile the hot path for `src/runtime/quantum_data_pipeline.dart` with a large but realistic workload.
+        target_symbols: &id002
+          - QLPrefetchConfig
+          - QLAggregateOp
+          - QLPipelineDelegate
+          - QLDataPipeline
+          - QLPipelineRegistry
+          - QLDataPipelineReadPlan
+          - QLPipelineMode
+          - QLExecutionMode
+        setup: Prepare a large input set with stable shape and repeated access patterns.
+        input: Large valid dataset and repeated reads.
+        body: Measure the primary operation repeatedly and compare cold vs warm behavior.
+        expected: Warm-path behavior improves or remains stable, with no hidden quadratic work.
+        assertions:
+          - warm path is faster or equal
+          - no repeated recomputation
+        metrics:
+          - wall time
+          - allocations
+          - cache hits
+        risks:
+          - quadratic scan
+          - unbounded copying
+          - hidden eager load
+        cleanup: Reset state and clear caches.
+      - id: quantum_data_pipeline.performance.002
+        purpose: Ensure cached or memoized work in `src/runtime/quantum_data_pipeline.dart` is invalidated precisely when input changes.
+        target_symbols: *id002
+        setup: Prime the cache, then change one field or dependency at a time.
+        input: Same input after one controlled mutation.
+        body: Read twice, mutate once, then read again.
+        expected: Only the changed branch recomputes; unrelated branches stay cached.
+        assertions:
+          - cache invalidates precisely
+          - unrelated work stays reused
+        metrics:
+          - recompute count
+          - cache-hit ratio
+        risks:
+          - stale cache
+          - over-invalidation
+        cleanup: Reset state and clear caches.
+      - id: quantum_data_pipeline.performance.003
+        purpose: Check that lazy materialization only happens on demand and not before the first access boundary.
+        target_symbols: *id002
+        setup: Prime a lazy fixture without touching the heavy branch.
+        input: A handle or metadata-only input before heavy data access.
+        body: Inspect the object, then touch the heavy branch once.
+        expected: No heavy work occurs before access, and the first access is explicit and measurable.
+        assertions:
+          - no eager load before access
+          - first access triggers exactly one load
+        metrics:
+          - first-access latency
+          - eager-load count
+        risks:
+          - hidden prefetch
+          - double fetch
+        cleanup: Reset state and clear caches.
+focus: pipeline assembly, staged execution, routing, transform chains, retry behavior, cache-aware reads, and regression safety.
+expansion_mode: supplemental
+shared_templates:
+  - docs_tests/yaml/shared/case_template.yaml
+  - docs_tests/yaml/shared/group_catalog.yaml
+  - docs_tests/yaml/shared/axis_catalog.yaml

@@ -63,14 +63,11 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:typed_data';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
-
 import 'quantum_primitives.dart';
 import '../ui/quantum_scene_layer.dart';
-
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  QLFRAME BUDGET (Vsync Deadline Tracker)
 // ────────────────────────────────────────────────────────────────────────────

@@ -1,0 +1,236 @@
+schema_version: 2
+doc_kind: file-test-supplement
+supplement_of: lib/src/runtime/quantum_vm.dart
+file: lib/src/runtime/quantum_vm.dart
+layer: runtime
+profile: vm-core
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/runtime/quantum_vm.dart
+  sha256: 232c6d99fdebb6e2692cb347c2ac99c43250ccd44a99613968c407a4aa0a0028
+  line_count: 7157
+  imports:
+    - dart:async
+    - dart:convert
+    - package:flutter/foundation.dart
+    - package:flutter/material.dart
+    - package:flutter/services.dart
+    - package:collection/collection.dart
+    - ../../quantum.dart
+  exports: []
+  parts:
+    - quantum_vm_components.dart
+  part_of: []
+  category: runtime
+  profile: vm-core
+  large_profile: true
+  keywords:
+    - media
+    - decimal
+    - char
+    - cache
+    - lazy
+    - projection
+    - registry
+    - slice
+    - orchestrator
+    - pipeline
+    - macro
+    - policy
+    - module
+    - token
+    - permission
+    - transport
+    - stream
+    - retry
+    - fallback
+    - platform
+    - native
+    - web
+    - io
+    - input
+groups:
+  - name: registry
+    description: registration, lookup, and removal behavior
+    rows:
+      - id: quantum_vm.registry.001
+        purpose: Exercise the `registry` branch under the normal public contract.
+        target_symbols: &id001
+          - QuantumSecurityException
+          - QLSchemaSlice
+          - QLLazySchemaView
+          - QLModuleAccessPolicy
+          - QLModuleRecord
+          - QLModuleRegistry
+          - QLRegistryEntry
+          - QuantumExtensionBundle
+        setup: Prepare a realistic fixture with the minimum data needed for this branch.
+        input: A focused input that triggers the main branch.
+        body: Run the public path for this branch and inspect outputs and side effects.
+        expected: The branch behaves deterministically and preserves its explicit invariants.
+        assertions:
+          - branch-specific invariants hold
+        metrics:
+          - branch latency
+          - side-effect count
+        risks:
+          - branch drift
+          - missing output
+        cleanup: Reset state and clear caches.
+      - id: quantum_vm.registry.002
+        purpose: Check the `registry` branch under a malformed or partial input.
+        target_symbols: *id001
+        setup: Use incomplete, malformed, or mixed-shape fixtures.
+        input: A malformed variant that still reaches the branch.
+        body: Run the same branch with the malformed input.
+        expected: The branch rejects or normalizes intentionally without silent corruption.
+        assertions:
+          - branch fails explicitly or normalizes intentionally
+        metrics:
+          - error localization
+        risks:
+          - partial mutation
+          - silent coercion
+        cleanup: Reset state and clear caches.
+      - id: quantum_vm.registry.003
+        purpose: Re-run the `registry` branch twice to prove stable repeated behavior.
+        target_symbols: *id001
+        setup: Prime state once, then repeat the same branch.
+        input: Repeated identical branch input.
+        body: Compare first and second execution results, cache hits, and event order.
+        expected: No duplicate side effect appears and the result stays stable.
+        assertions:
+          - repeatability holds
+          - no duplicate side effects
+        metrics:
+          - repeat latency
+          - cache-hit ratio
+        risks:
+          - double emit
+          - stale branch result
+        cleanup: Reset state and clear caches.
+  - name: macro-expansion
+    description: macro slots, token injection, and expansion safety
+    rows:
+      - id: quantum_vm.macro-expansion.001
+        purpose: Exercise the `macro-expansion` branch under the normal public contract.
+        target_symbols: &id002
+          - QuantumSecurityException
+          - QLSchemaSlice
+          - QLLazySchemaView
+          - QLModuleAccessPolicy
+          - QLModuleRecord
+          - QLModuleRegistry
+          - QLRegistryEntry
+          - QuantumExtensionBundle
+        setup: Prepare a realistic fixture with the minimum data needed for this branch.
+        input: A focused input that triggers the main branch.
+        body: Run the public path for this branch and inspect outputs and side effects.
+        expected: The branch behaves deterministically and preserves its explicit invariants.
+        assertions:
+          - branch-specific invariants hold
+        metrics:
+          - branch latency
+          - side-effect count
+        risks:
+          - branch drift
+          - missing output
+        cleanup: Reset state and clear caches.
+      - id: quantum_vm.macro-expansion.002
+        purpose: Check the `macro-expansion` branch under a malformed or partial input.
+        target_symbols: *id002
+        setup: Use incomplete, malformed, or mixed-shape fixtures.
+        input: A malformed variant that still reaches the branch.
+        body: Run the same branch with the malformed input.
+        expected: The branch rejects or normalizes intentionally without silent corruption.
+        assertions:
+          - branch fails explicitly or normalizes intentionally
+        metrics:
+          - error localization
+        risks:
+          - partial mutation
+          - silent coercion
+        cleanup: Reset state and clear caches.
+      - id: quantum_vm.macro-expansion.003
+        purpose: Re-run the `macro-expansion` branch twice to prove stable repeated behavior.
+        target_symbols: *id002
+        setup: Prime state once, then repeat the same branch.
+        input: Repeated identical branch input.
+        body: Compare first and second execution results, cache hits, and event order.
+        expected: No duplicate side effect appears and the result stays stable.
+        assertions:
+          - repeatability holds
+          - no duplicate side effects
+        metrics:
+          - repeat latency
+          - cache-hit ratio
+        risks:
+          - double emit
+          - stale branch result
+        cleanup: Reset state and clear caches.
+  - name: security
+    description: module access policy and denial handling
+    rows:
+      - id: quantum_vm.security.001
+        purpose: Exercise the `security` branch under the normal public contract.
+        target_symbols: &id003
+          - QuantumSecurityException
+          - QLSchemaSlice
+          - QLLazySchemaView
+          - QLModuleAccessPolicy
+          - QLModuleRecord
+          - QLModuleRegistry
+          - QLRegistryEntry
+          - QuantumExtensionBundle
+        setup: Prepare a realistic fixture with the minimum data needed for this branch.
+        input: A focused input that triggers the main branch.
+        body: Run the public path for this branch and inspect outputs and side effects.
+        expected: The branch behaves deterministically and preserves its explicit invariants.
+        assertions:
+          - branch-specific invariants hold
+        metrics:
+          - branch latency
+          - side-effect count
+        risks:
+          - branch drift
+          - missing output
+        cleanup: Reset state and clear caches.
+      - id: quantum_vm.security.002
+        purpose: Check the `security` branch under a malformed or partial input.
+        target_symbols: *id003
+        setup: Use incomplete, malformed, or mixed-shape fixtures.
+        input: A malformed variant that still reaches the branch.
+        body: Run the same branch with the malformed input.
+        expected: The branch rejects or normalizes intentionally without silent corruption.
+        assertions:
+          - branch fails explicitly or normalizes intentionally
+        metrics:
+          - error localization
+        risks:
+          - partial mutation
+          - silent coercion
+        cleanup: Reset state and clear caches.
+      - id: quantum_vm.security.003
+        purpose: Re-run the `security` branch twice to prove stable repeated behavior.
+        target_symbols: *id003
+        setup: Prime state once, then repeat the same branch.
+        input: Repeated identical branch input.
+        body: Compare first and second execution results, cache hits, and event order.
+        expected: No duplicate side effect appears and the result stays stable.
+        assertions:
+          - repeatability holds
+          - no duplicate side effects
+        metrics:
+          - repeat latency
+          - cache-hit ratio
+        risks:
+          - double emit
+          - stale branch result
+        cleanup: Reset state and clear caches.
+focus: module registry behavior, macro expansion, policy gating, token parsing, cache invalidation, and lazy schema views.
+expansion_mode: supplemental
+shared_templates:
+  - docs_tests/yaml/shared/case_template.yaml
+  - docs_tests/yaml/shared/group_catalog.yaml
+  - docs_tests/yaml/shared/axis_catalog.yaml

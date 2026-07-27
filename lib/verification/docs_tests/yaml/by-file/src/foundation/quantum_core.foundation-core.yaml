@@ -1,0 +1,175 @@
+schema_version: 2
+doc_kind: file-test-supplement
+supplement_of: lib/src/foundation/quantum_core.dart
+file: lib/src/foundation/quantum_core.dart
+layer: foundation
+profile: foundation-core
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/foundation/quantum_core.dart
+  sha256: 92e5147d39575fc00687a43bc6b09bb7ac2ddc2ea8d4c504352ccbe1802e81df
+  line_count: 657
+  imports:
+    - dart:async
+    - dart:collection
+    - dart:convert
+    - dart:typed_data
+    - package:yaml/yaml.dart
+  exports: []
+  parts: []
+  part_of: []
+  category: foundation
+  profile: foundation-core
+  large_profile: true
+  keywords:
+    - media
+    - hasmany
+    - bigint
+    - smallint
+    - decimal
+    - char
+    - flags
+    - cache
+    - projection
+    - validator
+    - policy
+    - token
+    - stream
+    - native
+    - io
+    - signal
+    - state
+    - async
+    - yaml
+    - json
+groups:
+  - name: registry
+    description: registration and lookup helpers
+    rows:
+      - id: quantum_core.registry.001
+        purpose: Exercise the `registry` branch under the normal public contract.
+        target_symbols: &id001
+          - QLNodeState
+          - QLNodeError
+          - QLFieldType
+          - QLFieldFlags
+          - QLPathUtils
+          - QLDisposable
+          - QLProjection
+          - QLChangeBatch
+        setup: Prepare a realistic fixture with the minimum data needed for this branch.
+        input: A focused input that triggers the main branch.
+        body: Run the public path for this branch and inspect outputs and side effects.
+        expected: The branch behaves deterministically and preserves its explicit invariants.
+        assertions:
+          - branch-specific invariants hold
+        metrics:
+          - branch latency
+          - side-effect count
+        risks:
+          - branch drift
+          - missing output
+        cleanup: Reset state and clear caches.
+      - id: quantum_core.registry.002
+        purpose: Check the `registry` branch under a malformed or partial input.
+        target_symbols: *id001
+        setup: Use incomplete, malformed, or mixed-shape fixtures.
+        input: A malformed variant that still reaches the branch.
+        body: Run the same branch with the malformed input.
+        expected: The branch rejects or normalizes intentionally without silent corruption.
+        assertions:
+          - branch fails explicitly or normalizes intentionally
+        metrics:
+          - error localization
+        risks:
+          - partial mutation
+          - silent coercion
+        cleanup: Reset state and clear caches.
+      - id: quantum_core.registry.003
+        purpose: Re-run the `registry` branch twice to prove stable repeated behavior.
+        target_symbols: *id001
+        setup: Prime state once, then repeat the same branch.
+        input: Repeated identical branch input.
+        body: Compare first and second execution results, cache hits, and event order.
+        expected: No duplicate side effect appears and the result stays stable.
+        assertions:
+          - repeatability holds
+          - no duplicate side effects
+        metrics:
+          - repeat latency
+          - cache-hit ratio
+        risks:
+          - double emit
+          - stale branch result
+        cleanup: Reset state and clear caches.
+  - name: cache
+    description: reuse and eviction helpers
+    rows:
+      - id: quantum_core.cache.001
+        purpose: Profile the hot path for `src/foundation/quantum_core.dart` with a large but realistic workload.
+        target_symbols: &id002
+          - QLNodeState
+          - QLNodeError
+          - QLFieldType
+          - QLFieldFlags
+          - QLPathUtils
+          - QLDisposable
+          - QLProjection
+          - QLChangeBatch
+        setup: Prepare a large input set with stable shape and repeated access patterns.
+        input: Large valid dataset and repeated reads.
+        body: Measure the primary operation repeatedly and compare cold vs warm behavior.
+        expected: Warm-path behavior improves or remains stable, with no hidden quadratic work.
+        assertions:
+          - warm path is faster or equal
+          - no repeated recomputation
+        metrics:
+          - wall time
+          - allocations
+          - cache hits
+        risks:
+          - quadratic scan
+          - unbounded copying
+          - hidden eager load
+        cleanup: Reset state and clear caches.
+      - id: quantum_core.cache.002
+        purpose: Ensure cached or memoized work in `src/foundation/quantum_core.dart` is invalidated precisely when input changes.
+        target_symbols: *id002
+        setup: Prime the cache, then change one field or dependency at a time.
+        input: Same input after one controlled mutation.
+        body: Read twice, mutate once, then read again.
+        expected: Only the changed branch recomputes; unrelated branches stay cached.
+        assertions:
+          - cache invalidates precisely
+          - unrelated work stays reused
+        metrics:
+          - recompute count
+          - cache-hit ratio
+        risks:
+          - stale cache
+          - over-invalidation
+        cleanup: Reset state and clear caches.
+      - id: quantum_core.cache.003
+        purpose: Check that lazy materialization only happens on demand and not before the first access boundary.
+        target_symbols: *id002
+        setup: Prime a lazy fixture without touching the heavy branch.
+        input: A handle or metadata-only input before heavy data access.
+        body: Inspect the object, then touch the heavy branch once.
+        expected: No heavy work occurs before access, and the first access is explicit and measurable.
+        assertions:
+          - no eager load before access
+          - first access triggers exactly one load
+        metrics:
+          - first-access latency
+          - eager-load count
+        risks:
+          - hidden prefetch
+          - double fetch
+        cleanup: Reset state and clear caches.
+focus: core primitives, descriptors, error handling, registry behavior, cache-friendly helpers, and stable low-level contracts.
+expansion_mode: supplemental
+shared_templates:
+  - docs_tests/yaml/shared/case_template.yaml
+  - docs_tests/yaml/shared/group_catalog.yaml
+  - docs_tests/yaml/shared/axis_catalog.yaml

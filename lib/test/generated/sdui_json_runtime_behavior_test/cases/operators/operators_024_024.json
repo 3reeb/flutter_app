@@ -1,0 +1,54 @@
+{
+  "__meta": {
+    "id": "operators-024-portal-024",
+    "title": "Portal transport wraps content in overlay_entry #024",
+    "description": "The $portal operator should wrap the content slot in a portal:overlay_entry node.",
+    "tags": [
+      "operators",
+      "portal",
+      "overlay"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "$portal": "sheet_0",
+    "type": "box:col",
+    "props": {
+      "role": "dialog"
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Portal body 024"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "portal",
+    "props": {
+      "__subType": "overlay_entry",
+      "portalName": "sheet_0"
+    },
+    "debugPath": "root",
+    "slots": {
+      "content": {
+        "type": "box:col",
+        "props": {
+          "role": "dialog"
+        },
+        "debugPath": "root.slots[content]",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Portal body 024"
+            },
+            "debugPath": "root.slots[content][0]"
+          }
+        ]
+      }
+    }
+  }
+}

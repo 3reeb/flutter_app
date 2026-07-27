@@ -25,9 +25,7 @@ import 'package:flutter/foundation.dart';
 import '../foundation/quantum_isolate_bridge.dart';
 import 'package:flutter/services.dart';
 import 'package:yaml/yaml.dart';
-
 import '../../quantum.dart';
-
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  EXCEPTIONS
 // ────────────────────────────────────────────────────────────────────────────

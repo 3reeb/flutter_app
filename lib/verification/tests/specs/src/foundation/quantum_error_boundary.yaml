@@ -1,0 +1,592 @@
+file: lib/src/foundation/quantum_error_boundary.dart
+docs_file: docs/src/foundation/quantum_error_boundary.dart.md
+line_count: 504
+category: ui
+tests:
+- uuid: 27ec62b1-e957-564e-88a8-59beccaded30
+  file: lib/src/foundation/quantum_error_boundary.dart
+  docs_file: docs/src/foundation/quantum_error_boundary.dart.md
+  title: 'Quantum Error Boundary: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum error boundary keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_error_boundary.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_error_boundary.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM ERROR BOUNDARY v1.0
+      - STRUCTURED SUBTREE FAULT ISOLATION'
+    headings:
+    - '`src/foundation/quantum_error_boundary.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum error boundary
+- uuid: 5e0ed35d-3124-5aab-ba36-fdd18491dc14
+  file: lib/src/foundation/quantum_error_boundary.dart
+  docs_file: docs/src/foundation/quantum_error_boundary.dart.md
+  title: 'Quantum Error Boundary: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum error boundary keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_error_boundary.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_error_boundary.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM ERROR BOUNDARY v1.0
+      - STRUCTURED SUBTREE FAULT ISOLATION'
+    headings:
+    - '`src/foundation/quantum_error_boundary.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum error boundary
+- uuid: 86b45c85-3340-528e-b9e9-708d3ff8b8f5
+  file: lib/src/foundation/quantum_error_boundary.dart
+  docs_file: docs/src/foundation/quantum_error_boundary.dart.md
+  title: 'Quantum Error Boundary: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum error boundary keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_error_boundary.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_error_boundary.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM ERROR BOUNDARY v1.0
+      - STRUCTURED SUBTREE FAULT ISOLATION'
+    headings:
+    - '`src/foundation/quantum_error_boundary.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum error boundary
+- uuid: bae5f75b-4c3c-57fe-8b50-342f7a248328
+  file: lib/src/foundation/quantum_error_boundary.dart
+  docs_file: docs/src/foundation/quantum_error_boundary.dart.md
+  title: 'Quantum Error Boundary: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum error boundary keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_error_boundary.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_error_boundary.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM ERROR BOUNDARY v1.0
+      - STRUCTURED SUBTREE FAULT ISOLATION'
+    headings:
+    - '`src/foundation/quantum_error_boundary.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum error boundary
+- uuid: 126019b4-de75-5a1e-93d8-11075a2d8766
+  file: lib/src/foundation/quantum_error_boundary.dart
+  docs_file: docs/src/foundation/quantum_error_boundary.dart.md
+  title: 'Quantum Error Boundary: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum error boundary keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_error_boundary.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_error_boundary.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM ERROR BOUNDARY v1.0
+      - STRUCTURED SUBTREE FAULT ISOLATION'
+    headings:
+    - '`src/foundation/quantum_error_boundary.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum error boundary
+- uuid: 9151fe5d-72a6-5ca1-b38a-e9989c3b0437
+  file: lib/src/foundation/quantum_error_boundary.dart
+  docs_file: docs/src/foundation/quantum_error_boundary.dart.md
+  title: 'Quantum Error Boundary: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum error boundary keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_error_boundary.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_error_boundary.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM ERROR BOUNDARY v1.0
+      - STRUCTURED SUBTREE FAULT ISOLATION'
+    headings:
+    - '`src/foundation/quantum_error_boundary.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum error boundary
+- uuid: ccd2e616-918e-5d24-8b09-79cb5626aee1
+  file: lib/src/foundation/quantum_error_boundary.dart
+  docs_file: docs/src/foundation/quantum_error_boundary.dart.md
+  title: 'Quantum Error Boundary: the runtime surface still matches the documented
+    API and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum error boundary keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_error_boundary.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_error_boundary.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM ERROR BOUNDARY v1.0
+      - STRUCTURED SUBTREE FAULT ISOLATION'
+    headings:
+    - '`src/foundation/quantum_error_boundary.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum error boundary
+- uuid: f312d8a2-3863-56c9-a36a-28e96047a0f5
+  file: lib/src/foundation/quantum_error_boundary.dart
+  docs_file: docs/src/foundation/quantum_error_boundary.dart.md
+  title: 'Quantum Error Boundary: layout remains correct under narrow, wide, and constrained
+    bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum error boundary keeps its documented runtime behavior
+    while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_error_boundary.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_error_boundary.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM ERROR BOUNDARY v1.0
+      - STRUCTURED SUBTREE FAULT ISOLATION'
+    headings:
+    - '`src/foundation/quantum_error_boundary.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum error boundary
+- uuid: 9bd129b9-e75c-52cc-ba30-a72db6fe73c9
+  file: lib/src/foundation/quantum_error_boundary.dart
+  docs_file: docs/src/foundation/quantum_error_boundary.dart.md
+  title: 'Quantum Error Boundary: semantics and accessibility output remain stable
+    across rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that quantum error boundary keeps its documented runtime behavior
+    while handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_error_boundary.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_error_boundary.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM ERROR BOUNDARY v1.0
+      - STRUCTURED SUBTREE FAULT ISOLATION'
+    headings:
+    - '`src/foundation/quantum_error_boundary.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - semantics
+  - quantum error boundary
+- uuid: a2cfd1c1-c7dc-5f73-9d05-c60273e7cc03
+  file: lib/src/foundation/quantum_error_boundary.dart
+  docs_file: docs/src/foundation/quantum_error_boundary.dart.md
+  title: 'Quantum Error Boundary: gesture handling and hit testing stay correct during
+    interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that quantum error boundary keeps its documented runtime behavior
+    while handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_error_boundary.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_error_boundary.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM ERROR BOUNDARY v1.0
+      - STRUCTURED SUBTREE FAULT ISOLATION'
+    headings:
+    - '`src/foundation/quantum_error_boundary.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - gesture
+  - quantum error boundary

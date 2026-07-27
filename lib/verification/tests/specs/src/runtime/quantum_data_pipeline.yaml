@@ -1,0 +1,670 @@
+file: lib/src/runtime/quantum_data_pipeline.dart
+docs_file: docs/src/runtime/quantum_data_pipeline.dart.md
+line_count: 1132
+category: state
+tests:
+- uuid: 049332fd-3c69-5325-9994-c6735160340d
+  file: lib/src/runtime/quantum_data_pipeline.dart
+  docs_file: docs/src/runtime/quantum_data_pipeline.dart.md
+  title: 'Quantum Data Pipeline: public contract remains stable under valid input'
+  slug: contract
+  category: state
+  severity: critical
+  description: Verify that quantum data pipeline keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_pipeline.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_pipeline.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the flat-cache data pipeline. It stores records in a compact
+      row-oriented shape, supports partial hydration, maintains indices, and computes
+      aggregates while keeping read paths cheap.
+    headings:
+    - '`src/runtime/quantum_data_pipeline.dart`'
+    - What this file is
+    - What it depends on
+    - Core pipeline model
+    - Why the schema changes matter here
+  tags:
+  - state
+  - contract
+  - quantum data pipeline
+- uuid: 756ad43d-6f9f-5885-923f-7e64d8667b1f
+  file: lib/src/runtime/quantum_data_pipeline.dart
+  docs_file: docs/src/runtime/quantum_data_pipeline.dart.md
+  title: 'Quantum Data Pipeline: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: state
+  severity: critical
+  description: Verify that quantum data pipeline keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_pipeline.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_pipeline.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the flat-cache data pipeline. It stores records in a compact
+      row-oriented shape, supports partial hydration, maintains indices, and computes
+      aggregates while keeping read paths cheap.
+    headings:
+    - '`src/runtime/quantum_data_pipeline.dart`'
+    - What this file is
+    - What it depends on
+    - Core pipeline model
+    - Why the schema changes matter here
+  tags:
+  - state
+  - invalid_input
+  - quantum data pipeline
+- uuid: b2dac894-669e-52c2-bc2a-7918064ed76f
+  file: lib/src/runtime/quantum_data_pipeline.dart
+  docs_file: docs/src/runtime/quantum_data_pipeline.dart.md
+  title: 'Quantum Data Pipeline: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: state
+  severity: high
+  description: Verify that quantum data pipeline keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_pipeline.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_pipeline.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the flat-cache data pipeline. It stores records in a compact
+      row-oriented shape, supports partial hydration, maintains indices, and computes
+      aggregates while keeping read paths cheap.
+    headings:
+    - '`src/runtime/quantum_data_pipeline.dart`'
+    - What this file is
+    - What it depends on
+    - Core pipeline model
+    - Why the schema changes matter here
+  tags:
+  - state
+  - reentrant
+  - quantum data pipeline
+- uuid: c79d20a0-50f4-568c-8559-c37da775e593
+  file: lib/src/runtime/quantum_data_pipeline.dart
+  docs_file: docs/src/runtime/quantum_data_pipeline.dart.md
+  title: 'Quantum Data Pipeline: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: state
+  severity: high
+  description: Verify that quantum data pipeline keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_pipeline.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_pipeline.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the flat-cache data pipeline. It stores records in a compact
+      row-oriented shape, supports partial hydration, maintains indices, and computes
+      aggregates while keeping read paths cheap.
+    headings:
+    - '`src/runtime/quantum_data_pipeline.dart`'
+    - What this file is
+    - What it depends on
+    - Core pipeline model
+    - Why the schema changes matter here
+  tags:
+  - state
+  - cleanup
+  - quantum data pipeline
+- uuid: 5c43236e-15e0-5acd-9fab-715251ac4f43
+  file: lib/src/runtime/quantum_data_pipeline.dart
+  docs_file: docs/src/runtime/quantum_data_pipeline.dart.md
+  title: 'Quantum Data Pipeline: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: state
+  severity: high
+  description: Verify that quantum data pipeline keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_pipeline.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_pipeline.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the flat-cache data pipeline. It stores records in a compact
+      row-oriented shape, supports partial hydration, maintains indices, and computes
+      aggregates while keeping read paths cheap.
+    headings:
+    - '`src/runtime/quantum_data_pipeline.dart`'
+    - What this file is
+    - What it depends on
+    - Core pipeline model
+    - Why the schema changes matter here
+  tags:
+  - state
+  - performance
+  - quantum data pipeline
+- uuid: 1a544047-581b-5759-a728-fc80a32f2423
+  file: lib/src/runtime/quantum_data_pipeline.dart
+  docs_file: docs/src/runtime/quantum_data_pipeline.dart.md
+  title: 'Quantum Data Pipeline: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: state
+  severity: medium
+  description: Verify that quantum data pipeline keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_pipeline.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_pipeline.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the flat-cache data pipeline. It stores records in a compact
+      row-oriented shape, supports partial hydration, maintains indices, and computes
+      aggregates while keeping read paths cheap.
+    headings:
+    - '`src/runtime/quantum_data_pipeline.dart`'
+    - What this file is
+    - What it depends on
+    - Core pipeline model
+    - Why the schema changes matter here
+  tags:
+  - state
+  - memory
+  - quantum data pipeline
+- uuid: be281329-cc87-53bb-8b86-a88658a946c5
+  file: lib/src/runtime/quantum_data_pipeline.dart
+  docs_file: docs/src/runtime/quantum_data_pipeline.dart.md
+  title: 'Quantum Data Pipeline: the runtime surface still matches the documented
+    API and headings'
+  slug: docs_parity
+  category: state
+  severity: medium
+  description: Verify that quantum data pipeline keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_pipeline.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_pipeline.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the flat-cache data pipeline. It stores records in a compact
+      row-oriented shape, supports partial hydration, maintains indices, and computes
+      aggregates while keeping read paths cheap.
+    headings:
+    - '`src/runtime/quantum_data_pipeline.dart`'
+    - What this file is
+    - What it depends on
+    - Core pipeline model
+    - Why the schema changes matter here
+  tags:
+  - state
+  - docs_parity
+  - quantum data pipeline
+- uuid: 488274a2-be6b-5e89-85ef-964efaf4041d
+  file: lib/src/runtime/quantum_data_pipeline.dart
+  docs_file: docs/src/runtime/quantum_data_pipeline.dart.md
+  title: 'Quantum Data Pipeline: cache hit, miss, eviction, and invalidation behavior
+    is deterministic'
+  slug: cache
+  category: state
+  severity: medium
+  description: Verify that quantum data pipeline keeps its documented runtime behavior
+    while handling cache conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_pipeline.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_pipeline.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the flat-cache data pipeline. It stores records in a compact
+      row-oriented shape, supports partial hydration, maintains indices, and computes
+      aggregates while keeping read paths cheap.
+    headings:
+    - '`src/runtime/quantum_data_pipeline.dart`'
+    - What this file is
+    - What it depends on
+    - Core pipeline model
+    - Why the schema changes matter here
+  tags:
+  - state
+  - cache
+  - quantum data pipeline
+- uuid: 2c9d9e2e-b12f-57da-8dfa-debe174af4fe
+  file: lib/src/runtime/quantum_data_pipeline.dart
+  docs_file: docs/src/runtime/quantum_data_pipeline.dart.md
+  title: 'Quantum Data Pipeline: snapshots remain isolated from later mutations'
+  slug: snapshot
+  category: state
+  severity: medium
+  description: Verify that quantum data pipeline keeps its documented runtime behavior
+    while handling snapshot conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_pipeline.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_pipeline.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the flat-cache data pipeline. It stores records in a compact
+      row-oriented shape, supports partial hydration, maintains indices, and computes
+      aggregates while keeping read paths cheap.
+    headings:
+    - '`src/runtime/quantum_data_pipeline.dart`'
+    - What this file is
+    - What it depends on
+    - Core pipeline model
+    - Why the schema changes matter here
+  tags:
+  - state
+  - snapshot
+  - quantum data pipeline
+- uuid: 48e10ea2-dc28-5c8a-ad8c-1dafd147c14a
+  file: lib/src/runtime/quantum_data_pipeline.dart
+  docs_file: docs/src/runtime/quantum_data_pipeline.dart.md
+  title: 'Quantum Data Pipeline: parallel mutation or subscription activity stays
+    consistent'
+  slug: concurrency
+  category: state
+  severity: medium
+  description: Verify that quantum data pipeline keeps its documented runtime behavior
+    while handling concurrency conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_pipeline.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_pipeline.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the flat-cache data pipeline. It stores records in a compact
+      row-oriented shape, supports partial hydration, maintains indices, and computes
+      aggregates while keeping read paths cheap.
+    headings:
+    - '`src/runtime/quantum_data_pipeline.dart`'
+    - What this file is
+    - What it depends on
+    - Core pipeline model
+    - Why the schema changes matter here
+  tags:
+  - state
+  - concurrency
+  - quantum data pipeline
+- uuid: 0b4c3856-5264-531d-b321-118663f8f4fb
+  file: lib/src/runtime/quantum_data_pipeline.dart
+  docs_file: docs/src/runtime/quantum_data_pipeline.dart.md
+  title: 'Quantum Data Pipeline: observers and listeners are detached so no leak remains
+    after teardown'
+  slug: leak
+  category: state
+  severity: medium
+  description: Verify that quantum data pipeline keeps its documented runtime behavior
+    while handling leak conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_pipeline.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_pipeline.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the flat-cache data pipeline. It stores records in a compact
+      row-oriented shape, supports partial hydration, maintains indices, and computes
+      aggregates while keeping read paths cheap.
+    headings:
+    - '`src/runtime/quantum_data_pipeline.dart`'
+    - What this file is
+    - What it depends on
+    - Core pipeline model
+    - Why the schema changes matter here
+  tags:
+  - state
+  - leak
+  - quantum data pipeline
+- uuid: 2eb74bce-1d91-53c7-8f72-a35d5ca6d062
+  file: lib/src/runtime/quantum_data_pipeline.dart
+  docs_file: docs/src/runtime/quantum_data_pipeline.dart.md
+  title: 'Quantum Data Pipeline: public contract remains stable under valid input'
+  slug: contract
+  category: state
+  severity: medium
+  description: Verify that quantum data pipeline keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_pipeline.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_pipeline.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the flat-cache data pipeline. It stores records in a compact
+      row-oriented shape, supports partial hydration, maintains indices, and computes
+      aggregates while keeping read paths cheap.
+    headings:
+    - '`src/runtime/quantum_data_pipeline.dart`'
+    - What this file is
+    - What it depends on
+    - Core pipeline model
+    - Why the schema changes matter here
+  tags:
+  - state
+  - contract
+  - quantum data pipeline

@@ -1,0 +1,480 @@
+file: lib/src/plugins/native/quantum_calendar.dart
+docs_file: docs/src/plugins/native/quantum_calendar.dart.md
+line_count: 109
+category: plugin
+tests:
+- uuid: 6b3d9281-8c5e-52b1-acc0-67edd1bc8005
+  file: lib/src/plugins/native/quantum_calendar.dart
+  docs_file: docs/src/plugins/native/quantum_calendar.dart.md
+  title: 'Quantum Calendar: public contract remains stable under valid input'
+  slug: contract
+  category: plugin
+  severity: critical
+  description: Verify that quantum calendar keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_calendar.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_calendar.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_calendar.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - contract
+  - quantum calendar
+- uuid: 11fe2294-07fc-5f80-b3aa-f6158592e9c9
+  file: lib/src/plugins/native/quantum_calendar.dart
+  docs_file: docs/src/plugins/native/quantum_calendar.dart.md
+  title: 'Quantum Calendar: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: plugin
+  severity: critical
+  description: Verify that quantum calendar keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_calendar.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_calendar.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_calendar.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - invalid_input
+  - quantum calendar
+- uuid: 6a4924bc-dfd1-512a-8363-f09c3629cb2a
+  file: lib/src/plugins/native/quantum_calendar.dart
+  docs_file: docs/src/plugins/native/quantum_calendar.dart.md
+  title: 'Quantum Calendar: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: plugin
+  severity: high
+  description: Verify that quantum calendar keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_calendar.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_calendar.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_calendar.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - reentrant
+  - quantum calendar
+- uuid: 9e624b2c-2fe8-5973-936e-5651650cf7ed
+  file: lib/src/plugins/native/quantum_calendar.dart
+  docs_file: docs/src/plugins/native/quantum_calendar.dart.md
+  title: 'Quantum Calendar: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: plugin
+  severity: high
+  description: Verify that quantum calendar keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_calendar.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_calendar.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_calendar.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - cleanup
+  - quantum calendar
+- uuid: f71c4872-3a26-57b2-bdb6-ee878affb2bd
+  file: lib/src/plugins/native/quantum_calendar.dart
+  docs_file: docs/src/plugins/native/quantum_calendar.dart.md
+  title: 'Quantum Calendar: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: plugin
+  severity: high
+  description: Verify that quantum calendar keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_calendar.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_calendar.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_calendar.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - performance
+  - quantum calendar
+- uuid: deeea01a-7d1f-5916-bf1f-98961df5044f
+  file: lib/src/plugins/native/quantum_calendar.dart
+  docs_file: docs/src/plugins/native/quantum_calendar.dart.md
+  title: 'Quantum Calendar: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: plugin
+  severity: medium
+  description: Verify that quantum calendar keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_calendar.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_calendar.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_calendar.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - memory
+  - quantum calendar
+- uuid: 813ef7ba-40cd-5f0a-a96b-83d6b42874b3
+  file: lib/src/plugins/native/quantum_calendar.dart
+  docs_file: docs/src/plugins/native/quantum_calendar.dart.md
+  title: 'Quantum Calendar: the runtime surface still matches the documented API and
+    headings'
+  slug: docs_parity
+  category: plugin
+  severity: medium
+  description: Verify that quantum calendar keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_calendar.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_calendar.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_calendar.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - docs_parity
+  - quantum calendar
+- uuid: 0f00fead-dcc2-521c-a877-2bcbea1403b9
+  file: lib/src/plugins/native/quantum_calendar.dart
+  docs_file: docs/src/plugins/native/quantum_calendar.dart.md
+  title: 'Quantum Calendar: permission-denied and unavailable-plugin cases fall back
+    safely'
+  slug: permission
+  category: plugin
+  severity: medium
+  description: Verify that quantum calendar keeps its documented runtime behavior
+    while handling permission conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/native/quantum_calendar.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/native/quantum_calendar.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A native capability plugin wrapper. Each file exposes one device-level
+      capability such as camera, calendar, location, microphone, phone, contacts,
+      files, notifications, or photos.
+    headings:
+    - '`src/plugins/native/quantum_calendar.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - permission
+  - quantum calendar

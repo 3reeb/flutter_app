@@ -1,0 +1,418 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/runtime/quantum_export_dom_stub.dart
+  docs_file: docs/src/runtime/quantum_export_dom_stub.dart.md
+  source_entry:
+    line_count: 23
+    byte_count: 1070
+    class_count: 0
+    enum_count: 0
+    function_count: 3
+    category: runtime
+    test_count: 8
+  scenario_count: 8
+source:
+  path: src/runtime/quantum_export_dom_stub.dart
+  docs_path: docs/src/runtime/quantum_export_dom_stub.dart.md
+  label: src/runtime/quantum_export_dom_stub.dart
+scenarios:
+- uuid: 24d72467-514f-5d49-93a0-0d6d6afb87e7
+  file: lib/src/runtime/quantum_export_dom_stub.dart
+  docs_file: docs/src/runtime/quantum_export_dom_stub.dart.md
+  title: 'Quantum Export Dom Stub: public contract remains stable under valid input'
+  slug: contract
+  category: runtime
+  severity: critical
+  description: Verify that quantum export dom stub keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_stub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_stub.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A stub implementation used when the current platform does not support the hydration reader behavior. It intentionally stays minimal so unsupported builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER — stub (non-web platforms)'
+    headings:
+    - '`src/runtime/quantum_export_dom_stub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - contract
+  - quantum export dom stub
+- uuid: c2a8ecd8-bc22-5851-8362-fc82efe77040
+  file: lib/src/runtime/quantum_export_dom_stub.dart
+  docs_file: docs/src/runtime/quantum_export_dom_stub.dart.md
+  title: 'Quantum Export Dom Stub: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: runtime
+  severity: critical
+  description: Verify that quantum export dom stub keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_stub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_stub.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A stub implementation used when the current platform does not support the hydration reader behavior. It intentionally stays minimal so unsupported builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER — stub (non-web platforms)'
+    headings:
+    - '`src/runtime/quantum_export_dom_stub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - invalid_input
+  - quantum export dom stub
+- uuid: 1ba187e3-2862-5c06-bdfb-8a6959694f48
+  file: lib/src/runtime/quantum_export_dom_stub.dart
+  docs_file: docs/src/runtime/quantum_export_dom_stub.dart.md
+  title: 'Quantum Export Dom Stub: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: runtime
+  severity: high
+  description: Verify that quantum export dom stub keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_stub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_stub.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A stub implementation used when the current platform does not support the hydration reader behavior. It intentionally stays minimal so unsupported builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER — stub (non-web platforms)'
+    headings:
+    - '`src/runtime/quantum_export_dom_stub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - reentrant
+  - quantum export dom stub
+- uuid: ce18b1d2-d856-5c43-a014-b86b8e46fe1c
+  file: lib/src/runtime/quantum_export_dom_stub.dart
+  docs_file: docs/src/runtime/quantum_export_dom_stub.dart.md
+  title: 'Quantum Export Dom Stub: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: runtime
+  severity: high
+  description: Verify that quantum export dom stub keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_stub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_stub.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A stub implementation used when the current platform does not support the hydration reader behavior. It intentionally stays minimal so unsupported builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER — stub (non-web platforms)'
+    headings:
+    - '`src/runtime/quantum_export_dom_stub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - cleanup
+  - quantum export dom stub
+- uuid: 29067035-cee4-5523-9223-f328c30ea7d2
+  file: lib/src/runtime/quantum_export_dom_stub.dart
+  docs_file: docs/src/runtime/quantum_export_dom_stub.dart.md
+  title: 'Quantum Export Dom Stub: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: runtime
+  severity: high
+  description: Verify that quantum export dom stub keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_stub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_stub.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A stub implementation used when the current platform does not support the hydration reader behavior. It intentionally stays minimal so unsupported builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER — stub (non-web platforms)'
+    headings:
+    - '`src/runtime/quantum_export_dom_stub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - performance
+  - quantum export dom stub
+- uuid: e66bdbb2-076a-5d11-80d7-f4e0b3f4cf45
+  file: lib/src/runtime/quantum_export_dom_stub.dart
+  docs_file: docs/src/runtime/quantum_export_dom_stub.dart.md
+  title: 'Quantum Export Dom Stub: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: runtime
+  severity: medium
+  description: Verify that quantum export dom stub keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_stub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_stub.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A stub implementation used when the current platform does not support the hydration reader behavior. It intentionally stays minimal so unsupported builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER — stub (non-web platforms)'
+    headings:
+    - '`src/runtime/quantum_export_dom_stub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - memory
+  - quantum export dom stub
+- uuid: 3d69d17a-08fe-56a1-bc81-f04cb23813ff
+  file: lib/src/runtime/quantum_export_dom_stub.dart
+  docs_file: docs/src/runtime/quantum_export_dom_stub.dart.md
+  title: 'Quantum Export Dom Stub: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: runtime
+  severity: medium
+  description: Verify that quantum export dom stub keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_stub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_stub.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A stub implementation used when the current platform does not support the hydration reader behavior. It intentionally stays minimal so unsupported builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER — stub (non-web platforms)'
+    headings:
+    - '`src/runtime/quantum_export_dom_stub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - docs_parity
+  - quantum export dom stub
+- uuid: 32a37fb6-ef38-5c55-bd1c-d330a5cb31b2
+  file: lib/src/runtime/quantum_export_dom_stub.dart
+  docs_file: docs/src/runtime/quantum_export_dom_stub.dart.md
+  title: 'Quantum Export Dom Stub: registry and dispatch semantics remain correct under mixed workload'
+  slug: registry
+  category: runtime
+  severity: medium
+  description: Verify that quantum export dom stub keeps its documented runtime behavior while handling registry conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_stub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_stub.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A stub implementation used when the current platform does not support the hydration reader behavior. It intentionally stays minimal so unsupported builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER — stub (non-web platforms)'
+    headings:
+    - '`src/runtime/quantum_export_dom_stub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - registry
+  - quantum export dom stub

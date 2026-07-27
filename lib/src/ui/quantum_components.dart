@@ -19,8 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-
-import '../../quantum.dart'; // Core ecosystem (Primitives, Layout, Theme, Behaviors)
+import 'package:quantum_layout/quantum.dart'; // Core ecosystem (Primitives, Layout, Theme, Behaviors)
 import 'dart:math' as math;
 
 // ─────────────────────────────────────────────────────────────────────── §1 ─

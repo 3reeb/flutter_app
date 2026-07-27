@@ -1,0 +1,19 @@
+{
+  "__meta": {
+    "id": "widget-021-resize-horizontal-only",
+    "title": "Resizable with only e/w handles limits resize to width changes",
+    "description": "East and west handles change width only. The handles array must not be expanded or reordered by the VM.",
+    "tags": ["widget", "resize", "horizontal"],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "box:col",
+    "props": { "resizable": true, "handles": ["e", "w"] }
+  },
+  "expected": {
+    "type": "box:col",
+    "props": { "resizable": true, "handles": ["e", "w"] },
+    "debugPath": "root"
+  }
+}

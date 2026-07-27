@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import '../../../quantum.dart';
+import 'package:quantum_layout/quantum.dart';
 import 'package:flutter/foundation.dart';
 // ════════════════════════════════════════════════════════════════════════════
 //  OMEGA CHART ENGINE (PURE FLUTTER, SIMD OPTIMIZED, ZERO-COPY)

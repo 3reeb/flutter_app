@@ -1,0 +1,442 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/ui/internal/quantum_focus_sync.dart
+  docs_file: docs/src/ui/internal/quantum_focus_sync.dart.md
+  source_entry:
+    line_count: 28
+    byte_count: 658
+    class_count: 0
+    enum_count: 0
+    function_count: 2
+    category: ui
+    test_count: 8
+  scenario_count: 8
+source:
+  path: src/ui/internal/quantum_focus_sync.dart
+  docs_path: docs/src/ui/internal/quantum_focus_sync.dart.md
+  label: src/ui/internal/quantum_focus_sync.dart
+scenarios:
+- uuid: 6ac74fca-aafd-5ca6-aa10-2acf96e52391
+  file: lib/src/ui/internal/quantum_focus_sync.dart
+  docs_file: docs/src/ui/internal/quantum_focus_sync.dart.md
+  title: 'Quantum Focus Sync: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum focus sync keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/internal/quantum_focus_sync.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/internal/quantum_focus_sync.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: / Shared focus synchronization helpers for the headless field primitives.'
+    headings:
+    - '`src/ui/internal/quantum_focus_sync.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum focus sync
+- uuid: f4b5490d-c84c-5dab-9544-14146e8b4bfb
+  file: lib/src/ui/internal/quantum_focus_sync.dart
+  docs_file: docs/src/ui/internal/quantum_focus_sync.dart.md
+  title: 'Quantum Focus Sync: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum focus sync keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/internal/quantum_focus_sync.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/internal/quantum_focus_sync.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: / Shared focus synchronization helpers for the headless field primitives.'
+    headings:
+    - '`src/ui/internal/quantum_focus_sync.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum focus sync
+- uuid: a9f0371d-f6f8-5c66-abd5-9393740e314c
+  file: lib/src/ui/internal/quantum_focus_sync.dart
+  docs_file: docs/src/ui/internal/quantum_focus_sync.dart.md
+  title: 'Quantum Focus Sync: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum focus sync keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/internal/quantum_focus_sync.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/internal/quantum_focus_sync.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: / Shared focus synchronization helpers for the headless field primitives.'
+    headings:
+    - '`src/ui/internal/quantum_focus_sync.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum focus sync
+- uuid: d7884149-f950-59ea-90e0-b2fac4d0a399
+  file: lib/src/ui/internal/quantum_focus_sync.dart
+  docs_file: docs/src/ui/internal/quantum_focus_sync.dart.md
+  title: 'Quantum Focus Sync: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum focus sync keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/internal/quantum_focus_sync.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/internal/quantum_focus_sync.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: / Shared focus synchronization helpers for the headless field primitives.'
+    headings:
+    - '`src/ui/internal/quantum_focus_sync.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum focus sync
+- uuid: 06075254-3315-52d2-b88e-476f9d4924be
+  file: lib/src/ui/internal/quantum_focus_sync.dart
+  docs_file: docs/src/ui/internal/quantum_focus_sync.dart.md
+  title: 'Quantum Focus Sync: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum focus sync keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/internal/quantum_focus_sync.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/internal/quantum_focus_sync.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: / Shared focus synchronization helpers for the headless field primitives.'
+    headings:
+    - '`src/ui/internal/quantum_focus_sync.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum focus sync
+- uuid: 0def35bc-dbc9-593d-a3fb-0c050d6b6540
+  file: lib/src/ui/internal/quantum_focus_sync.dart
+  docs_file: docs/src/ui/internal/quantum_focus_sync.dart.md
+  title: 'Quantum Focus Sync: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum focus sync keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/internal/quantum_focus_sync.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/internal/quantum_focus_sync.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: / Shared focus synchronization helpers for the headless field primitives.'
+    headings:
+    - '`src/ui/internal/quantum_focus_sync.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum focus sync
+- uuid: 819e227d-c7bd-54fb-a69d-6fded16339d5
+  file: lib/src/ui/internal/quantum_focus_sync.dart
+  docs_file: docs/src/ui/internal/quantum_focus_sync.dart.md
+  title: 'Quantum Focus Sync: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum focus sync keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/internal/quantum_focus_sync.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/internal/quantum_focus_sync.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: / Shared focus synchronization helpers for the headless field primitives.'
+    headings:
+    - '`src/ui/internal/quantum_focus_sync.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum focus sync
+- uuid: 19bf4cd2-5d00-5e4e-8411-d5303ae9668d
+  file: lib/src/ui/internal/quantum_focus_sync.dart
+  docs_file: docs/src/ui/internal/quantum_focus_sync.dart.md
+  title: 'Quantum Focus Sync: layout remains correct under narrow, wide, and constrained bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum focus sync keeps its documented runtime behavior while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/internal/quantum_focus_sync.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/internal/quantum_focus_sync.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: / Shared focus synchronization helpers for the headless field primitives.'
+    headings:
+    - '`src/ui/internal/quantum_focus_sync.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum focus sync

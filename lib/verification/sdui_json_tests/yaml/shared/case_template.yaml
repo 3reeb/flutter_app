@@ -1,0 +1,46 @@
+kind: sdui-json-case-template
+title: Reusable SDUI JSON case template
+sourcePath: src/runtime/quantum_vm.dart
+assertions:
+- kind: source_contains_all
+  values:
+  - type
+  - props
+  - children
+- kind: json_assertion_kinds_allowed
+  values:
+  - source_contains_all
+  - source_contains_any
+  - source_not_contains
+  - subtypes_exact
+  - subtypes_contains
+  - builder_contains
+  - line_count_at_least
+  - source_sha256_matches
+  - snapshot_path_not_empty
+  - json_round_trip
+  - json_round_trip_strict
+  - json_root_keys_contains
+  - json_root_keys_exact
+  - json_meta_keys_contains
+  - json_meta_keys_exact
+  - json_case_count_at_least
+  - json_case_count_exact
+  - json_case_keys_contains
+  - json_case_keys_exact
+  - json_case_ids_unique
+  - json_case_assertions_nonempty
+  - json_assertion_kinds_allowed
+  - json_path_exists
+  - json_path_not_empty
+  - json_path_equals
+  - json_path_contains_all
+  - json_path_contains_any
+  - json_path_keys_contains
+  - json_path_keys_exact
+  - json_path_length_at_least
+  - json_path_length_exact
+  - json_path_type_is
+  - all
+  - any
+  - not

@@ -1,0 +1,82 @@
+{
+  "__meta": {
+    "id": "nested-074-screen-074",
+    "title": "Mixed nested screen #074",
+    "description": "Spread-injected props and a portal content slot should survive together.",
+    "tags": [
+      "nested",
+      "spread",
+      "portal"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "box:col",
+    "$spread": "{{profile}}",
+    "env": {
+      "profile": {
+        "tone": "calm",
+        "density": "compact"
+      }
+    },
+    "children": [
+      {
+        "$portal": "sheet_2",
+        "type": "box:col",
+        "props": {
+          "role": "dialog"
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Portal body 074"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "env": {
+    "profile": {
+      "tone": "calm",
+      "density": "compact"
+    }
+  },
+  "expected": {
+    "type": "box:col",
+    "props": {
+      "tone": "calm",
+      "density": "compact"
+    },
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "portal",
+        "props": {
+          "__subType": "overlay_entry",
+          "portalName": "sheet_2"
+        },
+        "debugPath": "root[0]",
+        "slots": {
+          "content": {
+            "type": "box:col",
+            "props": {
+              "role": "dialog"
+            },
+            "debugPath": "root[0].slots[content]",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Portal body 074"
+                },
+                "debugPath": "root[0].slots[content][0]"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

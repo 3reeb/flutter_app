@@ -1,0 +1,122 @@
+__meta:
+  id: sdui-json-runtime-behavior-data-driven
+  title: SDUI runtime behavior data-driven suite
+  description: Recursive JSON fixtures that compile real SDUI input into exact blueprint snapshots.
+  tags:
+    - sdui
+    - runtime
+    - data-driven
+    - fixtures
+    - snapshots
+  allowBlank: true
+
+groups:
+  - id: basic-normalization
+    title: Basic normalization and metadata
+    cases:
+      - id: minimal-string
+        file: test/generated/sdui_json_runtime_behavior_test/cases/basic/minimal_string.json
+        expectedShape: text blueprint
+      - id: text-node-with-child
+        file: test/generated/sdui_json_runtime_behavior_test/cases/basic/text_node_with_child.json
+        expectedShape: text with child path
+      - id: row-subtype
+        file: test/generated/sdui_json_runtime_behavior_test/cases/basic/row_subtype.json
+        expectedShape: box row subtype
+      - id: split-guard
+        file: test/generated/sdui_json_runtime_behavior_test/cases/basic/split_guard.json
+        expectedShape: guarded split subtype
+      - id: metadata-preservation
+        file: test/generated/sdui_json_runtime_behavior_test/cases/basic/metadata_preservation.json
+        expectedShape: metadata and slot preservation
+      - id: slot-shorthand
+        file: test/generated/sdui_json_runtime_behavior_test/cases/basic/slot_shorthand.json
+        expectedShape: shorthand slot extraction
+
+  - id: compile-time
+    title: Compile-time environment and branching
+    cases:
+      - id: let-and-interpolation
+        file: test/generated/sdui_json_runtime_behavior_test/cases/compile_time/let_and_interpolation.json
+        expectedShape: let resolution
+      - id: classes-style
+        file: test/generated/sdui_json_runtime_behavior_test/cases/compile_time/classes_style.json
+        expectedShape: class substitution
+      - id: spread
+        file: test/generated/sdui_json_runtime_behavior_test/cases/compile_time/spread.json
+        expectedShape: structural spread
+      - id: scope-binding
+        file: test/generated/sdui_json_runtime_behavior_test/cases/compile_time/scope_binding.json
+        expectedShape: scoped binding
+      - id: if-prune
+        file: test/generated/sdui_json_runtime_behavior_test/cases/compile_time/if_prune.json
+        expectedShape: pruned node
+      - id: switch-select
+        file: test/generated/sdui_json_runtime_behavior_test/cases/compile_time/switch_select.json
+        expectedShape: selected branch
+
+  - id: operators
+    title: Runtime wrapper operators
+    cases:
+      - id: apply-wrapper-collapse
+        file: test/generated/sdui_json_runtime_behavior_test/cases/operators/apply_wrapper_collapse.json
+        expectedShape: collapsed wrapper
+      - id: compose-behaviors
+        file: test/generated/sdui_json_runtime_behavior_test/cases/operators/compose_behaviors.json
+        expectedShape: behavior chain
+      - id: watch-binding
+        file: test/generated/sdui_json_runtime_behavior_test/cases/operators/watch_binding.json
+        expectedShape: watch metadata
+      - id: throttle-wrapper
+        file: test/generated/sdui_json_runtime_behavior_test/cases/operators/throttle_wrapper.json
+        expectedShape: throttle wrapper
+      - id: debounce-wrapper
+        file: test/generated/sdui_json_runtime_behavior_test/cases/operators/debounce_wrapper.json
+        expectedShape: debounce wrapper
+      - id: parallel-flatten
+        file: test/generated/sdui_json_runtime_behavior_test/cases/operators/parallel_flatten.json
+        expectedShape: flat column
+      - id: repeat-wrapper
+        file: test/generated/sdui_json_runtime_behavior_test/cases/operators/repeat_wrapper.json
+        expectedShape: repeater wrapper
+      - id: async-slots
+        file: test/generated/sdui_json_runtime_behavior_test/cases/operators/async_slots.json
+        expectedShape: async slots
+      - id: stream-binding
+        file: test/generated/sdui_json_runtime_behavior_test/cases/operators/stream_binding.json
+        expectedShape: stream wrapper
+      - id: machine-state
+        file: test/generated/sdui_json_runtime_behavior_test/cases/operators/machine_state.json
+        expectedShape: machine wrapper
+      - id: portal-overlay-entry
+        file: test/generated/sdui_json_runtime_behavior_test/cases/operators/portal_overlay_entry.json
+        expectedShape: portal content slot
+      - id: reactive-map
+        file: test/generated/sdui_json_runtime_behavior_test/cases/operators/reactive_map.json
+        expectedShape: diff wrapper
+      - id: try-catch-finally
+        file: test/generated/sdui_json_runtime_behavior_test/cases/operators/try_catch_finally.json
+        expectedShape: error boundary
+      - id: layout-grid
+        file: test/generated/sdui_json_runtime_behavior_test/cases/operators/layout_grid.json
+        expectedShape: explicit grid
+      - id: macro-define-and-call
+        file: test/generated/sdui_json_runtime_behavior_test/cases/operators/macro_define_and_call.json
+        expectedShape: macro expansion
+
+  - id: state-and-pipeline
+    title: State and pipeline wrappers
+    cases:
+      - id: state-store-provider
+        file: test/generated/sdui_json_runtime_behavior_test/cases/state_and_pipeline/state_store_provider.json
+        expectedShape: store provider
+
+  - id: nested-and-failure
+    title: Large nested and negative cases
+    cases:
+      - id: large-nested-screen
+        file: test/generated/sdui_json_runtime_behavior_test/cases/nested/large_nested_screen.json
+        expectedShape: mixed nested screen
+      - id: ast-overflow-guard
+        file: test/generated/sdui_json_runtime_behavior_test/cases/failure/ast_overflow_guard.json
+        expectedShape: overflow failure

@@ -10,12 +10,9 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
-
 import '../foundation/quantum_yaml_engine.dart';
 import 'quantum_core_file_registry.dart';
-
 @immutable
 class QLCorePropSpec {
   final String name;
@@ -1105,6 +1102,18 @@ final class QuantumCoreSchemaRegistry {
                 type: 'dynamic', description: 'resizeEdges value.'),
             _prop('sheetAlignment',
                 type: 'dynamic', description: 'sheetAlignment value.'),
+            _prop('surfaceKind',
+                type: 'String', description: 'surfaceKind value.'),
+            _prop('presentation',
+                type: 'String', description: 'presentation value.'),
+            _prop('motion', type: 'dynamic', description: 'motion value.'),
+            _prop('motionJson',
+                type: 'String', description: 'motionJson value.'),
+            _prop('allowUnderlyingInteraction', type: 'bool', description: 'allowUnderlyingInteraction value.'),
+            _prop('allowResize', type: 'bool', description: 'allowResize value.'),
+            _prop('allowDrag', type: 'bool', description: 'allowDrag value.'),
+            _prop('zoomIn', type: 'bool', description: 'zoomIn value.'),
+            _prop('zoomScale', type: 'double', description: 'zoomScale value.'),
             _prop('trigger', type: 'dynamic', description: 'trigger value.'),
             _prop('triggerBind',
                 type: 'Binding',
@@ -1904,6 +1913,66 @@ final class QuantumCoreSchemaRegistry {
             _prop('align', type: 'String', description: 'align value.')
           ],
           metadata: const <String, dynamic>{'aliasOf': 'portal:sheet'},
+        ),
+        'modal': _schema(
+          name: 'modal',
+          extendsName: 'portal',
+          summary: 'Alias for portal:dialog.',
+          category: 'alias',
+          props: <QLCorePropSpec>[
+            _prop('trigger', type: 'dynamic', description: 'trigger value.'),
+            _prop('content', type: 'dynamic', description: 'content value.'),
+            _prop('triggerBind',
+                type: 'Binding',
+                description: 'Runtime binding key for lazy state lookup.'),
+            _prop('align', type: 'String', description: 'align value.')
+          ],
+          metadata: const <String, dynamic>{'aliasOf': 'portal:dialog'},
+        ),
+        'centered_overlay': _schema(
+          name: 'centered_overlay',
+          extendsName: 'portal',
+          summary: 'Alias for portal:dialog.',
+          category: 'alias',
+          props: <QLCorePropSpec>[
+            _prop('trigger', type: 'dynamic', description: 'trigger value.'),
+            _prop('content', type: 'dynamic', description: 'content value.'),
+            _prop('triggerBind',
+                type: 'Binding',
+                description: 'Runtime binding key for lazy state lookup.'),
+            _prop('align', type: 'String', description: 'align value.')
+          ],
+          metadata: const <String, dynamic>{'aliasOf': 'portal:dialog'},
+        ),
+        'persistent_panel': _schema(
+          name: 'persistent_panel',
+          extendsName: 'portal',
+          summary: 'Alias for portal:overlay.',
+          category: 'alias',
+          props: <QLCorePropSpec>[
+            _prop('trigger', type: 'dynamic', description: 'trigger value.'),
+            _prop('content', type: 'dynamic', description: 'content value.'),
+            _prop('triggerBind',
+                type: 'Binding',
+                description: 'Runtime binding key for lazy state lookup.'),
+            _prop('align', type: 'String', description: 'align value.')
+          ],
+          metadata: const <String, dynamic>{'aliasOf': 'portal:overlay'},
+        ),
+        'inline_expandable': _schema(
+          name: 'inline_expandable',
+          extendsName: 'portal',
+          summary: 'Alias for portal:overlay.',
+          category: 'alias',
+          props: <QLCorePropSpec>[
+            _prop('trigger', type: 'dynamic', description: 'trigger value.'),
+            _prop('content', type: 'dynamic', description: 'content value.'),
+            _prop('triggerBind',
+                type: 'Binding',
+                description: 'Runtime binding key for lazy state lookup.'),
+            _prop('align', type: 'String', description: 'align value.')
+          ],
+          metadata: const <String, dynamic>{'aliasOf': 'portal:overlay'},
         ),
         'popover': _schema(
           name: 'popover',

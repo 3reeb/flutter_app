@@ -1,0 +1,51 @@
+{
+  "__meta": {
+    "id": "state_and_pipeline-086-state-text-086",
+    "title": "Named stateful text root #086",
+    "description": "A stateful text root should be wrapped in system:store_provider and keep the named debug path.",
+    "tags": [
+      "state",
+      "pipeline",
+      "store",
+      "text"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "name": "panel_086",
+    "state": {
+      "user": {
+        "name": "Ada 086",
+        "active": true
+      },
+      "count": 86
+    },
+    "type": "text",
+    "props": {
+      "text": "Stateful 086"
+    }
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "user": {
+          "name": "Ada 086",
+          "active": true
+        },
+        "count": 86
+      }
+    },
+    "debugPath": "panel_086.store_provider",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Stateful 086"
+        },
+        "debugPath": "panel_086"
+      }
+    ]
+  }
+}

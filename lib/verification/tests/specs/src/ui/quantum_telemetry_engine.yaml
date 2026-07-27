@@ -1,0 +1,815 @@
+file: lib/src/ui/quantum_telemetry_engine.dart
+docs_file: docs/src/ui/quantum_telemetry_engine.dart.md
+line_count: 2553
+category: ui
+tests:
+- uuid: 61cf3727-9e7d-5faf-bfa5-30960d495168
+  file: lib/src/ui/quantum_telemetry_engine.dart
+  docs_file: docs/src/ui/quantum_telemetry_engine.dart.md
+  title: 'Quantum Telemetry Engine: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum telemetry engine keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_telemetry_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_telemetry_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
+      v2.0 — PRODUCTION GRADE'
+    headings:
+    - '`src/ui/quantum_telemetry_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum telemetry engine
+- uuid: d31821ac-9cea-5e27-a650-13bb856cb7bc
+  file: lib/src/ui/quantum_telemetry_engine.dart
+  docs_file: docs/src/ui/quantum_telemetry_engine.dart.md
+  title: 'Quantum Telemetry Engine: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum telemetry engine keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_telemetry_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_telemetry_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
+      v2.0 — PRODUCTION GRADE'
+    headings:
+    - '`src/ui/quantum_telemetry_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum telemetry engine
+- uuid: e04ec6a1-f7a7-58ca-a7e8-08221c32960a
+  file: lib/src/ui/quantum_telemetry_engine.dart
+  docs_file: docs/src/ui/quantum_telemetry_engine.dart.md
+  title: 'Quantum Telemetry Engine: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum telemetry engine keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_telemetry_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_telemetry_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
+      v2.0 — PRODUCTION GRADE'
+    headings:
+    - '`src/ui/quantum_telemetry_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum telemetry engine
+- uuid: 77914cdb-c8cf-56b8-8402-ebe8b7662f54
+  file: lib/src/ui/quantum_telemetry_engine.dart
+  docs_file: docs/src/ui/quantum_telemetry_engine.dart.md
+  title: 'Quantum Telemetry Engine: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum telemetry engine keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_telemetry_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_telemetry_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
+      v2.0 — PRODUCTION GRADE'
+    headings:
+    - '`src/ui/quantum_telemetry_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum telemetry engine
+- uuid: 11e5a322-b8f8-5e09-9adc-e89e6db555fa
+  file: lib/src/ui/quantum_telemetry_engine.dart
+  docs_file: docs/src/ui/quantum_telemetry_engine.dart.md
+  title: 'Quantum Telemetry Engine: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum telemetry engine keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_telemetry_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_telemetry_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
+      v2.0 — PRODUCTION GRADE'
+    headings:
+    - '`src/ui/quantum_telemetry_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum telemetry engine
+- uuid: 763710a9-3e69-53d9-ade7-0a581f39ae0c
+  file: lib/src/ui/quantum_telemetry_engine.dart
+  docs_file: docs/src/ui/quantum_telemetry_engine.dart.md
+  title: 'Quantum Telemetry Engine: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum telemetry engine keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_telemetry_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_telemetry_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
+      v2.0 — PRODUCTION GRADE'
+    headings:
+    - '`src/ui/quantum_telemetry_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum telemetry engine
+- uuid: 8ca88a96-ebec-54cc-b8b0-ecdc487a46c5
+  file: lib/src/ui/quantum_telemetry_engine.dart
+  docs_file: docs/src/ui/quantum_telemetry_engine.dart.md
+  title: 'Quantum Telemetry Engine: the runtime surface still matches the documented
+    API and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum telemetry engine keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_telemetry_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_telemetry_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
+      v2.0 — PRODUCTION GRADE'
+    headings:
+    - '`src/ui/quantum_telemetry_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum telemetry engine
+- uuid: 50fddb49-759e-5903-9c8e-70cadbc119af
+  file: lib/src/ui/quantum_telemetry_engine.dart
+  docs_file: docs/src/ui/quantum_telemetry_engine.dart.md
+  title: 'Quantum Telemetry Engine: layout remains correct under narrow, wide, and
+    constrained bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum telemetry engine keeps its documented runtime behavior
+    while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_telemetry_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_telemetry_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
+      v2.0 — PRODUCTION GRADE'
+    headings:
+    - '`src/ui/quantum_telemetry_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum telemetry engine
+- uuid: 0d629276-9d3d-50c0-b0f5-07bb5559dcaf
+  file: lib/src/ui/quantum_telemetry_engine.dart
+  docs_file: docs/src/ui/quantum_telemetry_engine.dart.md
+  title: 'Quantum Telemetry Engine: semantics and accessibility output remain stable
+    across rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that quantum telemetry engine keeps its documented runtime behavior
+    while handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_telemetry_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_telemetry_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
+      v2.0 — PRODUCTION GRADE'
+    headings:
+    - '`src/ui/quantum_telemetry_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - semantics
+  - quantum telemetry engine
+- uuid: 90a5d795-08c2-5666-9c2b-7709d5615a48
+  file: lib/src/ui/quantum_telemetry_engine.dart
+  docs_file: docs/src/ui/quantum_telemetry_engine.dart.md
+  title: 'Quantum Telemetry Engine: gesture handling and hit testing stay correct
+    during interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that quantum telemetry engine keeps its documented runtime behavior
+    while handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_telemetry_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_telemetry_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
+      v2.0 — PRODUCTION GRADE'
+    headings:
+    - '`src/ui/quantum_telemetry_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - gesture
+  - quantum telemetry engine
+- uuid: f9fee899-472e-5530-aeb2-ae7736153740
+  file: lib/src/ui/quantum_telemetry_engine.dart
+  docs_file: docs/src/ui/quantum_telemetry_engine.dart.md
+  title: 'Quantum Telemetry Engine: resize or drag interactions preserve geometry
+    and state'
+  slug: resize
+  category: ui
+  severity: medium
+  description: Verify that quantum telemetry engine keeps its documented runtime behavior
+    while handling resize conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_telemetry_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_telemetry_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
+      v2.0 — PRODUCTION GRADE'
+    headings:
+    - '`src/ui/quantum_telemetry_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - resize
+  - quantum telemetry engine
+- uuid: 1288fcf3-a758-5a88-8637-d3273c414d78
+  file: lib/src/ui/quantum_telemetry_engine.dart
+  docs_file: docs/src/ui/quantum_telemetry_engine.dart.md
+  title: 'Quantum Telemetry Engine: adjacent spans merge only when semantics allow
+    it'
+  slug: span_merge
+  category: ui
+  severity: medium
+  description: Verify that quantum telemetry engine keeps its documented runtime behavior
+    while handling span merge conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_telemetry_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_telemetry_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
+      v2.0 — PRODUCTION GRADE'
+    headings:
+    - '`src/ui/quantum_telemetry_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - span_merge
+  - quantum telemetry engine
+- uuid: 0c373e17-72e3-5595-b29a-9bf43462016a
+  file: lib/src/ui/quantum_telemetry_engine.dart
+  docs_file: docs/src/ui/quantum_telemetry_engine.dart.md
+  title: 'Quantum Telemetry Engine: exported telemetry remains parseable and bounded'
+  slug: export_format
+  category: ui
+  severity: medium
+  description: Verify that quantum telemetry engine keeps its documented runtime behavior
+    while handling export format conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_telemetry_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_telemetry_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
+      v2.0 — PRODUCTION GRADE'
+    headings:
+    - '`src/ui/quantum_telemetry_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - export_format
+  - quantum telemetry engine
+- uuid: 3c127840-9c8f-5927-9257-855709606e63
+  file: lib/src/ui/quantum_telemetry_engine.dart
+  docs_file: docs/src/ui/quantum_telemetry_engine.dart.md
+  title: 'Quantum Telemetry Engine: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: medium
+  description: Verify that quantum telemetry engine keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_telemetry_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_telemetry_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
+      v2.0 — PRODUCTION GRADE'
+    headings:
+    - '`src/ui/quantum_telemetry_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum telemetry engine

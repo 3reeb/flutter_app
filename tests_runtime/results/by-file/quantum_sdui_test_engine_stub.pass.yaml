@@ -1,0 +1,98 @@
+file: "quantum_sdui_test_engine_stub.dart"
+rows:
+  -
+    id: "manifest_roundtrip"
+    passed: true
+    expected: "round-trip ok"
+    actual: "round-trip ok"
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_sdui_test_engine_stub.yaml"
+    sourcePath: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+    fileLabel: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+  -
+    id: "surface_symbols_exist"
+    passed: true
+    expected: "all symbols found"
+    actual: "all symbols found"
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_sdui_test_engine_stub.yaml"
+    sourcePath: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+    fileLabel: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+  -
+    id: "quantum_sdui_test_engine_stub.cache_reuse.001"
+    passed: true
+    expected: "Repeated parsing and reading produce the same outputs."
+    actual: "Repeated parsing and reading produce the same outputs."
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_sdui_test_engine_stub.yaml"
+    sourcePath: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+    fileLabel: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+  -
+    id: "quantum_sdui_test_engine_stub.teardown_stability.002"
+    passed: true
+    expected: "Setup and teardown leave the source fingerprint unchanged."
+    actual: "Setup and teardown leave the source fingerprint unchanged."
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_sdui_test_engine_stub.yaml"
+    sourcePath: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+    fileLabel: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+  -
+    id: "quantum_sdui_test_engine_stub.serialization_stability.003"
+    passed: true
+    expected: "Serialized manifest data remains stable."
+    actual: "Serialized manifest data remains stable."
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_sdui_test_engine_stub.yaml"
+    sourcePath: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+    fileLabel: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+  -
+    id: "quantum_sdui_test_engine_stub.io_fallback.006"
+    passed: true
+    expected: "The file resolves from mirrored paths and loads successfully."
+    actual: "The file resolves from mirrored paths and loads successfully."
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_sdui_test_engine_stub.yaml"
+    sourcePath: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+    fileLabel: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+  -
+    id: "quantum_sdui_test_engine_stub.source_contains_all.007"
+    passed: true
+    expected: "All declared symbols are found in the source text."
+    actual: "All declared symbols are found in the source text."
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_sdui_test_engine_stub.yaml"
+    sourcePath: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+    fileLabel: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+  -
+    id: "quantum_sdui_test_engine_stub.source_not_contains_forbidden.008"
+    passed: true
+    expected: "No forbidden marker is found in the source text."
+    actual: "No forbidden marker is found in the source text."
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_sdui_test_engine_stub.yaml"
+    sourcePath: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+    fileLabel: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+  -
+    id: "quantum_sdui_test_engine_stub.manifest_roundtrip.010"
+    passed: true
+    expected: "The manifest and its nested rows round-trip without structural loss."
+    actual: "The manifest and its nested rows round-trip without structural loss."
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_sdui_test_engine_stub.yaml"
+    sourcePath: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+    fileLabel: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+  -
+    id: "quantum_sdui_test_engine_stub.concurrent_read_stable.012"
+    passed: true
+    expected: "Concurrent reads return the same fingerprint."
+    actual: "Concurrent reads return the same fingerprint."
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_sdui_test_engine_stub.yaml"
+    sourcePath: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+    fileLabel: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+  -
+    id: "quantum_sdui_test_engine_stub.metadata_alignment.013"
+    passed: true
+    expected: "Metadata path, hash, and line count match the file on disk."
+    actual: "Metadata path, hash, and line count match the file on disk."
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_sdui_test_engine_stub.yaml"
+    sourcePath: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+    fileLabel: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+  -
+    id: "quantum_sdui_test_engine_stub.surface_symbol_presence.014"
+    passed: true
+    expected: "Every declared surface symbol is present in the source text."
+    actual: "Every declared surface symbol is present in the source text."
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_sdui_test_engine_stub.yaml"
+    sourcePath: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"
+    fileLabel: "lib/src/runtime/quantum_sdui_test_engine_stub.dart"

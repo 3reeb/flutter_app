@@ -38,9 +38,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 // ─────────────────────────────────────────────────────────────────────── §0 ─
 //  TYPES, ENUMS & CONFIG
 // ────────────────────────────────────────────────────────────────────────────

@@ -1,0 +1,442 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/runtime/quantum_export_web_bridge.dart
+  docs_file: docs/src/runtime/quantum_export_web_bridge.dart.md
+  source_entry:
+    line_count: 286
+    byte_count: 10790
+    class_count: 3
+    enum_count: 1
+    function_count: 5
+    category: ui
+    test_count: 8
+  scenario_count: 8
+source:
+  path: src/runtime/quantum_export_web_bridge.dart
+  docs_path: docs/src/runtime/quantum_export_web_bridge.dart.md
+  label: src/runtime/quantum_export_web_bridge.dart
+scenarios:
+- uuid: cefc397a-cdb4-5200-80d2-94c61d6ce66e
+  file: lib/src/runtime/quantum_export_web_bridge.dart
+  docs_file: docs/src/runtime/quantum_export_web_bridge.dart.md
+  title: 'Quantum Export Web Bridge: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum export web bridge keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_web_bridge.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_web_bridge.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT WEB BRIDGE v1.0'
+    headings:
+    - '`src/runtime/quantum_export_web_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum export web bridge
+- uuid: 3d0036aa-8c92-5ff5-a35c-0f2321a88fad
+  file: lib/src/runtime/quantum_export_web_bridge.dart
+  docs_file: docs/src/runtime/quantum_export_web_bridge.dart.md
+  title: 'Quantum Export Web Bridge: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum export web bridge keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_web_bridge.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_web_bridge.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT WEB BRIDGE v1.0'
+    headings:
+    - '`src/runtime/quantum_export_web_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum export web bridge
+- uuid: e1a5aa47-0e37-5c55-8c60-b99836413db4
+  file: lib/src/runtime/quantum_export_web_bridge.dart
+  docs_file: docs/src/runtime/quantum_export_web_bridge.dart.md
+  title: 'Quantum Export Web Bridge: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum export web bridge keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_web_bridge.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_web_bridge.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT WEB BRIDGE v1.0'
+    headings:
+    - '`src/runtime/quantum_export_web_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum export web bridge
+- uuid: f63eb9f9-d34a-5f93-a55f-ba0799fdfa99
+  file: lib/src/runtime/quantum_export_web_bridge.dart
+  docs_file: docs/src/runtime/quantum_export_web_bridge.dart.md
+  title: 'Quantum Export Web Bridge: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum export web bridge keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_web_bridge.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_web_bridge.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT WEB BRIDGE v1.0'
+    headings:
+    - '`src/runtime/quantum_export_web_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum export web bridge
+- uuid: 708a2238-ce59-501e-840b-d1b5cc357cf5
+  file: lib/src/runtime/quantum_export_web_bridge.dart
+  docs_file: docs/src/runtime/quantum_export_web_bridge.dart.md
+  title: 'Quantum Export Web Bridge: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum export web bridge keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_web_bridge.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_web_bridge.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT WEB BRIDGE v1.0'
+    headings:
+    - '`src/runtime/quantum_export_web_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum export web bridge
+- uuid: bf7447ab-d276-565d-804c-35e74589080c
+  file: lib/src/runtime/quantum_export_web_bridge.dart
+  docs_file: docs/src/runtime/quantum_export_web_bridge.dart.md
+  title: 'Quantum Export Web Bridge: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum export web bridge keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_web_bridge.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_web_bridge.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT WEB BRIDGE v1.0'
+    headings:
+    - '`src/runtime/quantum_export_web_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum export web bridge
+- uuid: 778bd658-4d78-5343-b47c-e9489efbde10
+  file: lib/src/runtime/quantum_export_web_bridge.dart
+  docs_file: docs/src/runtime/quantum_export_web_bridge.dart.md
+  title: 'Quantum Export Web Bridge: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum export web bridge keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_web_bridge.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_web_bridge.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT WEB BRIDGE v1.0'
+    headings:
+    - '`src/runtime/quantum_export_web_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum export web bridge
+- uuid: b5da2219-a9c1-5136-ad72-9bb017020d1d
+  file: lib/src/runtime/quantum_export_web_bridge.dart
+  docs_file: docs/src/runtime/quantum_export_web_bridge.dart.md
+  title: 'Quantum Export Web Bridge: layout remains correct under narrow, wide, and constrained bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum export web bridge keeps its documented runtime behavior while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_web_bridge.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_web_bridge.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT WEB BRIDGE v1.0'
+    headings:
+    - '`src/runtime/quantum_export_web_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum export web bridge

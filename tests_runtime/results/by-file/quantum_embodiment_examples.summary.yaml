@@ -1,0 +1,6 @@
+file: "quantum_embodiment_examples.dart"
+manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_embodiment_examples.yaml"
+total: 18
+passed: 13
+failed: 5
+sourcePath: "src/runtime/quantum_embodiment_examples.dart"

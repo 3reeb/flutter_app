@@ -65,9 +65,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  CHANNELS — named, typed, lazy connections
 // ────────────────────────────────────────────────────────────────────────────

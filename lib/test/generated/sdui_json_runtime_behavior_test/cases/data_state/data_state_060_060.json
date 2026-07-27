@@ -1,0 +1,26 @@
+{
+  "__meta": {
+    "id": "ds-060-system-timer-on-complete",
+    "title": "system:timer with durationMs and onComplete compiles correctly",
+    "description": "A timer node fires onComplete after durationMs. Both props must survive compilation. Missing onComplete means the timer fires silently.",
+    "tags": ["data_state", "system", "timer", "action"],
+    "allowBlank": false,
+    "priority": "medium"
+  },
+  "input": {
+    "type": "system:timer",
+    "props": {
+      "durationMs": 3000,
+      "onComplete": { "type": "action", "name": "toast.dismiss" }
+    }
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "timer",
+      "durationMs": 3000,
+      "onComplete": { "type": "action", "name": "toast.dismiss" }
+    },
+    "debugPath": "root"
+  }
+}

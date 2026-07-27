@@ -1,0 +1,445 @@
+schema_version: 2
+doc_kind: file-test-manifest
+file: lib/src/foundation/quantum_primitives.dart
+layer: foundation
+profile: primitives
+test_doc_status: draft
+last_reviewed: '2026-07-26'
+source_metadata:
+  path: lib/src/foundation/quantum_primitives.dart
+  sha256: 859a49d34739f34723c3ba0e706710cbe0526cefb68880312536d80607a0fe03
+  line_count: 1034
+  imports:
+  - dart:typed_data
+  - dart:collection
+  - dart:async
+  - dart:collection
+  - package:flutter/foundation.dart
+  - package:flutter/material.dart
+  - package:flutter/rendering.dart
+  - package:flutter/scheduler.dart
+  - package:flutter/gestures.dart
+  - ../../quantum.dart
+  exports: []
+  parts: []
+  part_of: []
+  category: foundation
+  profile: primitives
+  large_profile: true
+  keywords:
+  - media
+  - cache
+  - registry
+  - pipeline
+  - stream
+  - fallback
+  - native
+  - io
+  - layout
+  - signal
+  - store
+  - state
+  - async
+  - json
+  - render
+surface_summary:
+  classes_enums_typedefs_mixins_extensions_functions:
+  - QLSafe
+  - QLArena
+  - QLReactiveContext
+  - QLSignalBase
+  - QLSignal
+  - QLComputed
+  - QLPhysicsTicker
+  - QLIntegratorRK4
+  count: 8
+focus: low-level primitive helpers and compatibility behavior.
+coverage_targets:
+- public API
+- failure paths
+- performance
+- integration boundaries
+- regression traps
+- compatibility
+- lazy-load
+- cache
+- serialization
+test_dimensions:
+  input_shapes:
+  - 'null'
+  - empty
+  - single-item
+  - multi-item
+  - mixed-type
+  - legacy-shape
+  - malformed
+  - duplicate
+  - large-batch
+  execution_modes:
+  - cold
+  - warm
+  - cached
+  - invalidated
+  - lazy
+  - eager
+  - replayed
+  outcomes:
+  - accept
+  - reject
+  - normalize
+  - defer
+  - reuse
+  - evict
+  - round-trip
+  measurement_axes:
+  - latency
+  - allocations
+  - cache-hits
+  - recompute-count
+  - event-order
+reusable_presets:
+  smoke_base:
+    purpose: Prove the canonical public path works and stays stable across repeated
+      runs.
+    assertions:
+    - observable result is stable
+    - no hidden mutation
+    - no duplicate side effects
+  edge_base:
+    purpose: Prove malformed input fails explicitly or normalizes intentionally.
+    assertions:
+    - failure is explicit
+    - no silent coercion
+    - no stale state
+  perf_base:
+    purpose: Measure the hot path and bound allocations or repeated work.
+    assertions:
+    - warm path is not worse than cold path
+    - allocation growth stays bounded
+  integration_base:
+    purpose: Validate behavior across local imports and neighboring runtime layers.
+    assertions:
+    - boundary contract holds
+    - cross-file side effects remain stable
+groups:
+- name: smoke
+  description: primitive helper sanity
+  rows:
+  - id: quantum_primitives.smoke.001
+    purpose: Prove the primary contract of `src/foundation/quantum_primitives.dart`
+      can be created and exercised with canonical values.
+    target_symbols: &id001
+    - QLSafe
+    - QLArena
+    - QLReactiveContext
+    - QLSignalBase
+    - QLSignal
+    - QLComputed
+    - QLPhysicsTicker
+    - QLIntegratorRK4
+    setup: Build the minimal valid object graph or runtime context required by this
+      file.
+    input: Canonical values that stay within the most common public-path defaults.
+    body: Call the main entry path twice with the same state to verify repeatability
+      and reuse.
+    expected: The result is stable across repeated calls and no hidden mutation appears.
+    assertions:
+    - observable output matches the documented contract
+    - repeat call returns the same shape
+    - no unexpected extra work is visible
+    metrics:
+    - call count
+    - cache hits
+    - allocation delta
+    risks:
+    - silent eager load
+    - duplicate side effects
+    - state mutation on read
+    cleanup: Reset state and clear caches.
+  - id: quantum_primitives.smoke.002
+    purpose: Confirm the file survives the smallest valid payload and the largest
+      documented trivial payload.
+    target_symbols: *id001
+    setup: Prepare one-item and small-batch fixtures.
+    input: A single item followed by a short repeated batch.
+    body: Execute the same path with one item, then with a small repeated batch.
+    expected: Both inputs are handled without shape loss or unexpected divergence.
+    assertions:
+    - one-item path works
+    - batch path works
+    - batch does not degrade shape
+    metrics:
+    - latency
+    - allocation count
+    risks:
+    - off-by-one handling
+    - shape drift on repeated values
+    cleanup: Reset state and clear caches.
+  - id: quantum_primitives.smoke.003
+    purpose: Ensure the public API does not require hidden global state to produce
+      a valid result.
+    target_symbols: *id001
+    setup: Run in a clean process with no previously initialized caches or registries.
+    input: Fresh process state.
+    body: Invoke the same contract after process-style reset conditions.
+    expected: No hidden singleton is required for success.
+    assertions:
+    - no implicit global dependency
+    - fresh start still succeeds
+    metrics:
+    - startup cost
+    risks:
+    - state leakage across test cases
+    cleanup: Reset state and clear caches.
+- name: edges
+  description: invalid values and boundary conditions
+  rows:
+  - id: quantum_primitives.edges.001
+    purpose: Reject `null`, empty, or missing inputs for `src/foundation/quantum_primitives.dart`
+      in a controlled way.
+    target_symbols: &id002
+    - QLSafe
+    - QLArena
+    - QLReactiveContext
+    - QLSignalBase
+    - QLSignal
+    - QLComputed
+    - QLPhysicsTicker
+    - QLIntegratorRK4
+    setup: Prepare explicit null/empty fixtures and any required default context.
+    input: null, empty, and omitted values.
+    body: Pass malformed inputs through the normal entry path, not a special helper.
+    expected: The file responds with explicit failure or documented fallback, never
+      silent corruption.
+    assertions:
+    - null is handled intentionally
+    - empty input is not accepted as valid data
+    - failure mode is explicit
+    metrics:
+    - failure latency
+    - error count
+    risks:
+    - silent fallback
+    - implicit coercion
+    - crash without context
+    cleanup: Reset state and clear caches.
+  - id: quantum_primitives.edges.002
+    purpose: Exercise malformed types and mixed shapes against the file-specific contract.
+    target_symbols: *id002
+    setup: Prepare values with wrong scalar types, mixed lists, and partially missing
+      nested fields.
+    input: A mixed-shape payload with the wrong scalar type in one branch.
+    body: Feed the malformed structure into the same contract path used by real callers.
+    expected: The contract either normalizes intentionally or rejects with a traceable
+      error.
+    assertions:
+    - wrong type does not pass silently
+    - mixed structures do not corrupt state
+    metrics:
+    - branch coverage
+    - error reporting
+    risks:
+    - silent coercion
+    - partial mutation
+    cleanup: Clear test fixtures and release observers.
+  - id: quantum_primitives.edges.003
+    purpose: Check duplicate, repeated, and out-of-order data for stability and idempotence.
+    target_symbols: *id002
+    setup: Build duplicated and shuffled fixtures.
+    input: Duplicate entries and shuffled order.
+    body: Run the same operation more than once and compare observable state.
+    expected: Duplicate inputs do not produce duplicate side effects unless explicitly
+      required.
+    assertions:
+    - idempotence is preserved
+    - duplicate items do not duplicate state
+    metrics:
+    - duplicate suppression
+    - repeat-call stability
+    risks:
+    - double insert
+    - order sensitivity
+    cleanup: Reset state and clear caches.
+- name: compatibility
+  description: legacy helper behavior
+  rows:
+  - id: quantum_primitives.compatibility.001
+    purpose: Validate older shapes still parse or fail in an explicit backward-compatible
+      way.
+    target_symbols: &id003
+    - QLSafe
+    - QLArena
+    - QLReactiveContext
+    - QLSignalBase
+    - QLSignal
+    - QLComputed
+    - QLPhysicsTicker
+    - QLIntegratorRK4
+    setup: Load legacy fixtures from older contract shapes.
+    input: An older serialized form.
+    body: Parse the legacy input with the current code.
+    expected: Legacy data either migrates cleanly or fails with a deliberate explanation.
+    assertions:
+    - legacy input is intentionally supported or intentionally rejected
+    metrics:
+    - compatibility latency
+    risks:
+    - silent breakage
+    cleanup: Reset state and clear caches.
+  - id: quantum_primitives.compatibility.002
+    purpose: Verify that new fields do not invalidate old core behaviors.
+    target_symbols: *id003
+    setup: Use a payload that mixes old and new keys.
+    input: Old + new field names together.
+    body: Run the same contract on mixed shapes.
+    expected: The old path still works, and the new path is additive rather than destructive.
+    assertions:
+    - old behavior survives
+    - new fields are additive
+    metrics:
+    - migration cost
+    risks:
+    - breaking rename
+    cleanup: Reset state and clear caches.
+  - id: quantum_primitives.compatibility.003
+    purpose: Check fallback coercions and legacy defaults do not hide data loss.
+    target_symbols: *id003
+    setup: Remove optional data and rely on defaults only where intended.
+    input: Legacy-like partial input.
+    body: Execute the normal parse/bind/store flow.
+    expected: Defaults are explicit and do not swallow meaningful input.
+    assertions:
+    - defaults are explicit
+    metrics:
+    - coercion count
+    risks:
+    - silent fallback that hides bugs
+    cleanup: Reset state and clear caches.
+- name: performance
+  description: tight-loop invocation
+  rows:
+  - id: quantum_primitives.performance.001
+    purpose: Profile the hot path for `src/foundation/quantum_primitives.dart` with
+      a large but realistic workload.
+    target_symbols: &id004
+    - QLSafe
+    - QLArena
+    - QLReactiveContext
+    - QLSignalBase
+    - QLSignal
+    - QLComputed
+    - QLPhysicsTicker
+    - QLIntegratorRK4
+    setup: Prepare a large input set with stable shape and repeated access patterns.
+    input: Large valid dataset and repeated reads.
+    body: Measure the primary operation repeatedly and compare cold vs warm behavior.
+    expected: Warm-path behavior improves or remains stable, with no hidden quadratic
+      work.
+    assertions:
+    - warm path is faster or equal
+    - no repeated recomputation
+    metrics:
+    - wall time
+    - allocations
+    - cache hits
+    risks:
+    - quadratic scan
+    - unbounded copying
+    - hidden eager load
+    cleanup: Reset state and clear caches.
+  - id: quantum_primitives.performance.002
+    purpose: Ensure cached or memoized work in `src/foundation/quantum_primitives.dart`
+      is invalidated precisely when input changes.
+    target_symbols: *id004
+    setup: Prime the cache, then change one field or dependency at a time.
+    input: Same input after one controlled mutation.
+    body: Read twice, mutate once, then read again.
+    expected: Only the changed branch recomputes; unrelated branches stay cached.
+    assertions:
+    - cache invalidates precisely
+    - unrelated work stays reused
+    metrics:
+    - recompute count
+    - cache-hit ratio
+    risks:
+    - stale cache
+    - over-invalidation
+    cleanup: Reset state and clear caches.
+  - id: quantum_primitives.performance.003
+    purpose: Check that lazy materialization only happens on demand and not before
+      the first access boundary.
+    target_symbols: *id004
+    setup: Prime a lazy fixture without touching the heavy branch.
+    input: A handle or metadata-only input before heavy data access.
+    body: Inspect the object, then touch the heavy branch once.
+    expected: No heavy work occurs before access, and the first access is explicit
+      and measurable.
+    assertions:
+    - no eager load before access
+    - first access triggers exactly one load
+    metrics:
+    - first-access latency
+    - eager-load count
+    risks:
+    - hidden prefetch
+    - double fetch
+    cleanup: Reset state and clear caches.
+- name: regression
+  description: unexpected coercion or silent drift
+  rows:
+  - id: quantum_primitives.regression.001
+    purpose: Exercise the `regression` branch under the file-specific contract.
+    target_symbols: &id005
+    - QLSafe
+    - QLArena
+    - QLReactiveContext
+    - QLSignalBase
+    - QLSignal
+    - QLComputed
+    - QLPhysicsTicker
+    - QLIntegratorRK4
+    setup: Prepare a realistic fixture that targets this branch.
+    input: A representative valid input for the branch.
+    body: Run the branch using the public API.
+    expected: The output matches the documented contract.
+    assertions:
+    - branch contract holds
+    metrics:
+    - latency
+    risks:
+    - silent mismatch
+    cleanup: Reset state and clear caches.
+  - id: quantum_primitives.regression.002
+    purpose: Exercise the `regression` branch with malformed or partial input.
+    target_symbols: *id005
+    setup: Prepare a malformed or partial variant.
+    input: Invalid or incomplete data.
+    body: Run the same public API path.
+    expected: The branch fails explicitly or normalizes intentionally.
+    assertions:
+    - failure is explicit
+    metrics:
+    - error path latency
+    risks:
+    - silent coercion
+    cleanup: Reset state and clear caches.
+  - id: quantum_primitives.regression.003
+    purpose: Repeat the `regression` branch to prove stable behavior.
+    target_symbols: *id005
+    setup: Prime and repeat the same fixture.
+    input: Identical repeated input.
+    body: Compare output, side effects, and allocation behavior.
+    expected: Repeated execution stays stable and bounded.
+    assertions:
+    - repeatability
+    metrics:
+    - repeat latency
+    risks:
+    - duplicate side effects
+    cleanup: Reset state and clear caches.
+regeneration_triggers:
+- signature changes
+- import changes that affect behavior
+- serialization or cache logic changes
+- new branches, platform paths, or fallback rules
+supplements: []

@@ -1,0 +1,125 @@
+{
+  "__meta": {
+    "id": "nested-092-screen-092",
+    "title": "Mixed nested screen #092",
+    "description": "Parallel fan-out and error boundaries should compose inside a parent screen.",
+    "tags": [
+      "nested",
+      "parallel",
+      "error-boundary"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "box:col",
+    "children": [
+      {
+        "$parallel": [
+          {
+            "type": "text",
+            "props": {
+              "text": "A092"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "B092"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "C092"
+            }
+          }
+        ]
+      },
+      {
+        "$try": {
+          "type": "text",
+          "props": {
+            "text": "Risky 092"
+          }
+        },
+        "$catch": {
+          "type": "text",
+          "props": {
+            "text": "Recovered 092"
+          }
+        },
+        "$finally": {
+          "type": "text",
+          "props": {
+            "text": "Done 092"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:col",
+    "props": {},
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "box:col",
+        "props": {},
+        "debugPath": "root[0]",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "A092"
+            },
+            "debugPath": "root[0][0]"
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "B092"
+            },
+            "debugPath": "root[0][1]"
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "C092"
+            },
+            "debugPath": "root[0][2]"
+          }
+        ]
+      },
+      {
+        "type": "hook",
+        "props": {
+          "__subType": "error_boundary"
+        },
+        "debugPath": "root[1]",
+        "slots": {
+          "try": {
+            "type": "text",
+            "props": {
+              "text": "Risky 092"
+            },
+            "debugPath": "root[1].slots[try]"
+          },
+          "catch": {
+            "type": "text",
+            "props": {
+              "text": "Recovered 092"
+            },
+            "debugPath": "root[1].slots[catch]"
+          },
+          "finally": {
+            "type": "text",
+            "props": {
+              "text": "Done 092"
+            },
+            "debugPath": "root[1].slots[finally]"
+          }
+        }
+      }
+    ]
+  }
+}

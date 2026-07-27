@@ -1,0 +1,548 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/features/charts/quantum_charts.dart
+  docs_file: docs/src/features/charts/quantum_charts.dart.md
+  source_entry:
+    line_count: 810
+    byte_count: 27151
+    class_count: 6
+    enum_count: 1
+    function_count: 16
+    category: visual
+    test_count: 10
+  scenario_count: 10
+source:
+  path: src/features/charts/quantum_charts.dart
+  docs_path: docs/src/features/charts/quantum_charts.dart.md
+  label: src/features/charts/quantum_charts.dart
+scenarios:
+- uuid: 723ff0ca-0a33-59bd-a4f3-2d290fd86042
+  file: lib/src/features/charts/quantum_charts.dart
+  docs_file: docs/src/features/charts/quantum_charts.dart.md
+  title: 'Quantum Charts: public contract remains stable under valid input'
+  slug: contract
+  category: visual
+  severity: critical
+  description: Verify that quantum charts keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/features/charts/quantum_charts.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/features/charts/quantum_charts.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A feature module under the framework feature set. It usually contains a specialized engine for charts or media processing built on top of the common primitives. Author-intent note: OMEGA CHART ENGINE (PURE FLUTTER, SIMD OPTIMIZED, ZERO-COPY)'
+    headings:
+    - '`src/features/charts/quantum_charts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - contract
+  - quantum charts
+- uuid: 095281e9-0e7f-5942-8297-8d91dbc47675
+  file: lib/src/features/charts/quantum_charts.dart
+  docs_file: docs/src/features/charts/quantum_charts.dart.md
+  title: 'Quantum Charts: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: visual
+  severity: critical
+  description: Verify that quantum charts keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/features/charts/quantum_charts.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/features/charts/quantum_charts.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A feature module under the framework feature set. It usually contains a specialized engine for charts or media processing built on top of the common primitives. Author-intent note: OMEGA CHART ENGINE (PURE FLUTTER, SIMD OPTIMIZED, ZERO-COPY)'
+    headings:
+    - '`src/features/charts/quantum_charts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - invalid_input
+  - quantum charts
+- uuid: 3774bf6b-09a6-56d6-ada9-fa98a5c09ab0
+  file: lib/src/features/charts/quantum_charts.dart
+  docs_file: docs/src/features/charts/quantum_charts.dart.md
+  title: 'Quantum Charts: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: visual
+  severity: high
+  description: Verify that quantum charts keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/features/charts/quantum_charts.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/features/charts/quantum_charts.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A feature module under the framework feature set. It usually contains a specialized engine for charts or media processing built on top of the common primitives. Author-intent note: OMEGA CHART ENGINE (PURE FLUTTER, SIMD OPTIMIZED, ZERO-COPY)'
+    headings:
+    - '`src/features/charts/quantum_charts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - reentrant
+  - quantum charts
+- uuid: 8fa0e1cf-7a0a-5445-ae5e-fd0d6c2ee7fd
+  file: lib/src/features/charts/quantum_charts.dart
+  docs_file: docs/src/features/charts/quantum_charts.dart.md
+  title: 'Quantum Charts: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: visual
+  severity: high
+  description: Verify that quantum charts keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/features/charts/quantum_charts.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/features/charts/quantum_charts.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A feature module under the framework feature set. It usually contains a specialized engine for charts or media processing built on top of the common primitives. Author-intent note: OMEGA CHART ENGINE (PURE FLUTTER, SIMD OPTIMIZED, ZERO-COPY)'
+    headings:
+    - '`src/features/charts/quantum_charts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - cleanup
+  - quantum charts
+- uuid: 9d726a0a-9d09-5af7-9717-cf6312f60ba7
+  file: lib/src/features/charts/quantum_charts.dart
+  docs_file: docs/src/features/charts/quantum_charts.dart.md
+  title: 'Quantum Charts: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: visual
+  severity: high
+  description: Verify that quantum charts keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/features/charts/quantum_charts.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/features/charts/quantum_charts.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A feature module under the framework feature set. It usually contains a specialized engine for charts or media processing built on top of the common primitives. Author-intent note: OMEGA CHART ENGINE (PURE FLUTTER, SIMD OPTIMIZED, ZERO-COPY)'
+    headings:
+    - '`src/features/charts/quantum_charts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - performance
+  - quantum charts
+- uuid: 12193580-4851-5353-b2fa-51f98a2e760e
+  file: lib/src/features/charts/quantum_charts.dart
+  docs_file: docs/src/features/charts/quantum_charts.dart.md
+  title: 'Quantum Charts: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: visual
+  severity: medium
+  description: Verify that quantum charts keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/features/charts/quantum_charts.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/features/charts/quantum_charts.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A feature module under the framework feature set. It usually contains a specialized engine for charts or media processing built on top of the common primitives. Author-intent note: OMEGA CHART ENGINE (PURE FLUTTER, SIMD OPTIMIZED, ZERO-COPY)'
+    headings:
+    - '`src/features/charts/quantum_charts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - memory
+  - quantum charts
+- uuid: ed7e12fc-03b5-525c-ae62-7969db9eb17d
+  file: lib/src/features/charts/quantum_charts.dart
+  docs_file: docs/src/features/charts/quantum_charts.dart.md
+  title: 'Quantum Charts: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: visual
+  severity: medium
+  description: Verify that quantum charts keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/features/charts/quantum_charts.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/features/charts/quantum_charts.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A feature module under the framework feature set. It usually contains a specialized engine for charts or media processing built on top of the common primitives. Author-intent note: OMEGA CHART ENGINE (PURE FLUTTER, SIMD OPTIMIZED, ZERO-COPY)'
+    headings:
+    - '`src/features/charts/quantum_charts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - docs_parity
+  - quantum charts
+- uuid: 6f43297b-3b83-5082-9cec-dcf30a9a8c42
+  file: lib/src/features/charts/quantum_charts.dart
+  docs_file: docs/src/features/charts/quantum_charts.dart.md
+  title: 'Quantum Charts: rendering remains correct for large, dense, and animated content'
+  slug: render
+  category: visual
+  severity: medium
+  description: Verify that quantum charts keeps its documented runtime behavior while handling render conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/features/charts/quantum_charts.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/features/charts/quantum_charts.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A feature module under the framework feature set. It usually contains a specialized engine for charts or media processing built on top of the common primitives. Author-intent note: OMEGA CHART ENGINE (PURE FLUTTER, SIMD OPTIMIZED, ZERO-COPY)'
+    headings:
+    - '`src/features/charts/quantum_charts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - render
+  - quantum charts
+- uuid: 83bf5f28-cf1c-57e5-838d-f4d69398aaf3
+  file: lib/src/features/charts/quantum_charts.dart
+  docs_file: docs/src/features/charts/quantum_charts.dart.md
+  title: 'Quantum Charts: pointer hover and selection feedback stay synchronized with paint state'
+  slug: hover
+  category: visual
+  severity: medium
+  description: Verify that quantum charts keeps its documented runtime behavior while handling hover conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/features/charts/quantum_charts.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/features/charts/quantum_charts.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A feature module under the framework feature set. It usually contains a specialized engine for charts or media processing built on top of the common primitives. Author-intent note: OMEGA CHART ENGINE (PURE FLUTTER, SIMD OPTIMIZED, ZERO-COPY)'
+    headings:
+    - '`src/features/charts/quantum_charts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - hover
+  - quantum charts
+- uuid: a0b760fa-3751-521a-8636-ed317314057e
+  file: lib/src/features/charts/quantum_charts.dart
+  docs_file: docs/src/features/charts/quantum_charts.dart.md
+  title: 'Quantum Charts: frame budget remains acceptable when the view is stressed'
+  slug: frame
+  category: visual
+  severity: medium
+  description: Verify that quantum charts keeps its documented runtime behavior while handling frame conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/features/charts/quantum_charts.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/features/charts/quantum_charts.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A feature module under the framework feature set. It usually contains a specialized engine for charts or media processing built on top of the common primitives. Author-intent note: OMEGA CHART ENGINE (PURE FLUTTER, SIMD OPTIMIZED, ZERO-COPY)'
+    headings:
+    - '`src/features/charts/quantum_charts.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - frame
+  - quantum charts

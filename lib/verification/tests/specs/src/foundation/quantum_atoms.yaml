@@ -1,0 +1,439 @@
+file: lib/src/foundation/quantum_atoms.dart
+docs_file: docs/src/foundation/quantum_atoms.dart.md
+line_count: 302
+category: runtime
+tests:
+- uuid: a7afecba-34aa-50b6-b020-425be47f5db5
+  file: lib/src/foundation/quantum_atoms.dart
+  docs_file: docs/src/foundation/quantum_atoms.dart.md
+  title: 'Quantum Atoms: public contract remains stable under valid input'
+  slug: contract
+  category: runtime
+  severity: critical
+  description: Verify that quantum atoms keeps its documented runtime behavior while
+    handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_atoms.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_atoms.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else.
+    headings:
+    - '`src/foundation/quantum_atoms.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - contract
+  - quantum atoms
+- uuid: 8aba3a9c-bd5c-5efc-8dd4-e533c7b0608e
+  file: lib/src/foundation/quantum_atoms.dart
+  docs_file: docs/src/foundation/quantum_atoms.dart.md
+  title: 'Quantum Atoms: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: runtime
+  severity: critical
+  description: Verify that quantum atoms keeps its documented runtime behavior while
+    handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_atoms.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_atoms.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else.
+    headings:
+    - '`src/foundation/quantum_atoms.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - invalid_input
+  - quantum atoms
+- uuid: 878c81f7-4c4e-5a74-af3e-370e06c19e5f
+  file: lib/src/foundation/quantum_atoms.dart
+  docs_file: docs/src/foundation/quantum_atoms.dart.md
+  title: 'Quantum Atoms: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: runtime
+  severity: high
+  description: Verify that quantum atoms keeps its documented runtime behavior while
+    handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_atoms.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_atoms.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else.
+    headings:
+    - '`src/foundation/quantum_atoms.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - reentrant
+  - quantum atoms
+- uuid: 7b28dc8a-7cdf-5669-bc7f-b67bf9c8793b
+  file: lib/src/foundation/quantum_atoms.dart
+  docs_file: docs/src/foundation/quantum_atoms.dart.md
+  title: 'Quantum Atoms: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: runtime
+  severity: high
+  description: Verify that quantum atoms keeps its documented runtime behavior while
+    handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_atoms.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_atoms.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else.
+    headings:
+    - '`src/foundation/quantum_atoms.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - cleanup
+  - quantum atoms
+- uuid: 664dd7bd-6595-5ff5-9a2a-abca707547e6
+  file: lib/src/foundation/quantum_atoms.dart
+  docs_file: docs/src/foundation/quantum_atoms.dart.md
+  title: 'Quantum Atoms: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: runtime
+  severity: high
+  description: Verify that quantum atoms keeps its documented runtime behavior while
+    handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_atoms.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_atoms.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else.
+    headings:
+    - '`src/foundation/quantum_atoms.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - performance
+  - quantum atoms
+- uuid: 95eaf4db-ddb1-5e5b-8c44-a9f8f6d7286b
+  file: lib/src/foundation/quantum_atoms.dart
+  docs_file: docs/src/foundation/quantum_atoms.dart.md
+  title: 'Quantum Atoms: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: runtime
+  severity: medium
+  description: Verify that quantum atoms keeps its documented runtime behavior while
+    handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_atoms.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_atoms.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else.
+    headings:
+    - '`src/foundation/quantum_atoms.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - memory
+  - quantum atoms
+- uuid: 99ddde0d-a8ce-5c47-95bb-ab4c1956f149
+  file: lib/src/foundation/quantum_atoms.dart
+  docs_file: docs/src/foundation/quantum_atoms.dart.md
+  title: 'Quantum Atoms: the runtime surface still matches the documented API and
+    headings'
+  slug: docs_parity
+  category: runtime
+  severity: medium
+  description: Verify that quantum atoms keeps its documented runtime behavior while
+    handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_atoms.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_atoms.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else.
+    headings:
+    - '`src/foundation/quantum_atoms.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - docs_parity
+  - quantum atoms
+- uuid: 454c122e-c023-5510-9eea-9904353407f7
+  file: lib/src/foundation/quantum_atoms.dart
+  docs_file: docs/src/foundation/quantum_atoms.dart.md
+  title: 'Quantum Atoms: registry and dispatch semantics remain correct under mixed
+    workload'
+  slug: registry
+  category: runtime
+  severity: medium
+  description: Verify that quantum atoms keeps its documented runtime behavior while
+    handling registry conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_atoms.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_atoms.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else.
+    headings:
+    - '`src/foundation/quantum_atoms.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - registry
+  - quantum atoms

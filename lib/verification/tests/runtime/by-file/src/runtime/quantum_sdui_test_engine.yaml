@@ -1,0 +1,378 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/runtime/quantum_sdui_test_engine.dart
+  docs_file: null
+  source_entry:
+    line_count: 13
+    byte_count: 850
+    class_count: 0
+    enum_count: 0
+    function_count: 0
+    category: runtime
+    test_count: 8
+  scenario_count: 8
+source:
+  path: src/runtime/quantum_sdui_test_engine.dart
+  docs_path: null
+  label: src/runtime/quantum_sdui_test_engine.dart
+scenarios:
+- uuid: cee86a0e-ebda-552d-89bb-ea16705895a7
+  file: lib/src/runtime/quantum_sdui_test_engine.dart
+  docs_file: null
+  title: 'Quantum Sdui Test Engine: public contract remains stable under valid input'
+  slug: contract
+  category: runtime
+  severity: critical
+  description: Verify that quantum sdui test engine keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_test_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - contract
+  - quantum sdui test engine
+- uuid: 132f6f49-26ab-55fb-9513-b5d47cc21a7b
+  file: lib/src/runtime/quantum_sdui_test_engine.dart
+  docs_file: null
+  title: 'Quantum Sdui Test Engine: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: runtime
+  severity: critical
+  description: Verify that quantum sdui test engine keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_test_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - invalid_input
+  - quantum sdui test engine
+- uuid: 43a9c16f-271e-5b4b-9a76-66287c2f5658
+  file: lib/src/runtime/quantum_sdui_test_engine.dart
+  docs_file: null
+  title: 'Quantum Sdui Test Engine: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: runtime
+  severity: high
+  description: Verify that quantum sdui test engine keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_test_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - reentrant
+  - quantum sdui test engine
+- uuid: 845c6b1d-311e-5d4a-96bf-3b3dea5bab8a
+  file: lib/src/runtime/quantum_sdui_test_engine.dart
+  docs_file: null
+  title: 'Quantum Sdui Test Engine: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: runtime
+  severity: high
+  description: Verify that quantum sdui test engine keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_test_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - cleanup
+  - quantum sdui test engine
+- uuid: c2f41df2-b2d9-5229-b92f-1aaa9e8a7211
+  file: lib/src/runtime/quantum_sdui_test_engine.dart
+  docs_file: null
+  title: 'Quantum Sdui Test Engine: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: runtime
+  severity: high
+  description: Verify that quantum sdui test engine keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_test_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - performance
+  - quantum sdui test engine
+- uuid: b0c26728-eb6f-547f-ab19-0c90a70576d7
+  file: lib/src/runtime/quantum_sdui_test_engine.dart
+  docs_file: null
+  title: 'Quantum Sdui Test Engine: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: runtime
+  severity: medium
+  description: Verify that quantum sdui test engine keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_test_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - memory
+  - quantum sdui test engine
+- uuid: a339b9ba-ad19-57f9-bebf-b2579ddc4b6f
+  file: lib/src/runtime/quantum_sdui_test_engine.dart
+  docs_file: null
+  title: 'Quantum Sdui Test Engine: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: runtime
+  severity: medium
+  description: Verify that quantum sdui test engine keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_test_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - docs_parity
+  - quantum sdui test engine
+- uuid: 8f341dec-057b-50c5-8f85-b59c1050366b
+  file: lib/src/runtime/quantum_sdui_test_engine.dart
+  docs_file: null
+  title: 'Quantum Sdui Test Engine: registry and dispatch semantics remain correct under mixed workload'
+  slug: registry
+  category: runtime
+  severity: medium
+  description: Verify that quantum sdui test engine keeps its documented runtime behavior while handling registry conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_test_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in the matching docs file.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: ''
+    headings: []
+  tags:
+  - runtime
+  - registry
+  - quantum sdui test engine

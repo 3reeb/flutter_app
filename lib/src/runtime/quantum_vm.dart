@@ -17,9 +17,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:collection/collection.dart';
-
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 part 'quantum_vm_components.dart';
 
 class QuantumSecurityException implements Exception {
@@ -968,6 +966,10 @@ abstract final class QLCompiler {
       if (children.isNotEmpty) out['children'] = children;
     }
 
+    if (out.containsKey('type') && out['type'] == null) {
+      throw const FormatException('Node missing type');
+    }
+
     if (out['type'] != null) {
       String type = out['type'].toString();
 
@@ -983,18 +985,41 @@ abstract final class QLCompiler {
       final colonParts = type.split(':');
       final String baseType = colonParts[0];
       final String subType = colonParts.length > 1 ? colonParts[1] : '';
-      out['props'] ??= <String, dynamic>{};
-      if (subType.isNotEmpty) {
-        out['props']['__subType'] = subType;
-      }
 
-      // Preserve structural box subtypes in the public type so callers and
-      // fixtures can distinguish row/col layouts, while all other colon forms
-      // continue to normalize to their base plugin type.
       if (baseType == 'box' && subType.isNotEmpty) {
         out['type'] = type;
       } else {
         out['type'] = baseType;
+        if (subType.isNotEmpty) {
+          out['props'] ??= <String, dynamic>{};
+          out['props']['__subType'] = subType;
+        }
+      }
+      
+      final actualSubType = subType.isNotEmpty ? subType : (out['props']?['__subType']?.toString() ?? '');
+
+      if (baseType == 'data' && actualSubType == 'paginated') {
+        if (out['props']?['pageSize'] == null) {
+          throw const FormatException('data:paginated requires pageSize');
+        }
+      }
+      
+      if (baseType == 'data' && actualSubType == 'diff') {
+        if (out['props']?['keyBy'] == null && out['props']?['key'] == null) {
+          throw const FormatException('data:diff requires keyBy or key');
+        }
+      }
+      
+      if (baseType == 'field' && actualSubType == 'slider') {
+        final props = out['props'] as Map?;
+        if (props != null && props.containsKey('defaultValue')) {
+          final val = num.tryParse(props['defaultValue'].toString());
+          final min = num.tryParse(props['min']?.toString() ?? '0') ?? 0;
+          final max = num.tryParse(props['max']?.toString() ?? '100') ?? 100;
+          if (val != null && (val < min || val > max)) {
+            throw const FormatException('Slider defaultValue outside min/max range');
+          }
+        }
       }
     }
 
@@ -1009,13 +1034,10 @@ abstract final class QLCompiler {
 
     if (out['props'] != null) {
       _parseMicroActions(out['props']);
-      _tokenizeNodeProperties(out['props'] as Map, 0);
     }
 
     if (out['type'] == 'box:split') {
-      out['style'] = out['style'] == null
-          ? 'min-w-0 min-h-0'
-          : '${out['style']} min-w-0 min-h-0';
+      out['style'] = mergeStyleTokens([out['style'], 'min-w-0 min-h-0']);
     }
 
     return out;
@@ -1158,41 +1180,37 @@ abstract final class QLCompiler {
     }
 
     if (node.containsKey(r'$apply')) {
-      final Map applyDef = node[r'$apply'];
-      final Map overrideProps = applyDef['props'] ?? {};
-      final String? styleStr = applyDef['style'];
+      final Map applyDef = node[r'$apply'] is Map
+          ? Map<String, dynamic>.from(node[r'$apply'] as Map)
+          : <String, dynamic>{};
+      final Map<String, dynamic> overrideProps =
+          Map<String, dynamic>.from(applyDef['props'] as Map? ?? const {});
+      final String? styleStr = applyDef['style']?.toString();
       final bool isMerge = applyDef['mode'] != 'override';
 
-      if (node['children'] is List) {
-        final List rawChildren = node['children'];
-        for (int i = 0; i < rawChildren.length; i++) {
-          Map child = _normalizeNode(rawChildren[i]);
-          child['props'] ??= <String, dynamic>{};
-          if (overrideProps.isNotEmpty) {
-            if (isMerge)
-              (child['props'] as Map).addAll(overrideProps);
-            else
-              child['props'] = Map<String, dynamic>.from(overrideProps);
+      final List rawChildren = node['children'] is List
+          ? List<dynamic>.from(node['children'] as List)
+          : const <dynamic>[];
+      final List<QLBlueprint> comp = [];
+      for (int i = 0; i < rawChildren.length; i++) {
+        final Map<String, dynamic> child = _normalizeNode(rawChildren[i]);
+        child['props'] ??= <String, dynamic>{};
+        if (overrideProps.isNotEmpty) {
+          if (isMerge) {
+            (child['props'] as Map).addAll(overrideProps);
+          } else {
+            child['props'] = Map<String, dynamic>.from(overrideProps);
           }
-          if (styleStr != null) {
-            child['style'] = isMerge && child['style'] != null
-                ? '${child['style']} $styleStr'.trim()
-                : styleStr;
-          }
-          rawChildren[i] = child;
         }
-      }
-
-      if (node['type'] == null ||
-          node['type'] == 'wrapper' ||
-          node['type'] == '\$apply') {
-        final List<QLBlueprint> comp = [];
-        for (int i = 0; i < (node['children'] as List? ?? []).length; i++) {
-          comp.addAll(_processNode(
-              node['children'][i], macros, currentEnv, depth + 1, parentPath));
+        if (styleStr != null) {
+          child['style'] = isMerge && child['style'] != null
+              ? '${child['style']} $styleStr'.trim()
+              : styleStr;
         }
-        return comp;
+        comp.addAll(
+            _processNode(child, macros, currentEnv, depth + 1, parentPath));
       }
+      return comp;
     }
 
     if (node.containsKey(r'$layout')) {
@@ -1315,7 +1333,7 @@ abstract final class QLCompiler {
       final def = node[r'$machine'] is Map
           ? node[r'$machine'] as Map<String, dynamic>
           : <String, dynamic>{};
-      return _processNode({
+      final Map<String, dynamic> machineNode = {
         'type': 'control',
         'props': {
           '__subType': 'machine',
@@ -1325,20 +1343,41 @@ abstract final class QLCompiler {
           'context': def['context'] ?? const <String, dynamic>{}
         },
         if (node['children'] != null) 'children': node['children'],
-      }, macros, currentEnv, depth + 1, parentPath);
+      };
+
+      if (node['type'] == null || node['type'] == 'wrapper') {
+        return _processNode(
+            machineNode, macros, currentEnv, depth + 1, parentPath);
+      }
+
+      if (node['children'] is List) {
+        final List children = List<dynamic>.from(node['children'] as List);
+        if (children.isNotEmpty) {
+          final dynamic firstChild = children.removeAt(0);
+          node['children'] = [
+            {
+              ...machineNode,
+              'children': [firstChild],
+            },
+            ...children,
+          ];
+        } else {
+          node['children'] = [machineNode];
+        }
+      } else {
+        node['children'] = [machineNode];
+      }
     }
 
     // ── $throttle / $debounce → system:throttle/debounce wrapper ─────────────
     if (node.containsKey(r'$throttle') || node.containsKey(r'$debounce')) {
       final ms = (node[r'$throttle'] ?? node[r'$debounce']) as int? ?? 100;
       final mode = node.containsKey(r'$throttle') ? 'throttle' : 'debounce';
-      final inner = _deepCopy(node)
-        ..remove(r'$throttle')
-        ..remove(r'$debounce');
       return _processNode({
         'type': 'system',
         'props': {'__subType': mode, 'ms': ms},
-        'children': [inner]
+        if (node['children'] != null) 'children': node['children'],
+        if (node['slots'] != null) 'slots': node['slots'],
       }, macros, currentEnv, depth + 1, parentPath);
     }
 
@@ -1394,9 +1433,17 @@ abstract final class QLCompiler {
           currentEnv, depth + 1, parentPath);
     }
 
-    final String currentPath = node['name'] != null
-        ? (parentPath.isEmpty ? node['name'] : '$parentPath.${node['name']}')
-        : parentPath;
+    final dynamic explicitName =
+        node['name'] ?? (node['props'] is Map ? node['props']['name'] : null);
+    final String currentPath = explicitName != null
+        ? (parentPath.isEmpty
+            ? explicitName.isEmpty
+                ? "root"
+                : explicitName.toString()
+            : '$parentPath.${explicitName.toString()}')
+        : (parentPath.isEmpty ? 'root' : parentPath);
+
+    // final String currentPath = parentPath.isEmpty ? 'root' : parentPath;
 
     final String resolvedType =
         _injectCompileTime(node['type']?.toString() ?? 'box:col', currentEnv);
@@ -1482,6 +1529,19 @@ abstract final class QLCompiler {
     );
 
     if (node['state'] != null) {
+      final Map<String, dynamic> childProps =
+          Map<String, dynamic>.from(safeProps)
+            ..remove('name')
+            ..remove('slot');
+      final QLBlueprint childBlueprint = QLBlueprint(
+        type: resolvedType,
+        props: Map.unmodifiable(childProps),
+        style: compiledStyle,
+        children: List.unmodifiable(children),
+        slots: resolvedSlots,
+        debugPath: currentPath,
+      );
+
       return [
         QLBlueprint(
           type: 'system',
@@ -1491,7 +1551,7 @@ abstract final class QLCompiler {
                 _injectCompileTimeStructurally(node['state'], currentEnv)
           },
           debugPath: '$currentPath.store_provider',
-          children: [coreBlueprint],
+          children: [childBlueprint],
         )
       ];
     }
@@ -2640,14 +2700,50 @@ class QuantumVM {
       'webrtc'
     ],
     'portal': <String>[
+      'action_sheet',
+      'alert',
+      'anchored_floating',
+      'centered',
+      'confirm',
       'context_menu',
+      'context_panel',
+      'dialog',
+      'docked',
       'drawer',
+      'dropdown',
+      'edge_attached',
+      'expandable_inline',
+      'flyout',
+      'form_modal',
+      'full_page_sheet',
+      'full_screen',
+      'full_screen_surface',
+      'immersive_editor',
+      'inline_details',
+      'inline_editor',
+      'inspector',
+      'lightbox',
+      'left_panel',
       'menu',
+      'mobile_sheet',
+      'modal',
+      'navigation_rail',
+      'nonModal',
+      'non_modal',
       'overlay',
       'overlay_entry',
+      'persistent_drawer',
+      'persistent_panel',
       'popover',
+      'popup_modal',
+      'right_panel',
       'sheet',
+      'sidebar',
+      'side_sheet',
       'toast',
+      'temporary_overlay',
+      'tooltip',
+      'utility_panel',
       'window'
     ],
     'stream': <String>['multiplex', 'ring', 'sse', 'tick', 'ws'],
@@ -5489,7 +5585,7 @@ class QuantumVM {
   QLPlugin? getPlugin(String type) => _plugins[type];
 
   QToken compileStyle(String style) {
-    final normalized = style.trim().replaceAll(RegExp(r'\s+'), ' ');
+    final normalized = mergeStyleTokens([style]);
     return _styleTokens.getOrPut(
       normalized,
       () {
@@ -5694,10 +5790,11 @@ class QuantumVM {
         }
 
         if (actionName == null || !_actions.containsKey(actionName)) {
-          print('ACTION SKIP: actionName=$actionName, hasKey=${_actions.containsKey(actionName)}');
+          print(
+              'ACTION SKIP: actionName=$actionName, hasKey=${_actions.containsKey(actionName)}');
           continue;
         }
-        
+
         print('ACTION EXECUTING: $actionName');
 
         final Map<String, dynamic> payload = actionMap.map((k, v) => MapEntry(
@@ -7055,4 +7152,65 @@ class _QEEDummyContext implements BuildContext {
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError(
       'Cannot call BuildContext methods in headless engine tests.');
+}
+
+class QLLazySchemaViewReadPlan {
+  final List<String> requested;
+  final List<String> available;
+  final List<String> missing;
+
+  const QLLazySchemaViewReadPlan({
+    required this.requested,
+    required this.available,
+    required this.missing,
+  });
+
+  bool get needsFetch => missing.isNotEmpty;
+
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'requested': requested,
+        'available': available,
+        'missing': missing,
+        'needsFetch': needsFetch,
+      };
+}
+
+extension QLLazySchemaViewSmartSelect on QLLazySchemaView {
+  List<String> normalizeSelection(Iterable<String>? names) {
+    final raw = names
+            ?.map((e) => e.trim())
+            .where((e) => e.isNotEmpty)
+            .toList(growable: false) ??
+        const <String>[];
+    if (raw.isEmpty) return fieldNames.toList(growable: false);
+    return raw.toList(growable: false);
+  }
+
+  QLLazySchemaViewReadPlan buildReadPlan(Iterable<String>? names) {
+    final requested = normalizeSelection(names);
+    final available = <String>[];
+    final missing = <String>[];
+    for (final name in requested) {
+      // Renamed local variable from 'field' to 'fieldSlice' to avoid shadowing the 'field()' method
+      final fieldSlice = field(name);
+      if (fieldSlice == null) {
+        missing.add(name);
+      } else {
+        available.add(name);
+      }
+    }
+    return QLLazySchemaViewReadPlan(
+      requested: requested,
+      available: available,
+      missing: missing,
+    );
+  }
+
+  Map<String, dynamic> project(Iterable<String>? names) =>
+      pick(normalizeSelection(names));
+
+  bool hasAll(Iterable<String>? names) => !buildReadPlan(names).needsFetch;
+
+  Iterable<String> missingFields(Iterable<String>? names) =>
+      buildReadPlan(names).missing;
 }

@@ -1,0 +1,840 @@
+file: lib/src/runtime/quantum_embodiment_engine.dart
+docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
+line_count: 2365
+category: ui
+tests:
+- uuid: c9875e54-21b1-5e56-9a13-8208c4063167
+  file: lib/src/runtime/quantum_embodiment_engine.dart
+  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
+  title: 'Quantum Embodiment Engine: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum embodiment engine keeps its documented runtime
+    behavior while handling contract conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
+      (QEE) v1.0 — RUNTIME INTERACTION ENGINE'
+    headings:
+    - '`src/runtime/quantum_embodiment_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum embodiment engine
+- uuid: f6f9e705-2911-5806-aed1-000805da5cf7
+  file: lib/src/runtime/quantum_embodiment_engine.dart
+  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
+  title: 'Quantum Embodiment Engine: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum embodiment engine keeps its documented runtime
+    behavior while handling invalid input conditions without corruption, leakage,
+    or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
+      (QEE) v1.0 — RUNTIME INTERACTION ENGINE'
+    headings:
+    - '`src/runtime/quantum_embodiment_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum embodiment engine
+- uuid: dfc80f50-00a9-55b6-b95f-ca338fa04c41
+  file: lib/src/runtime/quantum_embodiment_engine.dart
+  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
+  title: 'Quantum Embodiment Engine: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum embodiment engine keeps its documented runtime
+    behavior while handling reentrant conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
+      (QEE) v1.0 — RUNTIME INTERACTION ENGINE'
+    headings:
+    - '`src/runtime/quantum_embodiment_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum embodiment engine
+- uuid: 58d0d408-bf10-5993-990c-339ace53d558
+  file: lib/src/runtime/quantum_embodiment_engine.dart
+  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
+  title: 'Quantum Embodiment Engine: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum embodiment engine keeps its documented runtime
+    behavior while handling cleanup conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
+      (QEE) v1.0 — RUNTIME INTERACTION ENGINE'
+    headings:
+    - '`src/runtime/quantum_embodiment_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum embodiment engine
+- uuid: eb8f0c1f-8c06-58e5-80b4-d3c9925e2f3c
+  file: lib/src/runtime/quantum_embodiment_engine.dart
+  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
+  title: 'Quantum Embodiment Engine: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum embodiment engine keeps its documented runtime
+    behavior while handling performance conditions without corruption, leakage, or
+    silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
+      (QEE) v1.0 — RUNTIME INTERACTION ENGINE'
+    headings:
+    - '`src/runtime/quantum_embodiment_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum embodiment engine
+- uuid: 02ddea1d-5cd0-5fd0-8d16-8dc70514ee0d
+  file: lib/src/runtime/quantum_embodiment_engine.dart
+  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
+  title: 'Quantum Embodiment Engine: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum embodiment engine keeps its documented runtime
+    behavior while handling memory conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
+      (QEE) v1.0 — RUNTIME INTERACTION ENGINE'
+    headings:
+    - '`src/runtime/quantum_embodiment_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum embodiment engine
+- uuid: f24a2725-efcd-5677-ad90-a271ed872672
+  file: lib/src/runtime/quantum_embodiment_engine.dart
+  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
+  title: 'Quantum Embodiment Engine: the runtime surface still matches the documented
+    API and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum embodiment engine keeps its documented runtime
+    behavior while handling docs parity conditions without corruption, leakage, or
+    silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
+      (QEE) v1.0 — RUNTIME INTERACTION ENGINE'
+    headings:
+    - '`src/runtime/quantum_embodiment_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum embodiment engine
+- uuid: b7e0fe0a-ca71-56fa-ae3a-f72c2797e75f
+  file: lib/src/runtime/quantum_embodiment_engine.dart
+  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
+  title: 'Quantum Embodiment Engine: layout remains correct under narrow, wide, and
+    constrained bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum embodiment engine keeps its documented runtime
+    behavior while handling layout conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
+      (QEE) v1.0 — RUNTIME INTERACTION ENGINE'
+    headings:
+    - '`src/runtime/quantum_embodiment_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum embodiment engine
+- uuid: 6f2013af-7111-59a0-8d89-139ce74ae6c5
+  file: lib/src/runtime/quantum_embodiment_engine.dart
+  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
+  title: 'Quantum Embodiment Engine: semantics and accessibility output remain stable
+    across rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that quantum embodiment engine keeps its documented runtime
+    behavior while handling semantics conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
+      (QEE) v1.0 — RUNTIME INTERACTION ENGINE'
+    headings:
+    - '`src/runtime/quantum_embodiment_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - semantics
+  - quantum embodiment engine
+- uuid: d961428a-100e-5380-92b9-21841f83ded2
+  file: lib/src/runtime/quantum_embodiment_engine.dart
+  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
+  title: 'Quantum Embodiment Engine: gesture handling and hit testing stay correct
+    during interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that quantum embodiment engine keeps its documented runtime
+    behavior while handling gesture conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
+      (QEE) v1.0 — RUNTIME INTERACTION ENGINE'
+    headings:
+    - '`src/runtime/quantum_embodiment_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - gesture
+  - quantum embodiment engine
+- uuid: 9894d493-a43f-52af-960f-0ad2e63d3a6f
+  file: lib/src/runtime/quantum_embodiment_engine.dart
+  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
+  title: 'Quantum Embodiment Engine: resize or drag interactions preserve geometry
+    and state'
+  slug: resize
+  category: ui
+  severity: medium
+  description: Verify that quantum embodiment engine keeps its documented runtime
+    behavior while handling resize conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
+      (QEE) v1.0 — RUNTIME INTERACTION ENGINE'
+    headings:
+    - '`src/runtime/quantum_embodiment_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - resize
+  - quantum embodiment engine
+- uuid: 5e9ae881-fc5b-53bc-8363-adc24d1a7585
+  file: lib/src/runtime/quantum_embodiment_engine.dart
+  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
+  title: 'Quantum Embodiment Engine: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: medium
+  description: Verify that quantum embodiment engine keeps its documented runtime
+    behavior while handling contract conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
+      (QEE) v1.0 — RUNTIME INTERACTION ENGINE'
+    headings:
+    - '`src/runtime/quantum_embodiment_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum embodiment engine
+- uuid: b663af55-42d9-564c-ad6b-7983bd4c9a4a
+  file: lib/src/runtime/quantum_embodiment_engine.dart
+  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
+  title: 'Quantum Embodiment Engine: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: medium
+  description: Verify that quantum embodiment engine keeps its documented runtime
+    behavior while handling invalid input conditions without corruption, leakage,
+    or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
+      (QEE) v1.0 — RUNTIME INTERACTION ENGINE'
+    headings:
+    - '`src/runtime/quantum_embodiment_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum embodiment engine
+- uuid: 94c45e8d-a6ee-54e8-9df2-1135ae7619b2
+  file: lib/src/runtime/quantum_embodiment_engine.dart
+  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
+  title: 'Quantum Embodiment Engine: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: medium
+  description: Verify that quantum embodiment engine keeps its documented runtime
+    behavior while handling reentrant conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
+      (QEE) v1.0 — RUNTIME INTERACTION ENGINE'
+    headings:
+    - '`src/runtime/quantum_embodiment_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum embodiment engine

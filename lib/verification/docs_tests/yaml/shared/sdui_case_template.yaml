@@ -1,0 +1,20 @@
+sdui_json_case_template:
+  meta:
+    id: sdui-runtime-contract
+    title: SDUI runtime contract
+    description: Static contract checks for SDUI runtime sources.
+    tags:
+      - sdui
+      - runtime
+      - contract
+  cases:
+    - id: example-case
+      title: Example source contract
+      sourcePath: lib/src/runtime/example.dart
+      assertions:
+        - kind: source_contains_all
+          values:
+            - ExampleSymbol
+        - kind: source_not_contains
+          values:
+            - TODO

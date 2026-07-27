@@ -1,0 +1,517 @@
+schema_version: 2
+doc_kind: file-test-manifest
+file: lib/src/app/quantum_http_transport_web.dart
+layer: app
+profile: app-core
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/app/quantum_http_transport_web.dart
+  sha256: f237839fa033d5b889eb149b226f100d9c78b97480ceafecfe40b9e79ba77b9c
+  line_count: 67
+  imports:
+    - dart:convert
+    - dart:typed_data
+    - package:http/browser_client.dart
+    - quantum_http_transport.dart
+  exports: []
+  parts: []
+  part_of: []
+  category: app
+  profile: app-core
+  large_profile: false
+  keywords:
+    - transport
+    - stream
+    - web
+    - async
+surface_summary:
+  classes_enums_typedefs_mixins_extensions_functions:
+    - _WebQuantumHttpTransport
+    - _WebQuantumHttpRequest
+    - _WebQuantumHttpResponse
+    - createQuantumHttpTransport
+  count: 4
+focus: bootstrap wiring, config loading, transport selection, and route dispatch.
+coverage_targets:
+  - public API
+  - failure paths
+  - performance
+  - integration boundaries
+  - regression traps
+  - compatibility
+  - lazy-load
+  - cache
+  - serialization
+test_dimensions:
+  input_shapes:
+    - "null"
+    - empty
+    - single-item
+    - multi-item
+    - mixed-type
+    - legacy-shape
+    - malformed
+    - duplicate
+    - large-batch
+  execution_modes:
+    - cold
+    - warm
+    - cached
+    - invalidated
+    - lazy
+    - eager
+    - replayed
+  outcomes:
+    - accept
+    - reject
+    - normalize
+    - defer
+    - reuse
+    - evict
+    - round-trip
+  measurement_axes:
+    - latency
+    - allocations
+    - cache-hits
+    - recompute-count
+    - event-order
+reusable_presets:
+  smoke_base:
+    purpose: Prove the canonical public path works and stays stable across repeated runs.
+    assertions:
+      - observable result is stable
+      - no hidden mutation
+      - no duplicate side effects
+  edge_base:
+    purpose: Prove malformed input fails explicitly or normalizes intentionally.
+    assertions:
+      - failure is explicit
+      - no silent coercion
+      - no stale state
+  perf_base:
+    purpose: Measure the hot path and bound allocations or repeated work.
+    assertions:
+      - warm path is not worse than cold path
+      - allocation growth stays bounded
+  integration_base:
+    purpose: Validate behavior across local imports and neighboring runtime layers.
+    assertions:
+      - boundary contract holds
+      - cross-file side effects remain stable
+groups:
+  - name: smoke
+    description: app bootstrap and routing sanity
+    rows:
+      - id: quantum_http_transport_web.smoke.001
+        purpose: Prove the primary contract of `src/app/quantum_http_transport_web.dart` can be created and exercised with canonical values.
+        target_symbols: &id001
+          - _WebQuantumHttpTransport
+          - _WebQuantumHttpRequest
+          - _WebQuantumHttpResponse
+          - createQuantumHttpTransport
+        setup: Build the minimal valid object graph or runtime context required by this file.
+        input: Canonical values that stay within the most common public-path defaults.
+        body: Call the main entry path twice with the same state to verify repeatability and reuse.
+        expected: The result is stable across repeated calls and no hidden mutation appears.
+        assertions:
+          - observable output matches the documented contract
+          - repeat call returns the same shape
+          - no unexpected extra work is visible
+        metrics:
+          - call count
+          - cache hits
+          - allocation delta
+        risks:
+          - silent eager load
+          - duplicate side effects
+          - state mutation on read
+        cleanup: Reset state and clear caches.
+      - id: quantum_http_transport_web.smoke.002
+        purpose: Confirm the file survives the smallest valid payload and the largest documented trivial payload.
+        target_symbols: *id001
+        setup: Prepare one-item and small-batch fixtures.
+        input: A single item followed by a short repeated batch.
+        body: Execute the same path with one item, then with a small repeated batch.
+        expected: Both inputs are handled without shape loss or unexpected divergence.
+        assertions:
+          - one-item path works
+          - batch path works
+          - batch does not degrade shape
+        metrics:
+          - latency
+          - allocation count
+        risks:
+          - off-by-one handling
+          - shape drift on repeated values
+        cleanup: Reset state and clear caches.
+      - id: quantum_http_transport_web.smoke.003
+        purpose: Ensure the public API does not require hidden global state to produce a valid result.
+        target_symbols: *id001
+        setup: Run in a clean process with no previously initialized caches or registries.
+        input: Fresh process state.
+        body: Invoke the same contract after process-style reset conditions.
+        expected: No hidden singleton is required for success.
+        assertions:
+          - no implicit global dependency
+          - fresh start still succeeds
+        metrics:
+          - startup cost
+        risks:
+          - state leakage across test cases
+        cleanup: Reset state and clear caches.
+  - name: edges
+    description: bad config, missing transport, and empty route tables
+    rows:
+      - id: quantum_http_transport_web.edges.001
+        purpose: Reject `null`, empty, or missing inputs for `src/app/quantum_http_transport_web.dart` in a controlled way.
+        target_symbols: &id002
+          - _WebQuantumHttpTransport
+          - _WebQuantumHttpRequest
+          - _WebQuantumHttpResponse
+          - createQuantumHttpTransport
+        setup: Prepare explicit null/empty fixtures and any required default context.
+        input: null, empty, and omitted values.
+        body: Pass malformed inputs through the normal entry path, not a special helper.
+        expected: The file responds with explicit failure or documented fallback, never silent corruption.
+        assertions:
+          - null is handled intentionally
+          - empty input is not accepted as valid data
+          - failure mode is explicit
+        metrics:
+          - failure latency
+          - error count
+        risks:
+          - silent fallback
+          - implicit coercion
+          - crash without context
+        cleanup: Reset state and clear caches.
+      - id: quantum_http_transport_web.edges.002
+        purpose: Exercise malformed types and mixed shapes against the file-specific contract.
+        target_symbols: *id002
+        setup: Prepare values with wrong scalar types, mixed lists, and partially missing nested fields.
+        input: A mixed-shape payload with the wrong scalar type in one branch.
+        body: Feed the malformed structure into the same contract path used by real callers.
+        expected: The contract either normalizes intentionally or rejects with a traceable error.
+        assertions:
+          - wrong type does not pass silently
+          - mixed structures do not corrupt state
+        metrics:
+          - branch coverage
+          - error reporting
+        risks:
+          - silent coercion
+          - partial mutation
+        cleanup: Clear test fixtures and release observers.
+      - id: quantum_http_transport_web.edges.003
+        purpose: Check duplicate, repeated, and out-of-order data for stability and idempotence.
+        target_symbols: *id002
+        setup: Build duplicated and shuffled fixtures.
+        input: Duplicate entries and shuffled order.
+        body: Run the same operation more than once and compare observable state.
+        expected: Duplicate inputs do not produce duplicate side effects unless explicitly required.
+        assertions:
+          - idempotence is preserved
+          - duplicate items do not duplicate state
+        metrics:
+          - duplicate suppression
+          - repeat-call stability
+        risks:
+          - double insert
+          - order sensitivity
+        cleanup: Reset state and clear caches.
+  - name: bootstrap
+    description: load order and initialization safety
+    rows:
+      - id: quantum_http_transport_web.bootstrap.001
+        purpose: "Prove `src/app/quantum_http_transport_web.dart` cooperates with its imported neighbors: dart:convert, dart:typed_data, package:http/browser_client.dart, quantum_http_transport.dart."
+        target_symbols: &id003
+          - _WebQuantumHttpTransport
+          - _WebQuantumHttpRequest
+          - _WebQuantumHttpResponse
+          - createQuantumHttpTransport
+        setup: Stub or pin the neighboring files or adapters that this file imports.
+        input: A real cross-file call path using the normal import graph.
+        body: Run the public contract end-to-end across the import boundary.
+        expected: The outcome matches the same contract when driven by the neighbor file.
+        assertions:
+          - import boundary stays stable
+          - contract survives neighboring-file execution
+        metrics:
+          - cross-file call count
+          - boundary latency
+        risks:
+          - mismatched contract
+          - boundary state leak
+        cleanup: Reset state and clear caches.
+      - id: quantum_http_transport_web.bootstrap.002
+        purpose: Confirm the integration path handles fallback and partial availability without breaking the caller.
+        target_symbols: *id003
+        setup: Disable one dependency path and keep at least one alternate route available.
+        input: A partially available dependency graph.
+        body: Exercise the fallback branch rather than the ideal branch.
+        expected: The fallback path remains deterministic and explicit.
+        assertions:
+          - fallback path is reachable
+          - partial availability is handled
+        metrics:
+          - retry count
+          - fallback selection time
+        risks:
+          - unexpected hard failure
+          - wrong branch selection
+        cleanup: Reset state and clear caches.
+      - id: quantum_http_transport_web.bootstrap.003
+        purpose: Validate that repeated integration calls do not leak state or amplify side effects.
+        target_symbols: *id003
+        setup: Invoke the same integration flow multiple times under the same fixture.
+        input: Repeated identical integration calls.
+        body: Run the same cross-file path twice and compare outputs and side effects.
+        expected: The second call is not worse than the first and does not allocate or register extra work unless intended.
+        assertions:
+          - repeatability
+          - no duplicate registration
+          - no stale state
+        metrics:
+          - incremental allocations
+          - duplicate side-effect count
+        risks:
+          - listener leaks
+          - duplicate registrations
+          - stale snapshots
+        cleanup: Reset state and clear caches.
+  - name: routing
+    description: file and HTTP route dispatch
+    rows:
+      - id: quantum_http_transport_web.routing.001
+        purpose: "Prove `src/app/quantum_http_transport_web.dart` cooperates with its imported neighbors: dart:convert, dart:typed_data, package:http/browser_client.dart, quantum_http_transport.dart."
+        target_symbols: &id004
+          - _WebQuantumHttpTransport
+          - _WebQuantumHttpRequest
+          - _WebQuantumHttpResponse
+          - createQuantumHttpTransport
+        setup: Stub or pin the neighboring files or adapters that this file imports.
+        input: A real cross-file call path using the normal import graph.
+        body: Run the public contract end-to-end across the import boundary.
+        expected: The outcome matches the same contract when driven by the neighbor file.
+        assertions:
+          - import boundary stays stable
+          - contract survives neighboring-file execution
+        metrics:
+          - cross-file call count
+          - boundary latency
+        risks:
+          - mismatched contract
+          - boundary state leak
+        cleanup: Reset state and clear caches.
+      - id: quantum_http_transport_web.routing.002
+        purpose: Confirm the integration path handles fallback and partial availability without breaking the caller.
+        target_symbols: *id004
+        setup: Disable one dependency path and keep at least one alternate route available.
+        input: A partially available dependency graph.
+        body: Exercise the fallback branch rather than the ideal branch.
+        expected: The fallback path remains deterministic and explicit.
+        assertions:
+          - fallback path is reachable
+          - partial availability is handled
+        metrics:
+          - retry count
+          - fallback selection time
+        risks:
+          - unexpected hard failure
+          - wrong branch selection
+        cleanup: Reset state and clear caches.
+      - id: quantum_http_transport_web.routing.003
+        purpose: Validate that repeated integration calls do not leak state or amplify side effects.
+        target_symbols: *id004
+        setup: Invoke the same integration flow multiple times under the same fixture.
+        input: Repeated identical integration calls.
+        body: Run the same cross-file path twice and compare outputs and side effects.
+        expected: The second call is not worse than the first and does not allocate or register extra work unless intended.
+        assertions:
+          - repeatability
+          - no duplicate registration
+          - no stale state
+        metrics:
+          - incremental allocations
+          - duplicate side-effect count
+        risks:
+          - listener leaks
+          - duplicate registrations
+          - stale snapshots
+        cleanup: Reset state and clear caches.
+  - name: integration
+    description: foundation/runtime handoff
+    rows:
+      - id: quantum_http_transport_web.integration.001
+        purpose: "Prove `src/app/quantum_http_transport_web.dart` cooperates with its imported neighbors: dart:convert, dart:typed_data, package:http/browser_client.dart, quantum_http_transport.dart."
+        target_symbols: &id005
+          - _WebQuantumHttpTransport
+          - _WebQuantumHttpRequest
+          - _WebQuantumHttpResponse
+          - createQuantumHttpTransport
+        setup: Stub or pin the neighboring files or adapters that this file imports.
+        input: A real cross-file call path using the normal import graph.
+        body: Run the public contract end-to-end across the import boundary.
+        expected: The outcome matches the same contract when driven by the neighbor file.
+        assertions:
+          - import boundary stays stable
+          - contract survives neighboring-file execution
+        metrics:
+          - cross-file call count
+          - boundary latency
+        risks:
+          - mismatched contract
+          - boundary state leak
+        cleanup: Reset state and clear caches.
+      - id: quantum_http_transport_web.integration.002
+        purpose: Confirm the integration path handles fallback and partial availability without breaking the caller.
+        target_symbols: *id005
+        setup: Disable one dependency path and keep at least one alternate route available.
+        input: A partially available dependency graph.
+        body: Exercise the fallback branch rather than the ideal branch.
+        expected: The fallback path remains deterministic and explicit.
+        assertions:
+          - fallback path is reachable
+          - partial availability is handled
+        metrics:
+          - retry count
+          - fallback selection time
+        risks:
+          - unexpected hard failure
+          - wrong branch selection
+        cleanup: Reset state and clear caches.
+      - id: quantum_http_transport_web.integration.003
+        purpose: Validate that repeated integration calls do not leak state or amplify side effects.
+        target_symbols: *id005
+        setup: Invoke the same integration flow multiple times under the same fixture.
+        input: Repeated identical integration calls.
+        body: Run the same cross-file path twice and compare outputs and side effects.
+        expected: The second call is not worse than the first and does not allocate or register extra work unless intended.
+        assertions:
+          - repeatability
+          - no duplicate registration
+          - no stale state
+        metrics:
+          - incremental allocations
+          - duplicate side-effect count
+        risks:
+          - listener leaks
+          - duplicate registrations
+          - stale snapshots
+        cleanup: Reset state and clear caches.
+  - name: performance
+    description: startup cost and repeated boot
+    rows:
+      - id: quantum_http_transport_web.performance.001
+        purpose: Profile the hot path for `src/app/quantum_http_transport_web.dart` with a large but realistic workload.
+        target_symbols: &id006
+          - _WebQuantumHttpTransport
+          - _WebQuantumHttpRequest
+          - _WebQuantumHttpResponse
+          - createQuantumHttpTransport
+        setup: Prepare a large input set with stable shape and repeated access patterns.
+        input: Large valid dataset and repeated reads.
+        body: Measure the primary operation repeatedly and compare cold vs warm behavior.
+        expected: Warm-path behavior improves or remains stable, with no hidden quadratic work.
+        assertions:
+          - warm path is faster or equal
+          - no repeated recomputation
+        metrics:
+          - wall time
+          - allocations
+          - cache hits
+        risks:
+          - quadratic scan
+          - unbounded copying
+          - hidden eager load
+        cleanup: Reset state and clear caches.
+      - id: quantum_http_transport_web.performance.002
+        purpose: Ensure cached or memoized work in `src/app/quantum_http_transport_web.dart` is invalidated precisely when input changes.
+        target_symbols: *id006
+        setup: Prime the cache, then change one field or dependency at a time.
+        input: Same input after one controlled mutation.
+        body: Read twice, mutate once, then read again.
+        expected: Only the changed branch recomputes; unrelated branches stay cached.
+        assertions:
+          - cache invalidates precisely
+          - unrelated work stays reused
+        metrics:
+          - recompute count
+          - cache-hit ratio
+        risks:
+          - stale cache
+          - over-invalidation
+        cleanup: Reset state and clear caches.
+      - id: quantum_http_transport_web.performance.003
+        purpose: Check that lazy materialization only happens on demand and not before the first access boundary.
+        target_symbols: *id006
+        setup: Prime a lazy fixture without touching the heavy branch.
+        input: A handle or metadata-only input before heavy data access.
+        body: Inspect the object, then touch the heavy branch once.
+        expected: No heavy work occurs before access, and the first access is explicit and measurable.
+        assertions:
+          - no eager load before access
+          - first access triggers exactly one load
+        metrics:
+          - first-access latency
+          - eager-load count
+        risks:
+          - hidden prefetch
+          - double fetch
+        cleanup: Reset state and clear caches.
+  - name: regression
+    description: silent transport fallback or stale config
+    rows:
+      - id: quantum_http_transport_web.regression.001
+        purpose: Exercise the `regression` branch under the file-specific contract.
+        target_symbols: &id007
+          - _WebQuantumHttpTransport
+          - _WebQuantumHttpRequest
+          - _WebQuantumHttpResponse
+          - createQuantumHttpTransport
+        setup: Prepare a realistic fixture that targets this branch.
+        input: A representative valid input for the branch.
+        body: Run the branch using the public API.
+        expected: The output matches the documented contract.
+        assertions:
+          - branch contract holds
+        metrics:
+          - latency
+        risks:
+          - silent mismatch
+        cleanup: Reset state and clear caches.
+      - id: quantum_http_transport_web.regression.002
+        purpose: Exercise the `regression` branch with malformed or partial input.
+        target_symbols: *id007
+        setup: Prepare a malformed or partial variant.
+        input: Invalid or incomplete data.
+        body: Run the same public API path.
+        expected: The branch fails explicitly or normalizes intentionally.
+        assertions:
+          - failure is explicit
+        metrics:
+          - error path latency
+        risks:
+          - silent coercion
+        cleanup: Reset state and clear caches.
+      - id: quantum_http_transport_web.regression.003
+        purpose: Repeat the `regression` branch to prove stable behavior.
+        target_symbols: *id007
+        setup: Prime and repeat the same fixture.
+        input: Identical repeated input.
+        body: Compare output, side effects, and allocation behavior.
+        expected: Repeated execution stays stable and bounded.
+        assertions:
+          - repeatability
+        metrics:
+          - repeat latency
+        risks:
+          - duplicate side effects
+        cleanup: Reset state and clear caches.
+regeneration_triggers:
+  - signature changes
+  - import changes that affect behavior
+  - serialization or cache logic changes
+  - new branches, platform paths, or fallback rules
+supplements: []

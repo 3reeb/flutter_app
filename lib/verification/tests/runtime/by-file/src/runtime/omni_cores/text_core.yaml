@@ -1,0 +1,418 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/runtime/omni_cores/text_core.dart
+  docs_file: docs/src/runtime/omni_cores/text_core.dart.md
+  source_entry:
+    line_count: 190
+    byte_count: 7530
+    class_count: 0
+    enum_count: 0
+    function_count: 2
+    category: runtime
+    test_count: 8
+  scenario_count: 8
+source:
+  path: src/runtime/omni_cores/text_core.dart
+  docs_path: docs/src/runtime/omni_cores/text_core.dart.md
+  label: src/runtime/omni_cores/text_core.dart
+scenarios:
+- uuid: 72f79798-615b-512d-b1e4-f36238b0194b
+  file: lib/src/runtime/omni_cores/text_core.dart
+  docs_file: docs/src/runtime/omni_cores/text_core.dart.md
+  title: 'Text Core: public contract remains stable under valid input'
+  slug: contract
+  category: runtime
+  severity: critical
+  description: Verify that text core keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/text_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/text_core.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — TEXT ENGINE'
+    headings:
+    - '`src/runtime/omni_cores/text_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - contract
+  - text core
+- uuid: 66ff900e-2526-5641-a341-24e4e302ffe8
+  file: lib/src/runtime/omni_cores/text_core.dart
+  docs_file: docs/src/runtime/omni_cores/text_core.dart.md
+  title: 'Text Core: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: runtime
+  severity: critical
+  description: Verify that text core keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/text_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/text_core.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — TEXT ENGINE'
+    headings:
+    - '`src/runtime/omni_cores/text_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - invalid_input
+  - text core
+- uuid: 79201add-bf6c-52c6-931a-ad7fe423defd
+  file: lib/src/runtime/omni_cores/text_core.dart
+  docs_file: docs/src/runtime/omni_cores/text_core.dart.md
+  title: 'Text Core: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: runtime
+  severity: high
+  description: Verify that text core keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/text_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/text_core.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — TEXT ENGINE'
+    headings:
+    - '`src/runtime/omni_cores/text_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - reentrant
+  - text core
+- uuid: 0229f757-45f9-51a2-91b4-ad44bb8c4e3b
+  file: lib/src/runtime/omni_cores/text_core.dart
+  docs_file: docs/src/runtime/omni_cores/text_core.dart.md
+  title: 'Text Core: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: runtime
+  severity: high
+  description: Verify that text core keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/text_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/text_core.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — TEXT ENGINE'
+    headings:
+    - '`src/runtime/omni_cores/text_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - cleanup
+  - text core
+- uuid: e62c2d73-6a6e-59ea-a7cf-b7daf3837370
+  file: lib/src/runtime/omni_cores/text_core.dart
+  docs_file: docs/src/runtime/omni_cores/text_core.dart.md
+  title: 'Text Core: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: runtime
+  severity: high
+  description: Verify that text core keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/text_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/text_core.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — TEXT ENGINE'
+    headings:
+    - '`src/runtime/omni_cores/text_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - performance
+  - text core
+- uuid: c4e88163-f5b7-541b-842c-918b11654894
+  file: lib/src/runtime/omni_cores/text_core.dart
+  docs_file: docs/src/runtime/omni_cores/text_core.dart.md
+  title: 'Text Core: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: runtime
+  severity: medium
+  description: Verify that text core keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/text_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/text_core.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — TEXT ENGINE'
+    headings:
+    - '`src/runtime/omni_cores/text_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - memory
+  - text core
+- uuid: d08555f8-699e-5d70-a8a9-92a5d41a2bed
+  file: lib/src/runtime/omni_cores/text_core.dart
+  docs_file: docs/src/runtime/omni_cores/text_core.dart.md
+  title: 'Text Core: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: runtime
+  severity: medium
+  description: Verify that text core keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/text_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/text_core.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — TEXT ENGINE'
+    headings:
+    - '`src/runtime/omni_cores/text_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - docs_parity
+  - text core
+- uuid: 057b41cf-7951-5a7a-a114-a6969a41cb55
+  file: lib/src/runtime/omni_cores/text_core.dart
+  docs_file: docs/src/runtime/omni_cores/text_core.dart.md
+  title: 'Text Core: registry and dispatch semantics remain correct under mixed workload'
+  slug: registry
+  category: runtime
+  severity: medium
+  description: Verify that text core keeps its documented runtime behavior while handling registry conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/text_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/text_core.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — TEXT ENGINE'
+    headings:
+    - '`src/runtime/omni_cores/text_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - registry
+  - text core

@@ -1,0 +1,63 @@
+{
+  "__meta": {
+    "id": "operators-097-try-097",
+    "title": "Try/catch/finally becomes an error boundary #097",
+    "description": "The $try/$catch/$finally shorthand should compile into an error boundary.",
+    "tags": [
+      "operators",
+      "try",
+      "error-boundary"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "$try": {
+      "type": "text",
+      "props": {
+        "text": "Try 097"
+      }
+    },
+    "$catch": {
+      "type": "text",
+      "props": {
+        "text": "Catch 097"
+      }
+    },
+    "$finally": {
+      "type": "text",
+      "props": {
+        "text": "Finally 097"
+      }
+    }
+  },
+  "expected": {
+    "type": "hook",
+    "props": {
+      "__subType": "error_boundary"
+    },
+    "debugPath": "root",
+    "slots": {
+      "try": {
+        "type": "text",
+        "props": {
+          "text": "Try 097"
+        },
+        "debugPath": "root.slots[try]"
+      },
+      "catch": {
+        "type": "text",
+        "props": {
+          "text": "Catch 097"
+        },
+        "debugPath": "root.slots[catch]"
+      },
+      "finally": {
+        "type": "text",
+        "props": {
+          "text": "Finally 097"
+        },
+        "debugPath": "root.slots[finally]"
+      }
+    }
+  }
+}

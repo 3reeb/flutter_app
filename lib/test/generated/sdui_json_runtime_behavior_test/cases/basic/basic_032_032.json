@@ -1,0 +1,54 @@
+{
+  "__meta": {
+    "id": "basic-032-row-032",
+    "title": "Box row preserves row subtype #032",
+    "description": "Explicit box:row layouts keep the public subtype marker and child paths.",
+    "tags": [
+      "basic",
+      "box",
+      "subtype",
+      "layout"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "box:row",
+    "style": "gap-2 items-center",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Left 032"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Right 032"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:row",
+    "props": {},
+    "debugPath": "root",
+    "style": "gap-2 items-center",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Left 032"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Right 032"
+        },
+        "debugPath": "root[1]"
+      }
+    ]
+  }
+}

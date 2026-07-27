@@ -1,0 +1,28 @@
+{
+  "__meta": {
+    "id": "operators-087-watch-087",
+    "title": "Watch preserves binding metadata #087",
+    "description": "The $watch operator should keep the watch token on the compiled props.",
+    "tags": [
+      "operators",
+      "watch",
+      "binding"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "text",
+    "$watch": "state.user.field_3",
+    "props": {
+      "text": "Watch 087"
+    }
+  },
+  "expected": {
+    "type": "text",
+    "props": {
+      "text": "Watch 087",
+      "$watch": "state.user.field_3"
+    },
+    "debugPath": "root"
+  }
+}

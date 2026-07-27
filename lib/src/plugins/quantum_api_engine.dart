@@ -13,12 +13,10 @@ import '../foundation/quantum_isolate_bridge.dart';
 import '../foundation/quantum_schema.dart';
 import '../foundation/quantum_core.dart';
 import '../runtime/quantum_permissions.dart';
-
 // Assuming these are in your project
 import 'quantum_auth_engine.dart';
 import 'quantum_media_api.dart';
 import 'quantum_socket_engine.dart';
-
 // -----------------------------------------------------------------------------
 // SECTION 1 — CORE PRIMITIVES & POLICIES (100% UNTOUCHED)
 // -----------------------------------------------------------------------------

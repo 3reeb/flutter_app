@@ -1,0 +1,45 @@
+{
+  "__meta": {
+    "id": "operators-079-stream-079",
+    "title": "Stream binding becomes data:stream #079",
+    "description": "The $stream operator should emit a data:stream node with the child preserved.",
+    "tags": [
+      "operators",
+      "stream",
+      "binding"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "$stream": {
+      "bind": "feeds.users_1",
+      "as": "entry"
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Stream 079"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "data",
+    "props": {
+      "__subType": "stream",
+      "bind": "feeds.users_1",
+      "as": "entry"
+    },
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Stream 079"
+        },
+        "debugPath": "root[0]"
+      }
+    ]
+  }
+}

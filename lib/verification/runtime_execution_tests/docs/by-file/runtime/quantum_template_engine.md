@@ -1,0 +1,82 @@
+# Runtime execution test plan — runtime/quantum_template_engine
+
+This plan validates the file by running the code at runtime during app launch or launch-like harness execution.
+It focuses only on execution-based failure behavior produced by real code paths in this file.
+
+## Scope
+- File: `lib/runtime/quantum_template_engine`
+- Area: `quantum_template_engine`
+- Mode: runtime execution only
+- Static existence checks: excluded
+
+## Source snapshot
+- SHA-256: `d75d02c6ae58761ce03a86057f9f9177a0662c31069dcc33a43674dc7b30e1d4`
+- Line count: `794`
+- Imports:
+  - `dart:collection`
+  - `dart:typed_data`
+  - `dart:math`
+  - `dart:ui`
+  - `package:flutter/foundation.dart`
+  - `package:flutter/material.dart`
+  - `package:flutter/rendering.dart`
+  - `package:flutter/scheduler.dart`
+  - `package:flutter/services.dart`
+  - `package:flutter/gestures.dart`
+  - `package:quantum_layout/quantum.dart`
+
+## Executable surface
+- `QNativeTemplateBuilder`
+- `QTemplateEngine`
+- `TemplateDef`
+- `QTemplateContext`
+- `_PendingTemplateDef`
+- `buildLayout`
+- ... and 22 more
+
+## Launch-time failure targets
+- malformed structured payload
+- duplicate or recursive definitions
+- empty/zero-value edge case
+- oversized nested document
+- cycle detection
+- duplicate subscription
+
+## Symbol-specific runtime scenarios
+### QNativeTemplateBuilder
+- Drive `QNativeTemplateBuilder` with a null dependency or missing required input; expect the live launch path to fail at the exact point the object is created or registered.
+- Drive `QNativeTemplateBuilder` with a malformed payload or wrong value type; expect runtime validation to reject it instead of silently constructing stale state.
+- Drive `QNativeTemplateBuilder` with a duplicate identifier or repeated setup call; expect deterministic collision handling during execution.
+- Drive `QNativeTemplateBuilder` with a boundary-value payload such as empty, zero, or oversized data; expect bounded failure or explicit handling under launch pressure.
+
+### QTemplateEngine
+- Drive `QTemplateEngine` with a null or missing structured payload during app launch; expect the live parser/registry path to fail instead of defaulting silently.
+- Drive `QTemplateEngine` with a malformed document or wrong value type; expect runtime validation to stop the launch path at the point of execution.
+- Drive `QTemplateEngine` with duplicate keys, repeated registration, or a recursive reference; expect deterministic failure or cycle handling in the live code path.
+- Drive `QTemplateEngine` with an oversized or deeply nested payload; expect bounded failure under resource pressure, not a partial and stale runtime state.
+
+### TemplateDef
+- Drive `TemplateDef` with a null or missing structured payload during app launch; expect the live parser/registry path to fail instead of defaulting silently.
+- Drive `TemplateDef` with a malformed document or wrong value type; expect runtime validation to stop the launch path at the point of execution.
+- Drive `TemplateDef` with duplicate keys, repeated registration, or a recursive reference; expect deterministic failure or cycle handling in the live code path.
+- Drive `TemplateDef` with an oversized or deeply nested payload; expect bounded failure under resource pressure, not a partial and stale runtime state.
+
+### QTemplateContext
+- Drive `QTemplateContext` with a null or missing structured payload during app launch; expect the live parser/registry path to fail instead of defaulting silently.
+- Drive `QTemplateContext` with a malformed document or wrong value type; expect runtime validation to stop the launch path at the point of execution.
+- Drive `QTemplateContext` with duplicate keys, repeated registration, or a recursive reference; expect deterministic failure or cycle handling in the live code path.
+- Drive `QTemplateContext` with an oversized or deeply nested payload; expect bounded failure under resource pressure, not a partial and stale runtime state.
+
+## Cross-cutting launch stressors
+- Feed the live path an empty `Uint8List`, then an oversized buffer, to verify byte-oriented code fails deterministically at runtime.
+- Start the app with a disposed `BuildContext`, invalid constraints, or a duplicate-key subtree to exercise launch-time widget failure handling.
+- Run boundary numeric cases such as `0`, `-1`, `double.nan`, and large magnitudes through the live math path to check runtime rejection.
+- Exercise missing-file, permission-denied, and truncated-stream execution paths to ensure I/O failures are surfaced during startup.
+- Starve the frame scheduler or enqueue repeated callbacks so the launch path proves it can fail or back off under pressure.
+- Run the same failing input under repeated startup and teardown cycles to ensure no stale debug/runtime state persists.
+
+## Harness assertions
+- The test must execute the real code path during launch or launch-like initialization.
+- The test must use invalid, empty, malformed, duplicated, or resource-heavy inputs that the file can actually encounter.
+- The test must observe runtime failure, rejection, or cleanup behavior instead of checking for symbols statically.
+- The test must leave the launched state clean enough for the next execution attempt.

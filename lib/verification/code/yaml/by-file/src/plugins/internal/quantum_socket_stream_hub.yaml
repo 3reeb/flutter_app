@@ -1,0 +1,480 @@
+schema_version: 2
+doc_kind: file-test-manifest
+file: quantum_socket_stream_hub.dart
+layer: product
+profile: code
+test_doc_status: draft
+last_reviewed: '2026-07-27'
+source_metadata:
+  path: src/plugins/internal/quantum_socket_stream_hub.dart
+  sha256: 9c69debbf6e6c4cb45324427aa60e34a824798b8af61aa87526d9e23a0998107
+  line_count: 46
+  imports:
+  - dart:async
+  - dart:typed_data
+  exports: []
+  parts: []
+  part_of: []
+  category: code
+  profile: code
+  large_profile: false
+  keywords:
+  - QLSocketDriverBase
+surface_summary:
+  classes_enums_typedefs_mixins_extensions_functions:
+  - QLSocketDriverBase
+  count: 1
+focus: runtime execution, file contract, and production regression coverage.
+coverage_targets:
+- public API
+- failure paths
+- performance
+- integration boundaries
+- regression traps
+- compatibility
+- serialization
+- teardown
+test_dimensions:
+  input_shapes:
+  - 'null'
+  - empty
+  - single-item
+  - multi-item
+  - mixed-type
+  - legacy-shape
+  - malformed
+  - duplicate
+  - large-batch
+  execution_modes:
+  - cold
+  - warm
+  - cached
+  - invalidated
+  - lazy
+  - eager
+  - replayed
+  outcomes:
+  - accept
+  - reject
+  - normalize
+  - defer
+  - reuse
+  - evict
+  - round-trip
+  measurement_axes:
+  - latency
+  - allocations
+  - cache-hits
+  - recompute-count
+  - event-order
+reusable_presets:
+  smoke_base:
+    purpose: Prove the canonical public path works and stays stable across repeated runs.
+    assertions:
+    - observable result is stable
+    - no hidden mutation
+    - no duplicate side effects
+  edge_base:
+    purpose: Prove malformed input fails explicitly or normalizes intentionally.
+    assertions:
+    - failure is explicit
+    - no silent coercion
+    - no stale state
+  perf_base:
+    purpose: Measure the hot path and bound allocations or repeated work.
+    assertions:
+    - warm path is not worse than cold path
+    - allocation growth stays bounded
+  integration_base:
+    purpose: Validate behavior across local imports and neighboring runtime layers.
+    assertions:
+    - boundary contract holds
+    - cross-file side effects remain stable
+groups:
+- name: product
+  description: code file execution suite
+  rows:
+  - id: quantum_socket_stream_hub.source_contains_all.001
+    purpose: Prove the file declares the documented public surface and imports remain present.
+    target_symbols:
+    - QLSocketDriverBase
+    setup: Load src/plugins/internal/quantum_socket_stream_hub.dart and prepare the source fingerprint model.
+    input: Check that the declared public surface appears in the source text.
+    body: Execute the source_contains_all scenario using the shared source fingerprint harness.
+    expected: All declared symbols are found in the source text.
+    assertions:
+    - public surface is present
+    - all tokens exist
+    - no missing declarations
+    metrics:
+    - symbol count
+    - import count
+    - token coverage
+    risks:
+    - symbol drift
+    - missing export
+    - false-negative surface map
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - source_contains_all
+    - quantum_socket_stream_hub
+    operation: source_contains_all
+    payload:
+      operation: source_contains_all
+      sourcePath: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+      sourceHash: 9c69debbf6e6c4cb45324427aa60e34a824798b8af61aa87526d9e23a0998107
+      lineCount: 46
+      symbols: &id001
+      - QLSocketDriverBase
+      imports:
+      - dart:async
+      - dart:typed_data
+      exports: []
+      repeat: 1
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 0
+      layout: null
+    variant: code-execution
+  - id: quantum_socket_stream_hub.source_not_contains_forbidden.002
+    purpose: Prove the file avoids deprecated or forbidden legacy markers.
+    target_symbols:
+    - QLSocketDriverBase
+    setup: Load src/plugins/internal/quantum_socket_stream_hub.dart and prepare the source fingerprint model.
+    input: Check that forbidden legacy markers are absent.
+    body: Execute the source_not_contains_forbidden scenario using the shared source fingerprint harness.
+    expected: No forbidden marker is found in the source text.
+    assertions:
+    - no deprecated marker
+    - no hidden TODO
+    - no forbidden legacy path
+    metrics:
+    - forbidden token count
+    - legacy marker count
+    risks:
+    - legacy residue
+    - hidden TODO
+    - dead code marker
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - source_not_contains_forbidden
+    - quantum_socket_stream_hub
+    operation: source_not_contains_forbidden
+    payload:
+      operation: source_not_contains_forbidden
+      sourcePath: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+      sourceHash: 9c69debbf6e6c4cb45324427aa60e34a824798b8af61aa87526d9e23a0998107
+      lineCount: 46
+      symbols: *id001
+      imports:
+      - dart:async
+      - dart:typed_data
+      exports: []
+      repeat: 1
+      budgetMs: 0
+      forbiddenTokens:
+      - TODO
+      - FIXME
+      - throw UnimplementedError
+      minLines: 0
+      layout: null
+    variant: code-execution
+  - id: quantum_socket_stream_hub.fingerprint_stable.003
+    purpose: Prove repeated file reads keep the fingerprint unchanged.
+    target_symbols:
+    - QLSocketDriverBase
+    setup: Load src/plugins/internal/quantum_socket_stream_hub.dart and prepare the source fingerprint model.
+    input: Read the file twice and compare the SHA-256 digest.
+    body: Execute the fingerprint_stable scenario using the shared source fingerprint harness.
+    expected: The fingerprint stays identical across repeated reads.
+    assertions:
+    - sha256 stays stable
+    - repeat read is identical
+    - source bytes are consistent
+    metrics:
+    - sha256
+    - line count
+    - repeat-read parity
+    risks:
+    - cache pollution
+    - non-deterministic file read
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - fingerprint_stable
+    - quantum_socket_stream_hub
+    operation: fingerprint_stable
+    payload:
+      operation: fingerprint_stable
+      sourcePath: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+      sourceHash: 9c69debbf6e6c4cb45324427aa60e34a824798b8af61aa87526d9e23a0998107
+      lineCount: 46
+      symbols: *id001
+      imports:
+      - dart:async
+      - dart:typed_data
+      exports: []
+      repeat: 2
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 0
+      layout: null
+    variant: code-execution
+  - id: quantum_socket_stream_hub.manifest_roundtrip.004
+    purpose: Prove manifest JSON/YAML round-trip preserves structure.
+    target_symbols:
+    - QLSocketDriverBase
+    setup: Load src/plugins/internal/quantum_socket_stream_hub.dart and prepare the source fingerprint model.
+    input: Serialize the manifest to JSON and back without loss.
+    body: Execute the manifest_roundtrip scenario using the shared source fingerprint harness.
+    expected: The manifest and its nested rows round-trip without structural loss.
+    assertions:
+    - json round-trip preserves shape
+    - rows remain intact
+    - metadata remains intact
+    metrics:
+    - json encode count
+    - json decode count
+    risks:
+    - lossy serialization
+    - row corruption
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - manifest_roundtrip
+    - quantum_socket_stream_hub
+    operation: manifest_roundtrip
+    payload:
+      operation: manifest_roundtrip
+      sourcePath: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+      sourceHash: 9c69debbf6e6c4cb45324427aa60e34a824798b8af61aa87526d9e23a0998107
+      lineCount: 46
+      symbols: *id001
+      imports:
+      - dart:async
+      - dart:typed_data
+      exports: []
+      repeat: 1
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 0
+      layout: null
+    variant: code-execution
+  - id: quantum_socket_stream_hub.line_count_minimum.005
+    purpose: Prove the source stays above its documented line-count floor.
+    target_symbols:
+    - QLSocketDriverBase
+    setup: Load src/plugins/internal/quantum_socket_stream_hub.dart and prepare the source fingerprint model.
+    input: Verify the file stays at or above its documented line-count floor.
+    body: Execute the line_count_minimum scenario using the shared source fingerprint harness.
+    expected: The line count stays at or above the recorded floor.
+    assertions:
+    - line count floor is respected
+    - file is not truncated
+    - source remains complete
+    metrics:
+    - line count
+    - minimum threshold
+    risks:
+    - truncation
+    - incomplete file copy
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - line_count_minimum
+    - quantum_socket_stream_hub
+    operation: line_count_minimum
+    payload:
+      operation: line_count_minimum
+      sourcePath: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+      sourceHash: 9c69debbf6e6c4cb45324427aa60e34a824798b8af61aa87526d9e23a0998107
+      lineCount: 46
+      symbols: *id001
+      imports:
+      - dart:async
+      - dart:typed_data
+      exports: []
+      repeat: 1
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 45
+      layout: null
+    variant: code-execution
+  - id: quantum_socket_stream_hub.concurrent_read_stable.006
+    purpose: Prove concurrent reads observe the same file fingerprint.
+    target_symbols:
+    - QLSocketDriverBase
+    setup: Load src/plugins/internal/quantum_socket_stream_hub.dart and prepare the source fingerprint model.
+    input: Run repeated concurrent reads and compare the digest.
+    body: Execute the concurrent_read_stable scenario using the shared source fingerprint harness.
+    expected: Concurrent reads return the same fingerprint.
+    assertions:
+    - concurrent reads agree
+    - no race in fingerprint
+    - no divergent digest
+    metrics:
+    - read count
+    - digest parity
+    risks:
+    - race condition
+    - non-deterministic IO
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - concurrent_read_stable
+    - quantum_socket_stream_hub
+    operation: concurrent_read_stable
+    payload:
+      operation: concurrent_read_stable
+      sourcePath: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+      sourceHash: 9c69debbf6e6c4cb45324427aa60e34a824798b8af61aa87526d9e23a0998107
+      lineCount: 46
+      symbols: *id001
+      imports:
+      - dart:async
+      - dart:typed_data
+      exports: []
+      repeat: 2
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 0
+      layout: null
+    variant: code-execution
+  - id: quantum_socket_stream_hub.metadata_alignment.007
+    purpose: Prove declared metadata matches the source file on disk.
+    target_symbols:
+    - QLSocketDriverBase
+    setup: Load src/plugins/internal/quantum_socket_stream_hub.dart and prepare the source fingerprint model.
+    input: Verify metadata path, line count, and hash align with disk contents.
+    body: Execute the metadata_alignment scenario using the shared source fingerprint harness.
+    expected: Metadata path, hash, and line count match the file on disk.
+    assertions:
+    - path matches
+    - hash matches
+    - line count matches
+    metrics:
+    - path parity
+    - hash parity
+    - line parity
+    risks:
+    - stale metadata
+    - wrong path binding
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - metadata_alignment
+    - quantum_socket_stream_hub
+    operation: metadata_alignment
+    payload:
+      operation: metadata_alignment
+      sourcePath: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+      sourceHash: 9c69debbf6e6c4cb45324427aa60e34a824798b8af61aa87526d9e23a0998107
+      lineCount: 46
+      symbols: *id001
+      imports:
+      - dart:async
+      - dart:typed_data
+      exports: []
+      repeat: 1
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 0
+      layout: null
+    variant: code-execution
+  - id: quantum_socket_stream_hub.surface_symbol_presence.008
+    purpose: Prove all declared surface symbols are present in the source text.
+    target_symbols:
+    - QLSocketDriverBase
+    setup: Load src/plugins/internal/quantum_socket_stream_hub.dart and prepare the source fingerprint model.
+    input: Check that each declared surface symbol is present in the source text.
+    body: Execute the surface_symbol_presence scenario using the shared source fingerprint harness.
+    expected: Every declared surface symbol is present in the source text.
+    assertions:
+    - declared symbols are present
+    - surface stays truthful
+    - manifest matches source
+    metrics:
+    - surface count
+    - declared symbol count
+    risks:
+    - surface mismatch
+    - manifest drift
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - surface_symbol_presence
+    - quantum_socket_stream_hub
+    operation: surface_symbol_presence
+    payload:
+      operation: surface_symbol_presence
+      sourcePath: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+      sourceHash: 9c69debbf6e6c4cb45324427aa60e34a824798b8af61aa87526d9e23a0998107
+      lineCount: 46
+      symbols: *id001
+      imports:
+      - dart:async
+      - dart:typed_data
+      exports: []
+      repeat: 1
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 0
+      layout: null
+    variant: code-execution
+  - id: quantum_socket_stream_hub.documentation_alignment.009
+    purpose: Prove the code file remains aligned with its manifest and documented contract.
+    target_symbols:
+    - QLSocketDriverBase
+    setup: Load src/plugins/internal/quantum_socket_stream_hub.dart and prepare the source fingerprint model.
+    input: Ensure the source surface remains aligned with the manifest and docs.
+    body: Execute the documentation_alignment scenario using the shared source fingerprint harness.
+    expected: The manifest and source stay aligned.
+    assertions:
+    - manifest stays aligned
+    - source stays aligned
+    - docs stay aligned
+    metrics:
+    - doc count
+    - source count
+    risks:
+    - doc drift
+    - source drift
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - documentation_alignment
+    - quantum_socket_stream_hub
+    operation: documentation_alignment
+    payload:
+      operation: documentation_alignment
+      sourcePath: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+      sourceHash: 9c69debbf6e6c4cb45324427aa60e34a824798b8af61aa87526d9e23a0998107
+      lineCount: 46
+      symbols: *id001
+      imports:
+      - dart:async
+      - dart:typed_data
+      exports: []
+      repeat: 1
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 0
+      layout: null
+    variant: code-execution
+regeneration_triggers:
+- source hash changed
+- surface symbol set changed
+- imports changed
+- line count changed
+- docs changed
+supplements: []
+notes:
+- Generated as a production-oriented execution spec.
+- Includes runtime-oriented checks for fingerprint stability and repeatability.
+- Separate from code-test and docs-test trees.
+profiles:
+- code
+- production
+- regression

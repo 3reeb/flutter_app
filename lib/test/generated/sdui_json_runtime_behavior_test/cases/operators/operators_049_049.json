@@ -1,0 +1,41 @@
+{
+  "__meta": {
+    "id": "operators-049-repeat-049",
+    "title": "Repeat wrapper becomes system:repeater #049",
+    "description": "The $repeat operator should emit a system:repeater wrapper with the child preserved.",
+    "tags": [
+      "operators",
+      "repeat",
+      "wrapper"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "text",
+    "$repeat": "items.group_1",
+    "as": "entry",
+    "indexAs": "idx",
+    "props": {
+      "text": "Item 049"
+    }
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "repeater",
+      "bind": "items.group_1",
+      "as": "entry",
+      "indexAs": "idx"
+    },
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Item 049"
+        },
+        "debugPath": "root[0]"
+      }
+    ]
+  }
+}

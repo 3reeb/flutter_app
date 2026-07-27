@@ -1,0 +1,115 @@
+{
+  "__meta": {
+    "id": "nested-090-screen-090",
+    "title": "Mixed nested screen #090",
+    "description": "A large screen should preserve top-level order and compiled parallel branches.",
+    "tags": [
+      "nested",
+      "children",
+      "order"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "box:col",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Top 090"
+        }
+      },
+      {
+        "type": "box:row",
+        "style": "gap-3",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "L"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "R"
+            }
+          }
+        ]
+      },
+      {
+        "$parallel": [
+          {
+            "type": "text",
+            "props": {
+              "text": "P1 090"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "P2 090"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:col",
+    "props": {},
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Top 090"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "box:row",
+        "props": {},
+        "debugPath": "root[1]",
+        "style": "gap-3",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "L"
+            },
+            "debugPath": "root[1][0]"
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "R"
+            },
+            "debugPath": "root[1][1]"
+          }
+        ]
+      },
+      {
+        "type": "box:col",
+        "props": {},
+        "debugPath": "root[2]",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "P1 090"
+            },
+            "debugPath": "root[2][0]"
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "P2 090"
+            },
+            "debugPath": "root[2][1]"
+          }
+        ]
+      }
+    ]
+  }
+}

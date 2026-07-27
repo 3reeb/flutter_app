@@ -1,0 +1,658 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/runtime/quantum_sdui_engine.dart
+  docs_file: docs/src/runtime/quantum_sdui_engine.dart.md
+  source_entry:
+    line_count: 1222
+    byte_count: 43907
+    class_count: 14
+    enum_count: 0
+    function_count: 20
+    category: ui
+    test_count: 12
+  scenario_count: 12
+source:
+  path: src/runtime/quantum_sdui_engine.dart
+  docs_path: docs/src/runtime/quantum_sdui_engine.dart.md
+  label: src/runtime/quantum_sdui_engine.dart
+scenarios:
+- uuid: 155226ac-0b60-562e-ad4d-40e41ad58eea
+  file: lib/src/runtime/quantum_sdui_engine.dart
+  docs_file: docs/src/runtime/quantum_sdui_engine.dart.md
+  title: 'Quantum Sdui Engine: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum sdui engine keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_sdui_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0 — ENCRYPTED SERVER-DRIVEN UI'
+    headings:
+    - '`src/runtime/quantum_sdui_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum sdui engine
+- uuid: cae59240-96f0-522e-9a46-9da51775eb7e
+  file: lib/src/runtime/quantum_sdui_engine.dart
+  docs_file: docs/src/runtime/quantum_sdui_engine.dart.md
+  title: 'Quantum Sdui Engine: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum sdui engine keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_sdui_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0 — ENCRYPTED SERVER-DRIVEN UI'
+    headings:
+    - '`src/runtime/quantum_sdui_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum sdui engine
+- uuid: e5cdba81-eee0-5ee9-8021-b585ab444157
+  file: lib/src/runtime/quantum_sdui_engine.dart
+  docs_file: docs/src/runtime/quantum_sdui_engine.dart.md
+  title: 'Quantum Sdui Engine: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum sdui engine keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_sdui_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0 — ENCRYPTED SERVER-DRIVEN UI'
+    headings:
+    - '`src/runtime/quantum_sdui_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum sdui engine
+- uuid: 3390a660-80f6-539f-9052-39a088a037c4
+  file: lib/src/runtime/quantum_sdui_engine.dart
+  docs_file: docs/src/runtime/quantum_sdui_engine.dart.md
+  title: 'Quantum Sdui Engine: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum sdui engine keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_sdui_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0 — ENCRYPTED SERVER-DRIVEN UI'
+    headings:
+    - '`src/runtime/quantum_sdui_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum sdui engine
+- uuid: 30abfc93-dfd3-5587-adc1-de6f6976b60b
+  file: lib/src/runtime/quantum_sdui_engine.dart
+  docs_file: docs/src/runtime/quantum_sdui_engine.dart.md
+  title: 'Quantum Sdui Engine: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum sdui engine keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_sdui_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0 — ENCRYPTED SERVER-DRIVEN UI'
+    headings:
+    - '`src/runtime/quantum_sdui_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum sdui engine
+- uuid: 8037ddf6-d9d7-5be9-b9c4-14f1b34386b6
+  file: lib/src/runtime/quantum_sdui_engine.dart
+  docs_file: docs/src/runtime/quantum_sdui_engine.dart.md
+  title: 'Quantum Sdui Engine: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum sdui engine keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_sdui_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0 — ENCRYPTED SERVER-DRIVEN UI'
+    headings:
+    - '`src/runtime/quantum_sdui_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum sdui engine
+- uuid: 5cdc895a-db2c-5047-a261-28c91f41e7f7
+  file: lib/src/runtime/quantum_sdui_engine.dart
+  docs_file: docs/src/runtime/quantum_sdui_engine.dart.md
+  title: 'Quantum Sdui Engine: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum sdui engine keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_sdui_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0 — ENCRYPTED SERVER-DRIVEN UI'
+    headings:
+    - '`src/runtime/quantum_sdui_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum sdui engine
+- uuid: fe3a624a-bc76-5645-90c9-08025d479435
+  file: lib/src/runtime/quantum_sdui_engine.dart
+  docs_file: docs/src/runtime/quantum_sdui_engine.dart.md
+  title: 'Quantum Sdui Engine: layout remains correct under narrow, wide, and constrained bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum sdui engine keeps its documented runtime behavior while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_sdui_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0 — ENCRYPTED SERVER-DRIVEN UI'
+    headings:
+    - '`src/runtime/quantum_sdui_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum sdui engine
+- uuid: 39f4f95b-c70d-5af5-b778-017151458ad6
+  file: lib/src/runtime/quantum_sdui_engine.dart
+  docs_file: docs/src/runtime/quantum_sdui_engine.dart.md
+  title: 'Quantum Sdui Engine: semantics and accessibility output remain stable across rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that quantum sdui engine keeps its documented runtime behavior while handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_sdui_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0 — ENCRYPTED SERVER-DRIVEN UI'
+    headings:
+    - '`src/runtime/quantum_sdui_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - semantics
+  - quantum sdui engine
+- uuid: da7bde14-0ec9-5d30-92f2-6210ab07d460
+  file: lib/src/runtime/quantum_sdui_engine.dart
+  docs_file: docs/src/runtime/quantum_sdui_engine.dart.md
+  title: 'Quantum Sdui Engine: gesture handling and hit testing stay correct during interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that quantum sdui engine keeps its documented runtime behavior while handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_sdui_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0 — ENCRYPTED SERVER-DRIVEN UI'
+    headings:
+    - '`src/runtime/quantum_sdui_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - gesture
+  - quantum sdui engine
+- uuid: 5782c329-eb25-5711-ad4c-5c9efdd6454e
+  file: lib/src/runtime/quantum_sdui_engine.dart
+  docs_file: docs/src/runtime/quantum_sdui_engine.dart.md
+  title: 'Quantum Sdui Engine: resize or drag interactions preserve geometry and state'
+  slug: resize
+  category: ui
+  severity: medium
+  description: Verify that quantum sdui engine keeps its documented runtime behavior while handling resize conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_sdui_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0 — ENCRYPTED SERVER-DRIVEN UI'
+    headings:
+    - '`src/runtime/quantum_sdui_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - resize
+  - quantum sdui engine
+- uuid: c3742034-1446-542e-8e7e-77ccf8ed239d
+  file: lib/src/runtime/quantum_sdui_engine.dart
+  docs_file: docs/src/runtime/quantum_sdui_engine.dart.md
+  title: 'Quantum Sdui Engine: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: medium
+  description: Verify that quantum sdui engine keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_sdui_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_sdui_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0 — ENCRYPTED SERVER-DRIVEN UI'
+    headings:
+    - '`src/runtime/quantum_sdui_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum sdui engine

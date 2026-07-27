@@ -1,0 +1,442 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/ui/quantum_hydration_reader_html.dart
+  docs_file: docs/src/ui/quantum_hydration_reader_html.dart.md
+  source_entry:
+    line_count: 18
+    byte_count: 480
+    class_count: 0
+    enum_count: 0
+    function_count: 0
+    category: ui
+    test_count: 8
+  scenario_count: 8
+source:
+  path: src/ui/quantum_hydration_reader_html.dart
+  docs_path: docs/src/ui/quantum_hydration_reader_html.dart.md
+  label: src/ui/quantum_hydration_reader_html.dart
+scenarios:
+- uuid: 9d6bcfac-8ab9-5963-9bc4-5c9d2a3fa4f0
+  file: lib/src/ui/quantum_hydration_reader_html.dart
+  docs_file: docs/src/ui/quantum_hydration_reader_html.dart.md
+  title: 'Quantum Hydration Reader Html: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum hydration reader html keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_hydration_reader_html.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_hydration_reader_html.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: The HTML/web implementation for a platform-specific helper. This file only exists on web builds and bridges browser-side behavior into the shared UI API.
+    headings:
+    - '`src/ui/quantum_hydration_reader_html.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum hydration reader html
+- uuid: ed5b2c94-14fa-5bee-9c2f-c2b72667bf75
+  file: lib/src/ui/quantum_hydration_reader_html.dart
+  docs_file: docs/src/ui/quantum_hydration_reader_html.dart.md
+  title: 'Quantum Hydration Reader Html: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum hydration reader html keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_hydration_reader_html.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_hydration_reader_html.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: The HTML/web implementation for a platform-specific helper. This file only exists on web builds and bridges browser-side behavior into the shared UI API.
+    headings:
+    - '`src/ui/quantum_hydration_reader_html.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum hydration reader html
+- uuid: e963f926-c38d-5253-8748-a7837b13f60f
+  file: lib/src/ui/quantum_hydration_reader_html.dart
+  docs_file: docs/src/ui/quantum_hydration_reader_html.dart.md
+  title: 'Quantum Hydration Reader Html: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum hydration reader html keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_hydration_reader_html.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_hydration_reader_html.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: The HTML/web implementation for a platform-specific helper. This file only exists on web builds and bridges browser-side behavior into the shared UI API.
+    headings:
+    - '`src/ui/quantum_hydration_reader_html.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum hydration reader html
+- uuid: 731623da-a62b-5207-9149-c4e07661822e
+  file: lib/src/ui/quantum_hydration_reader_html.dart
+  docs_file: docs/src/ui/quantum_hydration_reader_html.dart.md
+  title: 'Quantum Hydration Reader Html: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum hydration reader html keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_hydration_reader_html.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_hydration_reader_html.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: The HTML/web implementation for a platform-specific helper. This file only exists on web builds and bridges browser-side behavior into the shared UI API.
+    headings:
+    - '`src/ui/quantum_hydration_reader_html.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum hydration reader html
+- uuid: 53683cb7-245c-51ba-aa4a-e2c449c8dbad
+  file: lib/src/ui/quantum_hydration_reader_html.dart
+  docs_file: docs/src/ui/quantum_hydration_reader_html.dart.md
+  title: 'Quantum Hydration Reader Html: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum hydration reader html keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_hydration_reader_html.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_hydration_reader_html.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: The HTML/web implementation for a platform-specific helper. This file only exists on web builds and bridges browser-side behavior into the shared UI API.
+    headings:
+    - '`src/ui/quantum_hydration_reader_html.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum hydration reader html
+- uuid: edc69b2d-42c3-59ff-aa8a-c823f3290682
+  file: lib/src/ui/quantum_hydration_reader_html.dart
+  docs_file: docs/src/ui/quantum_hydration_reader_html.dart.md
+  title: 'Quantum Hydration Reader Html: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum hydration reader html keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_hydration_reader_html.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_hydration_reader_html.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: The HTML/web implementation for a platform-specific helper. This file only exists on web builds and bridges browser-side behavior into the shared UI API.
+    headings:
+    - '`src/ui/quantum_hydration_reader_html.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum hydration reader html
+- uuid: aa6ae7c5-4d1b-5329-95a1-243bdbe86949
+  file: lib/src/ui/quantum_hydration_reader_html.dart
+  docs_file: docs/src/ui/quantum_hydration_reader_html.dart.md
+  title: 'Quantum Hydration Reader Html: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum hydration reader html keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_hydration_reader_html.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_hydration_reader_html.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: The HTML/web implementation for a platform-specific helper. This file only exists on web builds and bridges browser-side behavior into the shared UI API.
+    headings:
+    - '`src/ui/quantum_hydration_reader_html.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum hydration reader html
+- uuid: d66be1ee-f7c2-5791-87ac-bc0e6fdc4882
+  file: lib/src/ui/quantum_hydration_reader_html.dart
+  docs_file: docs/src/ui/quantum_hydration_reader_html.dart.md
+  title: 'Quantum Hydration Reader Html: layout remains correct under narrow, wide, and constrained bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum hydration reader html keeps its documented runtime behavior while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_hydration_reader_html.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_hydration_reader_html.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: The HTML/web implementation for a platform-specific helper. This file only exists on web builds and bridges browser-side behavior into the shared UI API.
+    headings:
+    - '`src/ui/quantum_hydration_reader_html.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum hydration reader html

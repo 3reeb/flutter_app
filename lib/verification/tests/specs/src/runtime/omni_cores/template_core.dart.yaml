@@ -1,0 +1,1020 @@
+file: lib/src/runtime/omni_cores/template_core.dart
+docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+line_count: 3102
+category: ui
+tests:
+- uuid: 06fe80cd-c200-5dea-9cfb-0b2900efe321
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that template core keeps its documented runtime behavior while
+    handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - template core
+- uuid: a96a19c3-c011-575d-a0cc-f582319dd55e
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that template core keeps its documented runtime behavior while
+    handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - template core
+- uuid: 773dd2fc-ad77-5f0a-9811-45f3ba2a7ddc
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that template core keeps its documented runtime behavior while
+    handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - template core
+- uuid: 881a3475-4fb2-519b-b66d-0422f3c7a155
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that template core keeps its documented runtime behavior while
+    handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - template core
+- uuid: ff555b4b-195d-5865-9b02-7b086b71486e
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that template core keeps its documented runtime behavior while
+    handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - template core
+- uuid: bb27367e-f572-5236-b2e6-adcb43936641
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that template core keeps its documented runtime behavior while
+    handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - template core
+- uuid: e2a4f134-8488-5030-9b4a-ee4cbd7179b3
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: the runtime surface still matches the documented API and
+    headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that template core keeps its documented runtime behavior while
+    handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - template core
+- uuid: d44d143c-971f-5e92-8b4b-14b019fb7d51
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: layout remains correct under narrow, wide, and constrained
+    bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that template core keeps its documented runtime behavior while
+    handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - template core
+- uuid: 7496c9ea-ced3-532a-b2b4-b2a67597919a
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: semantics and accessibility output remain stable across rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that template core keeps its documented runtime behavior while
+    handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - semantics
+  - template core
+- uuid: 3fcf2fa9-aef2-5563-9506-888fda1eda37
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: gesture handling and hit testing stay correct during interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that template core keeps its documented runtime behavior while
+    handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - gesture
+  - template core
+- uuid: d02e51e4-fcd8-5fcd-bcc9-98d501f34301
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: resize or drag interactions preserve geometry and state'
+  slug: resize
+  category: ui
+  severity: medium
+  description: Verify that template core keeps its documented runtime behavior while
+    handling resize conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - resize
+  - template core
+- uuid: 38897436-0e15-528a-87c4-31064b627de0
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: medium
+  description: Verify that template core keeps its documented runtime behavior while
+    handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - template core
+- uuid: a6cd1ae4-bccb-55dc-94c6-646f072cb46d
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: medium
+  description: Verify that template core keeps its documented runtime behavior while
+    handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - template core
+- uuid: 2b33f1c8-2854-581c-a744-7a00864141f6
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: medium
+  description: Verify that template core keeps its documented runtime behavior while
+    handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - template core
+- uuid: f06bbaa4-f124-5c98-98c7-282cd31467c0
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: medium
+  description: Verify that template core keeps its documented runtime behavior while
+    handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - template core
+- uuid: 2c571d12-5d53-5d7f-9a14-9286125b1335
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: medium
+  description: Verify that template core keeps its documented runtime behavior while
+    handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - template core
+- uuid: a52846e5-ae7f-5781-a091-3d4bdca6bcac
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that template core keeps its documented runtime behavior while
+    handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - template core
+- uuid: 372a4280-792f-5187-b95d-9d29309f070c
+  file: lib/src/runtime/omni_cores/template_core.dart
+  docs_file: docs/src/runtime/omni_cores/template_core.dart.md
+  title: 'Template Core: the runtime surface still matches the documented API and
+    headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that template core keeps its documented runtime behavior while
+    handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/template_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/template_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/template_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - template core

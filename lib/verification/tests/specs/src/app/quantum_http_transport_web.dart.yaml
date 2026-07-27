@@ -1,0 +1,463 @@
+file: lib/src/app/quantum_http_transport_web.dart
+docs_file: docs/src/app/quantum_http_transport_web.dart.md
+line_count: 67
+category: transport
+tests:
+- uuid: e58f348e-557b-5597-acda-d30a8f9d9bc5
+  file: lib/src/app/quantum_http_transport_web.dart
+  docs_file: docs/src/app/quantum_http_transport_web.dart.md
+  title: 'Quantum Http Transport Web: public contract remains stable under valid input'
+  slug: contract
+  category: transport
+  severity: critical
+  description: Verify that quantum http transport web keeps its documented runtime
+    behavior while handling contract conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_http_transport_web.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/app/quantum_http_transport_web.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A small platform-abstracted HTTP transport layer. The shared interface
+      lives here, while separate IO and web files provide the concrete client implementation
+      selected by conditional import. Author-intent note: import ''package:http/browser_client.dart'';
+      // Import this separately for BrowserClient'
+    headings:
+    - '`src/app/quantum_http_transport_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - contract
+  - quantum http transport web
+- uuid: 3b8de3bb-ecbd-5495-8380-d204233a9bc6
+  file: lib/src/app/quantum_http_transport_web.dart
+  docs_file: docs/src/app/quantum_http_transport_web.dart.md
+  title: 'Quantum Http Transport Web: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: transport
+  severity: critical
+  description: Verify that quantum http transport web keeps its documented runtime
+    behavior while handling invalid input conditions without corruption, leakage,
+    or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_http_transport_web.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/app/quantum_http_transport_web.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A small platform-abstracted HTTP transport layer. The shared interface
+      lives here, while separate IO and web files provide the concrete client implementation
+      selected by conditional import. Author-intent note: import ''package:http/browser_client.dart'';
+      // Import this separately for BrowserClient'
+    headings:
+    - '`src/app/quantum_http_transport_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - invalid_input
+  - quantum http transport web
+- uuid: 73dd8e7e-f4c5-546e-bf5e-3139f83b668d
+  file: lib/src/app/quantum_http_transport_web.dart
+  docs_file: docs/src/app/quantum_http_transport_web.dart.md
+  title: 'Quantum Http Transport Web: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: transport
+  severity: high
+  description: Verify that quantum http transport web keeps its documented runtime
+    behavior while handling reentrant conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_http_transport_web.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/app/quantum_http_transport_web.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A small platform-abstracted HTTP transport layer. The shared interface
+      lives here, while separate IO and web files provide the concrete client implementation
+      selected by conditional import. Author-intent note: import ''package:http/browser_client.dart'';
+      // Import this separately for BrowserClient'
+    headings:
+    - '`src/app/quantum_http_transport_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - reentrant
+  - quantum http transport web
+- uuid: ce79336c-7e8f-527e-8d80-c0bf688cd5f7
+  file: lib/src/app/quantum_http_transport_web.dart
+  docs_file: docs/src/app/quantum_http_transport_web.dart.md
+  title: 'Quantum Http Transport Web: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: transport
+  severity: high
+  description: Verify that quantum http transport web keeps its documented runtime
+    behavior while handling cleanup conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_http_transport_web.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/app/quantum_http_transport_web.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A small platform-abstracted HTTP transport layer. The shared interface
+      lives here, while separate IO and web files provide the concrete client implementation
+      selected by conditional import. Author-intent note: import ''package:http/browser_client.dart'';
+      // Import this separately for BrowserClient'
+    headings:
+    - '`src/app/quantum_http_transport_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - cleanup
+  - quantum http transport web
+- uuid: e7aac7c6-957f-50be-87bb-70f7fe901862
+  file: lib/src/app/quantum_http_transport_web.dart
+  docs_file: docs/src/app/quantum_http_transport_web.dart.md
+  title: 'Quantum Http Transport Web: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: transport
+  severity: high
+  description: Verify that quantum http transport web keeps its documented runtime
+    behavior while handling performance conditions without corruption, leakage, or
+    silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_http_transport_web.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/app/quantum_http_transport_web.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A small platform-abstracted HTTP transport layer. The shared interface
+      lives here, while separate IO and web files provide the concrete client implementation
+      selected by conditional import. Author-intent note: import ''package:http/browser_client.dart'';
+      // Import this separately for BrowserClient'
+    headings:
+    - '`src/app/quantum_http_transport_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - performance
+  - quantum http transport web
+- uuid: f8f09d81-06a8-588b-b414-52a8223f52d8
+  file: lib/src/app/quantum_http_transport_web.dart
+  docs_file: docs/src/app/quantum_http_transport_web.dart.md
+  title: 'Quantum Http Transport Web: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: transport
+  severity: medium
+  description: Verify that quantum http transport web keeps its documented runtime
+    behavior while handling memory conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_http_transport_web.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/app/quantum_http_transport_web.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A small platform-abstracted HTTP transport layer. The shared interface
+      lives here, while separate IO and web files provide the concrete client implementation
+      selected by conditional import. Author-intent note: import ''package:http/browser_client.dart'';
+      // Import this separately for BrowserClient'
+    headings:
+    - '`src/app/quantum_http_transport_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - memory
+  - quantum http transport web
+- uuid: e4f611a3-a760-5e2f-85c4-a66de92d513b
+  file: lib/src/app/quantum_http_transport_web.dart
+  docs_file: docs/src/app/quantum_http_transport_web.dart.md
+  title: 'Quantum Http Transport Web: the runtime surface still matches the documented
+    API and headings'
+  slug: docs_parity
+  category: transport
+  severity: medium
+  description: Verify that quantum http transport web keeps its documented runtime
+    behavior while handling docs parity conditions without corruption, leakage, or
+    silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_http_transport_web.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/app/quantum_http_transport_web.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A small platform-abstracted HTTP transport layer. The shared interface
+      lives here, while separate IO and web files provide the concrete client implementation
+      selected by conditional import. Author-intent note: import ''package:http/browser_client.dart'';
+      // Import this separately for BrowserClient'
+    headings:
+    - '`src/app/quantum_http_transport_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - docs_parity
+  - quantum http transport web
+- uuid: 561be949-8bbc-57dc-8455-a2435899c6d6
+  file: lib/src/app/quantum_http_transport_web.dart
+  docs_file: docs/src/app/quantum_http_transport_web.dart.md
+  title: 'Quantum Http Transport Web: offline, timeout, and partial-response conditions
+    are handled safely'
+  slug: offline
+  category: transport
+  severity: medium
+  description: Verify that quantum http transport web keeps its documented runtime
+    behavior while handling offline conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_http_transport_web.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/app/quantum_http_transport_web.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A small platform-abstracted HTTP transport layer. The shared interface
+      lives here, while separate IO and web files provide the concrete client implementation
+      selected by conditional import. Author-intent note: import ''package:http/browser_client.dart'';
+      // Import this separately for BrowserClient'
+    headings:
+    - '`src/app/quantum_http_transport_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - offline
+  - quantum http transport web

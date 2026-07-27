@@ -47,10 +47,8 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import '../../quantum.dart';
 import 'quantum_matrix_engine.dart';
-
 // ──────────────────────────────────────────────────────────────────────────────
 // SECTION 1 — Template Engine (QJsonTemplateEngine_D)
 // ──────────────────────────────────────────────────────────────────────────────

@@ -1,0 +1,447 @@
+file: lib/src/runtime/quantum_data_orchestrator.dart
+docs_file: docs/src/runtime/quantum_data_orchestrator.dart.md
+line_count: 473
+category: state
+tests:
+- uuid: 043fd6c5-ded9-5334-b9a9-ffb7b6a152d2
+  file: lib/src/runtime/quantum_data_orchestrator.dart
+  docs_file: docs/src/runtime/quantum_data_orchestrator.dart.md
+  title: 'Quantum Data Orchestrator: public contract remains stable under valid input'
+  slug: contract
+  category: state
+  severity: critical
+  description: Verify that quantum data orchestrator keeps its documented runtime
+    behavior while handling contract conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_orchestrator.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_orchestrator.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file bootstraps manifests into live runtime state. It is the orchestration
+      layer that connects schemas, data sources, slices, actions, and pipelines.
+    headings:
+    - '`src/runtime/quantum_data_orchestrator.dart`'
+    - What this file is
+    - Responsibilities
+    - Boot flow
+    - Why this file matters for the new type system
+  tags:
+  - state
+  - contract
+  - quantum data orchestrator
+- uuid: 7fecd6c6-4d10-5c99-b004-1100f8fe540e
+  file: lib/src/runtime/quantum_data_orchestrator.dart
+  docs_file: docs/src/runtime/quantum_data_orchestrator.dart.md
+  title: 'Quantum Data Orchestrator: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: state
+  severity: critical
+  description: Verify that quantum data orchestrator keeps its documented runtime
+    behavior while handling invalid input conditions without corruption, leakage,
+    or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_orchestrator.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_orchestrator.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file bootstraps manifests into live runtime state. It is the orchestration
+      layer that connects schemas, data sources, slices, actions, and pipelines.
+    headings:
+    - '`src/runtime/quantum_data_orchestrator.dart`'
+    - What this file is
+    - Responsibilities
+    - Boot flow
+    - Why this file matters for the new type system
+  tags:
+  - state
+  - invalid_input
+  - quantum data orchestrator
+- uuid: 659835bf-2799-50f8-a129-ba7bfb037dd2
+  file: lib/src/runtime/quantum_data_orchestrator.dart
+  docs_file: docs/src/runtime/quantum_data_orchestrator.dart.md
+  title: 'Quantum Data Orchestrator: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: state
+  severity: high
+  description: Verify that quantum data orchestrator keeps its documented runtime
+    behavior while handling reentrant conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_orchestrator.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_orchestrator.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file bootstraps manifests into live runtime state. It is the orchestration
+      layer that connects schemas, data sources, slices, actions, and pipelines.
+    headings:
+    - '`src/runtime/quantum_data_orchestrator.dart`'
+    - What this file is
+    - Responsibilities
+    - Boot flow
+    - Why this file matters for the new type system
+  tags:
+  - state
+  - reentrant
+  - quantum data orchestrator
+- uuid: 50c0a87f-e2c0-5fd9-a2a3-a318f4ce504f
+  file: lib/src/runtime/quantum_data_orchestrator.dart
+  docs_file: docs/src/runtime/quantum_data_orchestrator.dart.md
+  title: 'Quantum Data Orchestrator: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: state
+  severity: high
+  description: Verify that quantum data orchestrator keeps its documented runtime
+    behavior while handling cleanup conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_orchestrator.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_orchestrator.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file bootstraps manifests into live runtime state. It is the orchestration
+      layer that connects schemas, data sources, slices, actions, and pipelines.
+    headings:
+    - '`src/runtime/quantum_data_orchestrator.dart`'
+    - What this file is
+    - Responsibilities
+    - Boot flow
+    - Why this file matters for the new type system
+  tags:
+  - state
+  - cleanup
+  - quantum data orchestrator
+- uuid: 95a75e3b-5bec-550e-b54a-f1d799a2596a
+  file: lib/src/runtime/quantum_data_orchestrator.dart
+  docs_file: docs/src/runtime/quantum_data_orchestrator.dart.md
+  title: 'Quantum Data Orchestrator: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: state
+  severity: high
+  description: Verify that quantum data orchestrator keeps its documented runtime
+    behavior while handling performance conditions without corruption, leakage, or
+    silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_orchestrator.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_orchestrator.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file bootstraps manifests into live runtime state. It is the orchestration
+      layer that connects schemas, data sources, slices, actions, and pipelines.
+    headings:
+    - '`src/runtime/quantum_data_orchestrator.dart`'
+    - What this file is
+    - Responsibilities
+    - Boot flow
+    - Why this file matters for the new type system
+  tags:
+  - state
+  - performance
+  - quantum data orchestrator
+- uuid: 1682d62f-f9b4-5549-b638-6a6e5504da63
+  file: lib/src/runtime/quantum_data_orchestrator.dart
+  docs_file: docs/src/runtime/quantum_data_orchestrator.dart.md
+  title: 'Quantum Data Orchestrator: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: state
+  severity: medium
+  description: Verify that quantum data orchestrator keeps its documented runtime
+    behavior while handling memory conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_orchestrator.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_orchestrator.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file bootstraps manifests into live runtime state. It is the orchestration
+      layer that connects schemas, data sources, slices, actions, and pipelines.
+    headings:
+    - '`src/runtime/quantum_data_orchestrator.dart`'
+    - What this file is
+    - Responsibilities
+    - Boot flow
+    - Why this file matters for the new type system
+  tags:
+  - state
+  - memory
+  - quantum data orchestrator
+- uuid: d22c2c80-9cc6-569e-a6b7-77243ed802f8
+  file: lib/src/runtime/quantum_data_orchestrator.dart
+  docs_file: docs/src/runtime/quantum_data_orchestrator.dart.md
+  title: 'Quantum Data Orchestrator: the runtime surface still matches the documented
+    API and headings'
+  slug: docs_parity
+  category: state
+  severity: medium
+  description: Verify that quantum data orchestrator keeps its documented runtime
+    behavior while handling docs parity conditions without corruption, leakage, or
+    silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_orchestrator.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_orchestrator.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file bootstraps manifests into live runtime state. It is the orchestration
+      layer that connects schemas, data sources, slices, actions, and pipelines.
+    headings:
+    - '`src/runtime/quantum_data_orchestrator.dart`'
+    - What this file is
+    - Responsibilities
+    - Boot flow
+    - Why this file matters for the new type system
+  tags:
+  - state
+  - docs_parity
+  - quantum data orchestrator
+- uuid: 8858c3ca-2d1f-5c95-8b0e-466bd2c75ca1
+  file: lib/src/runtime/quantum_data_orchestrator.dart
+  docs_file: docs/src/runtime/quantum_data_orchestrator.dart.md
+  title: 'Quantum Data Orchestrator: cache hit, miss, eviction, and invalidation behavior
+    is deterministic'
+  slug: cache
+  category: state
+  severity: medium
+  description: Verify that quantum data orchestrator keeps its documented runtime
+    behavior while handling cache conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_data_orchestrator.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_data_orchestrator.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file bootstraps manifests into live runtime state. It is the orchestration
+      layer that connects schemas, data sources, slices, actions, and pipelines.
+    headings:
+    - '`src/runtime/quantum_data_orchestrator.dart`'
+    - What this file is
+    - Responsibilities
+    - Boot flow
+    - Why this file matters for the new type system
+  tags:
+  - state
+  - cache
+  - quantum data orchestrator

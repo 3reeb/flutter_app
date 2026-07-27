@@ -2,15 +2,11 @@ library quantum_domain;
 
 import 'dart:async';
 import 'dart:typed_data';
-
 import 'package:flutter/widgets.dart';
-
 import '../app/quantum_app_shell.dart';
-import '../../quantum.dart';
+import 'package:quantum_layout/quantum.dart';
 import 'quantum_api_shell.dart';
-
 export 'quantum_api_shell.dart';
-
 typedef QuantumPayloadBuilder = Map<String, dynamic> Function(
     Map<String, dynamic> payload);
 

@@ -1,0 +1,41 @@
+{
+  "__meta": {
+    "id": "operators-063-repeat-063",
+    "title": "Repeat wrapper becomes system:repeater #063",
+    "description": "The $repeat operator should emit a system:repeater wrapper with the child preserved.",
+    "tags": [
+      "operators",
+      "repeat",
+      "wrapper"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "text",
+    "$repeat": "items.group_3",
+    "as": "entry",
+    "indexAs": "idx",
+    "props": {
+      "text": "Item 063"
+    }
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "repeater",
+      "bind": "items.group_3",
+      "as": "entry",
+      "indexAs": "idx"
+    },
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Item 063"
+        },
+        "debugPath": "root[0]"
+      }
+    ]
+  }
+}

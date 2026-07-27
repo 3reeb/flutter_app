@@ -1,8 +1,6 @@
 import 'dart:collection';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import '../../quantum.dart';
 import 'quantum_reactive_graph.dart';
 

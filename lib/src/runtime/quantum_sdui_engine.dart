@@ -20,16 +20,13 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
-
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'quantum_permissions.dart';
-
-import '../../quantum.dart';
+import 'package:quantum_layout/quantum.dart';
 import '../foundation/quantum_yaml_engine.dart';
-
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  EXCEPTIONS
 // ────────────────────────────────────────────────────────────────────────────

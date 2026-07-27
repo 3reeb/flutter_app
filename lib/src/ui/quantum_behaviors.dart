@@ -19,8 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-
-import '../../quantum.dart'; // Ecosystem (Primitives, Core, Themes)
+import 'package:quantum_layout/quantum.dart'; // Ecosystem (Primitives, Core, Themes)
 
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  BEHAVIOR CONFIGURATIONS

@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:isolate';
-
 import 'package:flutter/foundation.dart';
-
 /// Shared isolate helper used by API, auth, media, and socket layers.
 ///
 /// The same `Isolate.run` fallback had been duplicated across multiple files.

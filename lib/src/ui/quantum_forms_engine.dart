@@ -7,10 +7,8 @@ library quantum_runtime;
 
 import 'dart:async';
 import 'dart:collection';
-
 import '../foundation/quantum_core.dart';
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 typedef QLDataMiddleware<T> = T Function(T incoming, T current);
 
 class QLChangeEvent<T> {
@@ -936,6 +934,251 @@ class QLNumberController extends QLFieldController<double> {
   });
 }
 
+int _qlClampSmallInt(dynamic value) {
+  final parsed = value is int ? value : int.tryParse(value?.toString() ?? '');
+  if (parsed == null) return 0;
+  return parsed.clamp(-32768, 32767);
+}
+
+BigInt _qlBigIntOf(dynamic value) {
+  if (value is BigInt) return value;
+  if (value is int) return BigInt.from(value);
+  if (value is num) return BigInt.from(value.toInt());
+  return BigInt.tryParse(value?.toString() ?? '') ?? BigInt.zero;
+}
+
+String _qlCharOf(dynamic value) {
+  final text = value?.toString() ?? '';
+  return text.isEmpty ? '' : text.substring(0, 1);
+}
+
+String _qlDecimalOf(dynamic value) => value?.toString().trim() ?? '';
+
+double _qlNumberOf(dynamic value) {
+  if (value is double) return value;
+  if (value is num) return value.toDouble();
+  return double.tryParse(value?.toString() ?? '') ?? 0.0;
+}
+
+Map<String, dynamic> _qlMediaOf(dynamic value, {String? mediaType}) {
+  if (value is Map) return Map<String, dynamic>.from(value);
+  if (value is String) {
+    return <String, dynamic>{
+      'src': value,
+      'url': value,
+      if (mediaType != null) 'mediaType': mediaType,
+    };
+  }
+  return <String, dynamic>{
+    'value': value,
+    if (mediaType != null) 'mediaType': mediaType,
+  };
+}
+
+class QLSmallIntController extends QLFieldController<int> {
+  QLSmallIntController({
+    required super.path,
+    required super.form,
+    int initialValue = 0,
+    super.sleepPolicy,
+    super.transform,
+    super.syncValidators,
+    super.asyncValidators,
+    super.middlewares,
+    super.fastMiddlewares,
+    super.dependencies,
+    super.initialMeta,
+  }) : super(initialValue: _qlClampSmallInt(initialValue));
+}
+
+class QLBigIntController extends QLFieldController<BigInt> {
+  QLBigIntController({
+    required super.path,
+    required super.form,
+    BigInt? initialValue,
+    super.sleepPolicy,
+    super.transform,
+    super.syncValidators,
+    super.asyncValidators,
+    super.middlewares,
+    super.fastMiddlewares,
+    super.dependencies,
+    super.initialMeta,
+  }) : super(initialValue: initialValue ?? BigInt.zero);
+}
+
+class QLDecimalController extends QLFieldController<String> {
+  QLDecimalController({
+    required super.path,
+    required super.form,
+    String initialValue = '',
+    super.sleepPolicy,
+    super.transform,
+    super.syncValidators,
+    super.asyncValidators,
+    super.middlewares,
+    super.fastMiddlewares,
+    super.dependencies,
+    super.initialMeta,
+  }) : super(initialValue: _qlDecimalOf(initialValue));
+}
+
+class QLCharController extends QLFieldController<String> {
+  QLCharController({
+    required super.path,
+    required super.form,
+    String initialValue = '',
+    super.sleepPolicy,
+    super.transform,
+    super.syncValidators,
+    super.asyncValidators,
+    super.middlewares,
+    super.fastMiddlewares,
+    super.dependencies,
+    super.initialMeta,
+  }) : super(initialValue: _qlCharOf(initialValue));
+}
+
+class QLFlagsController extends QLFieldController<int> {
+  QLFlagsController({
+    required super.path,
+    required super.form,
+    int initialValue = 0,
+    super.sleepPolicy,
+    super.transform,
+    super.syncValidators,
+    super.asyncValidators,
+    super.middlewares,
+    super.fastMiddlewares,
+    super.dependencies,
+    super.initialMeta,
+  }) : super(initialValue: initialValue);
+
+  void enableFlag(int flag) => mutate(data.value | flag);
+  void disableFlag(int flag) => mutate(data.value & ~flag);
+  void toggleFlag(int flag) => mutate(data.value ^ flag);
+}
+
+class QLMediaController extends QLFieldController<Map<String, dynamic>?> {
+  QLMediaController({
+    required super.path,
+    required super.form,
+    Map<String, dynamic>? initialValue,
+    super.sleepPolicy,
+    super.transform,
+    super.syncValidators,
+    super.asyncValidators,
+    super.middlewares,
+    super.fastMiddlewares,
+    super.dependencies,
+    super.initialMeta,
+  }) : super(initialValue: initialValue == null ? null : _qlMediaOf(initialValue));
+
+  void setMedia(Map<String, dynamic>? value) =>
+      mutate(value == null ? null : _qlMediaOf(value));
+  void setSource(String source, {String? mediaType}) =>
+      mutate(_qlMediaOf(source, mediaType: mediaType));
+
+  @override
+  dynamic serialize() => isHidden ? null : (data.value == null ? null : Map<String, dynamic>.from(data.value!));
+}
+
+class QLSmallIntArrayController extends QLScalarArrayController<int> {
+  QLSmallIntArrayController({
+    required super.path,
+    required super.form,
+    super.initialItems,
+    super.sleepPolicy,
+    super.transform,
+    super.syncValidators,
+    super.asyncValidators,
+    super.middlewares,
+    super.fastMiddlewares,
+    super.dependencies,
+    super.initialMeta,
+  });
+}
+
+class QLBigIntArrayController extends QLScalarArrayController<BigInt> {
+  QLBigIntArrayController({
+    required super.path,
+    required super.form,
+    super.initialItems,
+    super.sleepPolicy,
+    super.transform,
+    super.syncValidators,
+    super.asyncValidators,
+    super.middlewares,
+    super.fastMiddlewares,
+    super.dependencies,
+    super.initialMeta,
+  });
+}
+
+class QLDecimalArrayController extends QLScalarArrayController<String> {
+  QLDecimalArrayController({
+    required super.path,
+    required super.form,
+    super.initialItems,
+    super.sleepPolicy,
+    super.transform,
+    super.syncValidators,
+    super.asyncValidators,
+    super.middlewares,
+    super.fastMiddlewares,
+    super.dependencies,
+    super.initialMeta,
+  });
+}
+
+class QLCharArrayController extends QLScalarArrayController<String> {
+  QLCharArrayController({
+    required super.path,
+    required super.form,
+    super.initialItems,
+    super.sleepPolicy,
+    super.transform,
+    super.syncValidators,
+    super.asyncValidators,
+    super.middlewares,
+    super.fastMiddlewares,
+    super.dependencies,
+    super.initialMeta,
+  });
+}
+
+class QLFlagsArrayController extends QLScalarArrayController<int> {
+  QLFlagsArrayController({
+    required super.path,
+    required super.form,
+    super.initialItems,
+    super.sleepPolicy,
+    super.transform,
+    super.syncValidators,
+    super.asyncValidators,
+    super.middlewares,
+    super.fastMiddlewares,
+    super.dependencies,
+    super.initialMeta,
+  });
+}
+
+class QLMediaArrayController extends QLScalarArrayController<Map<String, dynamic>> {
+  QLMediaArrayController({
+    required super.path,
+    required super.form,
+    super.initialItems,
+    super.sleepPolicy,
+    super.transform,
+    super.syncValidators,
+    super.asyncValidators,
+    super.middlewares,
+    super.fastMiddlewares,
+    super.dependencies,
+    super.initialMeta,
+  });
+}
+
 class QLBoolController extends QLFieldController<bool> {
   QLBoolController({
     required super.path,
@@ -1535,7 +1778,7 @@ class QLNumberArrayController extends QLScalarArrayController<double> {
   QLNumberArrayController({
     required super.path,
     required super.form,
-    super.initialItems,
+    List<double> initialItems = const [],
     super.sleepPolicy,
     super.transform,
     super.syncValidators,
@@ -1544,7 +1787,7 @@ class QLNumberArrayController extends QLScalarArrayController<double> {
     super.fastMiddlewares,
     super.dependencies,
     super.initialMeta,
-  });
+  }) : super(initialItems: initialItems.map(_qlNumberOf).toList(growable: false));
 }
 
 class QLDateArrayController extends QLScalarArrayController<DateTime> {
@@ -1880,30 +2123,175 @@ class QLSchemaFormFactory {
 
     switch (spec.type) {
       case QLFieldType.string:
-        QLTextController(
-          path: path,
-          form: form,
-          initialValue: spec.meta['initialValue']?.toString() ?? '',
-          sleepPolicy: spec.meta['sleepPolicy'] as QLSleepPolicy? ??
-              QLSleepPolicy.manual,
-          syncValidators: const [],
-          asyncValidators: const [],
-        );
+        if (spec.hasMany) {
+          QLTextArrayController(
+            path: path,
+            form: form,
+            initialItems: List<String>.from(
+              (spec.meta['initialValue'] as List?)?.map((e) => e.toString()) ??
+                  const [],
+            ),
+          );
+        } else {
+          QLTextController(
+            path: path,
+            form: form,
+            initialValue: spec.meta['initialValue']?.toString() ?? '',
+            sleepPolicy: spec.meta['sleepPolicy'] as QLSleepPolicy? ??
+                QLSleepPolicy.manual,
+            syncValidators: const [],
+            asyncValidators: const [],
+          );
+        }
         break;
       case QLFieldType.textarea:
-        QLTextAreaController(
-          path: path,
-          form: form,
-          initialValue: spec.meta['initialValue']?.toString() ?? '',
-          maxLength: spec.meta['maxLength'] as int?,
-        );
+        if (spec.hasMany) {
+          QLTextArrayController(
+            path: path,
+            form: form,
+            initialItems: List<String>.from(
+              (spec.meta['initialValue'] as List?)?.map((e) => e.toString()) ??
+                  const [],
+            ),
+          );
+        } else {
+          QLTextAreaController(
+            path: path,
+            form: form,
+            initialValue: spec.meta['initialValue']?.toString() ?? '',
+            maxLength: spec.meta['maxLength'] as int?,
+          );
+        }
         break;
       case QLFieldType.number:
-        QLNumberController(
-          path: path,
-          form: form,
-          initialValue: (spec.meta['initialValue'] as num?)?.toDouble() ?? 0.0,
-        );
+        if (spec.hasMany) {
+          QLNumberArrayController(
+            path: path,
+            form: form,
+            initialItems: (spec.meta['initialValue'] as List?)
+                    ?.map(_qlNumberOf)
+                    .toList(growable: false) ??
+                const [],
+          );
+        } else {
+          QLNumberController(
+            path: path,
+            form: form,
+            initialValue: (spec.meta['initialValue'] as num?)?.toDouble() ?? 0.0,
+          );
+        }
+        break;
+      case QLFieldType.bigInt:
+        if (spec.hasMany) {
+          QLBigIntArrayController(
+            path: path,
+            form: form,
+            initialItems: (spec.meta['initialValue'] as List?)
+                    ?.map(_qlBigIntOf)
+                    .toList(growable: false) ??
+                const [],
+          );
+        } else {
+          QLBigIntController(
+            path: path,
+            form: form,
+            initialValue: _qlBigIntOf(spec.meta['initialValue']),
+          );
+        }
+        break;
+      case QLFieldType.smallInt:
+        if (spec.hasMany) {
+          QLSmallIntArrayController(
+            path: path,
+            form: form,
+            initialItems: (spec.meta['initialValue'] as List?)
+                    ?.map(_qlClampSmallInt)
+                    .toList(growable: false) ??
+                const [],
+          );
+        } else {
+          QLSmallIntController(
+            path: path,
+            form: form,
+            initialValue: _qlClampSmallInt(spec.meta['initialValue']),
+          );
+        }
+        break;
+      case QLFieldType.decimal:
+        if (spec.hasMany) {
+          QLDecimalArrayController(
+            path: path,
+            form: form,
+            initialItems: (spec.meta['initialValue'] as List?)
+                    ?.map(_qlDecimalOf)
+                    .toList(growable: false) ??
+                const [],
+          );
+        } else {
+          QLDecimalController(
+            path: path,
+            form: form,
+            initialValue: _qlDecimalOf(spec.meta['initialValue']),
+          );
+        }
+        break;
+      case QLFieldType.char:
+        if (spec.hasMany) {
+          QLCharArrayController(
+            path: path,
+            form: form,
+            initialItems: (spec.meta['initialValue'] as List?)
+                    ?.map(_qlCharOf)
+                    .toList(growable: false) ??
+                const [],
+          );
+        } else {
+          QLCharController(
+            path: path,
+            form: form,
+            initialValue: _qlCharOf(spec.meta['initialValue']),
+          );
+        }
+        break;
+      case QLFieldType.flags:
+        if (spec.hasMany) {
+          QLFlagsArrayController(
+            path: path,
+            form: form,
+            initialItems: (spec.meta['initialValue'] as List?)
+                    ?.map((e) => _qlClampSmallInt(e))
+                    .toList(growable: false) ??
+                const [],
+          );
+        } else {
+          QLFlagsController(
+            path: path,
+            form: form,
+            initialValue: _qlClampSmallInt(spec.meta['initialValue']),
+          );
+        }
+        break;
+      case QLFieldType.media:
+        if (spec.hasMany) {
+          QLMediaArrayController(
+            path: path,
+            form: form,
+            initialItems: (spec.meta['initialValue'] as List?)
+                    ?.map((e) => _qlMediaOf(e, mediaType: spec.mediaType))
+                    .toList(growable: false) ??
+                const [],
+          );
+        } else {
+          QLMediaController(
+            path: path,
+            form: form,
+            initialValue: spec.meta['initialValue'] is Map
+                ? _qlMediaOf(spec.meta['initialValue'], mediaType: spec.mediaType)
+                : spec.meta['initialValue'] == null
+                    ? null
+                    : _qlMediaOf(spec.meta['initialValue'], mediaType: spec.mediaType),
+          );
+        }
         break;
       case QLFieldType.boolean:
         QLBoolController(
@@ -1972,44 +2360,105 @@ class QLSchemaFormFactory {
         );
         break;
       case QLFieldType.array:
-        if (spec.itemSpec != null &&
-            (spec.itemSpec!.type == QLFieldType.number ||
-                spec.itemSpec!.type == QLFieldType.string ||
-                spec.itemSpec!.type == QLFieldType.boolean ||
-                spec.itemSpec!.type == QLFieldType.date ||
-                spec.itemSpec!.type == QLFieldType.enumeration)) {
-          if (spec.itemSpec!.type == QLFieldType.number) {
-            QLNumberArrayController(
-              path: path,
-              form: form,
-              initialItems:
-                  List<double>.from(spec.meta['initialValue'] ?? const []),
-            );
-          } else if (spec.itemSpec!.type == QLFieldType.date) {
-            QLDateArrayController(
-              path: path,
-              form: form,
-              initialItems:
-                  List<DateTime>.from(spec.meta['initialValue'] ?? const []),
-            );
-          } else if (spec.itemSpec!.type == QLFieldType.enumeration) {
-            QLEnumArrayController<dynamic>(
-              path: path,
-              form: form,
-              allowedValues: List<dynamic>.from(spec.itemSpec!.options),
-              initialItems:
-                  List<dynamic>.from(spec.meta['initialValue'] ?? const []),
-            );
-          } else {
-            QLTextArrayController(
-              path: path,
-              form: form,
-              initialItems: List<String>.from(
-                (spec.meta['initialValue'] as List?)
-                        ?.map((e) => e.toString()) ??
+        if (spec.itemSpec != null) {
+          switch (spec.itemSpec!.type) {
+            case QLFieldType.bigInt:
+              QLBigIntArrayController(
+                path: path,
+                form: form,
+                initialItems: (spec.meta['initialValue'] as List?)
+                        ?.map(_qlBigIntOf)
+                        .toList(growable: false) ??
                     const [],
-              ),
-            );
+              );
+              break;
+            case QLFieldType.smallInt:
+              QLSmallIntArrayController(
+                path: path,
+                form: form,
+                initialItems: (spec.meta['initialValue'] as List?)
+                        ?.map(_qlClampSmallInt)
+                        .toList(growable: false) ??
+                    const [],
+              );
+              break;
+            case QLFieldType.decimal:
+              QLDecimalArrayController(
+                path: path,
+                form: form,
+                initialItems: (spec.meta['initialValue'] as List?)
+                        ?.map(_qlDecimalOf)
+                        .toList(growable: false) ??
+                    const [],
+              );
+              break;
+            case QLFieldType.char:
+              QLCharArrayController(
+                path: path,
+                form: form,
+                initialItems: (spec.meta['initialValue'] as List?)
+                        ?.map(_qlCharOf)
+                        .toList(growable: false) ??
+                    const [],
+              );
+              break;
+            case QLFieldType.flags:
+              QLFlagsArrayController(
+                path: path,
+                form: form,
+                initialItems: (spec.meta['initialValue'] as List?)
+                        ?.map((e) => _qlClampSmallInt(e))
+                        .toList(growable: false) ??
+                    const [],
+              );
+              break;
+            case QLFieldType.media:
+              QLMediaArrayController(
+                path: path,
+                form: form,
+                initialItems: (spec.meta['initialValue'] as List?)
+                        ?.map((e) => _qlMediaOf(e, mediaType: spec.mediaType))
+                        .toList(growable: false) ??
+                    const [],
+              );
+              break;
+            case QLFieldType.number:
+              QLNumberArrayController(
+                path: path,
+                form: form,
+                initialItems: (spec.meta['initialValue'] as List?)
+                        ?.map(_qlNumberOf)
+                        .toList(growable: false) ??
+                    const [],
+              );
+              break;
+            case QLFieldType.date:
+              QLDateArrayController(
+                path: path,
+                form: form,
+                initialItems:
+                    List<DateTime>.from(spec.meta['initialValue'] ?? const []),
+              );
+              break;
+            case QLFieldType.enumeration:
+              QLEnumArrayController<dynamic>(
+                path: path,
+                form: form,
+                allowedValues: List<dynamic>.from(spec.itemSpec!.options),
+                initialItems:
+                    List<dynamic>.from(spec.meta['initialValue'] ?? const []),
+              );
+              break;
+            default:
+              QLTextArrayController(
+                path: path,
+                form: form,
+                initialItems: List<String>.from(
+                  (spec.meta['initialValue'] as List?)
+                          ?.map((e) => e.toString()) ??
+                      const [],
+                ),
+              );
           }
         } else {
           QLTextArrayController(

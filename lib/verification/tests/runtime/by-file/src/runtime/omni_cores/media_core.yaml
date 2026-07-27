@@ -1,0 +1,442 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/runtime/omni_cores/media_core.dart
+  docs_file: docs/src/runtime/omni_cores/media_core.dart.md
+  source_entry:
+    line_count: 397
+    byte_count: 14018
+    class_count: 7
+    enum_count: 0
+    function_count: 9
+    category: visual
+    test_count: 8
+  scenario_count: 8
+source:
+  path: src/runtime/omni_cores/media_core.dart
+  docs_path: docs/src/runtime/omni_cores/media_core.dart.md
+  label: src/runtime/omni_cores/media_core.dart
+scenarios:
+- uuid: 996855da-ddf7-55fe-bcc2-c3bb93fc74bd
+  file: lib/src/runtime/omni_cores/media_core.dart
+  docs_file: docs/src/runtime/omni_cores/media_core.dart.md
+  title: 'Media Core: public contract remains stable under valid input'
+  slug: contract
+  category: visual
+  severity: critical
+  description: Verify that media core keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/media_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/media_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)'
+    headings:
+    - '`src/runtime/omni_cores/media_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - contract
+  - media core
+- uuid: 44bc614a-1bf4-590f-b8b4-224faa4e74f7
+  file: lib/src/runtime/omni_cores/media_core.dart
+  docs_file: docs/src/runtime/omni_cores/media_core.dart.md
+  title: 'Media Core: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: visual
+  severity: critical
+  description: Verify that media core keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/media_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/media_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)'
+    headings:
+    - '`src/runtime/omni_cores/media_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - invalid_input
+  - media core
+- uuid: 68a1195a-cfd3-5d7a-9337-f6fd9a513e83
+  file: lib/src/runtime/omni_cores/media_core.dart
+  docs_file: docs/src/runtime/omni_cores/media_core.dart.md
+  title: 'Media Core: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: visual
+  severity: high
+  description: Verify that media core keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/media_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/media_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)'
+    headings:
+    - '`src/runtime/omni_cores/media_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - reentrant
+  - media core
+- uuid: 62cb18bb-2cfc-5eaa-9b1d-30d3bce2401c
+  file: lib/src/runtime/omni_cores/media_core.dart
+  docs_file: docs/src/runtime/omni_cores/media_core.dart.md
+  title: 'Media Core: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: visual
+  severity: high
+  description: Verify that media core keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/media_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/media_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)'
+    headings:
+    - '`src/runtime/omni_cores/media_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - cleanup
+  - media core
+- uuid: be204363-c4a3-53a3-946d-a0ec79b703f2
+  file: lib/src/runtime/omni_cores/media_core.dart
+  docs_file: docs/src/runtime/omni_cores/media_core.dart.md
+  title: 'Media Core: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: visual
+  severity: high
+  description: Verify that media core keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/media_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/media_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)'
+    headings:
+    - '`src/runtime/omni_cores/media_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - performance
+  - media core
+- uuid: b0f5b54e-4986-564f-a24c-33819adac371
+  file: lib/src/runtime/omni_cores/media_core.dart
+  docs_file: docs/src/runtime/omni_cores/media_core.dart.md
+  title: 'Media Core: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: visual
+  severity: medium
+  description: Verify that media core keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/media_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/media_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)'
+    headings:
+    - '`src/runtime/omni_cores/media_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - memory
+  - media core
+- uuid: 9717da4a-d44e-5a52-93cf-757258ce3fc1
+  file: lib/src/runtime/omni_cores/media_core.dart
+  docs_file: docs/src/runtime/omni_cores/media_core.dart.md
+  title: 'Media Core: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: visual
+  severity: medium
+  description: Verify that media core keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/media_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/media_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)'
+    headings:
+    - '`src/runtime/omni_cores/media_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - docs_parity
+  - media core
+- uuid: b60936b7-6ced-59ef-b908-1ce286318f64
+  file: lib/src/runtime/omni_cores/media_core.dart
+  docs_file: docs/src/runtime/omni_cores/media_core.dart.md
+  title: 'Media Core: rendering remains correct for large, dense, and animated content'
+  slug: render
+  category: visual
+  severity: medium
+  description: Verify that media core keeps its documented runtime behavior while handling render conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/media_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/media_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)'
+    headings:
+    - '`src/runtime/omni_cores/media_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - render
+  - media core

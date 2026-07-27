@@ -1,0 +1,39 @@
+{
+  "__meta": {
+    "id": "nested-028-screen-028",
+    "title": "Mixed nested screen #028",
+    "description": "Apply-collapse behavior should still work inside a nested screen.",
+    "tags": [
+      "nested",
+      "apply",
+      "collapse"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "box:col",
+    "$apply": {
+      "props": {
+        "tone": "accent"
+      },
+      "style": "rounded-xl"
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Surface 028"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "text",
+    "props": {
+      "text": "Surface 028",
+      "tone": "accent"
+    },
+    "debugPath": "root",
+    "style": "rounded-xl"
+  }
+}

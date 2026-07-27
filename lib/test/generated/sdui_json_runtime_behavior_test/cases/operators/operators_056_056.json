@@ -1,0 +1,87 @@
+{
+  "__meta": {
+    "id": "operators-056-layout-056",
+    "title": "Layout grids become explicit box:grid nodes #056",
+    "description": "The $layout operator should build a real grid node with explicit items.",
+    "tags": [
+      "operators",
+      "layout",
+      "grid"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "$layout": [
+      "a a",
+      "b b"
+    ],
+    "gap": 8,
+    "slots": {
+      "a": {
+        "type": "text",
+        "props": {
+          "text": "A056"
+        }
+      },
+      "b": {
+        "type": "text",
+        "props": {
+          "text": "B056"
+        }
+      }
+    },
+    "props": {
+      "tone": "surface"
+    }
+  },
+  "expected": {
+    "type": "box:grid",
+    "props": {
+      "tone": "surface",
+      "gridRows": "repeat(2, auto)",
+      "gridCols": "repeat(2, 1fr)",
+      "gap": 8
+    },
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "box:grid_item",
+        "props": {
+          "rowStart": 1,
+          "rowEnd": 2,
+          "colStart": 1,
+          "colEnd": 3
+        },
+        "debugPath": "root[0]",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "A056"
+            },
+            "debugPath": "root[0][0]"
+          }
+        ]
+      },
+      {
+        "type": "box:grid_item",
+        "props": {
+          "rowStart": 2,
+          "rowEnd": 3,
+          "colStart": 1,
+          "colEnd": 3
+        },
+        "debugPath": "root[1]",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "B056"
+            },
+            "debugPath": "root[1][0]"
+          }
+        ]
+      }
+    ]
+  }
+}

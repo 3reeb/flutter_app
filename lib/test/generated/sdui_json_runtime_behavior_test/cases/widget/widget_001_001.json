@@ -1,0 +1,20 @@
+{
+  "__meta": {
+    "id": "widget-001-fixed-size",
+    "title": "Fixed width and height props compile verbatim",
+    "description": "A box:row with numeric width:320 and height:48 must carry those values unchanged in the compiled blueprint. If the VM strips or casts sizing props, the renderer has no constraints and overflows its parent.",
+    "tags": ["widget", "sizing", "width", "height", "props"],
+    "allowBlank": false,
+    "priority": "critical"
+  },
+  "input": {
+    "type": "box:row",
+    "props": { "width": 320, "height": 48 },
+    "children": []
+  },
+  "expected": {
+    "type": "box:row",
+    "props": { "width": 320, "height": 48 },
+    "debugPath": "root"
+  }
+}

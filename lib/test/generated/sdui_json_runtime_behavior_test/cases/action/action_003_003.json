@@ -1,0 +1,24 @@
+{
+  "__meta": {
+    "id": "action-003-icon-button",
+    "title": "action:icon_button with icon prop compiles correctly",
+    "description": "An icon button must have __subType:icon_button injected and carry the icon name. A blank icon name renders a button with no visible content.",
+    "tags": ["action", "icon_button", "icon"],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "action:icon_button",
+    "props": { "icon": "mdi:delete", "tooltip": "Delete item", "size": 24 }
+  },
+  "expected": {
+    "type": "action",
+    "props": {
+      "__subType": "icon_button",
+      "icon": "mdi:delete",
+      "tooltip": "Delete item",
+      "size": 24
+    },
+    "debugPath": "root"
+  }
+}

@@ -1,0 +1,418 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/runtime/quantum_workspace_engine.dart
+  docs_file: docs/src/runtime/quantum_workspace_engine.dart.md
+  source_entry:
+    line_count: 359
+    byte_count: 12253
+    class_count: 5
+    enum_count: 0
+    function_count: 12
+    category: runtime
+    test_count: 8
+  scenario_count: 8
+source:
+  path: src/runtime/quantum_workspace_engine.dart
+  docs_path: docs/src/runtime/quantum_workspace_engine.dart.md
+  label: src/runtime/quantum_workspace_engine.dart
+scenarios:
+- uuid: 3b359853-c3de-5f11-b372-f9b9dda00e54
+  file: lib/src/runtime/quantum_workspace_engine.dart
+  docs_file: docs/src/runtime/quantum_workspace_engine.dart.md
+  title: 'Quantum Workspace Engine: public contract remains stable under valid input'
+  slug: contract
+  category: runtime
+  severity: critical
+  description: Verify that quantum workspace engine keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_workspace_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_workspace_engine.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM WORKSPACE ENGINE v3.0 - UNCOMPROMISED GPU RENDERER'
+    headings:
+    - '`src/runtime/quantum_workspace_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - contract
+  - quantum workspace engine
+- uuid: c7b57110-3815-5de1-8391-9ec1974af863
+  file: lib/src/runtime/quantum_workspace_engine.dart
+  docs_file: docs/src/runtime/quantum_workspace_engine.dart.md
+  title: 'Quantum Workspace Engine: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: runtime
+  severity: critical
+  description: Verify that quantum workspace engine keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_workspace_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_workspace_engine.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM WORKSPACE ENGINE v3.0 - UNCOMPROMISED GPU RENDERER'
+    headings:
+    - '`src/runtime/quantum_workspace_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - invalid_input
+  - quantum workspace engine
+- uuid: 81ed9775-6099-5a2e-9559-b0fdef7c3312
+  file: lib/src/runtime/quantum_workspace_engine.dart
+  docs_file: docs/src/runtime/quantum_workspace_engine.dart.md
+  title: 'Quantum Workspace Engine: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: runtime
+  severity: high
+  description: Verify that quantum workspace engine keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_workspace_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_workspace_engine.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM WORKSPACE ENGINE v3.0 - UNCOMPROMISED GPU RENDERER'
+    headings:
+    - '`src/runtime/quantum_workspace_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - reentrant
+  - quantum workspace engine
+- uuid: bafa632c-129e-553d-bdf2-94976bc59b3d
+  file: lib/src/runtime/quantum_workspace_engine.dart
+  docs_file: docs/src/runtime/quantum_workspace_engine.dart.md
+  title: 'Quantum Workspace Engine: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: runtime
+  severity: high
+  description: Verify that quantum workspace engine keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_workspace_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_workspace_engine.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM WORKSPACE ENGINE v3.0 - UNCOMPROMISED GPU RENDERER'
+    headings:
+    - '`src/runtime/quantum_workspace_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - cleanup
+  - quantum workspace engine
+- uuid: 31ef4c10-a9f7-530c-b9b3-cf9707e9691e
+  file: lib/src/runtime/quantum_workspace_engine.dart
+  docs_file: docs/src/runtime/quantum_workspace_engine.dart.md
+  title: 'Quantum Workspace Engine: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: runtime
+  severity: high
+  description: Verify that quantum workspace engine keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_workspace_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_workspace_engine.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM WORKSPACE ENGINE v3.0 - UNCOMPROMISED GPU RENDERER'
+    headings:
+    - '`src/runtime/quantum_workspace_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - performance
+  - quantum workspace engine
+- uuid: c685aca6-9028-55d9-b5de-367f4a20557b
+  file: lib/src/runtime/quantum_workspace_engine.dart
+  docs_file: docs/src/runtime/quantum_workspace_engine.dart.md
+  title: 'Quantum Workspace Engine: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: runtime
+  severity: medium
+  description: Verify that quantum workspace engine keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_workspace_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_workspace_engine.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM WORKSPACE ENGINE v3.0 - UNCOMPROMISED GPU RENDERER'
+    headings:
+    - '`src/runtime/quantum_workspace_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - memory
+  - quantum workspace engine
+- uuid: 331f8560-cbd5-5241-a152-b6da542da836
+  file: lib/src/runtime/quantum_workspace_engine.dart
+  docs_file: docs/src/runtime/quantum_workspace_engine.dart.md
+  title: 'Quantum Workspace Engine: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: runtime
+  severity: medium
+  description: Verify that quantum workspace engine keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_workspace_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_workspace_engine.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM WORKSPACE ENGINE v3.0 - UNCOMPROMISED GPU RENDERER'
+    headings:
+    - '`src/runtime/quantum_workspace_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - docs_parity
+  - quantum workspace engine
+- uuid: e57d9364-73f5-501a-932f-cf69060b933d
+  file: lib/src/runtime/quantum_workspace_engine.dart
+  docs_file: docs/src/runtime/quantum_workspace_engine.dart.md
+  title: 'Quantum Workspace Engine: registry and dispatch semantics remain correct under mixed workload'
+  slug: registry
+  category: runtime
+  severity: medium
+  description: Verify that quantum workspace engine keeps its documented runtime behavior while handling registry conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_workspace_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_workspace_engine.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle, rendering, decoding, or orchestration for one feature area and expose a higher-level API to the rest of the framework. Author-intent note: QUANTUM WORKSPACE ENGINE v3.0 - UNCOMPROMISED GPU RENDERER'
+    headings:
+    - '`src/runtime/quantum_workspace_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - registry
+  - quantum workspace engine

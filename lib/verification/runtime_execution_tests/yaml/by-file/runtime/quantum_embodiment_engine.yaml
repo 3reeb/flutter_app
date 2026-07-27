@@ -1,0 +1,89 @@
+schema_version: 1
+doc_kind: runtime-execution-file-test-manifest
+file: lib/runtime/quantum_embodiment_engine
+source_path: runtime/quantum_embodiment_engine
+launch_mode: app_startup
+execution_only: true
+area: quantum_embodiment_engine
+test_doc_status: draft
+source_metadata:
+  sha256: 7cab598611f88ae43d5e13857cae6bf5818438bc688ada0bc152e330eebf6582
+  line_count: 2362
+  imports:
+  - dart:async
+  - dart:collection
+  - dart:convert
+  - dart:io
+  - package:flutter/foundation.dart
+  - package:flutter/material.dart
+  - package:path_provider/path_provider.dart
+  - package:sqflite/sqflite.dart
+  - package:quantum_layout/quantum.dart
+  symbols:
+  - QEEConfig
+  - QEEDataSnapshot
+  - QEEUiNode
+  - QEELayoutProbe
+  - QEETelemetryProbe
+  - QEEMemoryProbe
+  - QEEErrorProbe
+  - QEEProbeResult
+  - QEEExecResult
+  - QEEExecutors
+  - QEEJsonExecutor
+  - QEEDataExecutor
+  - QEEActionExecutor
+  - QEEVmExecutor
+  - QEESchemaExecutor
+  - QEEScriptExecutor
+  - _AssertRecord
+  - QEEAssertions
+  - QEEStep
+  - QEEPolicyViolation
+runtime_focus:
+- null input
+- malformed input
+- boundary input
+- resource pressure
+test_cases:
+- id: case-1
+  title: null input
+  stimulus: null / missing input
+  runtime_failure_target: null_pointer_access
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-2
+  title: malformed input
+  stimulus: invalid / malformed payload
+  runtime_failure_target: parse_or_type_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-3
+  title: boundary input
+  stimulus: empty / oversized / zero-value edge case
+  runtime_failure_target: range_or_state_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-4
+  title: resource pressure
+  stimulus: large batch / repeated execution / allocation stress
+  runtime_failure_target: out_of_memory_or_allocation_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+assertions:
+  must_execute_live_code: true
+  must_capture_runtime_failure: true
+  must_not_use_static_verification: true
+  must_verify_cleanup: true

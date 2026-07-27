@@ -1,0 +1,476 @@
+file: lib/src/runtime/quantum_widget_image_exporter.dart
+docs_file: docs/src/runtime/quantum_widget_image_exporter.dart.md
+line_count: 414
+category: visual
+tests:
+- uuid: 77cd4793-8151-59b1-ae53-b1fbe24be62f
+  file: lib/src/runtime/quantum_widget_image_exporter.dart
+  docs_file: docs/src/runtime/quantum_widget_image_exporter.dart.md
+  title: 'Quantum Widget Image Exporter: public contract remains stable under valid
+    input'
+  slug: contract
+  category: visual
+  severity: critical
+  description: Verify that quantum widget image exporter keeps its documented runtime
+    behavior while handling contract conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_widget_image_exporter.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_widget_image_exporter.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets
+      out of the framework in a structured way rather than implementing business logic
+      itself. Author-intent note: QUANTUM WIDGET IMAGE EXPORTER v1.0'
+    headings:
+    - '`src/runtime/quantum_widget_image_exporter.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - contract
+  - quantum widget image exporter
+- uuid: bb8a0507-9a6a-59fb-a0e7-3a87f1ca123c
+  file: lib/src/runtime/quantum_widget_image_exporter.dart
+  docs_file: docs/src/runtime/quantum_widget_image_exporter.dart.md
+  title: 'Quantum Widget Image Exporter: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: visual
+  severity: critical
+  description: Verify that quantum widget image exporter keeps its documented runtime
+    behavior while handling invalid input conditions without corruption, leakage,
+    or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_widget_image_exporter.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_widget_image_exporter.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets
+      out of the framework in a structured way rather than implementing business logic
+      itself. Author-intent note: QUANTUM WIDGET IMAGE EXPORTER v1.0'
+    headings:
+    - '`src/runtime/quantum_widget_image_exporter.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - invalid_input
+  - quantum widget image exporter
+- uuid: c44a4844-5dbf-5943-86c4-6036c2a649c8
+  file: lib/src/runtime/quantum_widget_image_exporter.dart
+  docs_file: docs/src/runtime/quantum_widget_image_exporter.dart.md
+  title: 'Quantum Widget Image Exporter: re-entrant calls do not corrupt internal
+    state'
+  slug: reentrant
+  category: visual
+  severity: high
+  description: Verify that quantum widget image exporter keeps its documented runtime
+    behavior while handling reentrant conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_widget_image_exporter.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_widget_image_exporter.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets
+      out of the framework in a structured way rather than implementing business logic
+      itself. Author-intent note: QUANTUM WIDGET IMAGE EXPORTER v1.0'
+    headings:
+    - '`src/runtime/quantum_widget_image_exporter.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - reentrant
+  - quantum widget image exporter
+- uuid: 113b9e59-b2b5-50d1-b391-769feb2f55c9
+  file: lib/src/runtime/quantum_widget_image_exporter.dart
+  docs_file: docs/src/runtime/quantum_widget_image_exporter.dart.md
+  title: 'Quantum Widget Image Exporter: dispose/close/teardown releases resources
+    deterministically'
+  slug: cleanup
+  category: visual
+  severity: high
+  description: Verify that quantum widget image exporter keeps its documented runtime
+    behavior while handling cleanup conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_widget_image_exporter.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_widget_image_exporter.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets
+      out of the framework in a structured way rather than implementing business logic
+      itself. Author-intent note: QUANTUM WIDGET IMAGE EXPORTER v1.0'
+    headings:
+    - '`src/runtime/quantum_widget_image_exporter.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - cleanup
+  - quantum widget image exporter
+- uuid: 8afd0cda-5d9a-5521-8d68-20acba693b19
+  file: lib/src/runtime/quantum_widget_image_exporter.dart
+  docs_file: docs/src/runtime/quantum_widget_image_exporter.dart.md
+  title: 'Quantum Widget Image Exporter: hot-path behavior stays within the runtime
+    budget'
+  slug: performance
+  category: visual
+  severity: high
+  description: Verify that quantum widget image exporter keeps its documented runtime
+    behavior while handling performance conditions without corruption, leakage, or
+    silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_widget_image_exporter.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_widget_image_exporter.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets
+      out of the framework in a structured way rather than implementing business logic
+      itself. Author-intent note: QUANTUM WIDGET IMAGE EXPORTER v1.0'
+    headings:
+    - '`src/runtime/quantum_widget_image_exporter.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - performance
+  - quantum widget image exporter
+- uuid: a2187165-dca1-5531-a67b-2a4fcea702da
+  file: lib/src/runtime/quantum_widget_image_exporter.dart
+  docs_file: docs/src/runtime/quantum_widget_image_exporter.dart.md
+  title: 'Quantum Widget Image Exporter: memory usage stays bounded under repeated
+    operations'
+  slug: memory
+  category: visual
+  severity: medium
+  description: Verify that quantum widget image exporter keeps its documented runtime
+    behavior while handling memory conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_widget_image_exporter.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_widget_image_exporter.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets
+      out of the framework in a structured way rather than implementing business logic
+      itself. Author-intent note: QUANTUM WIDGET IMAGE EXPORTER v1.0'
+    headings:
+    - '`src/runtime/quantum_widget_image_exporter.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - memory
+  - quantum widget image exporter
+- uuid: 98e5bde3-36c8-5e5f-b78f-af69b8ccd87d
+  file: lib/src/runtime/quantum_widget_image_exporter.dart
+  docs_file: docs/src/runtime/quantum_widget_image_exporter.dart.md
+  title: 'Quantum Widget Image Exporter: the runtime surface still matches the documented
+    API and headings'
+  slug: docs_parity
+  category: visual
+  severity: medium
+  description: Verify that quantum widget image exporter keeps its documented runtime
+    behavior while handling docs parity conditions without corruption, leakage, or
+    silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_widget_image_exporter.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_widget_image_exporter.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets
+      out of the framework in a structured way rather than implementing business logic
+      itself. Author-intent note: QUANTUM WIDGET IMAGE EXPORTER v1.0'
+    headings:
+    - '`src/runtime/quantum_widget_image_exporter.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - docs_parity
+  - quantum widget image exporter
+- uuid: f1ecc8d4-013b-58c7-a5e8-27a0ff360a50
+  file: lib/src/runtime/quantum_widget_image_exporter.dart
+  docs_file: docs/src/runtime/quantum_widget_image_exporter.dart.md
+  title: 'Quantum Widget Image Exporter: rendering remains correct for large, dense,
+    and animated content'
+  slug: render
+  category: visual
+  severity: medium
+  description: Verify that quantum widget image exporter keeps its documented runtime
+    behavior while handling render conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_widget_image_exporter.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_widget_image_exporter.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets
+      out of the framework in a structured way rather than implementing business logic
+      itself. Author-intent note: QUANTUM WIDGET IMAGE EXPORTER v1.0'
+    headings:
+    - '`src/runtime/quantum_widget_image_exporter.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - render
+  - quantum widget image exporter

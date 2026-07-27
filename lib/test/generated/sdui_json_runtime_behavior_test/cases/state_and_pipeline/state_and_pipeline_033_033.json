@@ -1,0 +1,83 @@
+{
+  "__meta": {
+    "id": "state_and_pipeline-033-state-col-033",
+    "title": "Named stateful column root #033",
+    "description": "State roots should preserve named debug paths even when the child tree is nested.",
+    "tags": [
+      "state",
+      "pipeline",
+      "column"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "name": "dashboard_033",
+    "state": {
+      "theme": "dark",
+      "count": 33
+    },
+    "type": "box:col",
+    "children": [
+      {
+        "type": "box:row",
+        "style": "gap-2",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "L"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "R"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "theme": "dark",
+        "count": 33
+      }
+    },
+    "debugPath": "dashboard_033.store_provider",
+    "children": [
+      {
+        "type": "box:col",
+        "props": {},
+        "debugPath": "dashboard_033",
+        "children": [
+          {
+            "type": "box:row",
+            "props": {},
+            "debugPath": "dashboard_033[0]",
+            "style": "gap-2",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "L"
+                },
+                "debugPath": "dashboard_033[0][0]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "R"
+                },
+                "debugPath": "dashboard_033[0][1]"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

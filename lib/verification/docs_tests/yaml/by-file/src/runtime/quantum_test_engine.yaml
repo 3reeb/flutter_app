@@ -1,0 +1,255 @@
+schema_version: 2
+doc_kind: file-test-manifest
+file: lib/src/runtime/quantum_test_engine.dart
+layer: runtime
+profile: runtime-core
+test_doc_status: draft
+last_reviewed: '2026-07-26'
+source_metadata:
+  path: lib/src/runtime/quantum_test_engine.dart
+  sha256: bf6ece6049e37a46c6e3ac60786ddc8acd499dedfddc54fc8aba7b46caed3db1
+  line_count: 7
+  imports: []
+  exports: []
+  parts: []
+  part_of: []
+  category: runtime
+  profile: runtime-core
+  large_profile: false
+  keywords:
+  - test
+  - yaml
+  - manifest
+  - report
+  - validation
+surface_summary:
+  classes_enums_typedefs_mixins_extensions_functions:
+  - quantum_test_engine
+  count: 1
+focus: Central YAML-driven test orchestration, manifest discovery, result aggregation,
+  and compact reporting.
+coverage_targets:
+- public API
+- manifest loading
+- result aggregation
+- update detection
+- compatibility
+- error handling
+test_dimensions:
+  input_shapes:
+  - 'null'
+  - empty
+  - single-item
+  - multi-item
+  - legacy-shape
+  - malformed
+  - large-batch
+  execution_modes:
+  - cold
+  - warm
+  - cached
+  - lazy
+  - eager
+  outcomes:
+  - accept
+  - reject
+  - normalize
+  - reuse
+  - evict
+  - round-trip
+  measurement_axes:
+  - latency
+  - allocations
+  - error-path
+  - summary-size
+reusable_presets:
+  smoke_base:
+    purpose: Prove the canonical public path works and stays stable across repeated
+      runs.
+    assertions:
+    - observable result is stable
+    - no hidden mutation
+    - no duplicate side effects
+  edge_base:
+    purpose: Prove malformed input fails explicitly or normalizes intentionally.
+    assertions:
+    - failure is explicit
+    - no silent coercion
+    - no stale state
+  perf_base:
+    purpose: Measure the hot path and bound allocations or repeated work.
+    assertions:
+    - warm path is not worse than cold path
+    - allocation growth stays bounded
+  integration_base:
+    purpose: Validate behavior across local imports and neighboring runtime layers.
+    assertions:
+    - boundary contract holds
+    - cross-file side effects remain stable
+groups:
+- name: facade
+  description: Facade and conditional-export behavior.
+  rows:
+  - id: engine.facade.001
+    purpose: Prove the facade exports the runtime implementation chain without leaking
+      platform branches.
+    target_symbols:
+    - quantum_test_engine
+    setup: Load the public engine entrypoint and verify the conditional export contract.
+    input: Facade import and instance acquisition.
+    body: Resolve the singleton and ensure the public API surface is available.
+    expected: The engine instance is reachable and the export chain is intact.
+    assertions:
+    - singleton exists
+    - conditional export resolves
+    - public API stays stable
+    metrics:
+    - import cost
+    - API stability
+    risks:
+    - broken export chain
+    - platform split regression
+    cleanup: No cleanup required.
+  - id: engine.facade.002
+    purpose: Ensure the facade stays usable even when the IO implementation is unavailable.
+    target_symbols:
+    - quantum_test_engine
+    setup: Simulate unsupported platform conditions.
+    input: Stub import path.
+    body: Confirm the stub raises explicit unsupported behavior instead of silent
+      fallback.
+    expected: A clear unsupported error is thrown.
+    assertions:
+    - explicit unsupported error
+    - no silent success
+    metrics:
+    - startup behavior
+    risks:
+    - hidden IO assumption
+    cleanup: Reset any global state.
+- name: discovery
+  description: Manifest discovery and file catalog behavior.
+  rows:
+  - id: engine.discovery.001
+    purpose: Scan the YAML catalog and return the complete manifest set.
+    target_symbols:
+    - quantum_test_engine
+    setup: Use the docs_tests/yaml/by-file directory.
+    input: Root manifest directory.
+    body: Discover manifests recursively and sort them deterministically.
+    expected: Every manifest is discovered once with stable order.
+    assertions:
+    - all manifests discovered
+    - order is deterministic
+    - no duplicates
+    metrics:
+    - discovery latency
+    risks:
+    - missed manifests
+    - duplicate scan results
+    cleanup: None.
+  - id: engine.discovery.002
+    purpose: Reject a missing manifest directory with an explicit failure.
+    target_symbols:
+    - quantum_test_engine
+    setup: Point the engine at a non-existent manifest folder.
+    input: Missing path.
+    body: Attempt discovery from the missing directory.
+    expected: A clear error is raised that names the missing folder.
+    assertions:
+    - missing path fails explicitly
+    - no silent empty result
+    metrics:
+    - failure latency
+    risks:
+    - silent fallback
+    cleanup: None.
+- name: execution
+  description: Execution and result aggregation.
+  rows:
+  - id: engine.execution.001
+    purpose: Execute all rows through an injected executor and retain row identity,
+      input, and expected output.
+    target_symbols:
+    - quantum_test_engine
+    setup: Inject a deterministic executor that passes the spec through.
+    input: One or more manifest rows.
+    body: Run the engine across all loaded specs.
+    expected: Each row is tracked by unique id and produces a result record.
+    assertions:
+    - unique ids preserved
+    - input recorded
+    - expected recorded
+    metrics:
+    - result count
+    - duration
+    risks:
+    - row loss
+    - identity collision
+    cleanup: Clear result buffers.
+  - id: engine.execution.002
+    purpose: Capture thrown exceptions without stopping the remaining suite.
+    target_symbols:
+    - quantum_test_engine
+    setup: Inject an executor that throws on a known row.
+    input: A failing row followed by a passing row.
+    body: Continue after failure and aggregate both outcomes.
+    expected: Failure is recorded with error and stack trace, later rows still run.
+    assertions:
+    - failure isolated
+    - stack trace captured
+    - later rows continue
+    metrics:
+    - failure recovery
+    risks:
+    - suite abortion
+    cleanup: Reset executor state.
+- name: reporting
+  description: Compact report and redaction rules.
+  rows:
+  - id: engine.reporting.001
+    purpose: Keep report JSON compact by truncating large details and long strings.
+    target_symbols:
+    - quantum_test_engine
+    setup: Build a report with oversized strings and maps.
+    input: Large debug payloads.
+    body: Serialize the report to compact JSON.
+    expected: Only essential detail fields remain visible.
+    assertions:
+    - large values truncated
+    - important identifiers retained
+    metrics:
+    - serialized size
+    risks:
+    - debug noise overflow
+    cleanup: Drop report buffers.
+  - id: engine.reporting.002
+    purpose: Expose pass/fail counts and total duration in a human-readable summary.
+    target_symbols:
+    - quantum_test_engine
+    setup: Collect a mixed report.
+    input: A report with passes and failures.
+    body: Render the compact summary line.
+    expected: The summary contains totals, passes, failures, and duration.
+    assertions:
+    - summary includes totals
+    - summary includes duration
+    metrics:
+    - summary size
+    risks:
+    - opaque reporting
+    cleanup: None.
+regeneration_triggers:
+- public API shape changes
+- source metadata changes
+- row or group edits
+- new imports or exports
+- updated validation rules
+supplements: []
+notes:
+- This manifest is intentionally rich enough to drive future generated Dart tests.
+- The row descriptions are reusable templates, not happy-path-only examples.
+- The shared test engine applies strict validation and compact reporting.
+profiles:
+- runtime-core
+- test-engine-core

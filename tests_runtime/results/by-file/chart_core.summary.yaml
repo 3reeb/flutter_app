@@ -1,0 +1,6 @@
+file: "chart_core.dart"
+manifestPath: "tests_runtime/yaml/by-file/src/runtime/omni_cores/chart_core.yaml"
+total: 18
+passed: 14
+failed: 4
+sourcePath: "src/runtime/omni_cores/chart_core.dart"

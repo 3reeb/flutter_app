@@ -1,0 +1,38 @@
+{
+  "__meta": {
+    "id": "operators-085-apply-085",
+    "title": "Apply merges props and style #085",
+    "description": "The $apply operator should collapse into the child while merging props and style.",
+    "tags": [
+      "operators",
+      "apply",
+      "merge"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "$apply": {
+      "props": {
+        "tone": "accent-0"
+      },
+      "style": "rounded-2"
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Apply 085"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "text",
+    "props": {
+      "text": "Apply 085",
+      "tone": "accent-0"
+    },
+    "debugPath": "root",
+    "style": "rounded-2"
+  }
+}

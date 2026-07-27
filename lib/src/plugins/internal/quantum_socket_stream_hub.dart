@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:typed_data';
-
 /// Shared stream hub for socket drivers.
 ///
 /// Multiple socket implementations were repeating the same broadcast

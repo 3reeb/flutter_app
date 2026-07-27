@@ -1,0 +1,462 @@
+file: lib/src/runtime/omni_cores/collab_core.dart
+docs_file: docs/src/runtime/omni_cores/collab_core.dart.md
+line_count: 194
+category: ui
+tests:
+- uuid: ee61e20a-bc06-5092-979e-cabbb13d981a
+  file: lib/src/runtime/omni_cores/collab_core.dart
+  docs_file: docs/src/runtime/omni_cores/collab_core.dart.md
+  title: 'Collab Core: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that collab core keeps its documented runtime behavior while
+    handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/collab_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/collab_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework. Author-intent
+      note: COLLAB CORE — Real-time collaboration primitives'
+    headings:
+    - '`src/runtime/omni_cores/collab_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - collab core
+- uuid: 2c94a62c-b94d-5197-8b85-52f44db4b64e
+  file: lib/src/runtime/omni_cores/collab_core.dart
+  docs_file: docs/src/runtime/omni_cores/collab_core.dart.md
+  title: 'Collab Core: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that collab core keeps its documented runtime behavior while
+    handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/collab_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/collab_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework. Author-intent
+      note: COLLAB CORE — Real-time collaboration primitives'
+    headings:
+    - '`src/runtime/omni_cores/collab_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - collab core
+- uuid: 700fe2e2-753c-5639-b48a-96b0a3a430e0
+  file: lib/src/runtime/omni_cores/collab_core.dart
+  docs_file: docs/src/runtime/omni_cores/collab_core.dart.md
+  title: 'Collab Core: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that collab core keeps its documented runtime behavior while
+    handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/collab_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/collab_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework. Author-intent
+      note: COLLAB CORE — Real-time collaboration primitives'
+    headings:
+    - '`src/runtime/omni_cores/collab_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - collab core
+- uuid: 2fa2bf3b-8b22-595d-9f26-dab7b5b2c01d
+  file: lib/src/runtime/omni_cores/collab_core.dart
+  docs_file: docs/src/runtime/omni_cores/collab_core.dart.md
+  title: 'Collab Core: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that collab core keeps its documented runtime behavior while
+    handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/collab_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/collab_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework. Author-intent
+      note: COLLAB CORE — Real-time collaboration primitives'
+    headings:
+    - '`src/runtime/omni_cores/collab_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - collab core
+- uuid: e5f0d90a-d492-5e83-8a07-7ad0ee37bb80
+  file: lib/src/runtime/omni_cores/collab_core.dart
+  docs_file: docs/src/runtime/omni_cores/collab_core.dart.md
+  title: 'Collab Core: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that collab core keeps its documented runtime behavior while
+    handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/collab_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/collab_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework. Author-intent
+      note: COLLAB CORE — Real-time collaboration primitives'
+    headings:
+    - '`src/runtime/omni_cores/collab_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - collab core
+- uuid: 9672f153-b792-5dd7-8a45-50e261071701
+  file: lib/src/runtime/omni_cores/collab_core.dart
+  docs_file: docs/src/runtime/omni_cores/collab_core.dart.md
+  title: 'Collab Core: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that collab core keeps its documented runtime behavior while
+    handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/collab_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/collab_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework. Author-intent
+      note: COLLAB CORE — Real-time collaboration primitives'
+    headings:
+    - '`src/runtime/omni_cores/collab_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - collab core
+- uuid: 387ab426-d5ef-5f19-b0a8-7ffb42ae021f
+  file: lib/src/runtime/omni_cores/collab_core.dart
+  docs_file: docs/src/runtime/omni_cores/collab_core.dart.md
+  title: 'Collab Core: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that collab core keeps its documented runtime behavior while
+    handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/collab_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/collab_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework. Author-intent
+      note: COLLAB CORE — Real-time collaboration primitives'
+    headings:
+    - '`src/runtime/omni_cores/collab_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - collab core
+- uuid: fd45f41d-3a6e-5b24-9313-0b6c417448ea
+  file: lib/src/runtime/omni_cores/collab_core.dart
+  docs_file: docs/src/runtime/omni_cores/collab_core.dart.md
+  title: 'Collab Core: layout remains correct under narrow, wide, and constrained
+    bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that collab core keeps its documented runtime behavior while
+    handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/collab_core.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/collab_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags,
+      value objects, or utility abstractions used throughout the framework. Author-intent
+      note: COLLAB CORE — Real-time collaboration primitives'
+    headings:
+    - '`src/runtime/omni_cores/collab_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - collab core

@@ -1,0 +1,710 @@
+file: lib/src/foundation/quantum_primitives.dart
+docs_file: docs/src/foundation/quantum_primitives.dart.md
+line_count: 1034
+category: ui
+tests:
+- uuid: 624fa82d-9652-5ef0-8bf7-43a27c549a90
+  file: lib/src/foundation/quantum_primitives.dart
+  docs_file: docs/src/foundation/quantum_primitives.dart.md
+  title: 'Quantum Primitives: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum primitives keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_primitives.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_primitives.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM CORE PRIMITIVES
+      ENGINE v8.0 - OMNI-MATRIX DOD BUILD'
+    headings:
+    - '`src/foundation/quantum_primitives.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum primitives
+- uuid: a0cd1313-a61d-513a-8084-152d1b0bb458
+  file: lib/src/foundation/quantum_primitives.dart
+  docs_file: docs/src/foundation/quantum_primitives.dart.md
+  title: 'Quantum Primitives: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum primitives keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_primitives.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_primitives.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM CORE PRIMITIVES
+      ENGINE v8.0 - OMNI-MATRIX DOD BUILD'
+    headings:
+    - '`src/foundation/quantum_primitives.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum primitives
+- uuid: 3bc0d9b9-55aa-54ba-b2ac-09b3abb12e01
+  file: lib/src/foundation/quantum_primitives.dart
+  docs_file: docs/src/foundation/quantum_primitives.dart.md
+  title: 'Quantum Primitives: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum primitives keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_primitives.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_primitives.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM CORE PRIMITIVES
+      ENGINE v8.0 - OMNI-MATRIX DOD BUILD'
+    headings:
+    - '`src/foundation/quantum_primitives.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum primitives
+- uuid: dbfd8d6a-cae0-523d-bea2-76bbc9ea4cb1
+  file: lib/src/foundation/quantum_primitives.dart
+  docs_file: docs/src/foundation/quantum_primitives.dart.md
+  title: 'Quantum Primitives: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum primitives keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_primitives.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_primitives.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM CORE PRIMITIVES
+      ENGINE v8.0 - OMNI-MATRIX DOD BUILD'
+    headings:
+    - '`src/foundation/quantum_primitives.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum primitives
+- uuid: caf3c322-d688-5ea2-b45b-cdae42fb009d
+  file: lib/src/foundation/quantum_primitives.dart
+  docs_file: docs/src/foundation/quantum_primitives.dart.md
+  title: 'Quantum Primitives: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum primitives keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_primitives.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_primitives.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM CORE PRIMITIVES
+      ENGINE v8.0 - OMNI-MATRIX DOD BUILD'
+    headings:
+    - '`src/foundation/quantum_primitives.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum primitives
+- uuid: 7c924cfc-5d8d-50fd-a5c8-b5408d42604a
+  file: lib/src/foundation/quantum_primitives.dart
+  docs_file: docs/src/foundation/quantum_primitives.dart.md
+  title: 'Quantum Primitives: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum primitives keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_primitives.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_primitives.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM CORE PRIMITIVES
+      ENGINE v8.0 - OMNI-MATRIX DOD BUILD'
+    headings:
+    - '`src/foundation/quantum_primitives.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum primitives
+- uuid: bf612d49-2b37-5a45-b566-4f44f55b753b
+  file: lib/src/foundation/quantum_primitives.dart
+  docs_file: docs/src/foundation/quantum_primitives.dart.md
+  title: 'Quantum Primitives: the runtime surface still matches the documented API
+    and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum primitives keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_primitives.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_primitives.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM CORE PRIMITIVES
+      ENGINE v8.0 - OMNI-MATRIX DOD BUILD'
+    headings:
+    - '`src/foundation/quantum_primitives.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum primitives
+- uuid: fc595e6a-1b5c-5b52-a6e8-e8d0c2f997cf
+  file: lib/src/foundation/quantum_primitives.dart
+  docs_file: docs/src/foundation/quantum_primitives.dart.md
+  title: 'Quantum Primitives: layout remains correct under narrow, wide, and constrained
+    bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum primitives keeps its documented runtime behavior
+    while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_primitives.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_primitives.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM CORE PRIMITIVES
+      ENGINE v8.0 - OMNI-MATRIX DOD BUILD'
+    headings:
+    - '`src/foundation/quantum_primitives.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum primitives
+- uuid: 53ec0c9b-41f9-573e-ab2c-92f74251d89f
+  file: lib/src/foundation/quantum_primitives.dart
+  docs_file: docs/src/foundation/quantum_primitives.dart.md
+  title: 'Quantum Primitives: semantics and accessibility output remain stable across
+    rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that quantum primitives keeps its documented runtime behavior
+    while handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_primitives.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_primitives.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM CORE PRIMITIVES
+      ENGINE v8.0 - OMNI-MATRIX DOD BUILD'
+    headings:
+    - '`src/foundation/quantum_primitives.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - semantics
+  - quantum primitives
+- uuid: ca3b57fc-4296-5fe8-a270-63858e26499d
+  file: lib/src/foundation/quantum_primitives.dart
+  docs_file: docs/src/foundation/quantum_primitives.dart.md
+  title: 'Quantum Primitives: gesture handling and hit testing stay correct during
+    interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that quantum primitives keeps its documented runtime behavior
+    while handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_primitives.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_primitives.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM CORE PRIMITIVES
+      ENGINE v8.0 - OMNI-MATRIX DOD BUILD'
+    headings:
+    - '`src/foundation/quantum_primitives.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - gesture
+  - quantum primitives
+- uuid: daeee20d-d7f9-5761-af89-24f3a59a0da2
+  file: lib/src/foundation/quantum_primitives.dart
+  docs_file: docs/src/foundation/quantum_primitives.dart.md
+  title: 'Quantum Primitives: resize or drag interactions preserve geometry and state'
+  slug: resize
+  category: ui
+  severity: medium
+  description: Verify that quantum primitives keeps its documented runtime behavior
+    while handling resize conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_primitives.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_primitives.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM CORE PRIMITIVES
+      ENGINE v8.0 - OMNI-MATRIX DOD BUILD'
+    headings:
+    - '`src/foundation/quantum_primitives.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - resize
+  - quantum primitives
+- uuid: 60a6a427-e004-5281-ac2c-ddf5c7f2f479
+  file: lib/src/foundation/quantum_primitives.dart
+  docs_file: docs/src/foundation/quantum_primitives.dart.md
+  title: 'Quantum Primitives: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: medium
+  description: Verify that quantum primitives keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_primitives.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_primitives.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A foundation module. These files define the base reactive state, async
+      primitives, parsing utilities, data structures, math helpers, and error-handling
+      machinery used everywhere else. Author-intent note: QUANTUM CORE PRIMITIVES
+      ENGINE v8.0 - OMNI-MATRIX DOD BUILD'
+    headings:
+    - '`src/foundation/quantum_primitives.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum primitives

@@ -1,0 +1,55 @@
+{
+  "__meta": {
+    "id": "compile_time-037-let-037",
+    "title": "Let bindings interpolate children #037",
+    "description": "The $let operator should resolve compile-time placeholders in descendants.",
+    "tags": [
+      "compile-time",
+      "let",
+      "interpolation"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "box:col",
+    "$let": {
+      "title": "Dashboard 037",
+      "subtitle": "Quarter 7"
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "{{title}}"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "{{subtitle}}"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:col",
+    "props": {},
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Dashboard 037"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Quarter 7"
+        },
+        "debugPath": "root[1]"
+      }
+    ]
+  }
+}

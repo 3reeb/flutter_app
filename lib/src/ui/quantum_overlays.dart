@@ -1,13 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-
 // Quantum ecosystem — only the barrel import is needed after decoupling.
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 // ─────────────────────────────────────────────────────────────────────────────
 // Quantum Overlay Engine
 // A hardened, production-oriented overlay manager for dialogs, sheets, drawers,
@@ -70,6 +69,379 @@ enum QLResizeEdge {
 
 enum QLInteractionMode { none, drag, resize }
 
+enum QLOverlayInsertMode { top, bottom, aboveOlder, belowOlder, atIndex }
+
+@immutable
+class QLOverlayRuntimeSpec {
+  final bool allowDrag;
+  final bool allowResize;
+  final bool allowSwap;
+  final bool lockSwap;
+  final bool allowClose;
+  final bool lockClose;
+  final bool allowUnderlyingInteraction;
+  final bool closeOnOutsideTap;
+  final bool closeOnEscape;
+  final bool useSafeArea;
+  final bool newestOnTop;
+  final bool insertAboveOlder;
+  final bool insertBelowOlder;
+  final QLOverlayInsertMode insertMode;
+  final int? insertIndex;
+  final QLSheetEdge? preferredEdge;
+  final List<QLSheetEdge> allowedEdges;
+  final Map<String, dynamic> hooks;
+  final Map<String, dynamic> actions;
+  final Map<String, dynamic> native;
+  final Map<String, dynamic> extra;
+
+  const QLOverlayRuntimeSpec({
+    this.allowDrag = false,
+    this.allowResize = false,
+    this.allowSwap = true,
+    this.lockSwap = false,
+    this.allowClose = true,
+    this.lockClose = false,
+    this.allowUnderlyingInteraction = false,
+    this.closeOnOutsideTap = true,
+    this.closeOnEscape = true,
+    this.useSafeArea = true,
+    this.newestOnTop = true,
+    this.insertAboveOlder = true,
+    this.insertBelowOlder = false,
+    this.insertMode = QLOverlayInsertMode.top,
+    this.insertIndex,
+    this.preferredEdge,
+    this.allowedEdges = const <QLSheetEdge>[],
+    this.hooks = const <String, dynamic>{},
+    this.actions = const <String, dynamic>{},
+    this.native = const <String, dynamic>{},
+    this.extra = const <String, dynamic>{},
+  });
+
+  factory QLOverlayRuntimeSpec.fromValue(Object? value) {
+    if (value == null) return const QLOverlayRuntimeSpec();
+    Map<String, dynamic>? map;
+    if (value is Map) {
+      map = value.map((key, value) => MapEntry(key.toString(), value));
+    } else if (value is String && value.trim().isNotEmpty) {
+      try {
+        final decoded = jsonDecode(value);
+        if (decoded is Map) {
+          map = decoded.map((key, value) => MapEntry(key.toString(), value));
+        }
+      } catch (_) {
+        map = <String, dynamic>{'raw': value};
+      }
+    }
+    if (map == null) return const QLOverlayRuntimeSpec();
+
+    bool readBool(String key, {bool fallback = false}) =>
+        map![key] is bool ? map![key] as bool : fallback;
+
+    int? readInt(String key) =>
+        map![key] is num ? (map![key] as num).toInt() : null;
+
+    QLSheetEdge? readEdge(dynamic raw) {
+      final value = raw?.toString().trim().toLowerCase();
+      switch (value) {
+        case 'top':
+          return QLSheetEdge.top;
+        case 'left':
+          return QLSheetEdge.left;
+        case 'right':
+          return QLSheetEdge.right;
+        case 'bottom':
+          return QLSheetEdge.bottom;
+        default:
+          return null;
+      }
+    }
+
+    List<QLSheetEdge> readEdgeList(dynamic raw) {
+      if (raw is List) {
+        return raw
+            .map((item) => readEdge(item))
+            .whereType<QLSheetEdge>()
+            .toList(growable: false);
+      }
+      return const <QLSheetEdge>[];
+    }
+
+    QLOverlayInsertMode readInsertMode(dynamic raw) {
+      switch ((raw?.toString() ?? '').trim()) {
+        case 'bottom':
+          return QLOverlayInsertMode.bottom;
+        case 'aboveOlder':
+        case 'above_older':
+          return QLOverlayInsertMode.aboveOlder;
+        case 'belowOlder':
+        case 'below_older':
+          return QLOverlayInsertMode.belowOlder;
+        case 'atIndex':
+        case 'index':
+          return QLOverlayInsertMode.atIndex;
+        default:
+          return QLOverlayInsertMode.top;
+      }
+    }
+
+    return QLOverlayRuntimeSpec(
+      allowDrag: readBool('allowDrag') || readBool('enableDrag'),
+      allowResize: readBool('allowResize'),
+      allowSwap: readBool('allowSwap', fallback: true),
+      lockSwap: readBool('lockSwap'),
+      allowClose: readBool('allowClose', fallback: true),
+      lockClose: readBool('lockClose'),
+      allowUnderlyingInteraction: readBool('allowUnderlyingInteraction'),
+      closeOnOutsideTap: readBool('closeOnOutsideTap', fallback: true),
+      closeOnEscape: readBool('closeOnEscape', fallback: true),
+      useSafeArea: readBool('useSafeArea', fallback: true),
+      newestOnTop: readBool('newestOnTop', fallback: true),
+      insertAboveOlder: readBool('insertAboveOlder', fallback: true),
+      insertBelowOlder: readBool('insertBelowOlder'),
+      insertMode: readInsertMode(map['insertMode']),
+      insertIndex: readInt('insertIndex'),
+      preferredEdge: readEdge(map['preferredEdge'] ?? map['edge']),
+      allowedEdges: readEdgeList(map['allowedEdges']),
+      hooks: map['hooks'] is Map
+          ? Map<String, dynamic>.from(map['hooks'] as Map)
+          : const <String, dynamic>{},
+      actions: map['actions'] is Map
+          ? Map<String, dynamic>.from(map['actions'] as Map)
+          : const <String, dynamic>{},
+      native: map['native'] is Map
+          ? Map<String, dynamic>.from(map['native'] as Map)
+          : const <String, dynamic>{},
+      extra: map,
+    );
+  }
+
+  QLSheetEdge? resolveEdge(QLSheetEdge current,
+      {required double dx, required double dy}) {
+    if (!allowSwap || lockSwap) return current;
+    if (allowedEdges.isNotEmpty && !allowedEdges.contains(current)) {
+      return allowedEdges.first;
+    }
+    switch (current) {
+      case QLSheetEdge.bottom:
+        if (dy < -80) return QLSheetEdge.top;
+        if (dx < -80) return QLSheetEdge.left;
+        if (dx > 80) return QLSheetEdge.right;
+        break;
+      case QLSheetEdge.top:
+        if (dy > 80) return QLSheetEdge.bottom;
+        if (dx < -80) return QLSheetEdge.left;
+        if (dx > 80) return QLSheetEdge.right;
+        break;
+      case QLSheetEdge.left:
+        if (dx > 80) return QLSheetEdge.right;
+        if (dy < -80) return QLSheetEdge.top;
+        if (dy > 80) return QLSheetEdge.bottom;
+        break;
+      case QLSheetEdge.right:
+        if (dx < -80) return QLSheetEdge.left;
+        if (dy < -80) return QLSheetEdge.top;
+        if (dy > 80) return QLSheetEdge.bottom;
+        break;
+    }
+    return current;
+  }
+}
+
+enum QLSurfacePattern {
+  modal,
+  nonModal,
+  centered,
+  edgeDocked,
+  bottomAttached,
+  persistentPanel,
+  temporaryOverlay,
+  fullScreen,
+  anchoredFloating,
+  inlineExpandable,
+}
+
+@immutable
+class QLMotionSpec {
+  final String? type;
+  final String? curveName;
+  final Duration? duration;
+  final double? fromScale;
+  final double? toScale;
+  final double? fromOpacity;
+  final double? toOpacity;
+  final Offset? fromTranslate;
+  final Offset? toTranslate;
+  final double? fromBlur;
+  final double? toBlur;
+  final bool? zoomIn;
+  final double? zoomScale;
+  final Map<String, dynamic> raw;
+
+  const QLMotionSpec({
+    this.type,
+    this.curveName,
+    this.duration,
+    this.fromScale,
+    this.toScale,
+    this.fromOpacity,
+    this.toOpacity,
+    this.fromTranslate,
+    this.toTranslate,
+    this.fromBlur,
+    this.toBlur,
+    this.zoomIn,
+    this.zoomScale,
+    this.raw = const <String, dynamic>{},
+  });
+
+  factory QLMotionSpec.fromValue(Object? value) {
+    if (value == null) return const QLMotionSpec();
+    Map<String, dynamic>? map;
+    if (value is Map) {
+      map = value.map((key, value) => MapEntry(key.toString(), value));
+    } else if (value is String && value.trim().isNotEmpty) {
+      try {
+        final decoded = jsonDecode(value);
+        if (decoded is Map) {
+          map = decoded.map((key, value) => MapEntry(key.toString(), value));
+        }
+      } catch (_) {
+        map = <String, dynamic>{'type': value};
+      }
+    }
+    if (map == null) return const QLMotionSpec();
+
+    Offset? parseOffset(dynamic raw) {
+      if (raw is Map) {
+        final x = (raw['x'] is num) ? (raw['x'] as num).toDouble() : null;
+        final y = (raw['y'] is num) ? (raw['y'] as num).toDouble() : null;
+        if (x != null || y != null) {
+          return Offset(x ?? 0.0, y ?? 0.0);
+        }
+      } else if (raw is List && raw.length >= 2) {
+        final x = raw[0] is num ? (raw[0] as num).toDouble() : 0.0;
+        final y = raw[1] is num ? (raw[1] as num).toDouble() : 0.0;
+        return Offset(x, y);
+      }
+      return null;
+    }
+
+    Duration? parseDuration(dynamic raw) {
+      if (raw is Duration) return raw;
+      if (raw is num) return Duration(milliseconds: raw.toInt());
+      return null;
+    }
+
+    double? parseDouble(dynamic raw) => raw is num ? raw.toDouble() : null;
+    bool? parseBool(dynamic raw) => raw is bool ? raw : null;
+
+    return QLMotionSpec(
+      type: (map['type'] ?? map['animationType'] ?? map['preset'])?.toString(),
+      curveName: (map['curve'] ?? map['curveName'])?.toString(),
+      duration: parseDuration(map['duration']) ??
+          (map['durationMs'] is num
+              ? Duration(milliseconds: (map['durationMs'] as num).toInt())
+              : null),
+      fromScale: parseDouble(map['fromScale']),
+      toScale: parseDouble(map['toScale']),
+      fromOpacity: parseDouble(map['fromOpacity']),
+      toOpacity: parseDouble(map['toOpacity']),
+      fromTranslate: parseOffset(map['fromTranslate']) ??
+          ((map['fromX'] is num || map['fromY'] is num)
+              ? Offset(
+                  (map['fromX'] is num)
+                      ? (map['fromX'] as num).toDouble()
+                      : 0.0,
+                  (map['fromY'] is num)
+                      ? (map['fromY'] as num).toDouble()
+                      : 0.0)
+              : null),
+      toTranslate: parseOffset(map['toTranslate']) ??
+          ((map['toX'] is num || map['toY'] is num)
+              ? Offset(
+                  (map['toX'] is num) ? (map['toX'] as num).toDouble() : 0.0,
+                  (map['toY'] is num) ? (map['toY'] as num).toDouble() : 0.0)
+              : null),
+      fromBlur: parseDouble(map['fromBlur']),
+      toBlur: parseDouble(map['toBlur']),
+      zoomIn: parseBool(map['zoomIn']),
+      zoomScale: parseDouble(map['zoomScale']),
+      raw: map,
+    );
+  }
+
+  static Curve _curveFromName(String? name) {
+    switch ((name ?? '').trim()) {
+      case 'linear':
+        return Curves.linear;
+      case 'easeIn':
+        return Curves.easeIn;
+      case 'easeOut':
+        return Curves.easeOut;
+      case 'easeInOut':
+        return Curves.easeInOut;
+      case 'easeOutCubic':
+        return Curves.easeOutCubic;
+      case 'easeInCubic':
+        return Curves.easeInCubic;
+      case 'elasticOut':
+        return Curves.elasticOut;
+      case 'bounceOut':
+        return Curves.bounceOut;
+      case 'spring':
+        return Curves.elasticOut;
+      default:
+        return Curves.easeOutCubic;
+    }
+  }
+
+  QLTransitionPreset toPreset(
+    QLTransitionPreset fallback, {
+    required Size screenSize,
+    QLSurfacePattern? pattern,
+  }) {
+    final dynamicType = (type ?? '').trim().toLowerCase();
+    final bool wantsZoom = zoomIn == true || dynamicType.contains('zoom');
+    final bool wantsSlide = dynamicType.contains('slide') ||
+        dynamicType.contains('translate') ||
+        dynamicType.contains('fly');
+
+    final Offset resolvedTranslate = fromTranslate ??
+        (wantsSlide
+            ? switch (pattern) {
+                QLSurfacePattern.edgeDocked => const Offset(-1, 0),
+                QLSurfacePattern.bottomAttached => const Offset(0, 1),
+                QLSurfacePattern.anchoredFloating => const Offset(0, 0.08),
+                _ => const Offset(0, 0.14),
+              }
+            : fallback.fromTranslate);
+
+    final double resolvedScale =
+        fromScale ?? (wantsZoom ? (zoomScale ?? 0.88) : fallback.fromScale);
+
+    final double resolvedOpacity = fromOpacity ??
+        ((dynamicType == 'fade' || dynamicType == 'spring' || wantsZoom)
+            ? 0.0
+            : fallback.fromOpacity);
+
+    final double resolvedBlur = fromBlur ?? fallback.fromBlur;
+    final Duration resolvedDuration = duration ?? fallback.duration;
+    final Curve resolvedCurve =
+        curveName == null ? fallback.curve : _curveFromName(curveName);
+
+    return QLTransitionPreset(
+      fromScale: resolvedScale,
+      fromOpacity: resolvedOpacity,
+      fromTranslate: resolvedTranslate,
+      fromBlur: resolvedBlur,
+      curve: resolvedCurve,
+      duration: resolvedDuration,
+    );
+  }
+}
+
 typedef QLOverlayBuilder = Widget Function(
   BuildContext context,
   VoidCallback close,
@@ -108,6 +480,9 @@ class QLSpatialConfig {
   final Color barrierColor;
   final double barrierOpacity;
   final Color rootBgColor; // 🚀 ADD THIS
+  final QLSurfacePattern surfacePattern;
+  final QLMotionSpec motion;
+  final QLOverlayRuntimeSpec runtime;
 
   final bool allowDragging;
   final bool allowResizing;
@@ -151,7 +526,9 @@ class QLSpatialConfig {
     this.bgBlurSigma = 0.0,
     this.barrierColor = const Color(0xFF000000),
     this.rootBgColor = const Color(0xFF000000), // 🚀 ADD THIS
-
+    this.surfacePattern = QLSurfacePattern.centered,
+    this.motion = const QLMotionSpec(),
+    this.runtime = const QLOverlayRuntimeSpec(),
     this.barrierOpacity = 0.50,
     this.allowDragging = false,
     this.allowResizing = false,
@@ -167,6 +544,140 @@ class QLSpatialConfig {
     this.maxDragExtent = 1200.0,
   });
 
+  factory QLSpatialConfig.surface({
+    required QLSurfacePattern pattern,
+    bool dismissible = true,
+    bool allowUnderlyingInteraction = false,
+    bool enableDrag = false,
+    bool allowResize = false,
+    bool useSafeArea = true,
+    QLSheetEdge edge = QLSheetEdge.bottom,
+    Alignment anchor = Alignment.center,
+    Alignment? sheetAlignment,
+    double? targetLeft,
+    double? targetTop,
+    double? targetRight,
+    double? targetBottom,
+    bool matchAnchorWidth = false,
+    bool matchAnchorHeight = false,
+    BoxConstraints constraints = const BoxConstraints(),
+    EdgeInsetsGeometry sheetPadding = EdgeInsets.zero,
+    BorderRadius sheetBorderRadius = BorderRadius.zero,
+    Clip clipBehavior = Clip.none,
+    bool showDragHandle = false,
+    double dragHandleWidth = 36.0,
+    double dragHandleHeight = 4.0,
+    double dragHandleOpacity = 0.35,
+    QLResizeEdge resizeEdges = QLResizeEdge.none,
+    double bgZoomDepth = 0.08,
+    double bgBlurSigma = 0.0,
+    Color barrierColor = const Color(0xFF000000),
+    double barrierOpacity = 0.50,
+    Color rootBgColor = const Color(0xFF000000),
+    double? initialWidth,
+    double? initialHeight,
+    double minWidth = 160.0,
+    double minHeight = 120.0,
+    double maxDragExtent = 1200.0,
+    Duration? timeout,
+    QLMotionSpec motion = const QLMotionSpec(),
+    QLOverlayRuntimeSpec runtime = const QLOverlayRuntimeSpec(),
+  }) {
+    final bool modal = pattern == QLSurfacePattern.modal ||
+        pattern == QLSurfacePattern.centered ||
+        pattern == QLSurfacePattern.fullScreen ||
+        pattern == QLSurfacePattern.edgeDocked ||
+        pattern == QLSurfacePattern.bottomAttached;
+
+    final QLSheetEdge resolvedEdge = switch (pattern) {
+      QLSurfacePattern.bottomAttached => QLSheetEdge.bottom,
+      QLSurfacePattern.edgeDocked => edge,
+      _ => edge,
+    };
+
+    final QLTransitionMode resolvedTransition = switch (pattern) {
+      QLSurfacePattern.modal => QLTransitionMode.fadeScale,
+      QLSurfacePattern.nonModal => QLTransitionMode.fadeScale,
+      QLSurfacePattern.centered => QLTransitionMode.fadeScale,
+      QLSurfacePattern.edgeDocked => switch (resolvedEdge) {
+          QLSheetEdge.left => QLTransitionMode.slideRight,
+          QLSheetEdge.right => QLTransitionMode.slideLeft,
+          QLSheetEdge.top => QLTransitionMode.slideDown,
+          QLSheetEdge.bottom => QLTransitionMode.slideUp,
+        },
+      QLSurfacePattern.bottomAttached => QLTransitionMode.slideUp,
+      QLSurfacePattern.persistentPanel => QLTransitionMode.fadeScale,
+      QLSurfacePattern.temporaryOverlay => QLTransitionMode.popover,
+      QLSurfacePattern.fullScreen => QLTransitionMode.fullscreen,
+      QLSurfacePattern.anchoredFloating => QLTransitionMode.popover,
+      QLSurfacePattern.inlineExpandable => QLTransitionMode.fadeScale,
+    };
+
+    return QLSpatialConfig(
+      flags: (modal ? QLNodeFlags.isModal : 0) |
+          (modal ? QLNodeFlags.hasBarrier : 0) |
+          (dismissible ? QLNodeFlags.dismissible : 0) |
+          (allowUnderlyingInteraction ? 0 : QLNodeFlags.closeOnOutsideTap) |
+          QLNodeFlags.closeOnEscape |
+          (enableDrag ? QLNodeFlags.isDraggable : 0) |
+          (allowResize ? QLNodeFlags.allowResize : 0) |
+          (useSafeArea ? QLNodeFlags.useSafeArea : 0) |
+          (pattern == QLSurfacePattern.temporaryOverlay
+              ? QLNodeFlags.autoClose
+              : 0) |
+          (pattern == QLSurfacePattern.anchoredFloating
+              ? QLNodeFlags.isMenu
+              : 0) |
+          (pattern == QLSurfacePattern.fullScreen
+              ? QLNodeFlags.useSafeArea
+              : 0),
+      anchor: anchor,
+      targetLeft: targetLeft,
+      targetTop: targetTop,
+      targetRight: targetRight,
+      targetBottom: targetBottom,
+      snapPoints: const [],
+      constraints: constraints,
+      transition: resolvedTransition,
+      bgEffect: pattern == QLSurfacePattern.persistentPanel
+          ? QLBackgroundEffect.none
+          : (pattern == QLSurfacePattern.fullScreen
+              ? QLBackgroundEffect.darken
+              : QLBackgroundEffect.none),
+      timeout: timeout,
+      sheetEdge: resolvedEdge,
+      sheetAlignment: sheetAlignment ?? anchor,
+      sheetPadding: sheetPadding,
+      sheetBorderRadius: sheetBorderRadius,
+      clipBehavior: clipBehavior,
+      showDragHandle: showDragHandle,
+      dragHandleWidth: dragHandleWidth,
+      dragHandleHeight: dragHandleHeight,
+      dragHandleOpacity: dragHandleOpacity,
+      resizeEdges: resizeEdges,
+      bgZoomDepth: bgZoomDepth,
+      bgBlurSigma: bgBlurSigma,
+      barrierColor: barrierColor,
+      barrierOpacity: barrierOpacity,
+      rootBgColor: rootBgColor,
+      surfacePattern: pattern,
+      motion: motion,
+      runtime: runtime,
+      allowDragging: enableDrag,
+      allowResizing: allowResize,
+      closeOnOutsideTap: !allowUnderlyingInteraction && dismissible,
+      matchAnchorWidth: matchAnchorWidth,
+      matchAnchorHeight: matchAnchorHeight,
+      closeOnEscape: true,
+      useSafeArea: useSafeArea,
+      initialWidth: initialWidth,
+      initialHeight: initialHeight,
+      minWidth: minWidth,
+      minHeight: minHeight,
+      maxDragExtent: maxDragExtent,
+    );
+  }
+
   factory QLSpatialConfig.dialog({
     bool barrierDismissible = true,
     bool extrude3D = true,
@@ -174,6 +685,7 @@ class QLSpatialConfig {
     BoxConstraints constraints =
         const BoxConstraints(maxWidth: 480, maxHeight: 800),
     bool useSafeArea = true,
+    QLOverlayRuntimeSpec runtime = const QLOverlayRuntimeSpec(),
   }) {
     return QLSpatialConfig(
       flags: QLNodeFlags.isModal |
@@ -187,10 +699,12 @@ class QLSpatialConfig {
       constraints: constraints,
       transition: QLTransitionMode.fadeScale,
       bgEffect: effect,
+      runtime: runtime,
       allowDragging: false,
       allowResizing: false,
       closeOnOutsideTap: barrierDismissible,
       useSafeArea: useSafeArea,
+      surfacePattern: QLSurfacePattern.centered,
     );
   }
 
@@ -198,6 +712,7 @@ class QLSpatialConfig {
     bool barrierDismissible = true,
     QLBackgroundEffect effect = QLBackgroundEffect.darken,
     bool useSafeArea = false,
+    QLOverlayRuntimeSpec runtime = const QLOverlayRuntimeSpec(),
   }) {
     return QLSpatialConfig(
       flags: QLNodeFlags.isModal |
@@ -211,6 +726,8 @@ class QLSpatialConfig {
       transition: QLTransitionMode.fullscreen,
       bgEffect: effect,
       useSafeArea: useSafeArea,
+      runtime: runtime,
+      surfacePattern: QLSurfacePattern.fullScreen,
     );
   }
 
@@ -218,6 +735,7 @@ class QLSpatialConfig {
     bool dismissible = true,
     bool enableDrag = true,
     List<double> snapPoints = const [0.5, 1.0],
+    QLSurfacePattern surfacePattern = QLSurfacePattern.bottomAttached,
     QLBackgroundEffect effect = QLBackgroundEffect.zoomBack,
     BoxConstraints constraints =
         const BoxConstraints(maxWidth: 800, maxHeight: 720),
@@ -238,6 +756,7 @@ class QLSpatialConfig {
     Color barrierColor = const Color(0xFF000000),
     double barrierOpacity = 0.50,
     Color rootBgColor = const Color(0xFF000000),
+    QLOverlayRuntimeSpec runtime = const QLOverlayRuntimeSpec(),
   }) {
     final transition = switch (edge) {
       QLSheetEdge.bottom => QLTransitionMode.slideUp,
@@ -252,6 +771,11 @@ class QLSpatialConfig {
           QLSheetEdge.left => Alignment.centerLeft,
           QLSheetEdge.right => Alignment.centerRight
         };
+    final QLSurfacePattern resolvedPattern =
+        surfacePattern == QLSurfacePattern.bottomAttached &&
+                edge != QLSheetEdge.bottom
+            ? QLSurfacePattern.edgeDocked
+            : surfacePattern;
 
     return QLSpatialConfig(
       flags: QLNodeFlags.isModal |
@@ -285,6 +809,8 @@ class QLSpatialConfig {
       initialWidth: initialWidth,
       initialHeight: initialHeight,
       rootBgColor: rootBgColor,
+      runtime: runtime,
+      surfacePattern: resolvedPattern,
     );
   }
   factory QLSpatialConfig.drawer({
@@ -303,6 +829,7 @@ class QLSpatialConfig {
     Color barrierColor = const Color(0xFF000000),
     double barrierOpacity = 0.50,
     Color rootBgColor = const Color(0xFF000000),
+    QLOverlayRuntimeSpec runtime = const QLOverlayRuntimeSpec(),
   }) {
     return QLSpatialConfig.sheet(
       dismissible: dismissible,
@@ -320,6 +847,8 @@ class QLSpatialConfig {
       barrierColor: barrierColor,
       barrierOpacity: barrierOpacity,
       rootBgColor: rootBgColor,
+      runtime: runtime,
+      surfacePattern: QLSurfacePattern.edgeDocked,
       initialWidth: edge == QLSheetEdge.left || edge == QLSheetEdge.right
           ? constraints.maxWidth.isFinite
               ? constraints.maxWidth
@@ -341,6 +870,7 @@ class QLSpatialConfig {
     BoxConstraints constraints =
         const BoxConstraints(maxWidth: 280, maxHeight: 400),
     bool matchAnchorWidth = false,
+    QLOverlayRuntimeSpec runtime = const QLOverlayRuntimeSpec(),
   }) {
     return QLSpatialConfig(
       flags: QLNodeFlags.isMenu |
@@ -356,8 +886,10 @@ class QLSpatialConfig {
       constraints: constraints,
       transition: QLTransitionMode.popover,
       matchAnchorWidth: matchAnchorWidth,
+      runtime: runtime,
       allowDragging: false,
       allowResizing: false,
+      surfacePattern: QLSurfacePattern.anchoredFloating,
     );
   }
 
@@ -367,6 +899,7 @@ class QLSpatialConfig {
     BoxConstraints constraints =
         const BoxConstraints(maxWidth: 420, maxHeight: 720),
     bool closeOnOutsideTap = false,
+    QLOverlayRuntimeSpec runtime = const QLOverlayRuntimeSpec(),
   }) {
     return QLSpatialConfig(
       flags: QLNodeFlags.autoClose | QLNodeFlags.isDraggable,
@@ -376,6 +909,8 @@ class QLSpatialConfig {
       transition: QLTransitionMode.fadeScale,
       allowDragging: true,
       closeOnOutsideTap: closeOnOutsideTap,
+      runtime: runtime,
+      surfacePattern: QLSurfacePattern.temporaryOverlay,
     );
   }
 
@@ -384,12 +919,14 @@ class QLSpatialConfig {
     Duration duration = const Duration(seconds: 3),
     BoxConstraints constraints =
         const BoxConstraints(maxWidth: 420, maxHeight: 720),
+    QLOverlayRuntimeSpec runtime = const QLOverlayRuntimeSpec(),
   }) {
     return QLSpatialConfig.notification(
       position: position,
       duration: duration,
       constraints: constraints,
       closeOnOutsideTap: false,
+      runtime: runtime,
     );
   }
 
@@ -402,6 +939,7 @@ class QLSpatialConfig {
         const BoxConstraints(maxWidth: 800, maxHeight: 600),
     bool allowResize = true,
     QLResizeEdge resizeEdges = QLResizeEdge.bottomRight,
+    QLOverlayRuntimeSpec runtime = const QLOverlayRuntimeSpec(),
   }) {
     return QLSpatialConfig(
       flags: QLNodeFlags.isDraggable |
@@ -420,6 +958,8 @@ class QLSpatialConfig {
       allowResizing: allowResize,
       resizeEdges: resizeEdges,
       useSafeArea: true,
+      runtime: runtime,
+      surfacePattern: QLSurfacePattern.anchoredFloating,
     );
   }
 }
@@ -598,8 +1138,12 @@ class QuantumOverlay {
   void _handleEscape() {
     if (_activeNodes.value.isEmpty) return;
     final top = _activeNodes.value.last;
-    if ((top.config.flags & QLNodeFlags.closeOnEscape) != 0 ||
-        top.config.closeOnEscape) {
+    final runtime = top.config.runtime;
+    if (runtime.allowClose &&
+        !runtime.lockClose &&
+        ((top.config.flags & QLNodeFlags.closeOnEscape) != 0 ||
+            top.config.closeOnEscape ||
+            runtime.closeOnEscape)) {
       _closeNode(top.id);
     }
   }
@@ -608,13 +1152,18 @@ class QuantumOverlay {
     final nodes = _activeNodes.value;
     final idx = nodes.indexWhere((n) => n.id == id);
     if (idx != -1) {
+      final runtime = nodes[idx].config.runtime;
+      if (!runtime.allowClose || runtime.lockClose) return;
       nodes[idx].closeTrigger();
     }
   }
 
   void closeTop() {
     if (_activeNodes.value.isNotEmpty) {
-      _activeNodes.value.last.closeTrigger();
+      final top = _activeNodes.value.last;
+      if (!top.config.runtime.allowClose || top.config.runtime.lockClose)
+        return;
+      top.closeTrigger();
     }
   }
 
@@ -729,7 +1278,32 @@ class QuantumOverlay {
       wrapper.nodeKey.currentState?.beginExit(completeNull);
     };
 
-    final nodes = List<_QLNodeWrapper>.from(_activeNodes.value)..add(wrapper);
+    final nodes = List<_QLNodeWrapper>.from(_activeNodes.value);
+    switch (config.runtime.insertMode) {
+      case QLOverlayInsertMode.bottom:
+        nodes.insert(0, wrapper);
+        break;
+      case QLOverlayInsertMode.aboveOlder:
+        nodes.add(wrapper);
+        break;
+      case QLOverlayInsertMode.belowOlder:
+        nodes.insert(0, wrapper);
+        break;
+      case QLOverlayInsertMode.atIndex:
+        final index = config.runtime.insertIndex == null
+            ? nodes.length
+            : config.runtime.insertIndex!.clamp(0, nodes.length);
+        nodes.insert(index, wrapper);
+        break;
+      case QLOverlayInsertMode.top:
+      default:
+        if (config.runtime.insertBelowOlder) {
+          nodes.insert(0, wrapper);
+        } else {
+          nodes.add(wrapper);
+        }
+        break;
+    }
     _activeNodes.value = nodes;
     _recalculateBackgroundEffects();
     return completer.future;
@@ -904,6 +1478,7 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
   double _startW = 0.0;
   double _startH = 0.0;
   double _sheetOvershoot = 0.0;
+  QLSheetEdge _runtimeEdge = QLSheetEdge.bottom;
 
   @override
   void initState() {
@@ -921,9 +1496,15 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
     super.didChangeDependencies();
     if (!_initialized) {
       _initialized = true;
+      final basePreset = _mapPreset(widget.wrapper.config.transition);
+      final resolvedPreset = widget.wrapper.config.motion.toPreset(
+        basePreset,
+        screenSize: MediaQuery.sizeOf(context),
+        pattern: widget.wrapper.config.surfacePattern,
+      );
       _composer = QLTransitionComposer.entrance(
         vsync: this,
-        preset: _mapPreset(widget.wrapper.config.transition),
+        preset: resolvedPreset,
         screenSize: MediaQuery.sizeOf(context),
       );
     }
@@ -975,8 +1556,10 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
                 conf.minHeight, math.min(conf.constraints.maxHeight, 300.0))
             : 300.0);
 
-    _hasExplicitBox =
-        conf.transition == QLTransitionMode.windowDrop || conf.allowResizing;
+    _runtimeEdge = conf.runtime.preferredEdge ?? conf.sheetEdge;
+    _hasExplicitBox = conf.transition == QLTransitionMode.windowDrop ||
+        conf.allowResizing ||
+        conf.runtime.allowResize;
 
     if (conf.targetLeft != null && conf.targetTop != null) {
       _x = conf.targetLeft!;
@@ -1036,7 +1619,8 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
       effectiveMaxHeight,
     );
 
-    if (c.transition == QLTransitionMode.fullscreen) {
+    if (c.transition == QLTransitionMode.fullscreen ||
+        c.surfacePattern == QLSurfacePattern.fullScreen) {
       return BoxConstraints.tight(screenSize);
     }
 
@@ -1155,14 +1739,17 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
     final size = _contentKey.currentContext?.findRenderObject() is RenderBox
         ? (_contentKey.currentContext!.findRenderObject() as RenderBox).size
         : Size(_w, _h);
-    final resizeEdge = conf.allowResizing
+    final bool canResize = conf.allowResizing || conf.runtime.allowResize;
+    final resizeEdge = canResize
         ? _detectResizeEdge(e.localPosition, size, conf.resizeEdges)
         : QLResizeEdge.none;
     if (resizeEdge != QLResizeEdge.none) {
       _mode = QLInteractionMode.resize;
       _resizeEdge = resizeEdge;
-    } else if (conf.allowDragging ||
-        (conf.flags & QLNodeFlags.isDraggable) != 0) {
+    } else if ((conf.allowDragging ||
+            conf.runtime.allowDrag ||
+            (conf.flags & QLNodeFlags.isDraggable) != 0) &&
+        !conf.runtime.lockSwap) {
       _mode = QLInteractionMode.drag;
     } else {
       _mode = QLInteractionMode.none;
@@ -1190,20 +1777,31 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
 
     if (_mode != QLInteractionMode.drag) return;
 
-    switch (conf.transition) {
-      case QLTransitionMode.slideUp:
-      case QLTransitionMode.slideDown:
+    final resolvedEdge = conf.runtime.resolveEdge(_runtimeEdge, dx: dx, dy: dy);
+
+    // 👇 ADD THE NULL CHECK HERE (`resolvedEdge != null`)
+    if (resolvedEdge != null && resolvedEdge != _runtimeEdge) {
+      setState(() {
+        _runtimeEdge = resolvedEdge;
+      });
+    }
+
+    switch (_runtimeEdge) {
+      case QLSheetEdge.top:
         _sheetOvershoot = math.min(conf.maxDragExtent,
             math.max(-conf.maxDragExtent, _sheetOvershoot + dy));
         break;
-      case QLTransitionMode.slideLeft:
-      case QLTransitionMode.slideRight:
+      case QLSheetEdge.bottom:
+        _sheetOvershoot = math.min(conf.maxDragExtent,
+            math.max(-conf.maxDragExtent, _sheetOvershoot + dy));
+        break;
+      case QLSheetEdge.left:
         _sheetOvershoot = math.min(conf.maxDragExtent,
             math.max(-conf.maxDragExtent, _sheetOvershoot + dx));
         break;
-      default:
-        _dragDx += dx;
-        _dragDy += dy;
+      case QLSheetEdge.right:
+        _sheetOvershoot = math.min(conf.maxDragExtent,
+            math.max(-conf.maxDragExtent, _sheetOvershoot + dx));
         break;
     }
 
@@ -1277,36 +1875,42 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
     _gestureActive = false;
     _activePointer = null;
 
-    switch (conf.transition) {
-      case QLTransitionMode.slideUp:
-        if (_sheetOvershoot > 150) {
+    switch (_runtimeEdge) {
+      case QLSheetEdge.top:
+        if (_sheetOvershoot < -150 &&
+            !conf.runtime.lockClose &&
+            conf.runtime.allowClose) {
           beginExit(() {});
           return;
         }
         _sheetOvershoot = 0.0;
         break;
-      case QLTransitionMode.slideDown:
-        if (_sheetOvershoot < -150) {
+      case QLSheetEdge.bottom:
+        if (_sheetOvershoot > 150 &&
+            !conf.runtime.lockClose &&
+            conf.runtime.allowClose) {
           beginExit(() {});
           return;
         }
         _sheetOvershoot = 0.0;
         break;
-      case QLTransitionMode.slideLeft:
-        if (_sheetOvershoot < -150) {
+      case QLSheetEdge.left:
+        if (_sheetOvershoot < -150 &&
+            !conf.runtime.lockClose &&
+            conf.runtime.allowClose) {
           beginExit(() {});
           return;
         }
         _sheetOvershoot = 0.0;
         break;
-      case QLTransitionMode.slideRight:
-        if (_sheetOvershoot > 150) {
+      case QLSheetEdge.right:
+        if (_sheetOvershoot > 150 &&
+            !conf.runtime.lockClose &&
+            conf.runtime.allowClose) {
           beginExit(() {});
           return;
         }
         _sheetOvershoot = 0.0;
-        break;
-      default:
         break;
     }
 
@@ -1367,7 +1971,7 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
         m.storage[13] = trans.dy + _dragDy;
 
         if (_sheetOvershoot != 0.0) {
-          switch (c.sheetEdge) {
+          switch (_runtimeEdge) {
             case QLSheetEdge.bottom:
               m.storage[13] += _sheetOvershoot;
               break;
@@ -1486,12 +2090,12 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
       innerChild = SafeArea(child: innerChild);
     }
 
-    final bool sheetIsVertical = c.sheetEdge == QLSheetEdge.top ||
-        c.sheetEdge == QLSheetEdge.bottom ||
+    final bool sheetIsVertical = _runtimeEdge == QLSheetEdge.top ||
+        _runtimeEdge == QLSheetEdge.bottom ||
         c.transition == QLTransitionMode.slideUp ||
         c.transition == QLTransitionMode.slideDown;
-    final bool sheetIsHorizontal = c.sheetEdge == QLSheetEdge.left ||
-        c.sheetEdge == QLSheetEdge.right ||
+    final bool sheetIsHorizontal = _runtimeEdge == QLSheetEdge.left ||
+        _runtimeEdge == QLSheetEdge.right ||
         c.transition == QLTransitionMode.slideLeft ||
         c.transition == QLTransitionMode.slideRight;
     if (sheetIsVertical || sheetIsHorizontal) {
@@ -1533,8 +2137,19 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
       }
     }
 
-    if (c.transition == QLTransitionMode.fullscreen) {
+    if (c.surfacePattern == QLSurfacePattern.fullScreen ||
+        c.transition == QLTransitionMode.fullscreen) {
       return Positioned.fill(child: innerChild);
+    }
+
+    if (c.surfacePattern == QLSurfacePattern.persistentPanel ||
+        c.surfacePattern == QLSurfacePattern.inlineExpandable) {
+      return Positioned.fill(
+        child: Align(
+          alignment: c.sheetAlignment ?? c.anchor,
+          child: innerChild,
+        ),
+      );
     }
 
     if (_hasExplicitBox) {
@@ -1556,6 +2171,89 @@ extension QuantumOverlayContextExt on BuildContext {
       {int parentId = 0}) {
     return QuantumOverlay.instance
         .mount<T>(this, config, builder, parentId: parentId);
+  }
+
+  Future<T?> showQLSurface<T>({
+    required QLSurfacePattern pattern,
+    required QLOverlayBuilder builder,
+    bool dismissible = true,
+    bool allowUnderlyingInteraction = false,
+    bool enableDrag = false,
+    bool allowResize = false,
+    bool useSafeArea = true,
+    QLSheetEdge edge = QLSheetEdge.bottom,
+    Alignment anchor = Alignment.center,
+    Alignment? sheetAlignment,
+    double? targetLeft,
+    double? targetTop,
+    double? targetRight,
+    double? targetBottom,
+    bool matchAnchorWidth = false,
+    bool matchAnchorHeight = false,
+    BoxConstraints constraints = const BoxConstraints(),
+    EdgeInsetsGeometry sheetPadding = EdgeInsets.zero,
+    BorderRadius sheetBorderRadius = BorderRadius.zero,
+    Clip clipBehavior = Clip.none,
+    bool showDragHandle = false,
+    double dragHandleWidth = 36.0,
+    double dragHandleHeight = 4.0,
+    double dragHandleOpacity = 0.35,
+    QLResizeEdge resizeEdges = QLResizeEdge.none,
+    double bgZoomDepth = 0.08,
+    double bgBlurSigma = 0.0,
+    Color barrierColor = const Color(0xFF000000),
+    double barrierOpacity = 0.50,
+    Color rootBgColor = const Color(0xFF000000),
+    double? initialWidth,
+    double? initialHeight,
+    double minWidth = 160.0,
+    double minHeight = 120.0,
+    double maxDragExtent = 1200.0,
+    Duration? timeout,
+    QLMotionSpec motion = const QLMotionSpec(),
+    QLOverlayRuntimeSpec runtime = const QLOverlayRuntimeSpec(),
+  }) {
+    return mountOverlay<T>(
+      QLSpatialConfig.surface(
+        pattern: pattern,
+        dismissible: dismissible,
+        allowUnderlyingInteraction: allowUnderlyingInteraction,
+        enableDrag: enableDrag,
+        allowResize: allowResize,
+        useSafeArea: useSafeArea,
+        edge: edge,
+        anchor: anchor,
+        sheetAlignment: sheetAlignment,
+        targetLeft: targetLeft,
+        targetTop: targetTop,
+        targetRight: targetRight,
+        targetBottom: targetBottom,
+        matchAnchorWidth: matchAnchorWidth,
+        matchAnchorHeight: matchAnchorHeight,
+        constraints: constraints,
+        sheetPadding: sheetPadding,
+        sheetBorderRadius: sheetBorderRadius,
+        clipBehavior: clipBehavior,
+        showDragHandle: showDragHandle,
+        dragHandleWidth: dragHandleWidth,
+        dragHandleHeight: dragHandleHeight,
+        dragHandleOpacity: dragHandleOpacity,
+        resizeEdges: resizeEdges,
+        bgZoomDepth: bgZoomDepth,
+        bgBlurSigma: bgBlurSigma,
+        barrierColor: barrierColor,
+        barrierOpacity: barrierOpacity,
+        rootBgColor: rootBgColor,
+        initialWidth: initialWidth,
+        initialHeight: initialHeight,
+        minWidth: minWidth,
+        minHeight: minHeight,
+        maxDragExtent: maxDragExtent,
+        timeout: timeout,
+        motion: motion,
+      ),
+      builder,
+    );
   }
 
   Future<T?> showQLDialog<T>({

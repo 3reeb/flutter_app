@@ -1,0 +1,41 @@
+{
+  "__meta": {
+    "id": "compile_time-002-scope-002",
+    "title": "Scope prefixes descendant bindings #002",
+    "description": "The $scope operator should prefix descendant bindings with the active scope.",
+    "tags": [
+      "compile-time",
+      "scope",
+      "binding"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "box:col",
+    "$scope": "user",
+    "children": [
+      {
+        "type": "data",
+        "props": {
+          "bind": "profile.2",
+          "mode": "read"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:col",
+    "props": {},
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "data",
+        "props": {
+          "bind": "user.profile.2",
+          "mode": "read"
+        },
+        "debugPath": "root[0]"
+      }
+    ]
+  }
+}

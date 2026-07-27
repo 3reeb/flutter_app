@@ -1,0 +1,208 @@
+schema_version: 2
+doc_kind: file-test-manifest
+file: lib/src/runtime/quantum_test_engine_io.dart
+layer: runtime
+profile: runtime-core
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/runtime/quantum_test_engine_io.dart
+  sha256: 3341431434f4a85547d56595425d118c9e8638f85951bc40020e05478be57053
+  line_count: 168
+  imports:
+    - dart:async
+    - dart:io
+    - package:yaml/yaml.dart
+    - quantum_test_engine_shared.dart
+  exports: []
+  parts: []
+  part_of: []
+  category: runtime
+  profile: runtime-core
+  large_profile: true
+  keywords:
+    - test
+    - yaml
+    - manifest
+    - report
+    - validation
+surface_summary:
+  classes_enums_typedefs_mixins_extensions_functions: &id001
+    - QuantumTestEngine
+  count: 1
+focus:
+  File-system backed YAML discovery, manifest loading, and execution against
+  injected runners.
+coverage_targets:
+  - file discovery
+  - yaml parsing
+  - executor routing
+  - failure isolation
+  - compatibility
+  - performance
+test_dimensions:
+  input_shapes:
+    - "null"
+    - empty
+    - single-item
+    - multi-item
+    - legacy-shape
+    - malformed
+    - large-batch
+  execution_modes:
+    - cold
+    - warm
+    - cached
+    - lazy
+    - eager
+  outcomes:
+    - accept
+    - reject
+    - normalize
+    - reuse
+    - evict
+    - round-trip
+  measurement_axes:
+    - latency
+    - allocations
+    - error-path
+    - summary-size
+reusable_presets:
+  smoke_base:
+    purpose:
+      Prove the canonical public path works and stays stable across repeated
+      runs.
+    assertions:
+      - observable result is stable
+      - no hidden mutation
+      - no duplicate side effects
+  edge_base:
+    purpose: Prove malformed input fails explicitly or normalizes intentionally.
+    assertions:
+      - failure is explicit
+      - no silent coercion
+      - no stale state
+  perf_base:
+    purpose: Measure the hot path and bound allocations or repeated work.
+    assertions:
+      - warm path is not worse than cold path
+      - allocation growth stays bounded
+  integration_base:
+    purpose: Validate behavior across local imports and neighboring runtime layers.
+    assertions:
+      - boundary contract holds
+      - cross-file side effects remain stable
+groups:
+  - name: load
+    description: YAML parsing and manifest hydration.
+    rows:
+      - id: io.load.001
+        purpose: Load a YAML manifest from disk and hydrate the typed model.
+        target_symbols: *id001
+        setup: Choose a valid manifest path.
+        input: A readable manifest file.
+        body: Parse YAML and convert native structures.
+        expected: The manifest object matches the YAML source.
+        assertions:
+          - yaml parsed
+          - typed model created
+        metrics:
+          - load latency
+        risks:
+          - parse failure
+        cleanup: Close handles.
+      - id: io.load.002
+        purpose: Reject malformed YAML with a direct parse error.
+        target_symbols: *id001
+        setup: Provide broken YAML syntax.
+        input: Invalid YAML text.
+        body: Attempt parsing.
+        expected: A parse error is thrown and wrapped with the file path.
+        assertions:
+          - parse error explicit
+          - file path included
+        metrics:
+          - failure latency
+        risks:
+          - silent malformed config
+        cleanup: Remove temp file.
+  - name: discover
+    description: Directory scanning and manifest catalog behavior.
+    rows:
+      - id: io.discover.001
+        purpose: Discover manifests recursively from the docs_tests catalog.
+        target_symbols: *id001
+        setup: Use the generated manifest directory.
+        input: docs_tests/yaml/by-file tree.
+        body: Walk the tree and collect manifests.
+        expected: Every manifest is returned once.
+        assertions:
+          - recursive scan works
+          - results sorted
+        metrics:
+          - scan time
+        risks:
+          - missed files
+        cleanup: None.
+      - id: io.discover.002
+        purpose: Ignore index/readme support files during manifest discovery.
+        target_symbols: *id001
+        setup: Place index and readme files in the tree.
+        input: index/readme files.
+        body: Run discovery.
+        expected: Support files are skipped.
+        assertions:
+          - index skipped
+          - readme skipped
+        metrics:
+          - scan noise
+        risks:
+          - false positives
+        cleanup: None.
+  - name: run
+    description: Execution, aggregation, and resilience.
+    rows:
+      - id: io.run.001
+        purpose: Run each row through the executor while preserving manifest and row identity.
+        target_symbols: *id001
+        setup: Inject a deterministic executor.
+        input: Loaded manifest rows.
+        body: Execute the full manifest set.
+        expected: All rows return results with unique ids.
+        assertions:
+          - unique ids retained
+          - result recorded
+        metrics:
+          - result count
+        risks:
+          - identity loss
+        cleanup: Reset executor.
+      - id: io.run.002
+        purpose: Continue after row failures and retain the error payload.
+        target_symbols: *id001
+        setup: Use an executor that throws for a known row.
+        input: One failing row and one passing row.
+        body: Aggregate the run.
+        expected: Failure is captured and later rows still execute.
+        assertions:
+          - failure isolated
+          - stack trace captured
+        metrics:
+          - recovery count
+        risks:
+          - abort on first failure
+        cleanup: Clear temp state.
+regeneration_triggers:
+  - public API shape changes
+  - source metadata changes
+  - row or group edits
+  - new imports or exports
+  - updated validation rules
+supplements: []
+notes:
+  - This manifest is intentionally rich enough to drive future generated Dart tests.
+  - The row descriptions are reusable templates, not happy-path-only examples.
+  - The shared test engine applies strict validation and compact reporting.
+profiles:
+  - runtime-core
+  - test-engine-core

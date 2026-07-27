@@ -7,11 +7,8 @@
 
 import 'dart:async';
 import 'dart:collection';
-
 import 'package:flutter/foundation.dart';
-
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 typedef QLCoreFileLoader = Future<Map<String, dynamic>> Function(
     String assetPath);
 

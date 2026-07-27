@@ -1,0 +1,19 @@
+{
+  "__meta": {
+    "id": "widget-002-string-sizing",
+    "title": "String width/height values pass through unchanged",
+    "description": "Width expressed as 'fill' or 'auto' must not be cast to a number or stripped. The renderer uses these string tokens to trigger fill/auto sizing modes.",
+    "tags": ["widget", "sizing", "string"],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "box:col",
+    "props": { "width": "fill", "height": "auto" }
+  },
+  "expected": {
+    "type": "box:col",
+    "props": { "width": "fill", "height": "auto" },
+    "debugPath": "root"
+  }
+}

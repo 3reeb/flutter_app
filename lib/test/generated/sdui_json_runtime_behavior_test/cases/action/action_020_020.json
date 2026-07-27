@@ -1,0 +1,32 @@
+{
+  "__meta": {
+    "id": "action-020-long-press-delay",
+    "title": "action:long_press with durationMs prop compiles correctly",
+    "description": "Long press delay in ms must survive compilation. Missing durationMs uses the system default (500ms), which may not match UX spec.",
+    "tags": ["action", "long_press", "duration"],
+    "allowBlank": false,
+    "priority": "medium"
+  },
+  "input": {
+    "type": "action:long_press",
+    "props": {
+      "durationMs": 800,
+      "onLongPress": { "type": "action", "name": "card.menu" }
+    },
+    "children": [
+      { "type": "text", "props": { "text": "Hold me" } }
+    ]
+  },
+  "expected": {
+    "type": "action",
+    "props": {
+      "__subType": "long_press",
+      "durationMs": 800,
+      "onLongPress": { "type": "action", "name": "card.menu" }
+    },
+    "debugPath": "root",
+    "children": [
+      { "type": "text", "props": { "text": "Hold me" }, "debugPath": "root[0]" }
+    ]
+  }
+}

@@ -1,0 +1,743 @@
+file: lib/src/foundation/quantum_yaml_engine.dart
+docs_file: docs/src/foundation/quantum_yaml_engine.dart.md
+line_count: 1092
+category: parser
+tests:
+- uuid: 4ba9f3a5-f7d8-5432-bd71-daa4a8a411f2
+  file: lib/src/foundation/quantum_yaml_engine.dart
+  docs_file: docs/src/foundation/quantum_yaml_engine.dart.md
+  title: 'Quantum Yaml Engine: public contract remains stable under valid input'
+  slug: contract
+  category: parser
+  severity: critical
+  description: Verify that quantum yaml engine keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_yaml_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_yaml_engine.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
+      — OMEGA YAML-FIRST CONFIG SYSTEM'
+    headings:
+    - '`src/foundation/quantum_yaml_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - contract
+  - quantum yaml engine
+- uuid: f001512c-c0e5-5e26-93c8-48da5278590c
+  file: lib/src/foundation/quantum_yaml_engine.dart
+  docs_file: docs/src/foundation/quantum_yaml_engine.dart.md
+  title: 'Quantum Yaml Engine: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: parser
+  severity: critical
+  description: Verify that quantum yaml engine keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_yaml_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_yaml_engine.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
+      — OMEGA YAML-FIRST CONFIG SYSTEM'
+    headings:
+    - '`src/foundation/quantum_yaml_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - invalid_input
+  - quantum yaml engine
+- uuid: b8ed4056-2373-5349-9de5-255e4e029037
+  file: lib/src/foundation/quantum_yaml_engine.dart
+  docs_file: docs/src/foundation/quantum_yaml_engine.dart.md
+  title: 'Quantum Yaml Engine: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: parser
+  severity: high
+  description: Verify that quantum yaml engine keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_yaml_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_yaml_engine.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
+      — OMEGA YAML-FIRST CONFIG SYSTEM'
+    headings:
+    - '`src/foundation/quantum_yaml_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - reentrant
+  - quantum yaml engine
+- uuid: b4c64293-c526-5259-b92b-b19ee870e08a
+  file: lib/src/foundation/quantum_yaml_engine.dart
+  docs_file: docs/src/foundation/quantum_yaml_engine.dart.md
+  title: 'Quantum Yaml Engine: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: parser
+  severity: high
+  description: Verify that quantum yaml engine keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_yaml_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_yaml_engine.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
+      — OMEGA YAML-FIRST CONFIG SYSTEM'
+    headings:
+    - '`src/foundation/quantum_yaml_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - cleanup
+  - quantum yaml engine
+- uuid: c7d3145d-07ce-5960-b215-28285f7b35b0
+  file: lib/src/foundation/quantum_yaml_engine.dart
+  docs_file: docs/src/foundation/quantum_yaml_engine.dart.md
+  title: 'Quantum Yaml Engine: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: parser
+  severity: high
+  description: Verify that quantum yaml engine keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_yaml_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_yaml_engine.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
+      — OMEGA YAML-FIRST CONFIG SYSTEM'
+    headings:
+    - '`src/foundation/quantum_yaml_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - performance
+  - quantum yaml engine
+- uuid: e9935abb-1487-521c-a2a5-499516c954f8
+  file: lib/src/foundation/quantum_yaml_engine.dart
+  docs_file: docs/src/foundation/quantum_yaml_engine.dart.md
+  title: 'Quantum Yaml Engine: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: parser
+  severity: medium
+  description: Verify that quantum yaml engine keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_yaml_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_yaml_engine.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
+      — OMEGA YAML-FIRST CONFIG SYSTEM'
+    headings:
+    - '`src/foundation/quantum_yaml_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - memory
+  - quantum yaml engine
+- uuid: 73bf7f59-c052-53d5-a918-327cc820990c
+  file: lib/src/foundation/quantum_yaml_engine.dart
+  docs_file: docs/src/foundation/quantum_yaml_engine.dart.md
+  title: 'Quantum Yaml Engine: the runtime surface still matches the documented API
+    and headings'
+  slug: docs_parity
+  category: parser
+  severity: medium
+  description: Verify that quantum yaml engine keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_yaml_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_yaml_engine.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
+      — OMEGA YAML-FIRST CONFIG SYSTEM'
+    headings:
+    - '`src/foundation/quantum_yaml_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - docs_parity
+  - quantum yaml engine
+- uuid: 699acc2a-16a2-52db-a21e-e516a0577a9b
+  file: lib/src/foundation/quantum_yaml_engine.dart
+  docs_file: docs/src/foundation/quantum_yaml_engine.dart.md
+  title: 'Quantum Yaml Engine: malformed documents fail with actionable errors instead
+    of silent corruption'
+  slug: malformed
+  category: parser
+  severity: medium
+  description: Verify that quantum yaml engine keeps its documented runtime behavior
+    while handling malformed conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_yaml_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_yaml_engine.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
+      — OMEGA YAML-FIRST CONFIG SYSTEM'
+    headings:
+    - '`src/foundation/quantum_yaml_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - malformed
+  - quantum yaml engine
+- uuid: 060e2fa6-e6ef-5c63-b3cc-51aa6b8d1232
+  file: lib/src/foundation/quantum_yaml_engine.dart
+  docs_file: docs/src/foundation/quantum_yaml_engine.dart.md
+  title: 'Quantum Yaml Engine: deeply nested content, aliases, or recursive structures
+    stay bounded'
+  slug: nested
+  category: parser
+  severity: medium
+  description: Verify that quantum yaml engine keeps its documented runtime behavior
+    while handling nested conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_yaml_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_yaml_engine.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
+      — OMEGA YAML-FIRST CONFIG SYSTEM'
+    headings:
+    - '`src/foundation/quantum_yaml_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - nested
+  - quantum yaml engine
+- uuid: 018ab469-8135-57f4-893e-007a2af84552
+  file: lib/src/foundation/quantum_yaml_engine.dart
+  docs_file: docs/src/foundation/quantum_yaml_engine.dart.md
+  title: 'Quantum Yaml Engine: unicode, escaping, and BOM handling round-trip correctly'
+  slug: unicode
+  category: parser
+  severity: medium
+  description: Verify that quantum yaml engine keeps its documented runtime behavior
+    while handling unicode conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_yaml_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_yaml_engine.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
+      — OMEGA YAML-FIRST CONFIG SYSTEM'
+    headings:
+    - '`src/foundation/quantum_yaml_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - unicode
+  - quantum yaml engine
+- uuid: 743cd73a-e4f8-5aaf-94a7-e3c9b3df1cc8
+  file: lib/src/foundation/quantum_yaml_engine.dart
+  docs_file: docs/src/foundation/quantum_yaml_engine.dart.md
+  title: 'Quantum Yaml Engine: duplicate keys or conflicting declarations are surfaced
+    deterministically'
+  slug: duplicate
+  category: parser
+  severity: medium
+  description: Verify that quantum yaml engine keeps its documented runtime behavior
+    while handling duplicate conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_yaml_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_yaml_engine.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
+      — OMEGA YAML-FIRST CONFIG SYSTEM'
+    headings:
+    - '`src/foundation/quantum_yaml_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - duplicate
+  - quantum yaml engine
+- uuid: efd48852-ee17-5ddb-b3c4-bfe75648ce75
+  file: lib/src/foundation/quantum_yaml_engine.dart
+  docs_file: docs/src/foundation/quantum_yaml_engine.dart.md
+  title: 'Quantum Yaml Engine: schema parsing preserves field definitions and defaults'
+  slug: schema_fidelity
+  category: parser
+  severity: medium
+  description: Verify that quantum yaml engine keeps its documented runtime behavior
+    while handling schema fidelity conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_yaml_engine.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_yaml_engine.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
+      — OMEGA YAML-FIRST CONFIG SYSTEM'
+    headings:
+    - '`src/foundation/quantum_yaml_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - schema_fidelity
+  - quantum yaml engine

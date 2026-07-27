@@ -1,0 +1,458 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/app/quantum_boot_schema.dart
+  docs_file: docs/src/app/quantum_boot_schema.dart.md
+  source_entry:
+    line_count: 336
+    byte_count: 11680
+    class_count: 1
+    enum_count: 0
+    function_count: 16
+    category: parser
+    test_count: 8
+  scenario_count: 8
+source:
+  path: src/app/quantum_boot_schema.dart
+  docs_path: docs/src/app/quantum_boot_schema.dart.md
+  label: src/app/quantum_boot_schema.dart
+scenarios:
+- uuid: 9a2b44f1-3f5c-5a69-b952-b1edb0ca9dd2
+  file: lib/src/app/quantum_boot_schema.dart
+  docs_file: docs/src/app/quantum_boot_schema.dart.md
+  title: 'Quantum Boot Schema: public contract remains stable under valid input'
+  slug: contract
+  category: parser
+  severity: critical
+  description: Verify that quantum boot schema keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_boot_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_boot_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog'
+    headings:
+    - '`src/app/quantum_boot_schema.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - contract
+  - quantum boot schema
+- uuid: 8b22339a-ad65-5603-8c35-d53f1f160422
+  file: lib/src/app/quantum_boot_schema.dart
+  docs_file: docs/src/app/quantum_boot_schema.dart.md
+  title: 'Quantum Boot Schema: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: parser
+  severity: critical
+  description: Verify that quantum boot schema keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_boot_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_boot_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog'
+    headings:
+    - '`src/app/quantum_boot_schema.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - invalid_input
+  - quantum boot schema
+- uuid: 7a754358-0f79-5ae8-9fbd-98b1e36378ca
+  file: lib/src/app/quantum_boot_schema.dart
+  docs_file: docs/src/app/quantum_boot_schema.dart.md
+  title: 'Quantum Boot Schema: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: parser
+  severity: high
+  description: Verify that quantum boot schema keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_boot_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_boot_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog'
+    headings:
+    - '`src/app/quantum_boot_schema.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - reentrant
+  - quantum boot schema
+- uuid: 0d0c1884-6149-570d-8723-5286100083bb
+  file: lib/src/app/quantum_boot_schema.dart
+  docs_file: docs/src/app/quantum_boot_schema.dart.md
+  title: 'Quantum Boot Schema: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: parser
+  severity: high
+  description: Verify that quantum boot schema keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_boot_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_boot_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog'
+    headings:
+    - '`src/app/quantum_boot_schema.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - cleanup
+  - quantum boot schema
+- uuid: 5a623b59-19e4-5485-ae0a-f66dadbd5269
+  file: lib/src/app/quantum_boot_schema.dart
+  docs_file: docs/src/app/quantum_boot_schema.dart.md
+  title: 'Quantum Boot Schema: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: parser
+  severity: high
+  description: Verify that quantum boot schema keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_boot_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_boot_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog'
+    headings:
+    - '`src/app/quantum_boot_schema.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - performance
+  - quantum boot schema
+- uuid: f56025a7-214f-5a09-8e4a-c93f061ffb44
+  file: lib/src/app/quantum_boot_schema.dart
+  docs_file: docs/src/app/quantum_boot_schema.dart.md
+  title: 'Quantum Boot Schema: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: parser
+  severity: medium
+  description: Verify that quantum boot schema keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_boot_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_boot_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog'
+    headings:
+    - '`src/app/quantum_boot_schema.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - memory
+  - quantum boot schema
+- uuid: e4c79933-d89c-5d24-9c74-f63fc4cd902e
+  file: lib/src/app/quantum_boot_schema.dart
+  docs_file: docs/src/app/quantum_boot_schema.dart.md
+  title: 'Quantum Boot Schema: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: parser
+  severity: medium
+  description: Verify that quantum boot schema keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_boot_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_boot_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog'
+    headings:
+    - '`src/app/quantum_boot_schema.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - docs_parity
+  - quantum boot schema
+- uuid: d9ae16ce-ead4-5866-bcb1-31796131df32
+  file: lib/src/app/quantum_boot_schema.dart
+  docs_file: docs/src/app/quantum_boot_schema.dart.md
+  title: 'Quantum Boot Schema: malformed documents fail with actionable errors instead of silent corruption'
+  slug: malformed
+  category: parser
+  severity: medium
+  description: Verify that quantum boot schema keeps its documented runtime behavior while handling malformed conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_boot_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_boot_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config, shell behavior, HTTP transport, or file routing into the overall Flutter application. Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog'
+    headings:
+    - '`src/app/quantum_boot_schema.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - malformed
+  - quantum boot schema

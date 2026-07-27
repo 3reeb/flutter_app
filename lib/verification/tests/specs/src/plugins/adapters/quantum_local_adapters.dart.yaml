@@ -1,0 +1,488 @@
+file: lib/src/plugins/adapters/quantum_local_adapters.dart
+docs_file: docs/src/plugins/adapters/quantum_local_adapters.dart.md
+line_count: 191
+category: plugin
+tests:
+- uuid: e72f913d-d284-57ef-a18d-693810e14545
+  file: lib/src/plugins/adapters/quantum_local_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_local_adapters.dart.md
+  title: 'Quantum Local Adapters: public contract remains stable under valid input'
+  slug: contract
+  category: plugin
+  severity: critical
+  description: Verify that quantum local adapters keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_local_adapters.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_local_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend
+      or environment such as local, mock, universal, or Firebase behavior. Author-intent
+      note: / Highly robust SQLite implementation for heavy data caching and offline
+      queueing.'
+    headings:
+    - '`src/plugins/adapters/quantum_local_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - contract
+  - quantum local adapters
+- uuid: 58073cb4-75ee-5ce4-9fb7-c64c11308df7
+  file: lib/src/plugins/adapters/quantum_local_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_local_adapters.dart.md
+  title: 'Quantum Local Adapters: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: plugin
+  severity: critical
+  description: Verify that quantum local adapters keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_local_adapters.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_local_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend
+      or environment such as local, mock, universal, or Firebase behavior. Author-intent
+      note: / Highly robust SQLite implementation for heavy data caching and offline
+      queueing.'
+    headings:
+    - '`src/plugins/adapters/quantum_local_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - invalid_input
+  - quantum local adapters
+- uuid: fda90a2a-2f59-5b74-8121-67bcb32e0576
+  file: lib/src/plugins/adapters/quantum_local_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_local_adapters.dart.md
+  title: 'Quantum Local Adapters: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: plugin
+  severity: high
+  description: Verify that quantum local adapters keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_local_adapters.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_local_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend
+      or environment such as local, mock, universal, or Firebase behavior. Author-intent
+      note: / Highly robust SQLite implementation for heavy data caching and offline
+      queueing.'
+    headings:
+    - '`src/plugins/adapters/quantum_local_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - reentrant
+  - quantum local adapters
+- uuid: 2e13572d-b142-5c06-bc5c-4d933ca848af
+  file: lib/src/plugins/adapters/quantum_local_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_local_adapters.dart.md
+  title: 'Quantum Local Adapters: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: plugin
+  severity: high
+  description: Verify that quantum local adapters keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_local_adapters.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_local_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend
+      or environment such as local, mock, universal, or Firebase behavior. Author-intent
+      note: / Highly robust SQLite implementation for heavy data caching and offline
+      queueing.'
+    headings:
+    - '`src/plugins/adapters/quantum_local_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - cleanup
+  - quantum local adapters
+- uuid: 5840c8c2-710f-5bd7-8f4a-b3fcbbd2652b
+  file: lib/src/plugins/adapters/quantum_local_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_local_adapters.dart.md
+  title: 'Quantum Local Adapters: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: plugin
+  severity: high
+  description: Verify that quantum local adapters keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_local_adapters.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_local_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend
+      or environment such as local, mock, universal, or Firebase behavior. Author-intent
+      note: / Highly robust SQLite implementation for heavy data caching and offline
+      queueing.'
+    headings:
+    - '`src/plugins/adapters/quantum_local_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - performance
+  - quantum local adapters
+- uuid: afedf3a4-8d27-5776-81e4-1db89ea4c446
+  file: lib/src/plugins/adapters/quantum_local_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_local_adapters.dart.md
+  title: 'Quantum Local Adapters: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: plugin
+  severity: medium
+  description: Verify that quantum local adapters keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_local_adapters.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_local_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend
+      or environment such as local, mock, universal, or Firebase behavior. Author-intent
+      note: / Highly robust SQLite implementation for heavy data caching and offline
+      queueing.'
+    headings:
+    - '`src/plugins/adapters/quantum_local_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - memory
+  - quantum local adapters
+- uuid: 30db0bb8-bd93-5bd4-b526-3f22bf66508f
+  file: lib/src/plugins/adapters/quantum_local_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_local_adapters.dart.md
+  title: 'Quantum Local Adapters: the runtime surface still matches the documented
+    API and headings'
+  slug: docs_parity
+  category: plugin
+  severity: medium
+  description: Verify that quantum local adapters keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_local_adapters.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_local_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend
+      or environment such as local, mock, universal, or Firebase behavior. Author-intent
+      note: / Highly robust SQLite implementation for heavy data caching and offline
+      queueing.'
+    headings:
+    - '`src/plugins/adapters/quantum_local_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - docs_parity
+  - quantum local adapters
+- uuid: 2d861558-b59d-5b17-9fef-f41a059ce829
+  file: lib/src/plugins/adapters/quantum_local_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_local_adapters.dart.md
+  title: 'Quantum Local Adapters: permission-denied and unavailable-plugin cases fall
+    back safely'
+  slug: permission
+  category: plugin
+  severity: medium
+  description: Verify that quantum local adapters keeps its documented runtime behavior
+    while handling permission conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_local_adapters.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_local_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend
+      or environment such as local, mock, universal, or Firebase behavior. Author-intent
+      note: / Highly robust SQLite implementation for heavy data caching and offline
+      queueing.'
+    headings:
+    - '`src/plugins/adapters/quantum_local_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - permission
+  - quantum local adapters

@@ -1,0 +1,46 @@
+axes:
+  input_shapes:
+  - null
+  - empty
+  - single-item
+  - multi-item
+  - mixed-type
+  - legacy-shape
+  - malformed
+  - duplicate
+  - large-batch
+  execution_modes:
+  - cold
+  - warm
+  - cached
+  - invalidated
+  - lazy
+  - eager
+  - replayed
+  outcomes:
+  - accept
+  - reject
+  - normalize
+  - defer
+  - reuse
+  - evict
+  - round-trip
+  - fallback
+  measurement_axes:
+  - latency
+  - allocations
+  - cache-hits
+  - recompute-count
+  - event-order
+  platform_axes:
+  - io
+  - web
+  - stub
+  - native
+  - shared
+  mutation_axes:
+  - read-only
+  - idempotent
+  - repeated-mutation
+  - rollback
+  - retry

@@ -1,0 +1,699 @@
+file: lib/src/ui/quantum_layout_engine.dart
+docs_file: docs/src/ui/quantum_layout_engine.dart.md
+line_count: 1829
+category: ui
+tests:
+- uuid: af6c57d3-2d52-51e2-ae68-b02c18e9dc3f
+  file: lib/src/ui/quantum_layout_engine.dart
+  docs_file: docs/src/ui/quantum_layout_engine.dart.md
+  title: 'Quantum Layout Engine: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum layout engine keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_layout_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_layout_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
+      (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM'
+    headings:
+    - '`src/ui/quantum_layout_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum layout engine
+- uuid: fa9814d2-fdbe-5b23-91a9-016a4e1f807e
+  file: lib/src/ui/quantum_layout_engine.dart
+  docs_file: docs/src/ui/quantum_layout_engine.dart.md
+  title: 'Quantum Layout Engine: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum layout engine keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_layout_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_layout_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
+      (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM'
+    headings:
+    - '`src/ui/quantum_layout_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum layout engine
+- uuid: 60c45c71-a027-5ca3-8bc5-a0b7234b021c
+  file: lib/src/ui/quantum_layout_engine.dart
+  docs_file: docs/src/ui/quantum_layout_engine.dart.md
+  title: 'Quantum Layout Engine: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum layout engine keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_layout_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_layout_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
+      (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM'
+    headings:
+    - '`src/ui/quantum_layout_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum layout engine
+- uuid: 6639f1a6-3d44-5cbc-ace2-5404e799d19e
+  file: lib/src/ui/quantum_layout_engine.dart
+  docs_file: docs/src/ui/quantum_layout_engine.dart.md
+  title: 'Quantum Layout Engine: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum layout engine keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_layout_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_layout_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
+      (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM'
+    headings:
+    - '`src/ui/quantum_layout_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum layout engine
+- uuid: a67a2e88-b80d-5f79-9f94-bcece9d2bf03
+  file: lib/src/ui/quantum_layout_engine.dart
+  docs_file: docs/src/ui/quantum_layout_engine.dart.md
+  title: 'Quantum Layout Engine: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum layout engine keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_layout_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_layout_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
+      (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM'
+    headings:
+    - '`src/ui/quantum_layout_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum layout engine
+- uuid: fff17905-35d7-5990-8af9-22e9addeae29
+  file: lib/src/ui/quantum_layout_engine.dart
+  docs_file: docs/src/ui/quantum_layout_engine.dart.md
+  title: 'Quantum Layout Engine: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum layout engine keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_layout_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_layout_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
+      (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM'
+    headings:
+    - '`src/ui/quantum_layout_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum layout engine
+- uuid: b986be5b-9f15-529e-8610-2551c7136fbe
+  file: lib/src/ui/quantum_layout_engine.dart
+  docs_file: docs/src/ui/quantum_layout_engine.dart.md
+  title: 'Quantum Layout Engine: the runtime surface still matches the documented
+    API and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum layout engine keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_layout_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_layout_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
+      (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM'
+    headings:
+    - '`src/ui/quantum_layout_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum layout engine
+- uuid: fa8ba039-9872-5d85-a923-64dfb82da6b6
+  file: lib/src/ui/quantum_layout_engine.dart
+  docs_file: docs/src/ui/quantum_layout_engine.dart.md
+  title: 'Quantum Layout Engine: layout remains correct under narrow, wide, and constrained
+    bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum layout engine keeps its documented runtime behavior
+    while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_layout_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_layout_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
+      (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM'
+    headings:
+    - '`src/ui/quantum_layout_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum layout engine
+- uuid: 4df7a51a-501e-591f-a9d0-700a3faf30e6
+  file: lib/src/ui/quantum_layout_engine.dart
+  docs_file: docs/src/ui/quantum_layout_engine.dart.md
+  title: 'Quantum Layout Engine: semantics and accessibility output remain stable
+    across rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that quantum layout engine keeps its documented runtime behavior
+    while handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_layout_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_layout_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
+      (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM'
+    headings:
+    - '`src/ui/quantum_layout_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - semantics
+  - quantum layout engine
+- uuid: 2e3c2f9a-ffbc-5437-bb92-4e96f629dee3
+  file: lib/src/ui/quantum_layout_engine.dart
+  docs_file: docs/src/ui/quantum_layout_engine.dart.md
+  title: 'Quantum Layout Engine: gesture handling and hit testing stay correct during
+    interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that quantum layout engine keeps its documented runtime behavior
+    while handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_layout_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_layout_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
+      (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM'
+    headings:
+    - '`src/ui/quantum_layout_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - gesture
+  - quantum layout engine
+- uuid: f1c53f41-4a13-5865-b733-031ccdb9d9ae
+  file: lib/src/ui/quantum_layout_engine.dart
+  docs_file: docs/src/ui/quantum_layout_engine.dart.md
+  title: 'Quantum Layout Engine: resize or drag interactions preserve geometry and
+    state'
+  slug: resize
+  category: ui
+  severity: medium
+  description: Verify that quantum layout engine keeps its documented runtime behavior
+    while handling resize conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_layout_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_layout_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
+      (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM'
+    headings:
+    - '`src/ui/quantum_layout_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - resize
+  - quantum layout engine
+- uuid: 9df26d91-ac13-5fdb-a041-de06dd14ae29
+  file: lib/src/ui/quantum_layout_engine.dart
+  docs_file: docs/src/ui/quantum_layout_engine.dart.md
+  title: 'Quantum Layout Engine: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: medium
+  description: Verify that quantum layout engine keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_layout_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_layout_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
+      (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM'
+    headings:
+    - '`src/ui/quantum_layout_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum layout engine

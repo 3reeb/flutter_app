@@ -1,0 +1,221 @@
+schema_version: 2
+doc_kind: file-test-supplement
+supplement_of: lib/src/ui/quantum_forms_engine.dart
+file: lib/src/ui/quantum_forms_engine.dart
+layer: ui
+profile: forms-core
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/ui/quantum_forms_engine.dart
+  sha256: b046e7072ccb68102c1c0741d91b2c480769f70e1aba4bf6861c06dccdd8c48e
+  line_count: 2535
+  imports:
+    - dart:async
+    - dart:collection
+    - ../foundation/quantum_core.dart
+    - ../../quantum.dart
+  exports: []
+  parts: []
+  part_of: []
+  category: ui
+  profile: forms-core
+  large_profile: true
+  keywords:
+    - media
+    - hasmany
+    - bigint
+    - smallint
+    - decimal
+    - char
+    - flags
+    - validator
+    - validation
+    - policy
+    - stream
+    - io
+    - focus
+    - signal
+    - state
+    - async
+groups:
+  - name: controller-matrix
+    description: scalar and array controllers for bigInt, smallInt, decimal, char, flags, and media
+    rows:
+      - id: quantum_forms_engine.controller-matrix.001
+        purpose: Validate controller wiring for the extended scalar set and media controllers.
+        target_symbols: &id001
+          - QLChangeEvent
+          - _QLObserver
+          - QLDataNode
+          - QLGraphController
+          - QLFormController
+          - QLValidators
+          - QLTransforms
+          - QLFieldController
+        setup: Create controller fixtures for bigInt, smallInt, decimal, char, flags, and media.
+        input: Controller inputs for each extended type.
+        body: Bind controllers, mutate values, and inspect emitted state.
+        expected: Each controller emits the correct normalized shape and change signal.
+        assertions:
+          - controller state stays type-safe
+          - change emission order is stable
+        metrics:
+          - mutation count
+          - signal count
+        risks:
+          - wrong-controller binding
+          - missed events
+        cleanup: Reset state and clear caches.
+      - id: quantum_forms_engine.controller-matrix.002
+        purpose: Verify array-aware controllers preserve per-item identity and list length.
+        target_symbols: *id001
+        setup: Use array controllers with one item, many items, and empty lists.
+        input: A list-shaped controller model.
+        body: Mutate individual items and compare before/after state.
+        expected: List length and item boundaries remain explicit.
+        assertions:
+          - items stay addressable
+          - list mutations stay localized
+        metrics:
+          - diff size
+          - re-render count
+        risks:
+          - index drift
+          - item flattening
+        cleanup: Reset state and clear caches.
+      - id: quantum_forms_engine.controller-matrix.003
+        purpose: Confirm media controllers keep metadata, source info, and lazy-load policy intact.
+        target_symbols: *id001
+        setup: Prepare media items with mimeType, url/src, and size hints.
+        input: Media controller payloads with metadata and lazy hints.
+        body: Bind the controller and inspect the serialized and runtime values.
+        expected: Metadata survives and heavy fetches stay deferred until required.
+        assertions:
+          - metadata survives
+          - lazy policy survives
+        metrics:
+          - first-access latency
+          - metadata field count
+        risks:
+          - media normalization loss
+          - eager fetch
+        cleanup: Reset state and clear caches.
+  - name: validation
+    description: synchronous and deferred validation behavior
+    rows:
+      - id: quantum_forms_engine.validation.001
+        purpose: Exercise the `validation` branch under the file-specific contract.
+        target_symbols: &id002
+          - QLChangeEvent
+          - _QLObserver
+          - QLDataNode
+          - QLGraphController
+          - QLFormController
+          - QLValidators
+          - QLTransforms
+          - QLFieldController
+        setup: Prepare a realistic fixture that targets this branch.
+        input: A representative valid input for the branch.
+        body: Run the branch using the public API.
+        expected: The output matches the documented contract.
+        assertions:
+          - branch contract holds
+        metrics:
+          - latency
+        risks:
+          - silent mismatch
+        cleanup: Reset state and clear caches.
+      - id: quantum_forms_engine.validation.002
+        purpose: Exercise the `validation` branch with malformed or partial input.
+        target_symbols: *id002
+        setup: Prepare a malformed or partial variant.
+        input: Invalid or incomplete data.
+        body: Run the same public API path.
+        expected: The branch fails explicitly or normalizes intentionally.
+        assertions:
+          - failure is explicit
+        metrics:
+          - error path latency
+        risks:
+          - silent coercion
+        cleanup: Reset state and clear caches.
+      - id: quantum_forms_engine.validation.003
+        purpose: Repeat the `validation` branch to prove stable behavior.
+        target_symbols: *id002
+        setup: Prime and repeat the same fixture.
+        input: Identical repeated input.
+        body: Compare output, side effects, and allocation behavior.
+        expected: Repeated execution stays stable and bounded.
+        assertions:
+          - repeatability
+        metrics:
+          - repeat latency
+        risks:
+          - duplicate side effects
+        cleanup: Reset state and clear caches.
+  - name: graph-sync
+    description: state propagation and observer consistency
+    rows:
+      - id: quantum_forms_engine.graph-sync.001
+        purpose: Exercise the `graph-sync` branch under the normal public contract.
+        target_symbols: &id003
+          - QLChangeEvent
+          - _QLObserver
+          - QLDataNode
+          - QLGraphController
+          - QLFormController
+          - QLValidators
+          - QLTransforms
+          - QLFieldController
+        setup: Prepare a realistic fixture with the minimum data needed for this branch.
+        input: A focused input that triggers the main branch.
+        body: Run the public path for this branch and inspect outputs and side effects.
+        expected: The branch behaves deterministically and preserves its explicit invariants.
+        assertions:
+          - branch-specific invariants hold
+        metrics:
+          - branch latency
+          - side-effect count
+        risks:
+          - branch drift
+          - missing output
+        cleanup: Reset state and clear caches.
+      - id: quantum_forms_engine.graph-sync.002
+        purpose: Check the `graph-sync` branch under a malformed or partial input.
+        target_symbols: *id003
+        setup: Use incomplete, malformed, or mixed-shape fixtures.
+        input: A malformed variant that still reaches the branch.
+        body: Run the same branch with the malformed input.
+        expected: The branch rejects or normalizes intentionally without silent corruption.
+        assertions:
+          - branch fails explicitly or normalizes intentionally
+        metrics:
+          - error localization
+        risks:
+          - partial mutation
+          - silent coercion
+        cleanup: Reset state and clear caches.
+      - id: quantum_forms_engine.graph-sync.003
+        purpose: Re-run the `graph-sync` branch twice to prove stable repeated behavior.
+        target_symbols: *id003
+        setup: Prime state once, then repeat the same branch.
+        input: Repeated identical branch input.
+        body: Compare first and second execution results, cache hits, and event order.
+        expected: No duplicate side effect appears and the result stays stable.
+        assertions:
+          - repeatability holds
+          - no duplicate side effects
+        metrics:
+          - repeat latency
+          - cache-hit ratio
+        risks:
+          - double emit
+          - stale branch result
+        cleanup: Reset state and clear caches.
+focus: controller binding, validation, array-aware field handling, graph synchronization, media payload handling, and the extended scalar/controller matrix.
+expansion_mode: supplemental
+shared_templates:
+  - docs_tests/yaml/shared/case_template.yaml
+  - docs_tests/yaml/shared/group_catalog.yaml
+  - docs_tests/yaml/shared/axis_catalog.yaml

@@ -1,0 +1,418 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/runtime/quantum_export_dom_web.dart
+  docs_file: docs/src/runtime/quantum_export_dom_web.dart.md
+  source_entry:
+    line_count: 36
+    byte_count: 1590
+    class_count: 0
+    enum_count: 0
+    function_count: 3
+    category: runtime
+    test_count: 8
+  scenario_count: 8
+source:
+  path: src/runtime/quantum_export_dom_web.dart
+  docs_path: docs/src/runtime/quantum_export_dom_web.dart.md
+  label: src/runtime/quantum_export_dom_web.dart
+scenarios:
+- uuid: 308abfd1-727e-5f93-99d9-89cf06f91587
+  file: lib/src/runtime/quantum_export_dom_web.dart
+  docs_file: docs/src/runtime/quantum_export_dom_web.dart.md
+  title: 'Quantum Export Dom Web: public contract remains stable under valid input'
+  slug: contract
+  category: runtime
+  severity: critical
+  description: Verify that quantum export dom web keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_web.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_web.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)'
+    headings:
+    - '`src/runtime/quantum_export_dom_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - contract
+  - quantum export dom web
+- uuid: 129eee4e-e54a-5d88-a9ea-b7673884cc6a
+  file: lib/src/runtime/quantum_export_dom_web.dart
+  docs_file: docs/src/runtime/quantum_export_dom_web.dart.md
+  title: 'Quantum Export Dom Web: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: runtime
+  severity: critical
+  description: Verify that quantum export dom web keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_web.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_web.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)'
+    headings:
+    - '`src/runtime/quantum_export_dom_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - invalid_input
+  - quantum export dom web
+- uuid: 36e86090-80b6-5819-950b-5ea16d108e69
+  file: lib/src/runtime/quantum_export_dom_web.dart
+  docs_file: docs/src/runtime/quantum_export_dom_web.dart.md
+  title: 'Quantum Export Dom Web: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: runtime
+  severity: high
+  description: Verify that quantum export dom web keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_web.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_web.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)'
+    headings:
+    - '`src/runtime/quantum_export_dom_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - reentrant
+  - quantum export dom web
+- uuid: 1b5ece03-f2ac-5ec1-97ce-fc2e3107ec39
+  file: lib/src/runtime/quantum_export_dom_web.dart
+  docs_file: docs/src/runtime/quantum_export_dom_web.dart.md
+  title: 'Quantum Export Dom Web: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: runtime
+  severity: high
+  description: Verify that quantum export dom web keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_web.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_web.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)'
+    headings:
+    - '`src/runtime/quantum_export_dom_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - cleanup
+  - quantum export dom web
+- uuid: 7c339f9e-6d31-5079-bc6f-6b2c4d9edee5
+  file: lib/src/runtime/quantum_export_dom_web.dart
+  docs_file: docs/src/runtime/quantum_export_dom_web.dart.md
+  title: 'Quantum Export Dom Web: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: runtime
+  severity: high
+  description: Verify that quantum export dom web keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_web.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_web.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)'
+    headings:
+    - '`src/runtime/quantum_export_dom_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - performance
+  - quantum export dom web
+- uuid: 3c2a4330-e3a8-526c-9049-5de4244caf08
+  file: lib/src/runtime/quantum_export_dom_web.dart
+  docs_file: docs/src/runtime/quantum_export_dom_web.dart.md
+  title: 'Quantum Export Dom Web: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: runtime
+  severity: medium
+  description: Verify that quantum export dom web keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_web.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_web.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)'
+    headings:
+    - '`src/runtime/quantum_export_dom_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - memory
+  - quantum export dom web
+- uuid: d02135bd-229a-556b-bb64-0f1904515432
+  file: lib/src/runtime/quantum_export_dom_web.dart
+  docs_file: docs/src/runtime/quantum_export_dom_web.dart.md
+  title: 'Quantum Export Dom Web: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: runtime
+  severity: medium
+  description: Verify that quantum export dom web keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_web.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_web.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)'
+    headings:
+    - '`src/runtime/quantum_export_dom_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - docs_parity
+  - quantum export dom web
+- uuid: cf156a0d-53d1-5c11-bc5a-e32223d80558
+  file: lib/src/runtime/quantum_export_dom_web.dart
+  docs_file: docs/src/runtime/quantum_export_dom_web.dart.md
+  title: 'Quantum Export Dom Web: registry and dispatch semantics remain correct under mixed workload'
+  slug: registry
+  category: runtime
+  severity: medium
+  description: Verify that quantum export dom web keeps its documented runtime behavior while handling registry conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_export_dom_web.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_export_dom_web.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An export-oriented helper file. Its main role is to move data or widgets out of the framework in a structured way rather than implementing business logic itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)'
+    headings:
+    - '`src/runtime/quantum_export_dom_web.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - registry
+  - quantum export dom web

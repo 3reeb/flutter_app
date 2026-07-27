@@ -1,12 +1,9 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:typed_data';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 typedef QLJsonMap = Map<String, dynamic>;
 typedef QLJsonList = List<dynamic>;
 
@@ -1132,14 +1129,28 @@ class QLSliceStrategyRegistry {
     register('state.set', _stateSet, kind: 'mutation');
     register('state.merge', _stateMerge, kind: 'mutation');
     register('state.remove', _stateRemove, kind: 'mutation');
+    register('create', _create, kind: 'mutation');
+    register('update', _update, kind: 'mutation');
+    register('upsert', _upsert, kind: 'mutation');
+    register('delete', _delete, kind: 'mutation');
+    register('push', _push, kind: 'mutation');
+    register('pop', _pop, kind: 'mutation');
+    register('move', _move, kind: 'mutation');
+    register('reorder', _reorder, kind: 'mutation');
+    register('publish', _publish, kind: 'mutation');
     register('append', _append, kind: 'mutation');
     register('prepend', _prepend, kind: 'mutation');
     register('patch', _patch, kind: 'mutation');
     register('toggle', _toggle, kind: 'mutation');
     register('increment', _increment, kind: 'mutation');
     register('decrement', _decrement, kind: 'mutation');
+    register('aggregate', _aggregate, kind: 'query');
 
     register('get', _get, kind: 'query');
+    register('read', _read, kind: 'query');
+    register('query', _query, kind: 'query');
+    register('subscribe', _subscribe, kind: 'query');
+    register('listen', _listen, kind: 'query');
     register('snapshot', _snapshot, kind: 'query');
     register('keys', _keys, kind: 'query');
     register('resolve', _resolve, kind: 'query');
@@ -1175,6 +1186,24 @@ class QLSliceStrategyRegistry {
         case 'remove':
         case 'state.remove':
           return _stateRemove(store, payload, ctx);
+        case 'create':
+          return _create(store, payload, ctx);
+        case 'update':
+          return _update(store, payload, ctx);
+        case 'upsert':
+          return _upsert(store, payload, ctx);
+        case 'delete':
+          return _delete(store, payload, ctx);
+        case 'push':
+          return _push(store, payload, ctx);
+        case 'pop':
+          return _pop(store, payload, ctx);
+        case 'move':
+          return _move(store, payload, ctx);
+        case 'reorder':
+          return _reorder(store, payload, ctx);
+        case 'publish':
+          return _publish(store, payload, ctx);
         case 'append':
           return _append(store, payload, ctx);
         case 'prepend':
@@ -1187,16 +1216,28 @@ class QLSliceStrategyRegistry {
           return _increment(store, payload, ctx);
         case 'decrement':
           return _decrement(store, payload, ctx);
+        case 'aggregate':
+          return _aggregate(store, payload, ctx);
       }
     } else if (kind == 'query') {
       switch (op) {
         case 'get':
         case 'resolve':
           return _get(store, payload, ctx);
+        case 'read':
+          return _read(store, payload, ctx);
+        case 'query':
+          return _query(store, payload, ctx);
+        case 'subscribe':
+          return _subscribe(store, payload, ctx);
+        case 'listen':
+          return _listen(store, payload, ctx);
         case 'snapshot':
           return _snapshot(store, payload, ctx);
         case 'keys':
           return _keys(store, payload, ctx);
+        case 'aggregate':
+          return _aggregate(store, payload, ctx);
       }
     } else if (kind == 'pipeline') {
       switch (op) {
@@ -1476,23 +1517,293 @@ class QLSliceStrategyRegistry {
   }
 }
 
+String? _resolveSourceName(
+    QLSliceExecutionContext ctx, Map<String, dynamic> payload) {
+  final raw = payload['source'] ??
+      payload['dataSource'] ??
+      payload['bind'] ??
+      ctx.dataSource;
+  final name = raw?.toString().trim() ?? '';
+  return name.isEmpty ? null : name;
+}
+
+String? _resolvePath(Map<String, dynamic> payload) {
+  final path = payload['path'] ??
+      payload['key'] ??
+      payload['target'] ??
+      payload['statePath'] ??
+      payload['field'];
+  final value = path?.toString().trim() ?? '';
+  return value.isEmpty ? null : value;
+}
+
+FutureOr<dynamic> _dispatchDataOperation(
+  String operation,
+  QLDataStore store,
+  Map<String, dynamic> payload,
+  QLSliceExecutionContext ctx, {
+  required bool query,
+}) {
+  final sourceName = _resolveSourceName(ctx, payload);
+  if (sourceName != null && QLDataSourceRegistry.instance.exists(sourceName)) {
+    return QLDataSourceRegistry.instance.execute(
+      sourceName,
+      operation,
+      payload,
+      ctx: ctx,
+    );
+  }
+
+  return _dispatchLocalOperation(
+    operation,
+    store,
+    payload,
+    ctx,
+    query: query,
+  );
+}
+
+dynamic _dispatchLocalOperation(
+  String operation,
+  QLDataStore store,
+  Map<String, dynamic> payload,
+  QLSliceExecutionContext ctx, {
+  required bool query,
+}) {
+  final path = _resolvePath(payload) ?? ctx.namespace;
+  final value = payload['value'] ?? payload['data'] ?? payload['payload'];
+
+  switch (operation) {
+    case 'read':
+    case 'get':
+      return path == null ? store.getAll() : store.read(path);
+    case 'query':
+    case 'readMany':
+      return store.query(path,
+          where: payload['where'] is Map
+              ? Map<String, dynamic>.from(payload['where'] as Map)
+              : null,
+          select: payload['select'] is Iterable
+              ? List<String>.from(
+                  (payload['select'] as Iterable).map((e) => e.toString()))
+              : null);
+    case 'create':
+      if (path != null) {
+        return store.create(path, value);
+      }
+      return value;
+    case 'update':
+    case 'patch':
+      if (path != null) {
+        return store.update(path, value);
+      }
+      return value;
+    case 'upsert':
+      if (path != null) {
+        return store.upsert(path, value);
+      }
+      return value;
+    case 'delete':
+    case 'remove':
+      if (path != null) {
+        return store.delete(path);
+      }
+      return null;
+    case 'push':
+    case 'append':
+      if (path != null) {
+        return store.push(path, value);
+      }
+      return value;
+    case 'pop':
+      if (path != null) {
+        return store.pop(path,
+            index: (payload['index'] as num?)?.toInt() ?? -1);
+      }
+      return null;
+    case 'move':
+      if (path != null) {
+        return store.move(
+          path,
+          (payload['from'] as num?)?.toInt() ?? 0,
+          (payload['to'] as num?)?.toInt() ?? 0,
+        );
+      }
+      return null;
+    case 'reorder':
+      if (path != null) {
+        final order = (payload['order'] as List? ?? const [])
+            .map((e) => e is num ? e.toInt() : int.tryParse('$e') ?? 0)
+            .toList(growable: false);
+        return store.reorder(path, order);
+      }
+      return null;
+    case 'increment':
+      if (path != null) {
+        return store.increment(path, (payload['amount'] as num?) ?? 1);
+      }
+      return value;
+    case 'decrement':
+      if (path != null) {
+        return store.decrement(path, (payload['amount'] as num?) ?? 1);
+      }
+      return value;
+    case 'aggregate':
+      if (path != null) {
+        return store.aggregate(
+          path,
+          op: payload['aggregate']?.toString() ??
+              payload['op']?.toString() ??
+              'count',
+          field: payload['field']?.toString(),
+        );
+      }
+      return null;
+    case 'publish':
+      if (path != null) {
+        return store.publish(path, value);
+      }
+      return value;
+    case 'subscribe':
+    case 'listen':
+      if (path != null) {
+        return store.subscribe(path);
+      }
+      return Stream<dynamic>.value(null);
+    default:
+      return value ?? store.read(path ?? '');
+  }
+}
+
+FutureOr<dynamic> _create(QLDataStore store, Map<String, dynamic> payload,
+    QLSliceExecutionContext ctx) {
+  return _dispatchDataOperation('create', store, payload, ctx, query: false);
+}
+
+FutureOr<dynamic> _update(QLDataStore store, Map<String, dynamic> payload,
+    QLSliceExecutionContext ctx) {
+  return _dispatchDataOperation('update', store, payload, ctx, query: false);
+}
+
+FutureOr<dynamic> _push(QLDataStore store, Map<String, dynamic> payload,
+    QLSliceExecutionContext ctx) {
+  return _dispatchDataOperation('push', store, payload, ctx, query: false);
+}
+
+FutureOr<dynamic> _read(QLDataStore store, Map<String, dynamic> payload,
+    QLSliceExecutionContext ctx) {
+  return _dispatchDataOperation('read', store, payload, ctx, query: true);
+}
+
+FutureOr<dynamic> _query(QLDataStore store, Map<String, dynamic> payload,
+    QLSliceExecutionContext ctx) {
+  return _dispatchDataOperation('query', store, payload, ctx, query: true);
+}
+
+FutureOr<dynamic> _subscribe(QLDataStore store, Map<String, dynamic> payload,
+    QLSliceExecutionContext ctx) {
+  return _dispatchDataOperation('subscribe', store, payload, ctx, query: true);
+}
+
+FutureOr<dynamic> _listen(QLDataStore store, Map<String, dynamic> payload,
+    QLSliceExecutionContext ctx) {
+  return _dispatchDataOperation('listen', store, payload, ctx, query: true);
+}
+
+FutureOr<dynamic> _publish(QLDataStore store, Map<String, dynamic> payload,
+    QLSliceExecutionContext ctx) {
+  return _dispatchDataOperation('publish', store, payload, ctx, query: false);
+}
+
+FutureOr<dynamic> _aggregate(QLDataStore store, Map<String, dynamic> payload,
+    QLSliceExecutionContext ctx) {
+  return _dispatchDataOperation('aggregate', store, payload, ctx, query: true);
+}
+
+FutureOr<dynamic> _move(QLDataStore store, Map<String, dynamic> payload,
+    QLSliceExecutionContext ctx) {
+  return _dispatchDataOperation('move', store, payload, ctx, query: false);
+}
+
+FutureOr<dynamic> _reorder(QLDataStore store, Map<String, dynamic> payload,
+    QLSliceExecutionContext ctx) {
+  return _dispatchDataOperation('reorder', store, payload, ctx, query: false);
+}
+
+FutureOr<dynamic> _upsert(QLDataStore store, Map<String, dynamic> payload,
+    QLSliceExecutionContext ctx) {
+  return _dispatchDataOperation('upsert', store, payload, ctx, query: false);
+}
+
+FutureOr<dynamic> _delete(QLDataStore store, Map<String, dynamic> payload,
+    QLSliceExecutionContext ctx) {
+  return _dispatchDataOperation('delete', store, payload, ctx, query: false);
+}
+
+FutureOr<dynamic> _pop(QLDataStore store, Map<String, dynamic> payload,
+    QLSliceExecutionContext ctx) {
+  return _dispatchDataOperation('pop', store, payload, ctx, query: false);
+}
+
 class QLDataSourceHandle {
   final String name;
   Map<String, dynamic> config;
   final QLAsyncSignal<dynamic> signal;
   StreamSubscription<Map<String, dynamic>>? _subscription;
+  final List<Map<String, dynamic>> _pendingWrites = <Map<String, dynamic>>[];
 
   QLDataSourceHandle({required this.name, required this.config})
       : signal = QLAsyncRegistry.instance.get<dynamic>('dataSources.$name');
+
+  String? get schemaName =>
+      config['schema']?.toString() ?? config['schemaName']?.toString();
+
+  bool get smartSelectEnabled => config['smartSelect'] != false;
+  bool get localFirstEnabled =>
+      config['localFirst'] == true || config['offlineQueue'] == true;
+
+  QLSchemaBlueprint? get _schemaBlueprint {
+    final name = schemaName;
+    if (name == null || name.isEmpty) return null;
+    return QLSchemaRegistry.instance.getSchema(name);
+  }
 
   bool get isStreaming =>
       config['stream'] is Map ||
       config['subscribe'] == true ||
       config['realtime'] == true ||
-      config['type']?.toString() == 'realtime' ||
-      config['type']?.toString() == 'media' ||
+      _matchesSourceType(config['type']) ||
       config['type']?.toString() == 'stream' ||
       config['direction']?.toString() != 'outboundOnly';
+
+  Future<dynamic> executeOperation(
+    String operation, {
+    Map<String, dynamic>? payload,
+  }) async {
+    final args = payload == null
+        ? <String, dynamic>{}
+        : Map<String, dynamic>.from(payload);
+
+    switch (operation) {
+      case 'read':
+      case 'query':
+      case 'readOne':
+      case 'readMany':
+      case 'subscribe':
+      case 'listen':
+        return refresh(overrides: args);
+      case 'publish':
+      case 'push':
+        return push(args['payload'] ?? args['value'] ?? args);
+      default:
+        final request = _buildRequest(overrides: args);
+        request['action'] = request['action']?.toString().isNotEmpty == true
+            ? request['action']
+            : operation;
+        request['args']['op'] = operation;
+        return await Quantum.runAction(request);
+    }
+  }
 
   void _enterLoading() {
     signal.loading.setSilent(true);
@@ -1515,6 +1826,353 @@ class QLDataSourceHandle {
     signal.loading.setSilent(false);
     signal.error.forceNotify();
     signal.loading.forceNotify();
+  }
+
+  Future<dynamic> refresh({Map<String, dynamic>? overrides}) async {
+    await _subscription?.cancel();
+    _subscription = null;
+
+    final request = _buildRequest(overrides: overrides);
+    final args = request['args'] is Map
+        ? Map<String, dynamic>.from(request['args'] as Map)
+        : <String, dynamic>{};
+    request['args'] = args;
+
+    final smartSelect = _smartSelectForRequest(request);
+    if (smartSelect.isNotEmpty) {
+      args['select'] = smartSelect;
+      args['fields'] = smartSelect;
+    }
+
+    _enterLoading();
+
+    if (_shouldStreamRequest(request)) {
+      final completer = Completer<dynamic>();
+      var firstEvent = true;
+
+      _subscription = Quantum.runStreamAction(request).listen(
+        (event) {
+          final value = _mergeIncomingData(_normalizeStreamEvent(event));
+          _enterData(value);
+          if (firstEvent) {
+            firstEvent = false;
+            if (!completer.isCompleted) completer.complete(value);
+          }
+        },
+        onError: (Object error, StackTrace stackTrace) {
+          _enterError(error, stackTrace);
+          if (!completer.isCompleted) {
+            completer.completeError(error, stackTrace);
+          }
+        },
+        onDone: () {
+          if (signal.loading.value) {
+            signal.loading.setSilent(false);
+            signal.loading.forceNotify();
+          }
+          unawaited(_flushQueuedWrites());
+        },
+        cancelOnError: false,
+      );
+      return completer.future;
+    }
+
+    try {
+      final result = await Quantum.runAction(request);
+      if (result['success'] == true) {
+        final data = _mergeIncomingData(result['data']);
+        _enterData(data);
+        unawaited(_flushQueuedWrites());
+        return data;
+      }
+
+      final error = result['error'] ?? 'Unknown datasource error';
+      final failure = StateError(error.toString());
+      _enterError(failure, StackTrace.current);
+      if (localFirstEnabled) {
+        final optimistic = _optimisticResult(
+          request['action']?.toString() ?? 'read',
+          <String, dynamic>{
+            'data': args['data'],
+            'value': args['value'],
+            'payload': args['payload'],
+            'amount': args['amount'],
+            'index': args['index'],
+            'order': args['order'],
+          },
+        );
+        if (optimistic != null) {
+          signal.data.setSilent(optimistic);
+          signal.data.forceNotify();
+          return optimistic;
+        }
+      }
+      return null;
+    } catch (error, stackTrace) {
+      if (localFirstEnabled) {
+        _queueWrite(request);
+        final optimistic = _optimisticResult(
+          request['action']?.toString() ?? 'read',
+          <String, dynamic>{
+            'data': args['data'],
+            'value': args['value'],
+            'payload': args['payload'],
+            'amount': args['amount'],
+            'index': args['index'],
+            'order': args['order'],
+          },
+        );
+        if (optimistic != null) {
+          signal.data.setSilent(optimistic);
+          signal.data.forceNotify();
+          return optimistic;
+        }
+      }
+      _enterError(
+          error, stackTrace is StackTrace ? stackTrace : StackTrace.current);
+      rethrow;
+    }
+  }
+
+  Future<void> push(dynamic payload) async {
+    final outbound =
+        Map<String, dynamic>.from(config['outbound'] as Map? ?? const {});
+    final request = <String, dynamic>{
+      'domain': outbound['domain'] ??
+          config['pushDomain'] ??
+          config['domain'] ??
+          'realtime',
+      'action': outbound['action'] ??
+          config['pushAction'] ??
+          config['emitAction'] ??
+          'emit',
+      'resource': outbound['resource'] ?? config['resource'],
+      'args': <String, dynamic>{
+        ..._qlMapOf(outbound['args']),
+        ..._qlMapOf(config['pushArgs']),
+        'payload': payload,
+      },
+    };
+    await Quantum.runAction(request);
+  }
+
+  void registerBindingRequirements(
+      {Iterable<String>? select, bool? smartSelect}) {
+    if (smartSelect != null) {
+      config['smartSelect'] = smartSelect;
+    }
+    final normalized = _normalizeSelectList(select);
+    if (normalized.isEmpty) return;
+
+    final existing = _normalizeSelectList(
+      config['select'] ?? config['fields'] ?? config['projection'],
+    );
+
+    final merged = <String>{
+      ...existing,
+      ...normalized,
+    }.toList(growable: false);
+
+    config['select'] = merged;
+    config['fields'] = merged;
+    config['projection'] = merged;
+  }
+
+  List<String> _normalizeSelectList(dynamic raw) {
+    if (raw == null) return const <String>[];
+    if (raw is String) {
+      return raw
+          .split(',')
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toList(growable: false);
+    }
+    if (raw is Map) {
+      return raw.keys.map((e) => e.toString()).toList(growable: false);
+    }
+    if (raw is Iterable) {
+      final out = <String>[];
+      for (final item in raw) {
+        final value = item?.toString().trim() ?? '';
+        if (value.isNotEmpty) out.add(value);
+      }
+      return out.toSet().toList(growable: false);
+    }
+    final value = raw.toString().trim();
+    return value.isEmpty ? const <String>[] : <String>[value];
+  }
+
+  Map<String, dynamic>? _firstMapLike(dynamic value) {
+    if (value is Map) {
+      return Map<String, dynamic>.from(value.cast<String, dynamic>());
+    }
+    if (value is List) {
+      for (final item in value) {
+        if (item is Map) {
+          return Map<String, dynamic>.from(item.cast<String, dynamic>());
+        }
+      }
+    }
+    return null;
+  }
+
+  List<String> _smartSelectForRequest(Map<String, dynamic> request) {
+    if (!smartSelectEnabled) return const <String>[];
+
+    final select = _normalizeSelectList(
+      request['args'] is Map
+          ? (request['args'] as Map)['select'] ??
+              (request['args'] as Map)['fields']
+          : null,
+    );
+    final configured = _normalizeSelectList(
+      config['select'] ?? config['fields'] ?? config['projection'],
+    );
+    final schema = _schemaBlueprint;
+    final current = signal.data.value;
+
+    final desired = select.isNotEmpty
+        ? select
+        : (configured.isNotEmpty
+            ? configured
+            : (schema?.fieldPaths() ??
+                _normalizeSelectList(_firstMapLike(current)?.keys)));
+
+    if (desired.isEmpty) return const <String>[];
+
+    if (schema != null) {
+      final cachedRecord = _firstMapLike(current);
+      return schema.missingSelection(
+        cachedRecord: cachedRecord,
+        select: desired,
+      );
+    }
+
+    final known = <String>{};
+    final cachedRecord = _firstMapLike(current);
+    if (cachedRecord != null) {
+      known.addAll(cachedRecord.keys.map((e) => e.toString()));
+    }
+    return desired.where((field) => !known.contains(field)).toList(
+          growable: false,
+        );
+  }
+
+  dynamic _mergeIncomingData(dynamic incoming) {
+    final current = signal.data.value;
+    if (incoming == null) return incoming;
+
+    if (current is Map && incoming is Map) {
+      final schema = _schemaBlueprint;
+      if (schema != null) {
+        return _qlMergeProjectedMaps(
+          Map<String, dynamic>.from(current.cast<String, dynamic>()),
+          Map<String, dynamic>.from(incoming.cast<String, dynamic>()),
+        );
+      }
+      return _qlDeepMergeValue(current, incoming, merge: 'mergeMap');
+    }
+
+    if (current is List && incoming is List) {
+      return _qlMergeListRecords(current, incoming);
+    }
+
+    if (incoming is Map && current is List) {
+      return _qlMergeListRecords(current, <dynamic>[incoming]);
+    }
+
+    return incoming;
+  }
+
+  dynamic _optimisticResult(String operation, Map<String, dynamic> payload) {
+    final current = signal.data.value;
+    final data = payload['data'] ?? payload['value'] ?? payload['payload'];
+
+    switch (operation) {
+      case 'create':
+      case 'update':
+      case 'upsert':
+      case 'patch':
+      case 'set':
+        if (current is Map && data is Map) {
+          return _qlDeepMergeValue(current, data, merge: 'mergeMap');
+        }
+        return data ?? current;
+      case 'delete':
+        return null;
+      case 'push':
+      case 'append':
+        if (current is List) {
+          final next = List<dynamic>.from(current);
+          if (data is List) {
+            next.addAll(data);
+          } else {
+            next.add(data);
+          }
+          return next;
+        }
+        return data is List
+            ? data
+            : <dynamic>[if (current != null) current, data];
+      case 'pop':
+        if (current is List && current.isNotEmpty) {
+          final next = List<dynamic>.from(current);
+          final index = (payload['index'] as num?)?.toInt() ??
+              (payload['at'] as num?)?.toInt() ??
+              next.length - 1;
+          if (index >= 0 && index < next.length) {
+            next.removeAt(index);
+          } else {
+            next.removeLast();
+          }
+          return next;
+        }
+        return current;
+      case 'move':
+      case 'reorder':
+        if (current is List) {
+          final order = payload['order'];
+          if (order is List) {
+            final next = <dynamic>[];
+            for (final item in order) {
+              final idx = item is num ? item.toInt() : int.tryParse('$item');
+              if (idx != null && idx >= 0 && idx < current.length) {
+                next.add(current[idx]);
+              }
+            }
+            return next;
+          }
+        }
+        return current;
+      case 'increment':
+      case 'decrement':
+        final amount = (payload['amount'] as num?) ?? 1;
+        if (current is num) {
+          return operation == 'increment' ? current + amount : current - amount;
+        }
+        return data ?? current;
+      default:
+        return data ?? current;
+    }
+  }
+
+  Future<void> _flushQueuedWrites() async {
+    if (_pendingWrites.isEmpty) return;
+    final queued = List<Map<String, dynamic>>.from(_pendingWrites);
+    _pendingWrites.clear();
+
+    for (final request in queued) {
+      try {
+        await Quantum.runAction(request);
+      } catch (_) {
+        _pendingWrites.add(request);
+      }
+    }
+  }
+
+  void _queueWrite(Map<String, dynamic> request) {
+    if (!localFirstEnabled) return;
+    _pendingWrites.add(Map<String, dynamic>.from(request));
   }
 
   Map<String, dynamic> _buildRequest({Map<String, dynamic>? overrides}) {
@@ -1561,7 +2219,7 @@ class QLDataSourceHandle {
 
     if (!request.containsKey('domain')) {
       final type = config['type']?.toString() ?? '';
-      if (type == 'media') {
+      if (_matchesSourceType(type)) {
         request['domain'] = 'media';
         request['action'] =
             request['action'] ?? config['mediaAction'] ?? 'adaptive_stream';
@@ -1594,10 +2252,21 @@ class QLDataSourceHandle {
     final action = request['action']?.toString() ?? '';
     return domain == 'realtime' ||
         domain == 'media' ||
+        domain == 'asset' ||
+        domain == 'file' ||
         domain == 'task' ||
         action == 'subscribe' ||
         action == 'firehose' ||
         action == 'adaptive_stream';
+  }
+
+  bool _matchesSourceType(dynamic type) {
+    final normalized = type?.toString().trim().toLowerCase() ?? '';
+    return normalized == 'media' ||
+        normalized == 'asset' ||
+        normalized == 'file' ||
+        normalized == 'upload' ||
+        normalized == 'streamable_media';
   }
 
   dynamic _normalizeStreamEvent(Map<String, dynamic> event) {
@@ -1607,73 +2276,6 @@ class QLDataSourceHandle {
       return event['payload'];
     }
     return event;
-  }
-
-  Future<dynamic> refresh({Map<String, dynamic>? overrides}) async {
-    await _subscription?.cancel();
-    _subscription = null;
-    final request = _buildRequest(overrides: overrides);
-    _enterLoading();
-
-    if (_shouldStreamRequest(request)) {
-      final completer = Completer<dynamic>();
-      var firstEvent = true;
-      _subscription = Quantum.runStreamAction(request).listen(
-        (event) {
-          final value = _normalizeStreamEvent(event);
-          _enterData(value);
-          if (firstEvent) {
-            firstEvent = false;
-            if (!completer.isCompleted) completer.complete(value);
-          }
-        },
-        onError: (Object error, StackTrace stackTrace) {
-          _enterError(error, stackTrace);
-          if (!completer.isCompleted)
-            completer.completeError(error, stackTrace);
-        },
-        onDone: () {
-          if (signal.loading.value) {
-            signal.loading.setSilent(false);
-            signal.loading.forceNotify();
-          }
-        },
-        cancelOnError: false,
-      );
-      return completer.future;
-    }
-
-    final result = await Quantum.runAction(request);
-    if (result['success'] == true) {
-      final data = result['data'];
-      _enterData(data);
-      return data;
-    }
-    final error = result['error'] ?? 'Unknown datasource error';
-    _enterError(StateError(error.toString()), StackTrace.current);
-    return null;
-  }
-
-  Future<void> push(dynamic payload) async {
-    final outbound =
-        Map<String, dynamic>.from(config['outbound'] as Map? ?? const {});
-    final request = <String, dynamic>{
-      'domain': outbound['domain'] ??
-          config['pushDomain'] ??
-          config['domain'] ??
-          'realtime',
-      'action': outbound['action'] ??
-          config['pushAction'] ??
-          config['emitAction'] ??
-          'emit',
-      'resource': outbound['resource'] ?? config['resource'],
-      'args': <String, dynamic>{
-        ..._qlMapOf(outbound['args']),
-        ..._qlMapOf(config['pushArgs']),
-        'payload': payload,
-      },
-    };
-    await Quantum.runAction(request);
   }
 
   void dispose() {
@@ -1741,6 +2343,8 @@ class QLDataSourceRegistry {
     dynamic defaultValue,
     String? transform,
     bool subscribe = true,
+    Iterable<String>? select,
+    bool smartSelect = true,
     Map<String, dynamic>? metadata,
     QLSliceExecutionContext? ctx,
   }) {
@@ -1749,6 +2353,9 @@ class QLDataSourceRegistry {
       if (defaultValue != null) store.set(statePath, defaultValue);
       return () {};
     }
+
+    handle.registerBindingRequirements(
+        select: select, smartSelect: smartSelect);
 
     final effectiveCtx = ctx ??
         QLSliceExecutionContext(
@@ -1829,6 +2436,17 @@ class QLDataSourceRegistry {
         .putIfAbsent(namespace, () => <VoidCallback>[])
         .add(cancel);
     return cancel;
+  }
+
+  Future<dynamic> execute(
+    String name,
+    String operation,
+    Map<String, dynamic> payload, {
+    QLSliceExecutionContext? ctx,
+  }) async {
+    final handle = _sources[name];
+    if (handle == null) return null;
+    return await handle.executeOperation(operation, payload: payload);
   }
 
   void detachNamespace(String namespace) {
@@ -2019,6 +2637,17 @@ class QLSliceRegistry {
             defaultValue: defaultValue,
             transform: binding['transform']?.toString(),
             subscribe: binding['subscribe'] != false,
+            select: binding['select'] is Iterable
+                ? List<String>.from(
+                    (binding['select'] as Iterable).map((e) => e.toString()),
+                  )
+                : (binding['fields'] is Iterable
+                    ? List<String>.from(
+                        (binding['fields'] as Iterable)
+                            .map((e) => e.toString()),
+                      )
+                    : const <String>[]),
+            smartSelect: binding['smartSelect'] != false,
             metadata: binding['metadata'] is Map
                 ? Map<String, dynamic>.from(binding['metadata'] as Map)
                 : const <String, dynamic>{},
@@ -2346,5 +2975,399 @@ class QLSignalProxy<T> extends QLSignal<T> {
   void dispose() {
     source.removeListener(_syncFromSource);
     super.dispose();
+  }
+}
+
+dynamic _qlMergeProjectedMaps(dynamic current, dynamic incoming) {
+  if (current is! Map || incoming is! Map) return incoming;
+  final out = Map<String, dynamic>.from(current.cast<String, dynamic>());
+  for (final entry in incoming.entries) {
+    final key = entry.key.toString();
+    final next = entry.value;
+    final prev = out[key];
+    if (prev is Map && next is Map) {
+      out[key] = _qlMergeProjectedMaps(prev, next);
+    } else if (prev is List && next is List) {
+      out[key] = _qlMergeListRecords(prev, next);
+    } else {
+      out[key] = next;
+    }
+  }
+  return out;
+}
+
+List<dynamic> _qlMergeListRecords(List<dynamic> current, List<dynamic> incoming,
+    {String idField = 'id'}) {
+  final out = List<dynamic>.from(current);
+  final indexById = <String, int>{};
+
+  for (var i = 0; i < out.length; i++) {
+    final item = out[i];
+    if (item is Map) {
+      final id = item[idField]?.toString() ?? item['key']?.toString();
+      if (id != null && id.isNotEmpty) {
+        indexById[id] = i;
+      }
+    }
+  }
+
+  for (final item in incoming) {
+    if (item is Map) {
+      final id = item[idField]?.toString() ?? item['key']?.toString();
+      if (id != null && id.isNotEmpty) {
+        final idx = indexById[id];
+        if (idx != null) {
+          out[idx] = _qlMergeProjectedMaps(out[idx], item);
+          continue;
+        }
+        indexById[id] = out.length;
+      }
+    }
+    out.add(item);
+  }
+
+  return out;
+}
+
+void _qlWriteProjectedPath(
+  Map<String, dynamic> target,
+  List<dynamic> strides,
+  dynamic value,
+) {
+  if (strides.isEmpty) return;
+  dynamic current = target;
+  for (int i = 0; i < strides.length - 1; i++) {
+    final seg = strides[i];
+    final next = strides[i + 1];
+    if (current is Map) {
+      final key = seg.toString();
+      current.putIfAbsent(
+        key,
+        () => next is int ? <dynamic>[] : <String, dynamic>{},
+      );
+      current = current[key];
+    } else if (current is List) {
+      final idx = seg is int ? seg : int.tryParse(seg.toString()) ?? 0;
+      while (current.length <= idx) {
+        current.add(next is int ? <dynamic>[] : <String, dynamic>{});
+      }
+      current = current[idx];
+    } else {
+      return;
+    }
+  }
+
+  final last = strides.last;
+  if (current is Map) {
+    current[last.toString()] = value;
+  } else if (current is List) {
+    final idx = last is int ? last : int.tryParse(last.toString()) ?? 0;
+    while (current.length <= idx) {
+      current.add(null);
+    }
+    current[idx] = value;
+  }
+}
+
+Map<String, dynamic> _qlProjectMapBySelect(
+  Map<String, dynamic> source,
+  Iterable<String> select,
+) {
+  final out = <String, dynamic>{};
+  for (final raw in select) {
+    final path = raw.trim();
+    if (path.isEmpty) continue;
+    final value = _qlReadPathValue(source, path);
+    if (value == null) continue;
+    _qlWriteProjectedPath(out, QLPathUtils.resolve(path), value);
+  }
+  return out;
+}
+
+dynamic _qlProjectValue(dynamic source, Iterable<String> select) {
+  if (source is Map) {
+    return _qlProjectMapBySelect(
+      Map<String, dynamic>.from(source.cast<String, dynamic>()),
+      select,
+    );
+  }
+  if (source is List) {
+    return source
+        .map((item) => _qlProjectValue(item, select))
+        .toList(growable: false);
+  }
+  return source;
+}
+
+bool _qlMatchesWhere(dynamic item, Map<String, dynamic> where) {
+  if (where.isEmpty) return true;
+  if (item is! Map) return false;
+  final map = Map<String, dynamic>.from(item.cast<String, dynamic>());
+  for (final entry in where.entries) {
+    final key = entry.key.toString();
+    final expected = entry.value;
+    final actual = _qlReadPathValue(map, key);
+    if (expected is Map) {
+      final inner = Map<String, dynamic>.from(expected.cast<String, dynamic>());
+      if (inner.containsKey('equals') && actual != inner['equals'])
+        return false;
+      if (inner.containsKey('contains') &&
+          !actual.toString().contains(inner['contains'].toString())) {
+        return false;
+      }
+      if (inner.containsKey('gt') &&
+          !(actual is num && actual > (inner['gt'] as num))) return false;
+      if (inner.containsKey('gte') &&
+          !(actual is num && actual >= (inner['gte'] as num))) return false;
+      if (inner.containsKey('lt') &&
+          !(actual is num && actual < (inner['lt'] as num))) return false;
+      if (inner.containsKey('lte') &&
+          !(actual is num && actual <= (inner['lte'] as num))) return false;
+      continue;
+    }
+    if (actual != expected) return false;
+  }
+  return true;
+}
+
+extension QLDataStoreUnifiedOps on QLDataStore {
+  dynamic read(String path, {Iterable<String>? select}) {
+    final value = get(path);
+    if (select == null || select.isEmpty) return value;
+    return _qlProjectValue(value, select);
+  }
+
+  List<Map<String, dynamic>> query(
+    String path, {
+    Map<String, dynamic>? where,
+    Iterable<String>? select,
+    String? search,
+    int? limit,
+    int? offset,
+    String? sortBy,
+    bool descending = false,
+  }) {
+    final raw = get(path);
+    final list = raw is List ? raw : <dynamic>[if (raw != null) raw];
+    final filtered = list.where((item) {
+      if (where != null && !_qlMatchesWhere(item, where)) return false;
+      if (search != null && search.isNotEmpty) {
+        return item.toString().toLowerCase().contains(search.toLowerCase());
+      }
+      return true;
+    }).map((item) {
+      if (item is Map<String, dynamic>) {
+        final map = Map<String, dynamic>.from(item);
+        return select == null || select.isEmpty
+            ? map
+            : _qlProjectMapBySelect(map, select);
+      }
+      if (item is Map) {
+        final map = Map<String, dynamic>.from(item.cast<String, dynamic>());
+        return select == null || select.isEmpty
+            ? map
+            : _qlProjectMapBySelect(map, select);
+      }
+      return <String, dynamic>{'value': item};
+    }).toList(growable: false);
+
+    if (sortBy != null && sortBy.isNotEmpty) {
+      filtered.sort((a, b) {
+        final av = _qlReadPathValue(a, sortBy);
+        final bv = _qlReadPathValue(b, sortBy);
+        final cmp = av.toString().compareTo(bv.toString());
+        return descending ? -cmp : cmp;
+      });
+    }
+
+    final start = offset == null || offset <= 0 ? 0 : offset;
+    final end = limit == null
+        ? filtered.length
+        : (start + limit).clamp(0, filtered.length);
+    if (start >= filtered.length) return const <Map<String, dynamic>>[];
+    return filtered.sublist(start, end);
+  }
+
+  Map<String, dynamic> create(String path, dynamic value) {
+    if (value is Map) {
+      final next = Map<String, dynamic>.from(value.cast<String, dynamic>());
+      if (path.isEmpty) {
+        set(path, next);
+        return next;
+      }
+      final current = get(path);
+      if (current is List) {
+        final merged = List<dynamic>.from(current)..add(next);
+        set(path, merged);
+      } else {
+        set(path, next);
+      }
+      return next;
+    }
+    set(path, value);
+    return <String, dynamic>{'value': value};
+  }
+
+  Map<String, dynamic> update(String path, dynamic value) {
+    final current = get(path);
+    if (current is Map && value is Map) {
+      final merged = _qlMergeProjectedMaps(current, value);
+      set(path, merged);
+      return Map<String, dynamic>.from(merged.cast<String, dynamic>());
+    }
+    set(path, value);
+    return value is Map
+        ? Map<String, dynamic>.from(value.cast<String, dynamic>())
+        : <String, dynamic>{'value': value};
+  }
+
+  Map<String, dynamic> upsert(String path, dynamic value,
+      {String idField = 'id'}) {
+    final current = get(path);
+    if (current is List && value is Map) {
+      final next = List<dynamic>.from(current);
+      final id = value[idField]?.toString();
+      if (id != null && id.isNotEmpty) {
+        final idx = next.indexWhere(
+            (item) => item is Map && item[idField]?.toString() == id);
+        if (idx >= 0) {
+          next[idx] = _qlMergeProjectedMaps(next[idx], value);
+        } else {
+          next.add(value);
+        }
+      } else {
+        next.add(value);
+      }
+      set(path, next);
+      return Map<String, dynamic>.from(value.cast<String, dynamic>());
+    }
+    return update(path, value);
+  }
+
+  dynamic delete(String path) {
+    final current = get(path);
+    sweep(path);
+    return current;
+  }
+
+  dynamic push(String path, dynamic value) {
+    final current = get(path);
+    final next = current is List
+        ? List<dynamic>.from(current)
+        : <dynamic>[if (current != null) current];
+    if (value is List) {
+      next.addAll(value);
+    } else {
+      next.add(value);
+    }
+    set(path, next);
+    return next;
+  }
+
+  dynamic pop(String path, {int index = -1}) {
+    final current = get(path);
+    if (current is! List || current.isEmpty) return null;
+    final next = List<dynamic>.from(current);
+    final idx = index < 0 ? next.length - 1 : index;
+    if (idx < 0 || idx >= next.length) return null;
+    final removed = next.removeAt(idx);
+    set(path, next);
+    return removed;
+  }
+
+  dynamic move(String path, int from, int to) {
+    final current = get(path);
+    if (current is! List || current.isEmpty) return current;
+    final next = List<dynamic>.from(current);
+    if (from < 0 || from >= next.length) return current;
+    final item = next.removeAt(from);
+    final target = to.clamp(0, next.length);
+    next.insert(target, item);
+    set(path, next);
+    return next;
+  }
+
+  dynamic reorder(String path, List<int> order) {
+    final current = get(path);
+    if (current is! List || current.isEmpty) return current;
+    final next = <dynamic>[];
+    for (final idx in order) {
+      if (idx >= 0 && idx < current.length) {
+        next.add(current[idx]);
+      }
+    }
+    if (next.isEmpty) return current;
+    set(path, next);
+    return next;
+  }
+
+  num increment(String path, [num amount = 1]) {
+    final current = get(path);
+    final next = (current is num ? current : 0) + amount;
+    set(path, next);
+    return next;
+  }
+
+  num decrement(String path, [num amount = 1]) {
+    final current = get(path);
+    final next = (current is num ? current : 0) - amount;
+    set(path, next);
+    return next;
+  }
+
+  num aggregate(String path, {String op = 'count', String? field}) {
+    final current = get(path);
+    final list =
+        current is List ? current : <dynamic>[if (current != null) current];
+    final values = <num>[];
+    for (final item in list) {
+      if (field == null) {
+        if (item is num) values.add(item);
+        continue;
+      }
+      final raw = _qlReadPathValue(item, field);
+      if (raw is num) {
+        values.add(raw);
+      } else if (raw != null) {
+        final parsed = num.tryParse(raw.toString());
+        if (parsed != null) values.add(parsed);
+      }
+    }
+
+    switch (op) {
+      case 'sum':
+        return values.fold<num>(0, (a, b) => a + b);
+      case 'avg':
+        return values.isEmpty
+            ? 0
+            : values.fold<num>(0, (a, b) => a + b) / values.length;
+      case 'min':
+        return values.isEmpty ? 0 : values.reduce((a, b) => a < b ? a : b);
+      case 'max':
+        return values.isEmpty ? 0 : values.reduce((a, b) => a > b ? a : b);
+      default:
+        return list.length;
+    }
+  }
+
+  Stream<dynamic> subscribe(String path) => signal(path).stream;
+
+  StreamSubscription<dynamic> listen(
+    String path,
+    void Function(dynamic event) onData, {
+    Function? onError,
+    void Function()? onDone,
+    bool? cancelOnError,
+  }) {
+    return signal(path).listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError,
+    );
+  }
+
+  void publish(String path, dynamic value) {
+    set(path, value);
   }
 }

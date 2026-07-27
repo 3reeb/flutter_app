@@ -1,0 +1,90 @@
+schema_version: 1
+doc_kind: runtime-execution-file-test-manifest
+file: lib/foundation/quantum_matrix_engine
+source_path: foundation/quantum_matrix_engine
+launch_mode: app_startup
+execution_only: true
+area: quantum_matrix_engine
+test_doc_status: draft
+source_metadata:
+  sha256: 45ead811350e4b3624460cb5019f81cab3c6f82d50fe31667f8be4fb80546d08
+  line_count: 2474
+  imports:
+  - dart:collection
+  - dart:math
+  - dart:typed_data
+  - package:flutter/material.dart
+  - package:flutter/rendering.dart
+  - package:flutter/scheduler.dart
+  - package:flutter/foundation.dart
+  - ../../quantum.dart
+  - quantum_primitives.dart
+  - ../ui/quantum_layout_engine.dart
+  symbols:
+  - QMatrixInteractionController
+  - QMatrixSlotRuntimeOverride
+  - QMatrixSlotDef
+  - _CompiledSlot
+  - _CompiledMatrixData
+  - QMatrixLayoutDef
+  - QMatrixBuilder
+  - QuantumMatrixParentData
+  - QuantumMatrixNode
+  - RenderQuantumMatrix
+  - _PaintEntry
+  - _QuantumMatrixCorePlugin
+  - _QuantumMatrixPlugin
+  - _MatrixSlotIdentifier
+  - _MatrixInteractiveShell
+  - _MatrixInteractiveShellState
+  - _ResizeHandles
+  - QMatrixSemanticsOrder
+  - QMatrixTextDirectionMode
+  - QMatrixInteractionMode
+runtime_focus:
+- division by zero
+- singular or zero-sized matrix
+- nan / infinity propagation
+- invalid dimensions
+test_cases:
+- id: case-1
+  title: null input
+  stimulus: null / missing input
+  runtime_failure_target: null_pointer_access
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-2
+  title: malformed input
+  stimulus: invalid / malformed payload
+  runtime_failure_target: parse_or_type_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-3
+  title: boundary input
+  stimulus: empty / oversized / zero-value edge case
+  runtime_failure_target: range_or_state_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-4
+  title: resource pressure
+  stimulus: large batch / repeated execution / allocation stress
+  runtime_failure_target: out_of_memory_or_allocation_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+assertions:
+  must_execute_live_code: true
+  must_capture_runtime_failure: true
+  must_not_use_static_verification: true
+  must_verify_cleanup: true

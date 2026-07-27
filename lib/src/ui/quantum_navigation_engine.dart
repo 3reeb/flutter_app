@@ -18,14 +18,11 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'quantum_hydration_reader.dart';
-
 // Ecosystem Primitives
 import '../foundation/quantum_primitives.dart';
 import 'quantum_components.dart';
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  HYBRID SEO & DATA FETCHING MODELS (Next.js Parity)
 // ────────────────────────────────────────────────────────────────────────────

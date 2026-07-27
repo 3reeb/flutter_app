@@ -21,10 +21,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-
-import '../../quantum.dart';
+import 'package:quantum_layout/quantum.dart';
 import 'internal/quantum_focus_sync.dart';
-
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  CORE STATE OBJECTS
 // ────────────────────────────────────────────────────────────────────────────

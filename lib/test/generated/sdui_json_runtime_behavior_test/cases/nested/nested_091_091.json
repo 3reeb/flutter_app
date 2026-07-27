@@ -1,0 +1,86 @@
+{
+  "__meta": {
+    "id": "nested-091-screen-091",
+    "title": "Mixed nested screen #091",
+    "description": "A larger screen should combine let bindings, class substitution, and a row layout.",
+    "tags": [
+      "nested",
+      "screen",
+      "row"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "box:col",
+    "$let": {
+      "title": "Operations 091"
+    },
+    "$classes": {
+      "surface": "shadow-0"
+    },
+    "style": "p-6 @surface",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "{{title}}"
+        }
+      },
+      {
+        "type": "box:row",
+        "style": "gap-4",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Left"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Right"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:col",
+    "props": {},
+    "debugPath": "root",
+    "style": "p-6 shadow-0",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Operations 091"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "box:row",
+        "props": {},
+        "debugPath": "root[1]",
+        "style": "gap-4",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Left"
+            },
+            "debugPath": "root[1][0]"
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Right"
+            },
+            "debugPath": "root[1][1]"
+          }
+        ]
+      }
+    ]
+  }
+}

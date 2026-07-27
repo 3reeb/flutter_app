@@ -1,0 +1,41 @@
+{
+  "__meta": {
+    "id": "operators-046-throttle-046",
+    "title": "Throttle wrapper emits system:throttle #046",
+    "description": "The $throttle operator should wrap its child in a system:throttle blueprint.",
+    "tags": [
+      "operators",
+      "throttle",
+      "wrapper"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "$throttle": 175,
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Throttle 046"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "throttle",
+      "ms": 175
+    },
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Throttle 046"
+        },
+        "debugPath": "root[0]"
+      }
+    ]
+  }
+}

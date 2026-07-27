@@ -1,0 +1,163 @@
+file: "quantum_embodiment_engine.dart"
+rows:
+  -
+    id: "manifest_and_source_present"
+    passed: false
+    expected: "source exists"
+    actual: "Expected: 'lib/src/runtime/quantum_embodiment_engine.dart'
+  Actual: 'src/runtime/quantum_embodiment_engine.dart'
+   Which: is different.
+          Expected: lib/src/ru ...
+            Actual: src/runtim ...
+                    ^
+           Differ at offset 0
+"
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_embodiment_engine.yaml"
+    sourcePath: "lib/src/runtime/quantum_embodiment_engine.dart"
+    fileLabel: "lib/src/runtime/quantum_embodiment_engine.dart"
+    stackTrace: "#0      fail (package:matcher/src/expect/expect.dart:187:31)
+#1      _expect (package:matcher/src/expect/expect.dart:182:3)
+#2      expect (package:matcher/src/expect/expect.dart:65:3)
+#3      expect (package:flutter_test/src/widget_tester.dart:490:18)
+#4      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:51:9)
+#5      defineSeparatedFileSuite.capture (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:38:11)
+#6      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:48:7)
+#7      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:25)
+<asynchronous suspension>
+#8      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#9      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+"
+  -
+    id: "fingerprint_matches"
+    passed: false
+    expected: "7cab598611f88ae43d5e13857cae6bf5818438bc688ada0bc152e330eebf6582"
+    actual: "Expected: 'f3476884e193c31acdea8b077e16a363954a6d43d9e297a06ae1d99d57104c6d'
+  Actual: '7cab598611f88ae43d5e13857cae6bf5818438bc688ada0bc152e330eebf6582'
+   Which: is different.
+          Expected: f3476884e1 ...
+            Actual: 7cab598611 ...
+                    ^
+           Differ at offset 0
+"
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_embodiment_engine.yaml"
+    sourcePath: "lib/src/runtime/quantum_embodiment_engine.dart"
+    fileLabel: "lib/src/runtime/quantum_embodiment_engine.dart"
+    stackTrace: "#0      fail (package:matcher/src/expect/expect.dart:187:31)
+#1      _expect (package:matcher/src/expect/expect.dart:182:3)
+#2      expect (package:matcher/src/expect/expect.dart:65:3)
+#3      expect (package:flutter_test/src/widget_tester.dart:490:18)
+#4      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:58:9)
+#5      defineSeparatedFileSuite.capture (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:38:11)
+#6      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:57:7)
+#7      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:25)
+<asynchronous suspension>
+#8      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#9      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+"
+  -
+    id: "quantum_embodiment_engine.perf_budget.004"
+    passed: false
+    expected: "Repeated fingerprint passes remain inside the budget."
+    actual: "Expected: 'f3476884e193c31acdea8b077e16a363954a6d43d9e297a06ae1d99d57104c6d'
+  Actual: '7cab598611f88ae43d5e13857cae6bf5818438bc688ada0bc152e330eebf6582'
+   Which: is different.
+          Expected: f3476884e1 ...
+            Actual: 7cab598611 ...
+                    ^
+           Differ at offset 0
+"
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_embodiment_engine.yaml"
+    sourcePath: "lib/src/runtime/quantum_embodiment_engine.dart"
+    fileLabel: "lib/src/runtime/quantum_embodiment_engine.dart"
+    stackTrace: "#0      fail (package:matcher/src/expect/expect.dart:187:31)
+#1      _expect (package:matcher/src/expect/expect.dart:182:3)
+#2      expect (package:matcher/src/expect/expect.dart:65:3)
+#3      expect (package:flutter_test/src/widget_tester.dart:490:18)
+#4      _exerciseOperation (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:185:7)
+#5      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:84:13)
+#6      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:25)
+<asynchronous suspension>
+#7      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#8      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+"
+  -
+    id: "quantum_embodiment_engine.memory_proxy.005"
+    passed: false
+    expected: "Repeated reads remain bounded and do not drift in size."
+    actual: "Expected: true
+  Actual: <false>
+"
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_embodiment_engine.yaml"
+    sourcePath: "lib/src/runtime/quantum_embodiment_engine.dart"
+    fileLabel: "lib/src/runtime/quantum_embodiment_engine.dart"
+    stackTrace: "#0      fail (package:matcher/src/expect/expect.dart:187:31)
+#1      _expect (package:matcher/src/expect/expect.dart:182:3)
+#2      expect (package:matcher/src/expect/expect.dart:65:3)
+#3      expect (package:flutter_test/src/widget_tester.dart:490:18)
+#4      _exerciseOperation (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:190:7)
+#5      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:84:13)
+#6      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:25)
+<asynchronous suspension>
+#7      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#8      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+"
+  -
+    id: "quantum_embodiment_engine.fingerprint_stable.009"
+    passed: false
+    expected: "The fingerprint stays identical across repeated reads."
+    actual: "Expected: 'f3476884e193c31acdea8b077e16a363954a6d43d9e297a06ae1d99d57104c6d'
+  Actual: '7cab598611f88ae43d5e13857cae6bf5818438bc688ada0bc152e330eebf6582'
+   Which: is different.
+          Expected: f3476884e1 ...
+            Actual: 7cab598611 ...
+                    ^
+           Differ at offset 0
+"
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_embodiment_engine.yaml"
+    sourcePath: "lib/src/runtime/quantum_embodiment_engine.dart"
+    fileLabel: "lib/src/runtime/quantum_embodiment_engine.dart"
+    stackTrace: "#0      fail (package:matcher/src/expect/expect.dart:187:31)
+#1      _expect (package:matcher/src/expect/expect.dart:182:3)
+#2      expect (package:matcher/src/expect/expect.dart:65:3)
+#3      expect (package:flutter_test/src/widget_tester.dart:490:18)
+#4      _exerciseOperation (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:134:7)
+#5      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:84:13)
+#6      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:25)
+<asynchronous suspension>
+#7      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#8      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+"
+  -
+    id: "quantum_embodiment_engine.line_count_minimum.011"
+    passed: false
+    expected: "The line count stays at or above the recorded floor."
+    actual: "Expected: a value greater than or equal to <2364>
+  Actual: <2363>
+   Which: is not a value greater than or equal to <2364>
+"
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_embodiment_engine.yaml"
+    sourcePath: "lib/src/runtime/quantum_embodiment_engine.dart"
+    fileLabel: "lib/src/runtime/quantum_embodiment_engine.dart"
+    stackTrace: "#0      fail (package:matcher/src/expect/expect.dart:187:31)
+#1      _expect (package:matcher/src/expect/expect.dart:182:3)
+#2      expect (package:matcher/src/expect/expect.dart:65:3)
+#3      expect (package:flutter_test/src/widget_tester.dart:490:18)
+#4      _exerciseOperation (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:144:7)
+#5      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:84:13)
+#6      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:25)
+<asynchronous suspension>
+#7      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#8      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+"

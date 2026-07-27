@@ -1,0 +1,461 @@
+schema_version: 2
+doc_kind: file-test-manifest
+file: lib/src/ui/quantum_hydration_reader_html.dart
+layer: ui
+profile: ui-core
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/ui/quantum_hydration_reader_html.dart
+  sha256: 2d65ce8acc56d27694b5a2423397c79f29a31f957d8699d9f3137bb80f33cc46
+  line_count: 18
+  imports:
+    - dart:convert
+  exports: []
+  parts: []
+  part_of: []
+  category: ui
+  profile: ui-core
+  large_profile: false
+  keywords:
+    - json
+surface_summary:
+  classes_enums_typedefs_mixins_extensions_functions:
+    - quantumReadDomProps
+  count: 1
+focus: UI composition, state sync, hydration, rendering stability, and input behavior.
+coverage_targets:
+  - public API
+  - failure paths
+  - performance
+  - integration boundaries
+  - regression traps
+  - compatibility
+  - lazy-load
+  - cache
+  - serialization
+test_dimensions:
+  input_shapes:
+    - "null"
+    - empty
+    - single-item
+    - multi-item
+    - mixed-type
+    - legacy-shape
+    - malformed
+    - duplicate
+    - large-batch
+  execution_modes:
+    - cold
+    - warm
+    - cached
+    - invalidated
+    - lazy
+    - eager
+    - replayed
+  outcomes:
+    - accept
+    - reject
+    - normalize
+    - defer
+    - reuse
+    - evict
+    - round-trip
+  measurement_axes:
+    - latency
+    - allocations
+    - cache-hits
+    - recompute-count
+    - event-order
+reusable_presets:
+  smoke_base:
+    purpose: Prove the canonical public path works and stays stable across repeated runs.
+    assertions:
+      - observable result is stable
+      - no hidden mutation
+      - no duplicate side effects
+  edge_base:
+    purpose: Prove malformed input fails explicitly or normalizes intentionally.
+    assertions:
+      - failure is explicit
+      - no silent coercion
+      - no stale state
+  perf_base:
+    purpose: Measure the hot path and bound allocations or repeated work.
+    assertions:
+      - warm path is not worse than cold path
+      - allocation growth stays bounded
+  integration_base:
+    purpose: Validate behavior across local imports and neighboring runtime layers.
+    assertions:
+      - boundary contract holds
+      - cross-file side effects remain stable
+groups:
+  - name: smoke
+    description: widget/controller bootstrap and stable build
+    rows:
+      - id: quantum_hydration_reader_html.smoke.001
+        purpose: Prove the primary contract of `src/ui/quantum_hydration_reader_html.dart` can be created and exercised with canonical values.
+        target_symbols: &id001
+          - quantumReadDomProps
+        setup: Build the minimal valid object graph or runtime context required by this file.
+        input: Canonical values that stay within the most common public-path defaults.
+        body: Call the main entry path twice with the same state to verify repeatability and reuse.
+        expected: The result is stable across repeated calls and no hidden mutation appears.
+        assertions:
+          - observable output matches the documented contract
+          - repeat call returns the same shape
+          - no unexpected extra work is visible
+        metrics:
+          - call count
+          - cache hits
+          - allocation delta
+        risks:
+          - silent eager load
+          - duplicate side effects
+          - state mutation on read
+        cleanup: Reset state and clear caches.
+      - id: quantum_hydration_reader_html.smoke.002
+        purpose: Confirm the file survives the smallest valid payload and the largest documented trivial payload.
+        target_symbols: *id001
+        setup: Prepare one-item and small-batch fixtures.
+        input: A single item followed by a short repeated batch.
+        body: Execute the same path with one item, then with a small repeated batch.
+        expected: Both inputs are handled without shape loss or unexpected divergence.
+        assertions:
+          - one-item path works
+          - batch path works
+          - batch does not degrade shape
+        metrics:
+          - latency
+          - allocation count
+        risks:
+          - off-by-one handling
+          - shape drift on repeated values
+        cleanup: Reset state and clear caches.
+      - id: quantum_hydration_reader_html.smoke.003
+        purpose: Ensure the public API does not require hidden global state to produce a valid result.
+        target_symbols: *id001
+        setup: Run in a clean process with no previously initialized caches or registries.
+        input: Fresh process state.
+        body: Invoke the same contract after process-style reset conditions.
+        expected: No hidden singleton is required for success.
+        assertions:
+          - no implicit global dependency
+          - fresh start still succeeds
+        metrics:
+          - startup cost
+        risks:
+          - state leakage across test cases
+        cleanup: Reset state and clear caches.
+  - name: edges
+    description: empty input, invalid state, and malformed schema
+    rows:
+      - id: quantum_hydration_reader_html.edges.001
+        purpose: Reject `null`, empty, or missing inputs for `src/ui/quantum_hydration_reader_html.dart` in a controlled way.
+        target_symbols: &id002
+          - quantumReadDomProps
+        setup: Prepare explicit null/empty fixtures and any required default context.
+        input: null, empty, and omitted values.
+        body: Pass malformed inputs through the normal entry path, not a special helper.
+        expected: The file responds with explicit failure or documented fallback, never silent corruption.
+        assertions:
+          - null is handled intentionally
+          - empty input is not accepted as valid data
+          - failure mode is explicit
+        metrics:
+          - failure latency
+          - error count
+        risks:
+          - silent fallback
+          - implicit coercion
+          - crash without context
+        cleanup: Reset state and clear caches.
+      - id: quantum_hydration_reader_html.edges.002
+        purpose: Exercise malformed types and mixed shapes against the file-specific contract.
+        target_symbols: *id002
+        setup: Prepare values with wrong scalar types, mixed lists, and partially missing nested fields.
+        input: A mixed-shape payload with the wrong scalar type in one branch.
+        body: Feed the malformed structure into the same contract path used by real callers.
+        expected: The contract either normalizes intentionally or rejects with a traceable error.
+        assertions:
+          - wrong type does not pass silently
+          - mixed structures do not corrupt state
+        metrics:
+          - branch coverage
+          - error reporting
+        risks:
+          - silent coercion
+          - partial mutation
+        cleanup: Clear test fixtures and release observers.
+      - id: quantum_hydration_reader_html.edges.003
+        purpose: Check duplicate, repeated, and out-of-order data for stability and idempotence.
+        target_symbols: *id002
+        setup: Build duplicated and shuffled fixtures.
+        input: Duplicate entries and shuffled order.
+        body: Run the same operation more than once and compare observable state.
+        expected: Duplicate inputs do not produce duplicate side effects unless explicitly required.
+        assertions:
+          - idempotence is preserved
+          - duplicate items do not duplicate state
+        metrics:
+          - duplicate suppression
+          - repeat-call stability
+        risks:
+          - double insert
+          - order sensitivity
+        cleanup: Reset state and clear caches.
+  - name: input
+    description: focus, validation, and event handling
+    rows:
+      - id: quantum_hydration_reader_html.input.001
+        purpose: Validate focus and event propagation for `src/ui/quantum_hydration_reader_html.dart`.
+        target_symbols: &id003
+          - quantumReadDomProps
+        setup: Prepare a focused widget/controller fixture.
+        input: A focused input sequence and one blur event.
+        body: Dispatch focus, input, and blur in the same order a user would.
+        expected: Focus transitions remain explicit and the event chain stays stable.
+        assertions:
+          - focus reaches the correct target
+          - blur clears or preserves state per contract
+        metrics:
+          - event ordering
+          - listener count
+        risks:
+          - focus loop
+          - lost event
+        cleanup: Reset state and clear caches.
+      - id: quantum_hydration_reader_html.input.002
+        purpose: Check invalid or malformed input does not create a hidden UI state.
+        target_symbols: *id003
+        setup: Use a bad schema, empty model, or invalid value.
+        input: Invalid input state.
+        body: Feed the invalid state through the normal interaction path.
+        expected: The UI rejects or normalizes the state visibly and intentionally.
+        assertions:
+          - invalid input is not silently accepted
+        metrics:
+          - validation cost
+        risks:
+          - hidden fallback state
+        cleanup: Reset state and clear caches.
+      - id: quantum_hydration_reader_html.input.003
+        purpose: Repeat the same input path multiple times to prove no duplicate state or listener buildup.
+        target_symbols: *id003
+        setup: Trigger the same UI interaction more than once.
+        input: Repeated identical input gestures.
+        body: Compare emitted state and listener counts after each repeat.
+        expected: State stays bounded and listeners do not accumulate unexpectedly.
+        assertions:
+          - listener count remains bounded
+          - state remains bounded
+        metrics:
+          - listener count
+          - allocation delta
+        risks:
+          - listener leak
+          - duplicate dispatch
+        cleanup: Reset state and clear caches.
+  - name: layout
+    description: measurement and rebuild stability
+    rows:
+      - id: quantum_hydration_reader_html.layout.001
+        purpose: Confirm layout computation remains stable for `src/ui/quantum_hydration_reader_html.dart`.
+        target_symbols: &id004
+          - quantumReadDomProps
+        setup: Use a representative layout tree or form.
+        input: A small, medium, and large constraint set.
+        body: Measure or build layout under multiple constraints.
+        expected: Layout remains deterministic under repeated builds.
+        assertions:
+          - layout is deterministic
+        metrics:
+          - layout latency
+        risks:
+          - constraint drift
+        cleanup: Reset state and clear caches.
+      - id: quantum_hydration_reader_html.layout.002
+        purpose: Check that invalid constraints or missing children fail explicitly.
+        target_symbols: *id004
+        setup: Use malformed or missing layout inputs.
+        input: Bad constraint or child state.
+        body: Run the layout pass with the malformed input.
+        expected: The contract rejects or handles the malformed case intentionally.
+        assertions:
+          - malformed layout is explicit
+        metrics:
+          - error path latency
+        risks:
+          - silent fallback layout
+        cleanup: Reset state and clear caches.
+      - id: quantum_hydration_reader_html.layout.003
+        purpose: Ensure repeated layout work does not produce runaway allocations.
+        target_symbols: *id004
+        setup: Repeat layout on an unchanged tree.
+        input: The same tree measured repeatedly.
+        body: Compare the work performed across repeated runs.
+        expected: Repeated work stays bounded and does not allocate extra state unnecessarily.
+        assertions:
+          - allocation growth stays bounded
+        metrics:
+          - allocation delta
+          - frame time
+        risks:
+          - layout churn
+        cleanup: Reset state and clear caches.
+  - name: hydration
+    description: read/hydrate reattachment behavior
+    rows:
+      - id: quantum_hydration_reader_html.hydration.001
+        purpose: Validate initial hydration for `src/ui/quantum_hydration_reader_html.dart`.
+        target_symbols: &id005
+          - quantumReadDomProps
+        setup: Prepare pre-rendered or preloaded state.
+        input: Hydrated state plus the initial on-screen representation.
+        body: Hydrate the UI/runtime object and inspect the restored state.
+        expected: Hydration reproduces the expected runtime shape.
+        assertions:
+          - restored state matches source state
+        metrics:
+          - hydrate latency
+        risks:
+          - mismatched hydrate shape
+        cleanup: Reset state and clear caches.
+      - id: quantum_hydration_reader_html.hydration.002
+        purpose: Check that hydration is not repeated unnecessarily.
+        target_symbols: *id005
+        setup: Reuse the same hydrated fixture without changing the source state.
+        input: Two consecutive hydration passes with identical input.
+        body: Hydrate twice and compare work done each time.
+        expected: The second pass reuses prior work or performs only the documented minimum.
+        assertions:
+          - no duplicate hydration work
+        metrics:
+          - hydrate work count
+        risks:
+          - hidden eager work
+        cleanup: Reset state and clear caches.
+      - id: quantum_hydration_reader_html.hydration.003
+        purpose: Confirm reattachment after partial loss does not corrupt state.
+        target_symbols: *id005
+        setup: Drop a non-critical part of the hydrated tree and reconnect it.
+        input: Partially hydrated state.
+        body: Restore the missing part and re-read state.
+        expected: Partial state is repaired intentionally and remains coherent.
+        assertions:
+          - partial restore is coherent
+        metrics:
+          - repair cost
+        risks:
+          - stale child state
+        cleanup: Reset state and clear caches.
+  - name: performance
+    description: build churn and low-copy updates
+    rows:
+      - id: quantum_hydration_reader_html.performance.001
+        purpose: Profile the hot path for `src/ui/quantum_hydration_reader_html.dart` with a large but realistic workload.
+        target_symbols: &id006
+          - quantumReadDomProps
+        setup: Prepare a large input set with stable shape and repeated access patterns.
+        input: Large valid dataset and repeated reads.
+        body: Measure the primary operation repeatedly and compare cold vs warm behavior.
+        expected: Warm-path behavior improves or remains stable, with no hidden quadratic work.
+        assertions:
+          - warm path is faster or equal
+          - no repeated recomputation
+        metrics:
+          - wall time
+          - allocations
+          - cache hits
+        risks:
+          - quadratic scan
+          - unbounded copying
+          - hidden eager load
+        cleanup: Reset state and clear caches.
+      - id: quantum_hydration_reader_html.performance.002
+        purpose: Ensure cached or memoized work in `src/ui/quantum_hydration_reader_html.dart` is invalidated precisely when input changes.
+        target_symbols: *id006
+        setup: Prime the cache, then change one field or dependency at a time.
+        input: Same input after one controlled mutation.
+        body: Read twice, mutate once, then read again.
+        expected: Only the changed branch recomputes; unrelated branches stay cached.
+        assertions:
+          - cache invalidates precisely
+          - unrelated work stays reused
+        metrics:
+          - recompute count
+          - cache-hit ratio
+        risks:
+          - stale cache
+          - over-invalidation
+        cleanup: Reset state and clear caches.
+      - id: quantum_hydration_reader_html.performance.003
+        purpose: Check that lazy materialization only happens on demand and not before the first access boundary.
+        target_symbols: *id006
+        setup: Prime a lazy fixture without touching the heavy branch.
+        input: A handle or metadata-only input before heavy data access.
+        body: Inspect the object, then touch the heavy branch once.
+        expected: No heavy work occurs before access, and the first access is explicit and measurable.
+        assertions:
+          - no eager load before access
+          - first access triggers exactly one load
+        metrics:
+          - first-access latency
+          - eager-load count
+        risks:
+          - hidden prefetch
+          - double fetch
+        cleanup: Reset state and clear caches.
+  - name: regression
+    description: stale UI state, duplicate listeners, and hidden eager work
+    rows:
+      - id: quantum_hydration_reader_html.regression.001
+        purpose: Exercise the `regression` branch under the file-specific contract.
+        target_symbols: &id007
+          - quantumReadDomProps
+        setup: Prepare a realistic fixture that targets this branch.
+        input: A representative valid input for the branch.
+        body: Run the branch using the public API.
+        expected: The output matches the documented contract.
+        assertions:
+          - branch contract holds
+        metrics:
+          - latency
+        risks:
+          - silent mismatch
+        cleanup: Reset state and clear caches.
+      - id: quantum_hydration_reader_html.regression.002
+        purpose: Exercise the `regression` branch with malformed or partial input.
+        target_symbols: *id007
+        setup: Prepare a malformed or partial variant.
+        input: Invalid or incomplete data.
+        body: Run the same public API path.
+        expected: The branch fails explicitly or normalizes intentionally.
+        assertions:
+          - failure is explicit
+        metrics:
+          - error path latency
+        risks:
+          - silent coercion
+        cleanup: Reset state and clear caches.
+      - id: quantum_hydration_reader_html.regression.003
+        purpose: Repeat the `regression` branch to prove stable behavior.
+        target_symbols: *id007
+        setup: Prime and repeat the same fixture.
+        input: Identical repeated input.
+        body: Compare output, side effects, and allocation behavior.
+        expected: Repeated execution stays stable and bounded.
+        assertions:
+          - repeatability
+        metrics:
+          - repeat latency
+        risks:
+          - duplicate side effects
+        cleanup: Reset state and clear caches.
+regeneration_triggers:
+  - signature changes
+  - import changes that affect behavior
+  - serialization or cache logic changes
+  - new branches, platform paths, or fallback rules
+supplements: []

@@ -1,0 +1,19 @@
+{
+  "__meta": {
+    "id": "widget-011-drag-axis-constrained",
+    "title": "dragAxis:x constrains drag to horizontal only",
+    "description": "A horizontally constrained draggable must have dragAxis:'x'. The runtime uses this to lock Y movement. Passing 'both' would allow vertical drift.",
+    "tags": ["widget", "drag", "axis"],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "box:row",
+    "props": { "draggable": true, "dragAxis": "x" }
+  },
+  "expected": {
+    "type": "box:row",
+    "props": { "draggable": true, "dragAxis": "x" },
+    "debugPath": "root"
+  }
+}

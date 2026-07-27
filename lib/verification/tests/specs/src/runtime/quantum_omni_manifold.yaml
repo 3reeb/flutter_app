@@ -1,0 +1,440 @@
+file: lib/src/runtime/quantum_omni_manifold.dart
+docs_file: docs/src/runtime/quantum_omni_manifold.dart.md
+line_count: 262
+category: runtime
+tests:
+- uuid: 552b65a8-4353-51c3-9936-b71c6143cd15
+  file: lib/src/runtime/quantum_omni_manifold.dart
+  docs_file: docs/src/runtime/quantum_omni_manifold.dart.md
+  title: 'Quantum Omni Manifold: public contract remains stable under valid input'
+  slug: contract
+  category: runtime
+  severity: critical
+  description: Verify that quantum omni manifold keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_omni_manifold.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_omni_manifold.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM OMNI MANIFOLD v3.0 - UNCOMPROMISED SPATIAL ISOLATE CALCULATOR'
+    headings:
+    - '`src/runtime/quantum_omni_manifold.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - contract
+  - quantum omni manifold
+- uuid: 7ae7c461-ef7e-582d-88d2-3735814a4106
+  file: lib/src/runtime/quantum_omni_manifold.dart
+  docs_file: docs/src/runtime/quantum_omni_manifold.dart.md
+  title: 'Quantum Omni Manifold: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: runtime
+  severity: critical
+  description: Verify that quantum omni manifold keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_omni_manifold.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_omni_manifold.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM OMNI MANIFOLD v3.0 - UNCOMPROMISED SPATIAL ISOLATE CALCULATOR'
+    headings:
+    - '`src/runtime/quantum_omni_manifold.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - invalid_input
+  - quantum omni manifold
+- uuid: 34d1fb3a-79d7-5023-91d6-07d4fad54e42
+  file: lib/src/runtime/quantum_omni_manifold.dart
+  docs_file: docs/src/runtime/quantum_omni_manifold.dart.md
+  title: 'Quantum Omni Manifold: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: runtime
+  severity: high
+  description: Verify that quantum omni manifold keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_omni_manifold.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_omni_manifold.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM OMNI MANIFOLD v3.0 - UNCOMPROMISED SPATIAL ISOLATE CALCULATOR'
+    headings:
+    - '`src/runtime/quantum_omni_manifold.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - reentrant
+  - quantum omni manifold
+- uuid: 2fcd7ab3-e4f6-5752-99c3-d58acbf1c11f
+  file: lib/src/runtime/quantum_omni_manifold.dart
+  docs_file: docs/src/runtime/quantum_omni_manifold.dart.md
+  title: 'Quantum Omni Manifold: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: runtime
+  severity: high
+  description: Verify that quantum omni manifold keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_omni_manifold.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_omni_manifold.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM OMNI MANIFOLD v3.0 - UNCOMPROMISED SPATIAL ISOLATE CALCULATOR'
+    headings:
+    - '`src/runtime/quantum_omni_manifold.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - cleanup
+  - quantum omni manifold
+- uuid: 78562d53-1c85-57bd-81e8-19130c08e696
+  file: lib/src/runtime/quantum_omni_manifold.dart
+  docs_file: docs/src/runtime/quantum_omni_manifold.dart.md
+  title: 'Quantum Omni Manifold: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: runtime
+  severity: high
+  description: Verify that quantum omni manifold keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_omni_manifold.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_omni_manifold.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM OMNI MANIFOLD v3.0 - UNCOMPROMISED SPATIAL ISOLATE CALCULATOR'
+    headings:
+    - '`src/runtime/quantum_omni_manifold.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - performance
+  - quantum omni manifold
+- uuid: e59cdb5d-f4a1-5fdb-b525-e30fad081b41
+  file: lib/src/runtime/quantum_omni_manifold.dart
+  docs_file: docs/src/runtime/quantum_omni_manifold.dart.md
+  title: 'Quantum Omni Manifold: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: runtime
+  severity: medium
+  description: Verify that quantum omni manifold keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_omni_manifold.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_omni_manifold.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM OMNI MANIFOLD v3.0 - UNCOMPROMISED SPATIAL ISOLATE CALCULATOR'
+    headings:
+    - '`src/runtime/quantum_omni_manifold.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - memory
+  - quantum omni manifold
+- uuid: 0ec2d76e-46e1-5a53-9071-1d826346c82b
+  file: lib/src/runtime/quantum_omni_manifold.dart
+  docs_file: docs/src/runtime/quantum_omni_manifold.dart.md
+  title: 'Quantum Omni Manifold: the runtime surface still matches the documented
+    API and headings'
+  slug: docs_parity
+  category: runtime
+  severity: medium
+  description: Verify that quantum omni manifold keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_omni_manifold.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_omni_manifold.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM OMNI MANIFOLD v3.0 - UNCOMPROMISED SPATIAL ISOLATE CALCULATOR'
+    headings:
+    - '`src/runtime/quantum_omni_manifold.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - docs_parity
+  - quantum omni manifold
+- uuid: 01b9de4f-ca4b-50d1-bf7d-fb16b3275b95
+  file: lib/src/runtime/quantum_omni_manifold.dart
+  docs_file: docs/src/runtime/quantum_omni_manifold.dart.md
+  title: 'Quantum Omni Manifold: registry and dispatch semantics remain correct under
+    mixed workload'
+  slug: registry
+  category: runtime
+  severity: medium
+  description: Verify that quantum omni manifold keeps its documented runtime behavior
+    while handling registry conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_omni_manifold.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/runtime/quantum_omni_manifold.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+      cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM OMNI MANIFOLD v3.0 - UNCOMPROMISED SPATIAL ISOLATE CALCULATOR'
+    headings:
+    - '`src/runtime/quantum_omni_manifold.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - runtime
+  - registry
+  - quantum omni manifold

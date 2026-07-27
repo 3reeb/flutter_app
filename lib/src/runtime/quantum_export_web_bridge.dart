@@ -19,12 +19,9 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 // Conditional import: on web dart:html is available → use real DOM writer.
 // On every other platform → use the no-op stub.
 import 'quantum_export_dom_stub.dart'

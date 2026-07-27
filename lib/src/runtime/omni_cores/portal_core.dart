@@ -1,6 +1,7 @@
 part of '../quantum_omni_registry.dart';
 
-// Moved from quantum_omni_registry.dart: _buildPortal
+// Pattern-aware portal router: dialogs, sheets, drawers, menus, anchored
+// surfaces, persistent panels, and inline expandable surfaces.
 
 Widget _buildPortal(QLContext rawCtx) {
   final ctx = _AliasContext(rawCtx);
@@ -16,6 +17,69 @@ Widget _buildPortal(QLContext rawCtx) {
         return QLBackgroundEffect.darken;
       default:
         return QLBackgroundEffect.none;
+    }
+  }
+
+  QLSurfacePattern parseSurfacePattern(String value) {
+    switch (value) {
+      case 'modal':
+      case 'alert':
+      case 'confirm':
+      case 'form_modal':
+        return QLSurfacePattern.modal;
+      case 'nonModal':
+      case 'non_modal':
+      case 'inspector':
+      case 'utility_panel':
+        return QLSurfacePattern.nonModal;
+      case 'centered':
+      case 'centered_overlay':
+      case 'dialog':
+      case 'popup_modal':
+      case 'lightbox':
+        return QLSurfacePattern.centered;
+      case 'edge_attached':
+      case 'docked':
+      case 'side_sheet':
+      case 'left_panel':
+      case 'right_panel':
+      case 'drawer':
+        return QLSurfacePattern.edgeDocked;
+      case 'bottom_attached':
+      case 'bottom_sheet':
+      case 'action_sheet':
+      case 'mobile_sheet':
+      case 'sheet':
+        return QLSurfacePattern.bottomAttached;
+      case 'persistent_panel':
+      case 'sidebar':
+      case 'navigation_rail':
+      case 'persistent_drawer':
+        return QLSurfacePattern.persistentPanel;
+      case 'temporary_overlay':
+      case 'popover':
+      case 'flyout':
+      case 'context_panel':
+      case 'menu':
+      case 'context_menu':
+      case 'dropdown':
+        return QLSurfacePattern.temporaryOverlay;
+      case 'full_screen':
+      case 'full_screen_surface':
+      case 'full_page_sheet':
+      case 'immersive_editor':
+        return QLSurfacePattern.fullScreen;
+      case 'anchored_floating':
+      case 'tooltip':
+      case 'anchored_menu':
+        return QLSurfacePattern.anchoredFloating;
+      case 'expandable_inline':
+      case 'inline_editor':
+      case 'inline_details':
+      case 'accordion':
+        return QLSurfacePattern.inlineExpandable;
+      default:
+        return QLSurfacePattern.centered;
     }
   }
 
@@ -55,7 +119,76 @@ Widget _buildPortal(QLContext rawCtx) {
     }
   }
 
-  // 🚀 Z-SPACE PRIMITIVE: portal:overlay_entry / portal:overlay
+  QLMotionSpec parseMotion() {
+    final dynamic motionValue =
+        ctx.map('motion') ?? ctx.map('animation') ?? ctx.map('motionSpec') ??
+        ctx.map('animationSpec');
+    if (motionValue is Map || motionValue is String) {
+      return QLMotionSpec.fromValue(motionValue);
+    }
+    final String jsonText = ctx.string('motionJson', fallback: '');
+    if (jsonText.isNotEmpty) {
+      return QLMotionSpec.fromValue(jsonText);
+    }
+    final String animationType = ctx.string('animationType', fallback: '');
+    final int durationMs = ctx.integer('durationMs', fallback: -1);
+    if (animationType.isNotEmpty || durationMs >= 0) {
+      return QLMotionSpec.fromValue(<String, dynamic>{
+        'type': animationType,
+        if (durationMs >= 0) 'durationMs': durationMs,
+        if (ctx.boolean('zoomIn', fallback: false)) 'zoomIn': true,
+        if (ctx.number('zoomScale', fallback: double.nan).isFinite)
+          'zoomScale': ctx.number('zoomScale'),
+        if (ctx.number('fromScale', fallback: double.nan).isFinite)
+          'fromScale': ctx.number('fromScale'),
+        if (ctx.number('fromOpacity', fallback: double.nan).isFinite)
+          'fromOpacity': ctx.number('fromOpacity'),
+        if (ctx.number('fromBlur', fallback: double.nan).isFinite)
+          'fromBlur': ctx.number('fromBlur'),
+        if (ctx.number('fromX', fallback: double.nan).isFinite)
+          'fromX': ctx.number('fromX'),
+        if (ctx.number('fromY', fallback: double.nan).isFinite)
+          'fromY': ctx.number('fromY'),
+        if (ctx.number('toX', fallback: double.nan).isFinite)
+          'toX': ctx.number('toX'),
+        if (ctx.number('toY', fallback: double.nan).isFinite)
+          'toY': ctx.number('toY'),
+        if (ctx.string('curve', fallback: '').isNotEmpty)
+          'curve': ctx.string('curve'),
+      });
+    }
+    return const QLMotionSpec();
+  }
+
+  QLOverlayRuntimeSpec parseRuntime() {
+    final dynamic runtimeValue =
+        ctx.map('runtime') ??
+        ctx.map('control') ??
+        ctx.map('behavior') ??
+        ctx.map('stack') ??
+        ctx.map('hooks') ??
+        ctx.map('actions') ??
+        ctx.map('overlay');
+    if (runtimeValue is Map || runtimeValue is String) {
+      return QLOverlayRuntimeSpec.fromValue(runtimeValue);
+    }
+    final String runtimeJson = ctx.string('runtimeJson', fallback: '');
+    if (runtimeJson.isNotEmpty) {
+      return QLOverlayRuntimeSpec.fromValue(runtimeJson);
+    }
+    return const QLOverlayRuntimeSpec();
+  }
+
+  Widget buildContent() {
+    return ctx.slot('content') ??
+        Q('col min-w-0 min-h-0', children: ctx.children);
+  }
+
+  Widget buildTrigger() {
+    return ctx.slot('trigger') ?? ctx.slot('content') ?? const SizedBox.shrink();
+  }
+
+  // Detached overlay entry primitive.
   if (subType == 'overlay_entry' || subType == 'overlay') {
     final String triggerBind = ctx.string('triggerBind');
     final QLSignal<dynamic> triggerSig =
@@ -67,108 +200,80 @@ Widget _buildPortal(QLContext rawCtx) {
     );
   }
 
-  // STANDARD PORTAL LOGIC
+  final QLSurfacePattern surfaceKind = parseSurfacePattern(
+    ctx.string('surfaceKind', fallback: ctx.string('presentation', fallback: subType)),
+  );
+  final QLMotionSpec motion = parseMotion();
+  final QLOverlayRuntimeSpec runtime = parseRuntime();
+  final QLSheetEdge edge = parseEdge(
+    ctx.string('edge', fallback: subType == 'drawer' ? 'left' : 'bottom'),
+  );
+  final bool barrier = ctx.boolean('barrierDismissible', fallback: true);
+  final bool allowDrag = ctx.boolean('enableDrag', fallback: true);
+  final bool allowResize = ctx.boolean('allowResize', fallback: true);
+  final bool underlying = ctx.boolean('allowUnderlyingInteraction', fallback: false);
+  final QLBackgroundEffect effect = parseEffect(ctx.string('bgEffect',
+      fallback: surfaceKind == QLSurfacePattern.bottomAttached ||
+              surfaceKind == QLSurfacePattern.edgeDocked
+          ? 'zoomBack'
+          : 'blur'));
+  final bool showDragHandle = ctx.boolean('showDragHandle',
+      fallback: surfaceKind == QLSurfacePattern.bottomAttached ||
+          surfaceKind == QLSurfacePattern.edgeDocked);
+  final double blurSigma = ctx.number('bgBlurSigma', fallback: 12.0);
+  final double zoomDepth = ctx.number('bgZoomDepth', fallback: 0.08);
+  final Color barrierColor =
+      ctx.color('barrierColor', fallback: Colors.black) ?? Colors.black;
+  final Color rootBgColor =
+      ctx.color('rootBgColor', fallback: Colors.black) ?? Colors.black;
+  final double barrierOpacity = ctx.number('barrierOpacity', fallback: 0.50);
+  final Clip clipBehavior =
+      ctx.boolean('clipSheet', fallback: true) ? Clip.antiAlias : Clip.none;
+  final Alignment? sheetAlignment =
+      switch (ctx.string('sheetAlignment', fallback: ctx.string('align'))) {
+        'topLeft' => Alignment.topLeft,
+        'topCenter' => Alignment.topCenter,
+        'topRight' => Alignment.topRight,
+        'centerLeft' => Alignment.centerLeft,
+        'center' => Alignment.center,
+        'centerRight' => Alignment.centerRight,
+        'bottomLeft' => Alignment.bottomLeft,
+        'bottomCenter' => Alignment.bottomCenter,
+        'bottomRight' => Alignment.bottomRight,
+        _ => null,
+      };
+  final EdgeInsetsGeometry sheetPadding = EdgeInsets.fromLTRB(
+    ctx.number('sheetPaddingLeft',
+        fallback: ctx.number('sheetPadding', fallback: 0.0)),
+    ctx.number('sheetPaddingTop',
+        fallback: ctx.number('sheetPadding', fallback: 0.0)),
+    ctx.number('sheetPaddingRight',
+        fallback: ctx.number('sheetPadding', fallback: 0.0)),
+    ctx.number('sheetPaddingBottom',
+        fallback: ctx.number('sheetPadding', fallback: 0.0)),
+  );
+  final BorderRadius sheetRadius = BorderRadius.circular(
+      ctx.number('sheetRadius',
+          fallback: ctx.number('cornerRadius', fallback: 0.0)));
+  final BoxConstraints constraints = BoxConstraints(
+    maxWidth: ctx.number('maxWidth', fallback: double.nan).isFinite
+        ? ctx.number('maxWidth')
+        : (surfaceKind == QLSurfacePattern.inlineExpandable ? 800 : 800),
+    maxHeight: ctx.number('maxHeight', fallback: double.nan).isFinite
+        ? ctx.number('maxHeight')
+        : (surfaceKind == QLSurfacePattern.inlineExpandable ? 99999 : 720),
+  );
+
   QLSpatialConfig buildConfig(BuildContext mountCtx) {
     final RenderBox? box = mountCtx.findRenderObject() as RenderBox?;
     final Offset origin = box?.localToGlobal(Offset.zero) ?? Offset.zero;
     final Size sz = box?.size ?? Size.zero;
 
-    final effect = parseEffect(ctx.string('bgEffect',
-        fallback:
-            subType == 'sheet' || subType == 'drawer' ? 'zoomBack' : 'blur'));
-    final edge = parseEdge(
-        ctx.string('edge', fallback: subType == 'drawer' ? 'left' : 'bottom'));
-    final barrier = ctx.boolean('barrierDismissible', fallback: true);
-    final blurSigma = ctx.number('bgBlurSigma', fallback: 12.0);
-    final zoomDepth = ctx.number('bgZoomDepth', fallback: 0.08);
-    final barrierColor =
-        ctx.color('barrierColor', fallback: Colors.black) ?? Colors.black;
-    final rootBgColor =
-        ctx.color('rootBgColor', fallback: Colors.black) ?? Colors.black;
-    final barrierOpacity = ctx.number('barrierOpacity', fallback: 0.50);
-    final bool showDragHandle = ctx.boolean('showDragHandle',
-        fallback: subType == 'sheet' || subType == 'drawer');
-    final Clip clipBehavior =
-        ctx.boolean('clipSheet', fallback: true) ? Clip.antiAlias : Clip.none;
-    final Alignment? sheetAlignment =
-        switch (ctx.string('sheetAlignment', fallback: ctx.string('align'))) {
-      'topLeft' => Alignment.topLeft,
-      'topCenter' => Alignment.topCenter,
-      'topRight' => Alignment.topRight,
-      'centerLeft' => Alignment.centerLeft,
-      'center' => Alignment.center,
-      'centerRight' => Alignment.centerRight,
-      'bottomLeft' => Alignment.bottomLeft,
-      'bottomCenter' => Alignment.bottomCenter,
-      'bottomRight' => Alignment.bottomRight,
-      _ => null,
-    };
-    final EdgeInsetsGeometry sheetPadding = EdgeInsets.fromLTRB(
-      ctx.number('sheetPaddingLeft',
-          fallback: ctx.number('sheetPadding', fallback: 0.0)),
-      ctx.number('sheetPaddingTop',
-          fallback: ctx.number('sheetPadding', fallback: 0.0)),
-      ctx.number('sheetPaddingRight',
-          fallback: ctx.number('sheetPadding', fallback: 0.0)),
-      ctx.number('sheetPaddingBottom',
-          fallback: ctx.number('sheetPadding', fallback: 0.0)),
-    );
-    final BorderRadius sheetRadius = BorderRadius.circular(ctx.number(
-        'sheetRadius',
-        fallback: ctx.number('cornerRadius', fallback: 0.0)));
-
-    if (subType == 'drawer') {
-      return QLSpatialConfig.drawer(
-        dismissible: barrier,
-        enableDrag: ctx.boolean('enableDrag', fallback: true),
-        edge: edge,
-        bgZoomDepth: zoomDepth,
-        sheetAlignment: sheetAlignment,
-        sheetPadding: sheetPadding,
-        sheetBorderRadius: sheetRadius,
-        clipBehavior: clipBehavior,
-        showDragHandle: showDragHandle,
-        barrierColor: barrierColor,
-        barrierOpacity: barrierOpacity,
-        rootBgColor: rootBgColor,
-      );
-    }
-    if (subType == 'sheet') {
-      return QLSpatialConfig.sheet(
-        dismissible: barrier,
-        enableDrag: ctx.boolean('enableDrag', fallback: true),
-        effect: effect,
-        edge: edge,
-        sheetAlignment: sheetAlignment,
-        sheetPadding: sheetPadding,
-        sheetBorderRadius: sheetRadius,
-        clipBehavior: clipBehavior,
-        showDragHandle: showDragHandle,
-        bgBlurSigma: blurSigma,
-        bgZoomDepth: zoomDepth,
-        initialWidth: ctx.number('w'),
-        initialHeight: ctx.number('h'),
-        barrierColor: barrierColor,
-        barrierOpacity: barrierOpacity,
-        rootBgColor: rootBgColor,
-      );
-    }
-    if (subType == 'popover' ||
-        subType == 'menu' ||
-        subType == 'context_menu') {
-      return QLSpatialConfig.menu(
-        targetLeft: origin.dx,
-        targetTop: origin.dy,
-        targetRight: origin.dx + sz.width,
-        targetBottom: origin.dy + sz.height,
-        matchAnchorWidth: ctx.boolean('matchAnchorWidth'),
-        isModal: ctx.boolean('isModal'),
-      );
-    }
     if (subType == 'toast') {
       return QLSpatialConfig.toast(
         duration: Duration(
             milliseconds: ctx.number('durationMs', fallback: 3000).toInt()),
+        runtime: runtime,
       );
     }
     if (subType == 'window') {
@@ -180,12 +285,209 @@ Widget _buildPortal(QLContext rawCtx) {
         allowResize: ctx.boolean('allowResize', fallback: true),
         resizeEdges:
             parseResizeEdge(ctx.string('resizeEdges', fallback: 'bottomRight')),
+        runtime: runtime,
       );
     }
+
+    if (surfaceKind == QLSurfacePattern.inlineExpandable ||
+        subType == 'expandable_inline') {
+      return QLSpatialConfig.surface(
+        pattern: QLSurfacePattern.inlineExpandable,
+        dismissible: false,
+        allowUnderlyingInteraction: true,
+        anchor: sheetAlignment ?? Alignment.centerLeft,
+        sheetAlignment: sheetAlignment ?? Alignment.centerLeft,
+        constraints: constraints,
+        sheetPadding: sheetPadding,
+        sheetBorderRadius: sheetRadius,
+        clipBehavior: clipBehavior,
+        bgZoomDepth: zoomDepth,
+        bgBlurSigma: blurSigma,
+        rootBgColor: rootBgColor,
+        motion: motion,
+        useSafeArea: ctx.boolean('useSafeArea', fallback: true),
+        runtime: runtime,
+      );
+    }
+
+    if (surfaceKind == QLSurfacePattern.persistentPanel) {
+      return QLSpatialConfig.surface(
+        pattern: QLSurfacePattern.persistentPanel,
+        dismissible: false,
+        allowUnderlyingInteraction: true,
+        anchor: sheetAlignment ?? Alignment.centerLeft,
+        sheetAlignment: sheetAlignment ?? Alignment.centerLeft,
+        constraints: constraints,
+        sheetPadding: sheetPadding,
+        sheetBorderRadius: sheetRadius,
+        clipBehavior: clipBehavior,
+        showDragHandle: showDragHandle,
+        bgZoomDepth: zoomDepth,
+        bgBlurSigma: blurSigma,
+        rootBgColor: rootBgColor,
+        motion: motion,
+        useSafeArea: ctx.boolean('useSafeArea', fallback: true),
+        runtime: runtime,
+      );
+    }
+
+    if (surfaceKind == QLSurfacePattern.fullScreen) {
+      return QLSpatialConfig.surface(
+        pattern: QLSurfacePattern.fullScreen,
+        dismissible: barrier,
+        allowUnderlyingInteraction: false,
+        anchor: Alignment.center,
+        constraints: const BoxConstraints(),
+        bgBlurSigma: blurSigma,
+        bgZoomDepth: zoomDepth,
+        barrierColor: barrierColor,
+        barrierOpacity: barrierOpacity,
+        rootBgColor: rootBgColor,
+        motion: motion,
+        useSafeArea: ctx.boolean('useSafeArea', fallback: false),
+        runtime: runtime,
+      );
+    }
+
+    if (surfaceKind == QLSurfacePattern.edgeDocked || subType == 'drawer') {
+      return QLSpatialConfig.surface(
+        pattern: QLSurfacePattern.edgeDocked,
+        dismissible: barrier,
+        allowUnderlyingInteraction: underlying,
+        enableDrag: allowDrag,
+        edge: edge,
+        anchor: sheetAlignment ?? Alignment.centerLeft,
+        sheetAlignment: sheetAlignment ?? Alignment.centerLeft,
+        constraints: constraints,
+        sheetPadding: sheetPadding,
+        sheetBorderRadius: sheetRadius,
+        clipBehavior: clipBehavior,
+        showDragHandle: showDragHandle,
+        bgZoomDepth: zoomDepth,
+        bgBlurSigma: blurSigma,
+        barrierColor: barrierColor,
+        barrierOpacity: barrierOpacity,
+        rootBgColor: rootBgColor,
+        initialWidth: ctx.number('w'),
+        initialHeight: ctx.number('h'),
+        motion: motion,
+        useSafeArea: ctx.boolean('useSafeArea', fallback: true),
+        runtime: runtime,
+      );
+    }
+
+    if (surfaceKind == QLSurfacePattern.bottomAttached || subType == 'sheet') {
+      return QLSpatialConfig.surface(
+        pattern: QLSurfacePattern.bottomAttached,
+        dismissible: barrier,
+        allowUnderlyingInteraction: underlying,
+        enableDrag: allowDrag,
+        edge: edge,
+        anchor: sheetAlignment ?? Alignment.bottomCenter,
+        sheetAlignment: sheetAlignment ?? Alignment.bottomCenter,
+        constraints: constraints,
+        sheetPadding: sheetPadding,
+        sheetBorderRadius: sheetRadius,
+        clipBehavior: clipBehavior,
+        showDragHandle: showDragHandle,
+        bgZoomDepth: zoomDepth,
+        bgBlurSigma: blurSigma,
+        barrierColor: barrierColor,
+        barrierOpacity: barrierOpacity,
+        rootBgColor: rootBgColor,
+        initialWidth: ctx.number('w'),
+        initialHeight: ctx.number('h'),
+        motion: motion,
+        useSafeArea: ctx.boolean('useSafeArea', fallback: true),
+        runtime: runtime,
+      );
+    }
+
+    if (surfaceKind == QLSurfacePattern.temporaryOverlay ||
+        subType == 'popover' ||
+        subType == 'menu' ||
+        subType == 'context_menu' ||
+        subType == 'dropdown' ||
+        subType == 'flyout' ||
+        subType == 'context_panel') {
+      return QLSpatialConfig.surface(
+        pattern: QLSurfacePattern.temporaryOverlay,
+        dismissible: true,
+        allowUnderlyingInteraction: underlying,
+        anchor: Alignment.topLeft,
+        sheetAlignment: Alignment.topLeft,
+        constraints: constraints,
+        bgZoomDepth: zoomDepth,
+        bgBlurSigma: blurSigma,
+        barrierColor: barrierColor,
+        barrierOpacity: barrierOpacity,
+        rootBgColor: rootBgColor,
+        motion: motion,
+        useSafeArea: false,
+        runtime: runtime,
+      );
+    }
+
+    if (surfaceKind == QLSurfacePattern.anchoredFloating) {
+      return QLSpatialConfig.surface(
+        pattern: QLSurfacePattern.anchoredFloating,
+        dismissible: true,
+        allowUnderlyingInteraction: underlying,
+        anchor: Alignment.topLeft,
+        sheetAlignment: Alignment.topLeft,
+        targetLeft: origin.dx,
+        targetTop: origin.dy,
+        targetRight: origin.dx + sz.width,
+        targetBottom: origin.dy + sz.height,
+        matchAnchorWidth: ctx.boolean('matchAnchorWidth'),
+        constraints: constraints,
+        bgZoomDepth: zoomDepth,
+        bgBlurSigma: blurSigma,
+        barrierColor: barrierColor,
+        barrierOpacity: barrierOpacity,
+        rootBgColor: rootBgColor,
+        motion: motion,
+        useSafeArea: false,
+        runtime: runtime,
+      );
+    }
+
     return QLSpatialConfig.dialog(
       barrierDismissible: barrier,
       extrude3D: ctx.boolean('extrude3D', fallback: true),
       effect: effect,
+      useSafeArea: ctx.boolean('useSafeArea', fallback: true),
+      runtime: runtime,
+    );
+  }
+
+  QLSpatialConfig buildInlineConfig() {
+    return QLSpatialConfig.surface(
+      pattern: surfaceKind == QLSurfacePattern.inlineExpandable
+          ? QLSurfacePattern.inlineExpandable
+          : QLSurfacePattern.persistentPanel,
+      dismissible: false,
+      allowUnderlyingInteraction: true,
+      anchor: sheetAlignment ?? Alignment.centerLeft,
+      sheetAlignment: sheetAlignment ?? Alignment.centerLeft,
+      constraints: constraints,
+      sheetPadding: sheetPadding,
+      sheetBorderRadius: sheetRadius,
+      clipBehavior: clipBehavior,
+      bgZoomDepth: zoomDepth,
+      bgBlurSigma: blurSigma,
+      rootBgColor: rootBgColor,
+      motion: motion,
+      useSafeArea: ctx.boolean('useSafeArea', fallback: true),
+      runtime: runtime,
+    );
+  }
+
+  if (surfaceKind == QLSurfacePattern.inlineExpandable ||
+      surfaceKind == QLSurfacePattern.persistentPanel) {
+    return _QLInlineSurfaceHost(
+      config: buildInlineConfig(),
+      child: buildContent(),
     );
   }
 
@@ -195,7 +497,7 @@ Widget _buildPortal(QLContext rawCtx) {
         if (triggerCtx.mounted) {
           triggerCtx.mountOverlay(
             buildConfig(triggerCtx),
-            (c, close) => ctx.slot('content') ?? const SizedBox.shrink(),
+            (c, close) => buildContent(),
           );
         }
       });
@@ -203,7 +505,13 @@ Widget _buildPortal(QLContext rawCtx) {
     });
   }
 
-  if (subType == 'menu' || subType == 'context_menu') {
+  if (subType == 'menu' ||
+      subType == 'context_menu' ||
+      subType == 'popover' ||
+      subType == 'dropdown' ||
+      subType == 'flyout' ||
+      subType == 'context_panel' ||
+      subType == 'anchored_floating') {
     return Builder(builder: (triggerCtx) {
       return Listener(
         behavior: HitTestBehavior.translucent,
@@ -211,11 +519,11 @@ Widget _buildPortal(QLContext rawCtx) {
           if (triggerCtx.mounted) {
             triggerCtx.mountOverlay(
               buildConfig(triggerCtx),
-              (c, close) => ctx.slot('content') ?? const SizedBox.shrink(),
+              (c, close) => buildContent(),
             );
           }
         },
-        child: ctx.slot('trigger') ?? const SizedBox.shrink(),
+        child: buildTrigger(),
       );
     });
   }
@@ -229,15 +537,145 @@ Widget _buildPortal(QLContext rawCtx) {
         if (pointerDownPos != null &&
             (e.position - pointerDownPos!).distance < 15) {
           if (triggerCtx.mounted) {
-            triggerCtx.mountOverlay(buildConfig(triggerCtx),
-                (c, close) => ctx.slot('content') ?? const SizedBox.shrink());
+            triggerCtx.mountOverlay(
+              buildConfig(triggerCtx),
+              (c, close) => buildContent(),
+            );
           }
         }
         pointerDownPos = null;
       },
-      child: ctx.slot('trigger') ?? const SizedBox.shrink(),
+      child: buildTrigger(),
     );
   });
+}
+
+class _QLInlineSurfaceHost extends StatefulWidget {
+  final QLSpatialConfig config;
+  final Widget child;
+
+  const _QLInlineSurfaceHost({required this.config, required this.child});
+
+  @override
+  State<_QLInlineSurfaceHost> createState() => _QLInlineSurfaceHostState();
+}
+
+class _QLInlineSurfaceHostState extends State<_QLInlineSurfaceHost>
+    with TickerProviderStateMixin {
+  late final QLTransitionComposer _composer;
+  bool _initialized = false;
+
+  QLTransitionPreset _mapPreset(QLTransitionMode mode) {
+    switch (mode) {
+      case QLTransitionMode.fadeScale:
+        return QLTransitionPresets.dialog;
+      case QLTransitionMode.slideUp:
+        return QLTransitionPresets.sheet;
+      case QLTransitionMode.slideDown:
+        return QLTransitionPreset(
+            fromScale: 1.0,
+            fromOpacity: 0.0,
+            fromTranslate: const Offset(0, -1),
+            curve: QLSprings.sheet,
+            duration: const Duration(milliseconds: 420));
+      case QLTransitionMode.slideLeft:
+        return QLTransitionPresets.drawer;
+      case QLTransitionMode.slideRight:
+        return QLTransitionPreset(
+            fromScale: 1.0,
+            fromOpacity: 0.0,
+            fromTranslate: const Offset(1, 0),
+            curve: QLSprings.sheet,
+            duration: const Duration(milliseconds: 380));
+      case QLTransitionMode.popover:
+        return QLTransitionPresets.menu;
+      case QLTransitionMode.windowDrop:
+        return QLTransitionPresets.window;
+      case QLTransitionMode.fullscreen:
+        return QLTransitionPresets.full;
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    _initialized = true;
+    final basePreset = _mapPreset(widget.config.transition);
+    final resolvedPreset = widget.config.motion.toPreset(
+      basePreset,
+      screenSize: MediaQuery.sizeOf(context),
+      pattern: widget.config.surfacePattern,
+    );
+    _composer = QLTransitionComposer.entrance(
+      vsync: this,
+      preset: resolvedPreset,
+      screenSize: MediaQuery.sizeOf(context),
+    );
+  }
+
+  @override
+  void dispose() {
+    _composer.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = widget.config;
+    final bool needsSafeArea = c.useSafeArea || (c.flags & QLNodeFlags.useSafeArea) != 0;
+
+    Widget child = widget.child;
+    child = AnimatedBuilder(
+      animation: Listenable.merge([
+        _composer.scaleSignal,
+        _composer.translateSignal,
+        _composer.opacitySignal,
+      ]),
+      builder: (ctx, child) {
+        final Matrix4 m = Matrix4.identity();
+        final double scale = _composer.scaleSignal.value;
+        if (scale != 1.0) {
+          m.storage[0] = scale;
+          m.storage[5] = scale;
+          m.storage[10] = scale;
+        }
+        final Offset trans = _composer.translateSignal.value;
+        m.storage[12] = trans.dx;
+        m.storage[13] = trans.dy;
+        return Transform(
+          transform: m,
+          child: Opacity(
+            opacity: _composer.opacitySignal.value.clamp(0.0, 1.0),
+            child: child,
+          ),
+        );
+      },
+      child: child,
+    );
+
+    if (c.sheetPadding != EdgeInsets.zero) {
+      child = Padding(padding: c.sheetPadding, child: child);
+    }
+    if (c.sheetBorderRadius != BorderRadius.zero || c.clipBehavior != Clip.none) {
+      child = ClipRRect(
+        borderRadius: c.sheetBorderRadius,
+        clipBehavior: c.clipBehavior,
+        child: child,
+      );
+    }
+    if (needsSafeArea) {
+      child = SafeArea(child: child);
+    }
+    if (c.constraints.hasBoundedWidth || c.constraints.hasBoundedHeight) {
+      child = ConstrainedBox(constraints: c.constraints, child: child);
+    }
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 180),
+      curve: Curves.easeOut,
+      child: child,
+    );
+  }
 }
 
 class _QLOverlayEntryNode extends StatefulWidget {
@@ -313,4 +751,8 @@ void _registerPortalAliases(QuantumVM vm) {
   vm.defineAlias('drawer', 'portal:sheet', description: 'Drawer alias routed through sheet.', tags: const ['portal', 'alias']);
   vm.defineAlias('sheet', 'portal:sheet', description: 'Sheet portal alias.', tags: const ['portal', 'alias']);
   vm.defineAlias('popover', 'portal:popover', description: 'Popover portal alias.', tags: const ['portal', 'alias']);
+  vm.defineAlias('modal', 'portal:dialog', description: 'Modal alias.', tags: const ['portal', 'alias']);
+  vm.defineAlias('centered_overlay', 'portal:dialog', description: 'Centered overlay alias.', tags: const ['portal', 'alias']);
+  vm.defineAlias('persistent_panel', 'portal:overlay', description: 'Persistent panel alias.', tags: const ['portal', 'alias']);
+  vm.defineAlias('inline_expandable', 'portal:overlay', description: 'Inline expandable alias.', tags: const ['portal', 'alias']);
 }

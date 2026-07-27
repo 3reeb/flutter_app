@@ -2,11 +2,11 @@
 // quantum_permissions.dart
 // ════════════════════════════════════════════════════════════════════════════
 
+import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
-
+import 'package:flutter/services.dart';
 import '../plugins/quantum_auth_engine.dart';
-
 class QuantumPermissionException implements Exception {
   final String code;
   final String message;
@@ -178,8 +178,15 @@ class QuantumPermissionRegistry {
     _rules[name] = rule;
   }
 
+  void registerAll(Map<String, dynamic> rules) {
+    _rules.addAll(rules);
+  }
+
   dynamic resolve(String name) => _rules[name];
   bool contains(String name) => _rules.containsKey(name);
+  dynamic remove(String name) => _rules.remove(name);
+  Iterable<String> get names => _rules.keys;
+  Map<String, dynamic> snapshot() => Map<String, dynamic>.unmodifiable(_rules);
   void clear() => _rules.clear();
 }
 
@@ -972,6 +979,1546 @@ class QuantumPermissionEngine {
   }
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+// APP PERMISSION HUB (in-app capabilities, feature gates, computed logic)
+// ════════════════════════════════════════════════════════════════════════════
+
+enum QuantumAppPermissionKind {
+  role,
+  claim,
+  feature,
+  subscription,
+  computed,
+  custom,
+}
+
+class QuantumAppPermissionDescriptor {
+  final String id;
+  final String label;
+  final QuantumAppPermissionKind kind;
+  final String? description;
+  final Set<String> aliases;
+  final dynamic rule;
+  final Map<String, dynamic> meta;
+
+  const QuantumAppPermissionDescriptor({
+    required this.id,
+    required this.label,
+    this.kind = QuantumAppPermissionKind.custom,
+    this.description,
+    this.aliases = const <String>{},
+    this.rule,
+    this.meta = const <String, dynamic>{},
+  });
+
+  factory QuantumAppPermissionDescriptor.core({
+    required String id,
+    required String label,
+    required QuantumAppPermissionKind kind,
+    String? description,
+    Set<String> aliases = const <String>{},
+    dynamic rule,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) {
+    return QuantumAppPermissionDescriptor(
+      id: id,
+      label: label,
+      kind: kind,
+      description: description,
+      aliases: Set<String>.unmodifiable(aliases),
+      rule: rule,
+      meta: Map<String, dynamic>.unmodifiable(meta),
+    );
+  }
+
+  QuantumAppPermissionDescriptor copyWith({
+    String? id,
+    String? label,
+    QuantumAppPermissionKind? kind,
+    String? description,
+    Set<String>? aliases,
+    dynamic rule,
+    Map<String, dynamic>? meta,
+  }) {
+    return QuantumAppPermissionDescriptor(
+      id: id ?? this.id,
+      label: label ?? this.label,
+      kind: kind ?? this.kind,
+      description: description ?? this.description,
+      aliases: aliases ?? this.aliases,
+      rule: rule ?? this.rule,
+      meta: meta ?? this.meta,
+    );
+  }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'label': label,
+        'kind': kind.name,
+        'description': description,
+        'aliases': aliases.toList(growable: false),
+        'rule': rule is Function ? 'computed' : rule,
+        'meta': meta,
+      };
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is QuantumAppPermissionDescriptor && other.id == id);
+
+  @override
+  int get hashCode => id.hashCode;
+}
+
+class QuantumAppPermissionCenter {
+  static final QuantumAppPermissionCenter instance =
+      QuantumAppPermissionCenter._();
+
+  QuantumAppPermissionCenter._() {
+    registerCatalog(QuantumAppPermissionCatalog.core());
+  }
+
+  static const int _cacheLimit = 512;
+  final Map<String, QuantumAppPermissionDescriptor> _descriptors =
+      <String, QuantumAppPermissionDescriptor>{};
+  final Map<String, String> _aliases = <String, String>{};
+  final LinkedHashMap<String, QuantumPermissionDecision> _cache =
+      LinkedHashMap<String, QuantumPermissionDecision>();
+
+  Iterable<QuantumAppPermissionDescriptor> get descriptors =>
+      List<QuantumAppPermissionDescriptor>.unmodifiable(_descriptors.values);
+
+  bool contains(String permissionId) => _resolveId(permissionId) != null;
+
+  QuantumAppPermissionDescriptor? descriptor(String permissionId) {
+    final id = _resolveId(permissionId);
+    return id == null ? null : _descriptors[id];
+  }
+
+  void registerCatalog(Iterable<QuantumAppPermissionDescriptor> catalog) {
+    for (final descriptor in catalog) {
+      registerPermission(descriptor);
+    }
+  }
+
+  void registerPermission(
+    QuantumAppPermissionDescriptor descriptor, {
+    dynamic rule,
+    bool overwrite = true,
+  }) {
+    final existingId = _resolveId(descriptor.id);
+    if (existingId != null && !overwrite) {
+      return;
+    }
+
+    final previous = _descriptors[descriptor.id];
+    if (previous != null) {
+      for (final alias in previous.aliases) {
+        _aliases.remove(alias);
+      }
+    }
+
+    final resolvedRule =
+        rule ?? descriptor.rule ?? <String, dynamic>{'allow': true};
+    _descriptors[descriptor.id] = descriptor.copyWith(rule: resolvedRule);
+    _aliases[descriptor.id] = descriptor.id;
+    for (final alias in descriptor.aliases) {
+      _aliases[alias] = descriptor.id;
+    }
+    _cache.clear();
+  }
+
+  void registerRule(
+    String permissionId,
+    dynamic rule, {
+    QuantumAppPermissionDescriptor? descriptor,
+  }) {
+    if (descriptor != null) {
+      registerPermission(descriptor, rule: rule);
+      return;
+    }
+    final id = _resolveId(permissionId) ?? permissionId;
+    final current = _descriptors[id];
+    if (current == null) {
+      _aliases[id] = id;
+      _descriptors[id] = QuantumAppPermissionDescriptor.core(
+        id: id,
+        label: id,
+        kind: QuantumAppPermissionKind.computed,
+        rule: rule,
+      );
+    } else {
+      _descriptors[id] = current.copyWith(rule: rule);
+    }
+    _cache.clear();
+  }
+
+  bool removePermission(String permissionId) {
+    final id = _resolveId(permissionId);
+    if (id == null) return false;
+
+    final descriptor = _descriptors.remove(id);
+    if (descriptor != null) {
+      for (final alias in descriptor.aliases) {
+        _aliases.remove(alias);
+      }
+    }
+    _aliases.remove(id);
+    _cache.clear();
+    return true;
+  }
+
+  void clear() {
+    _descriptors.clear();
+    _aliases.clear();
+    _cache.clear();
+  }
+
+  QuantumPermissionDecision evaluate(
+    String permissionId,
+    QuantumPermissionContext context, {
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) {
+    final descriptor = _requireDescriptor(permissionId);
+    return evaluateRule(
+      descriptor.rule ?? descriptor.meta['rule'],
+      context,
+      meta: <String, dynamic>{
+        ...meta,
+        'appPermissionId': descriptor.id,
+        'appPermissionKind': descriptor.kind.name,
+      },
+    );
+  }
+
+  QuantumPermissionDecision evaluateRule(
+    dynamic rule,
+    QuantumPermissionContext context, {
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) {
+    final dynamic resolved = _resolveRule(rule);
+    final cacheKey = _cacheKey(resolved, context, meta);
+    final cached = _cache.remove(cacheKey);
+    if (cached != null) {
+      _cache[cacheKey] = cached;
+      return cached;
+    }
+
+    QuantumPermissionDecision decision;
+    if (resolved is String && contains(resolved)) {
+      decision = evaluate(resolved, context, meta: meta);
+    } else {
+      decision = QuantumPermissionEngine.instance.evaluate(
+        resolved,
+        context,
+        meta: meta,
+      );
+    }
+
+    if (_cache.length >= _cacheLimit) {
+      _cache.remove(_cache.keys.first);
+    }
+    _cache[cacheKey] = decision;
+    return decision;
+  }
+
+  bool can(
+    dynamic rule,
+    QuantumPermissionContext context, {
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) =>
+      evaluateRule(rule, context, meta: meta).allowed;
+
+  QuantumPermissionDecision require(
+    dynamic rule,
+    QuantumPermissionContext context, {
+    String code = 'app_permission_denied',
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) {
+    final decision = evaluateRule(rule, context, meta: meta);
+    if (!decision.allowed) {
+      throw QuantumPermissionException(code, decision.reason,
+          details: decision.meta);
+    }
+    return decision;
+  }
+
+  Future<T> guard<T>(
+    dynamic rule,
+    QuantumPermissionContext context,
+    Future<T> Function() action, {
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) async {
+    require(rule, context, meta: meta);
+    return action();
+  }
+
+  bool isAdmin({
+    SessionContext? session,
+    Map<String, dynamic> env = const <String, dynamic>{},
+    Map<String, dynamic> data = const <String, dynamic>{},
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) {
+    return can(
+      'isAdmin',
+      QuantumPermissionContext.fromSession(
+        session,
+        env: env,
+        data: data,
+        meta: meta,
+      ),
+      meta: meta,
+    );
+  }
+
+  bool hasFeature(
+    String featureName, {
+    SessionContext? session,
+    Map<String, dynamic> env = const <String, dynamic>{},
+    Map<String, dynamic> data = const <String, dynamic>{},
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) {
+    return can(
+      'hasFeature',
+      QuantumPermissionContext.fromSession(
+        session,
+        env: env,
+        data: data,
+        meta: <String, dynamic>{...meta, 'feature': featureName},
+      ),
+      meta: <String, dynamic>{...meta, 'feature': featureName},
+    );
+  }
+
+  QuantumAppPermissionDescriptor _requireDescriptor(String permissionId) {
+    final descriptor = this.descriptor(permissionId);
+    if (descriptor == null) {
+      throw QuantumPermissionException(
+        'app_permission_unknown',
+        'Unknown app permission: $permissionId',
+      );
+    }
+    return descriptor;
+  }
+
+  String? _resolveId(String permissionId) {
+    final trimmed = permissionId.trim();
+    if (trimmed.isEmpty) return null;
+    return _aliases[trimmed] ?? _descriptors[trimmed]?.id;
+  }
+
+  dynamic _resolveRule(dynamic rule) {
+    if (rule is String) {
+      final trimmed = rule.trim();
+      final id = _resolveId(
+        trimmed.startsWith('@') ? trimmed.substring(1) : trimmed,
+      );
+      if (id != null && id != trimmed) {
+        final descriptor = _descriptors[id];
+        if (descriptor != null) {
+          return _resolveRule(descriptor.rule ?? descriptor.meta['rule']);
+        }
+      }
+      return rule;
+    }
+    if (rule is Map) {
+      return Map<String, dynamic>.from(rule);
+    }
+    if (rule is List) {
+      return List<dynamic>.from(rule);
+    }
+    return rule;
+  }
+
+  String _cacheKey(
+    dynamic rule,
+    QuantumPermissionContext context,
+    Map<String, dynamic> meta,
+  ) {
+    return _appStableStringify(<String, dynamic>{
+      'rule': rule,
+      'user': context.userId,
+      'roles': context.roles.toList(growable: false)..sort(),
+      'permissions': context.permissions.toList(growable: false)..sort(),
+      'features': context.features.toList(growable: false)..sort(),
+      'subscriptions': context.subscriptions.toList(growable: false)..sort(),
+      'scope': context.scope,
+      'resource': context.resource,
+      'operation': context.operation,
+      'feature': context.feature,
+      'schema': context.schema,
+      'data': context.data,
+      'env': context.env,
+      'meta': meta,
+    });
+  }
+}
+
+class QuantumAppPermissionCatalog {
+  static Iterable<QuantumAppPermissionDescriptor> core() =>
+      <QuantumAppPermissionDescriptor>[
+        QuantumAppPermissionDescriptor.core(
+          id: 'isAdmin',
+          label: 'Administrator',
+          kind: QuantumAppPermissionKind.computed,
+          description:
+              'Checks whether the current session is an administrator or elevated account.',
+          aliases: <String>{'admin', 'is_admin'},
+          rule: <String, dynamic>{
+            'any': <dynamic>[
+              <String, dynamic>{
+                'claim': <String, dynamic>{'isAdmin': true}
+              },
+              <String, dynamic>{
+                'role': <String>['admin', 'owner', 'superadmin']
+              },
+            ],
+          },
+        ),
+        QuantumAppPermissionDescriptor.core(
+          id: 'hasFeature',
+          label: 'Feature Gate',
+          kind: QuantumAppPermissionKind.feature,
+          description:
+              'Checks whether a named feature is enabled for the current session.',
+          aliases: <String>{'featureGate', 'feature_enabled'},
+          rule: (QuantumPermissionContext context, Map<String, dynamic> meta) {
+            final featureName =
+                (meta['feature'] ?? context.feature)?.toString() ?? '';
+            return featureName.isNotEmpty && context.hasFeature(featureName);
+          },
+        ),
+        QuantumAppPermissionDescriptor.core(
+          id: 'hasSubscription',
+          label: 'Subscription Gate',
+          kind: QuantumAppPermissionKind.subscription,
+          description:
+              'Checks whether a subscription or plan requirement is satisfied.',
+          aliases: <String>{'planGate', 'subscriptionGate'},
+          rule: (QuantumPermissionContext context, Map<String, dynamic> meta) {
+            final value =
+                (meta['subscription'] ?? context.claim('plan'))?.toString() ??
+                    '';
+            return value.isNotEmpty && context.hasSubscription(value);
+          },
+        ),
+      ];
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// CENTRAL PERMISSION HUB
+// ════════════════════════════════════════════════════════════════════════════
+
+enum QuantumPermissionState {
+  unknown,
+  granted,
+  limited,
+  denied,
+  restricted,
+  permanentlyDenied,
+  unavailable,
+}
+
+extension QuantumPermissionStateX on QuantumPermissionState {
+  bool get isGranted =>
+      this == QuantumPermissionState.granted ||
+      this == QuantumPermissionState.limited;
+
+  bool get isDenied =>
+      this == QuantumPermissionState.denied ||
+      this == QuantumPermissionState.restricted ||
+      this == QuantumPermissionState.permanentlyDenied;
+
+  bool get canAskAgain =>
+      this != QuantumPermissionState.permanentlyDenied &&
+      this != QuantumPermissionState.unavailable;
+}
+
+enum QuantumPermissionKind {
+  camera,
+  microphone,
+  location,
+  contacts,
+  calendar,
+  photos,
+  notifications,
+  phone,
+  files,
+  media,
+  sensors,
+  network,
+  biometric,
+  custom,
+}
+
+class QuantumPermissionDescriptor {
+  final String id;
+  final String label;
+  final QuantumPermissionKind kind;
+  final String? description;
+  final Set<String> aliases;
+  final Map<String, String> nativeIds;
+  final dynamic defaultRule;
+  final Map<String, dynamic> meta;
+
+  const QuantumPermissionDescriptor({
+    required this.id,
+    required this.label,
+    this.kind = QuantumPermissionKind.custom,
+    this.description,
+    this.aliases = const <String>{},
+    this.nativeIds = const <String, String>{},
+    this.defaultRule,
+    this.meta = const <String, dynamic>{},
+  });
+
+  factory QuantumPermissionDescriptor.core({
+    required String id,
+    required String label,
+    required QuantumPermissionKind kind,
+    String? description,
+    Set<String> aliases = const <String>{},
+    Map<String, String> nativeIds = const <String, String>{},
+    dynamic defaultRule,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) {
+    return QuantumPermissionDescriptor(
+      id: id,
+      label: label,
+      kind: kind,
+      description: description,
+      aliases: Set<String>.unmodifiable(aliases),
+      nativeIds: Map<String, String>.unmodifiable(nativeIds),
+      defaultRule: defaultRule,
+      meta: Map<String, dynamic>.unmodifiable(meta),
+    );
+  }
+
+  QuantumPermissionDescriptor copyWith({
+    String? id,
+    String? label,
+    QuantumPermissionKind? kind,
+    String? description,
+    Set<String>? aliases,
+    Map<String, String>? nativeIds,
+    dynamic defaultRule,
+    Map<String, dynamic>? meta,
+  }) {
+    return QuantumPermissionDescriptor(
+      id: id ?? this.id,
+      label: label ?? this.label,
+      kind: kind ?? this.kind,
+      description: description ?? this.description,
+      aliases: aliases ?? this.aliases,
+      nativeIds: nativeIds ?? this.nativeIds,
+      defaultRule: defaultRule ?? this.defaultRule,
+      meta: meta ?? this.meta,
+    );
+  }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'label': label,
+        'kind': kind.name,
+        'description': description,
+        'aliases': aliases.toList(growable: false),
+        'nativeIds': nativeIds,
+        'defaultRule': defaultRule,
+        'meta': meta,
+      };
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is QuantumPermissionDescriptor && other.id == id);
+
+  @override
+  int get hashCode => id.hashCode;
+}
+
+class QuantumPermissionSnapshot {
+  final String permissionId;
+  final QuantumPermissionState state;
+  final String source;
+  final String reason;
+  final DateTime updatedAt;
+  final Map<String, dynamic> meta;
+
+  // Removed 'const' keyword
+  QuantumPermissionSnapshot({
+    required this.permissionId,
+    required this.state,
+    required this.source,
+    required this.reason,
+    required this.updatedAt,
+    this.meta = const <String, dynamic>{},
+  });
+
+  // Removed 'const' keyword
+  QuantumPermissionSnapshot.unknown(
+    String permissionId, {
+    String source = 'unknown',
+    String reason = 'permission status is unknown',
+    DateTime? updatedAt,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) : this(
+          permissionId: permissionId,
+          state: QuantumPermissionState.unknown,
+          source: source,
+          reason: reason,
+          updatedAt: updatedAt ?? DateTime.fromMillisecondsSinceEpoch(0),
+          meta: meta,
+        );
+
+  // Removed 'const' keyword
+  QuantumPermissionSnapshot.granted(
+    String permissionId, {
+    String source = 'native',
+    String reason = 'granted',
+    DateTime? updatedAt,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) : this(
+          permissionId: permissionId,
+          state: QuantumPermissionState.granted,
+          source: source,
+          reason: reason,
+          updatedAt: updatedAt ?? DateTime.fromMillisecondsSinceEpoch(0),
+          meta: meta,
+        );
+
+  // Removed 'const' keyword
+  QuantumPermissionSnapshot.limited(
+    String permissionId, {
+    String source = 'native',
+    String reason = 'limited',
+    DateTime? updatedAt,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) : this(
+          permissionId: permissionId,
+          state: QuantumPermissionState.limited,
+          source: source,
+          reason: reason,
+          updatedAt: updatedAt ?? DateTime.fromMillisecondsSinceEpoch(0),
+          meta: meta,
+        );
+
+  // Removed 'const' keyword
+  QuantumPermissionSnapshot.denied(
+    String permissionId, {
+    String source = 'native',
+    String reason = 'denied',
+    DateTime? updatedAt,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) : this(
+          permissionId: permissionId,
+          state: QuantumPermissionState.denied,
+          source: source,
+          reason: reason,
+          updatedAt: updatedAt ?? DateTime.fromMillisecondsSinceEpoch(0),
+          meta: meta,
+        );
+
+  // Removed 'const' keyword
+  QuantumPermissionSnapshot.restricted(
+    String permissionId, {
+    String source = 'native',
+    String reason = 'restricted',
+    DateTime? updatedAt,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) : this(
+          permissionId: permissionId,
+          state: QuantumPermissionState.restricted,
+          source: source,
+          reason: reason,
+          updatedAt: updatedAt ?? DateTime.fromMillisecondsSinceEpoch(0),
+          meta: meta,
+        );
+
+  // Removed 'const' keyword
+  QuantumPermissionSnapshot.permanentlyDenied(
+    String permissionId, {
+    String source = 'native',
+    String reason = 'permanently denied',
+    DateTime? updatedAt,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) : this(
+          permissionId: permissionId,
+          state: QuantumPermissionState.permanentlyDenied,
+          source: source,
+          reason: reason,
+          updatedAt: updatedAt ?? DateTime.fromMillisecondsSinceEpoch(0),
+          meta: meta,
+        );
+
+  // Removed 'const' keyword
+  QuantumPermissionSnapshot.unavailable(
+    String permissionId, {
+    String source = 'native',
+    String reason = 'unavailable',
+    DateTime? updatedAt,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) : this(
+          permissionId: permissionId,
+          state: QuantumPermissionState.unavailable,
+          source: source,
+          reason: reason,
+          updatedAt: updatedAt ?? DateTime.fromMillisecondsSinceEpoch(0),
+          meta: meta,
+        );
+
+  bool get granted => state.isGranted;
+  bool get denied => state.isDenied;
+  bool get canAskAgain => state.canAskAgain;
+
+  QuantumPermissionSnapshot copyWith({
+    QuantumPermissionState? state,
+    String? source,
+    String? reason,
+    DateTime? updatedAt,
+    Map<String, dynamic>? meta,
+  }) {
+    return QuantumPermissionSnapshot(
+      permissionId: permissionId,
+      state: state ?? this.state,
+      source: source ?? this.source,
+      reason: reason ?? this.reason,
+      updatedAt: updatedAt ?? this.updatedAt,
+      meta: meta ?? this.meta,
+    );
+  }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'permissionId': permissionId,
+        'state': state.name,
+        'source': source,
+        'reason': reason,
+        'updatedAt': updatedAt.toIso8601String(),
+        'meta': meta,
+        'granted': granted,
+        'denied': denied,
+        'canAskAgain': canAskAgain,
+      };
+
+  factory QuantumPermissionSnapshot.fromJson(Map<String, dynamic> json) {
+    return QuantumPermissionSnapshot(
+      permissionId:
+          json['permissionId']?.toString() ?? json['id']?.toString() ?? '',
+      state: _parsePermissionState(json['state']?.toString() ??
+          json['status']?.toString() ??
+          (json['granted'] == true ? 'granted' : 'unknown')),
+      source: json['source']?.toString() ?? 'native',
+      reason: json['reason']?.toString() ?? 'permission snapshot',
+      updatedAt: DateTime.tryParse(json['updatedAt']?.toString() ?? '') ??
+          DateTime.now(),
+      meta: (json['meta'] as Map?)?.cast<String, dynamic>() ??
+          const <String, dynamic>{},
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is QuantumPermissionSnapshot &&
+          other.permissionId == permissionId &&
+          other.state == state &&
+          other.source == source &&
+          other.reason == reason &&
+          other.updatedAt == updatedAt &&
+          _mapEquals(other.meta, meta));
+
+  @override
+  int get hashCode => Object.hash(
+      permissionId, state, source, reason, updatedAt, _mapHash(meta));
+}
+
+abstract class QuantumPermissionSource {
+  Future<QuantumPermissionSnapshot> check(
+    QuantumPermissionDescriptor descriptor, {
+    QuantumPermissionContext? context,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  });
+
+  Future<QuantumPermissionSnapshot> request(
+    QuantumPermissionDescriptor descriptor, {
+    QuantumPermissionContext? context,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  });
+
+  Future<bool> openSettings(
+    QuantumPermissionDescriptor descriptor, {
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  });
+}
+
+class QuantumPermissionMemorySource implements QuantumPermissionSource {
+  final Map<String, QuantumPermissionSnapshot> _snapshots =
+      <String, QuantumPermissionSnapshot>{};
+
+  void seed(QuantumPermissionSnapshot snapshot) {
+    _snapshots[snapshot.permissionId] = snapshot;
+  }
+
+  void seedState(
+    String permissionId, {
+    QuantumPermissionState state = QuantumPermissionState.granted,
+    String source = 'memory',
+    String reason = 'seeded',
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) {
+    _snapshots[permissionId] = QuantumPermissionSnapshot(
+      permissionId: permissionId,
+      state: state,
+      source: source,
+      reason: reason,
+      updatedAt: DateTime.now(),
+      meta: meta,
+    );
+  }
+
+  void clear([String? permissionId]) {
+    if (permissionId == null) {
+      _snapshots.clear();
+      return;
+    }
+    _snapshots.remove(permissionId);
+  }
+
+  @override
+  Future<QuantumPermissionSnapshot> check(
+    QuantumPermissionDescriptor descriptor, {
+    QuantumPermissionContext? context,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) async {
+    return _snapshots[descriptor.id] ??
+        QuantumPermissionSnapshot.unknown(
+          descriptor.id,
+          source: 'memory',
+          meta: meta,
+        );
+  }
+
+  @override
+  Future<QuantumPermissionSnapshot> request(
+    QuantumPermissionDescriptor descriptor, {
+    QuantumPermissionContext? context,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) async {
+    final current = _snapshots[descriptor.id];
+    if (current != null) return current;
+    return QuantumPermissionSnapshot.unavailable(
+      descriptor.id,
+      source: 'memory',
+      reason: 'no native permission source configured',
+      meta: meta,
+    );
+  }
+
+  @override
+  Future<bool> openSettings(
+    QuantumPermissionDescriptor descriptor, {
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) async {
+    return false;
+  }
+}
+
+class QuantumPermissionNativeSource implements QuantumPermissionSource {
+  QuantumPermissionNativeSource({
+    MethodChannel? channel,
+  }) : _channel = channel ?? const MethodChannel('quantum_permissions');
+
+  final MethodChannel _channel;
+
+  @override
+  Future<QuantumPermissionSnapshot> check(
+    QuantumPermissionDescriptor descriptor, {
+    QuantumPermissionContext? context,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) async {
+    return _invoke('check', descriptor, context: context, meta: meta);
+  }
+
+  @override
+  Future<QuantumPermissionSnapshot> request(
+    QuantumPermissionDescriptor descriptor, {
+    QuantumPermissionContext? context,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) async {
+    return _invoke('request', descriptor, context: context, meta: meta);
+  }
+
+  @override
+  Future<bool> openSettings(
+    QuantumPermissionDescriptor descriptor, {
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) async {
+    try {
+      final dynamic raw = await _channel.invokeMethod<dynamic>(
+        'openSettings',
+        <String, dynamic>{
+          'permissionId': descriptor.id,
+          'meta': meta,
+        },
+      );
+      return raw == true;
+    } on MissingPluginException {
+      return false;
+    }
+  }
+
+  Future<QuantumPermissionSnapshot> _invoke(
+    String method,
+    QuantumPermissionDescriptor descriptor, {
+    QuantumPermissionContext? context,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) async {
+    try {
+      final dynamic raw = await _channel.invokeMethod<dynamic>(
+        method,
+        <String, dynamic>{
+          'permissionId': descriptor.id,
+          'descriptor': descriptor.toJson(),
+          'context': context == null ? null : _contextToJson(context),
+          'meta': meta,
+        },
+      );
+      if (raw is Map) {
+        return QuantumPermissionSnapshot.fromJson(
+            Map<String, dynamic>.from(raw as Map));
+      }
+      if (raw is bool) {
+        return raw
+            ? QuantumPermissionSnapshot.granted(
+                descriptor.id,
+                source: 'native',
+                meta: meta,
+              )
+            : QuantumPermissionSnapshot.denied(
+                descriptor.id,
+                source: 'native',
+                meta: meta,
+              );
+      }
+      return QuantumPermissionSnapshot.unavailable(
+        descriptor.id,
+        source: 'native',
+        reason: 'native bridge returned unsupported data',
+        meta: meta,
+      );
+    } on MissingPluginException {
+      return QuantumPermissionSnapshot.unavailable(
+        descriptor.id,
+        source: 'native',
+        reason: 'native bridge not installed',
+        meta: meta,
+      );
+    } on PlatformException catch (e) {
+      return QuantumPermissionSnapshot.denied(
+        descriptor.id,
+        source: 'native',
+        reason: e.message ?? e.code,
+        meta: <String, dynamic>{
+          ...meta,
+          'code': e.code,
+          'details': e.details,
+        },
+      );
+    }
+  }
+}
+
+class QuantumPermissionCenter {
+  static final QuantumPermissionCenter instance = QuantumPermissionCenter._();
+
+  QuantumPermissionCenter._() {
+    registerCatalog(QuantumPermissionCatalog.core());
+  }
+
+  static const int _snapshotLimit = 128;
+  static const Duration _cacheDuration = Duration(milliseconds: 750);
+
+  final QuantumPermissionNativeSource _nativeSource =
+      QuantumPermissionNativeSource();
+  QuantumPermissionSource _source = QuantumPermissionMemorySource();
+
+  final Map<String, QuantumPermissionDescriptor> _descriptors =
+      <String, QuantumPermissionDescriptor>{};
+  final Map<String, String> _aliases = <String, String>{};
+  final Map<String, QuantumPermissionSnapshot> _snapshots =
+      LinkedHashMap<String, QuantumPermissionSnapshot>();
+  final Map<String, DateTime> _lastSync = <String, DateTime>{};
+  final Map<String, StreamController<QuantumPermissionSnapshot>> _watchers =
+      <String, StreamController<QuantumPermissionSnapshot>>{};
+
+  QuantumPermissionSource get source => _source;
+  set source(QuantumPermissionSource value) => _source = value;
+
+  Iterable<QuantumPermissionDescriptor> get descriptors =>
+      List<QuantumPermissionDescriptor>.unmodifiable(_descriptors.values);
+
+  bool contains(String permissionId) => _resolveId(permissionId) != null;
+
+  QuantumPermissionDescriptor? descriptor(String permissionId) {
+    final id = _resolveId(permissionId);
+    return id == null ? null : _descriptors[id];
+  }
+
+  QuantumPermissionSnapshot? snapshot(String permissionId) {
+    final id = _resolveId(permissionId);
+    return id == null ? null : _snapshots[id];
+  }
+
+  void registerCatalog(Iterable<QuantumPermissionDescriptor> catalog) {
+    for (final descriptor in catalog) {
+      registerPermission(descriptor);
+    }
+  }
+
+  void registerPermission(
+    QuantumPermissionDescriptor descriptor, {
+    dynamic rule,
+    bool overwrite = true,
+  }) {
+    final existingId = _resolveId(descriptor.id);
+    if (existingId != null && !overwrite && existingId != descriptor.id) {
+      return;
+    }
+
+    final resolvedRule = rule ??
+        descriptor.defaultRule ??
+        <String, dynamic>{'permission': descriptor.id};
+
+    _descriptors[descriptor.id] = descriptor;
+    _aliases[descriptor.id] = descriptor.id;
+    for (final alias in descriptor.aliases) {
+      _aliases[alias] = descriptor.id;
+    }
+    QuantumPermissionRegistry.instance.register(descriptor.id, resolvedRule);
+    for (final alias in descriptor.aliases) {
+      QuantumPermissionRegistry.instance.register(alias, resolvedRule);
+    }
+    _snapshots.remove(descriptor.id);
+    _lastSync.remove(descriptor.id);
+  }
+
+  void registerRule(
+    String permissionId,
+    dynamic rule, {
+    QuantumPermissionDescriptor? descriptor,
+  }) {
+    if (descriptor != null) {
+      registerPermission(descriptor, rule: rule);
+      return;
+    }
+    final id = _resolveId(permissionId) ?? permissionId;
+    QuantumPermissionRegistry.instance.register(id, rule);
+    _aliases[id] = id;
+  }
+
+  bool removePermission(String permissionId) {
+    final id = _resolveId(permissionId);
+    if (id == null) return false;
+
+    final descriptor = _descriptors.remove(id);
+    if (descriptor != null) {
+      QuantumPermissionRegistry.instance.remove(id);
+      for (final alias in descriptor.aliases) {
+        _aliases.remove(alias);
+        QuantumPermissionRegistry.instance.remove(alias);
+      }
+    }
+    _snapshots.remove(id);
+    _lastSync.remove(id);
+    return true;
+  }
+
+  void clear() {
+    _descriptors.clear();
+    _aliases.clear();
+    _snapshots.clear();
+    _lastSync.clear();
+    QuantumPermissionRegistry.instance.clear();
+  }
+
+  QuantumPermissionDecision evaluatePolicy(
+    String permissionId,
+    QuantumPermissionContext context, {
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) {
+    final descriptor = this.descriptor(permissionId);
+    final dynamic rule = QuantumPermissionRegistry.instance.resolve(
+          _resolveId(permissionId) ?? permissionId,
+        ) ??
+        descriptor?.defaultRule;
+    if (rule == null) {
+      return const QuantumPermissionDecision.allow('no permission policy');
+    }
+    return QuantumPermissionEngine.instance.evaluate(rule, context, meta: meta);
+  }
+
+  bool allowsPolicy(
+    String permissionId,
+    QuantumPermissionContext context, {
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) {
+    return evaluatePolicy(permissionId, context, meta: meta).allowed;
+  }
+
+  Future<QuantumPermissionSnapshot> check(
+    String permissionId, {
+    QuantumPermissionContext? context,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+    bool forceRefresh = false,
+  }) async {
+    final descriptor = _requireDescriptor(permissionId);
+    final now = DateTime.now();
+    final cached = _snapshots[descriptor.id];
+    if (!forceRefresh &&
+        cached != null &&
+        now.difference(_lastSync[descriptor.id] ?? cached.updatedAt) <
+            _cacheDuration) {
+      return cached;
+    }
+
+    QuantumPermissionSnapshot snapshot;
+    try {
+      snapshot = await _nativeSource.check(
+        descriptor,
+        context: context,
+        meta: meta,
+      );
+      if (snapshot.state == QuantumPermissionState.unavailable) {
+        snapshot = await _source.check(
+          descriptor,
+          context: context,
+          meta: meta,
+        );
+      }
+    } catch (_) {
+      snapshot = await _source.check(
+        descriptor,
+        context: context,
+        meta: meta,
+      );
+    }
+
+    final policy = context == null
+        ? const QuantumPermissionDecision.allow('no policy context')
+        : evaluatePolicy(
+            descriptor.id,
+            context,
+            meta: meta,
+          );
+
+    if (!policy.allowed) {
+      snapshot = QuantumPermissionSnapshot.denied(
+        descriptor.id,
+        source: 'policy',
+        reason: policy.reason,
+        updatedAt: now,
+        meta: <String, dynamic>{
+          ...snapshot.meta,
+          ...policy.meta,
+          'matched': policy.matched,
+        },
+      );
+    } else if (snapshot.state == QuantumPermissionState.unknown &&
+        descriptor.defaultRule == null) {
+      snapshot = snapshot.copyWith(
+        updatedAt: now,
+        meta: <String, dynamic>{
+          ...snapshot.meta,
+          'policy': policy.toJson(),
+        },
+      );
+    }
+
+    _storeSnapshot(snapshot, now);
+    return snapshot;
+  }
+
+  Future<QuantumPermissionSnapshot> request(
+    String permissionId, {
+    QuantumPermissionContext? context,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) async {
+    final descriptor = _requireDescriptor(permissionId);
+    final snapshot = await _nativeSource.request(
+      descriptor,
+      context: context,
+      meta: meta,
+    );
+    final policy = context == null
+        ? const QuantumPermissionDecision.allow('no policy context')
+        : evaluatePolicy(
+            descriptor.id,
+            context,
+            meta: meta,
+          );
+    final resolved = policy.allowed
+        ? snapshot
+        : QuantumPermissionSnapshot.denied(
+            descriptor.id,
+            source: 'policy',
+            reason: policy.reason,
+            updatedAt: DateTime.now(),
+            meta: <String, dynamic>{
+              ...snapshot.meta,
+              ...policy.meta,
+              'matched': policy.matched,
+            },
+          );
+    _storeSnapshot(resolved, DateTime.now());
+    return resolved;
+  }
+
+  Future<bool> openSettings(
+    String permissionId, {
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) async {
+    final descriptor = _requireDescriptor(permissionId);
+    return _nativeSource.openSettings(descriptor, meta: meta);
+  }
+
+  Future<Map<String, QuantumPermissionSnapshot>> sync({
+    Iterable<String>? permissionIds,
+    QuantumPermissionContext? context,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) async {
+    final ids = (permissionIds == null || permissionIds.isEmpty)
+        ? _descriptors.keys
+        : permissionIds.map((id) => _resolveId(id) ?? id);
+    final results = <String, QuantumPermissionSnapshot>{};
+    for (final id in ids) {
+      final snapshot = await check(
+        id,
+        context: context,
+        meta: meta,
+        forceRefresh: true,
+      );
+      results[id] = snapshot;
+    }
+    return results;
+  }
+
+  Stream<QuantumPermissionSnapshot> watch(String permissionId) async* {
+    final descriptor = _requireDescriptor(permissionId);
+    final cached = _snapshots[descriptor.id];
+    if (cached != null) yield cached;
+    final controller = _watchers.putIfAbsent(
+      descriptor.id,
+      () => StreamController<QuantumPermissionSnapshot>.broadcast(sync: true),
+    );
+    yield* controller.stream;
+  }
+
+  void forget(String permissionId) {
+    final id = _resolveId(permissionId);
+    if (id == null) return;
+    _snapshots.remove(id);
+    _lastSync.remove(id);
+  }
+
+  Future<T> guarded<T>(
+    String permissionId,
+    QuantumPermissionContext context,
+    Future<T> Function() action, {
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) async {
+    final permissionSnapshot = await check(
+      permissionId,
+      context: context,
+      meta: meta,
+    );
+    if (!permissionSnapshot.granted) {
+      throw QuantumPermissionException(
+        'permission_denied',
+        permissionSnapshot.reason,
+        details: permissionSnapshot.toJson(),
+      );
+    }
+    return action();
+  }
+
+  QuantumPermissionDescriptor _requireDescriptor(String permissionId) {
+    final descriptor = this.descriptor(permissionId);
+    if (descriptor == null) {
+      throw QuantumPermissionException(
+        'permission_unknown',
+        'Unknown permission: $permissionId',
+      );
+    }
+    return descriptor;
+  }
+
+  String? _resolveId(String permissionId) {
+    final trimmed = permissionId.trim();
+    if (trimmed.isEmpty) return null;
+    return _aliases[trimmed] ?? _descriptors[trimmed]?.id;
+  }
+
+  void _storeSnapshot(
+    QuantumPermissionSnapshot snapshot,
+    DateTime now,
+  ) {
+    if (_snapshots.length >= _snapshotLimit &&
+        !_snapshots.containsKey(snapshot.permissionId)) {
+      _snapshots.remove(_snapshots.keys.first);
+    }
+    _snapshots[snapshot.permissionId] = snapshot.copyWith(updatedAt: now);
+    _lastSync[snapshot.permissionId] = now;
+    _watchers[snapshot.permissionId]?.add(_snapshots[snapshot.permissionId]!);
+  }
+}
+
+class QuantumPermissionCatalog {
+  static Iterable<QuantumPermissionDescriptor> core() =>
+      <QuantumPermissionDescriptor>[
+        QuantumPermissionDescriptor.core(
+          id: 'camera',
+          label: 'Camera',
+          kind: QuantumPermissionKind.camera,
+          description: 'Capture photos and video from the device camera.',
+          aliases: <String>{'photos.camera', 'media.camera'},
+          nativeIds: <String, String>{
+            'android': 'android.permission.CAMERA',
+            'ios': 'NSCameraUsageDescription',
+            'web': 'camera',
+          },
+        ),
+        QuantumPermissionDescriptor.core(
+          id: 'microphone',
+          label: 'Microphone',
+          kind: QuantumPermissionKind.microphone,
+          description: 'Record audio or join voice experiences.',
+          aliases: <String>{'audio.recording', 'voice'},
+          nativeIds: <String, String>{
+            'android': 'android.permission.RECORD_AUDIO',
+            'ios': 'NSMicrophoneUsageDescription',
+            'web': 'microphone',
+          },
+        ),
+        QuantumPermissionDescriptor.core(
+          id: 'location',
+          label: 'Location',
+          kind: QuantumPermissionKind.location,
+          description: 'Access approximate or precise device location.',
+          aliases: <String>{'gps', 'geo'},
+          nativeIds: <String, String>{
+            'android': 'android.permission.ACCESS_FINE_LOCATION',
+            'ios': 'NSLocationWhenInUseUsageDescription',
+            'web': 'geolocation',
+          },
+        ),
+        QuantumPermissionDescriptor.core(
+          id: 'contacts',
+          label: 'Contacts',
+          kind: QuantumPermissionKind.contacts,
+          description: 'Read and search the device address book.',
+          nativeIds: <String, String>{
+            'android': 'android.permission.READ_CONTACTS',
+            'ios': 'NSContactsUsageDescription',
+            'web': 'contacts',
+          },
+        ),
+        QuantumPermissionDescriptor.core(
+          id: 'calendar',
+          label: 'Calendar',
+          kind: QuantumPermissionKind.calendar,
+          description: 'Read or create calendar events.',
+          nativeIds: <String, String>{
+            'android': 'android.permission.READ_CALENDAR',
+            'ios': 'NSCalendarsUsageDescription',
+            'web': 'calendar',
+          },
+        ),
+        QuantumPermissionDescriptor.core(
+          id: 'photos',
+          label: 'Photos',
+          kind: QuantumPermissionKind.photos,
+          description: 'Read media library or photo picker selections.',
+          aliases: <String>{'gallery', 'media.photos'},
+          nativeIds: <String, String>{
+            'android': 'android.permission.READ_MEDIA_IMAGES',
+            'ios': 'NSPhotoLibraryUsageDescription',
+            'web': 'photos',
+          },
+        ),
+        QuantumPermissionDescriptor.core(
+          id: 'notifications',
+          label: 'Notifications',
+          kind: QuantumPermissionKind.notifications,
+          description: 'Show or manage local and push notifications.',
+          aliases: <String>{'push', 'localNotifications'},
+          nativeIds: <String, String>{
+            'android': 'android.permission.POST_NOTIFICATIONS',
+            'ios': 'UNUserNotificationCenter',
+            'web': 'notifications',
+          },
+        ),
+        QuantumPermissionDescriptor.core(
+          id: 'phone',
+          label: 'Phone',
+          kind: QuantumPermissionKind.phone,
+          description: 'Access phone state or phone-call related actions.',
+          nativeIds: <String, String>{
+            'android': 'android.permission.READ_PHONE_STATE',
+            'ios': 'CTTelephonyNetworkInfo',
+            'web': 'phone',
+          },
+        ),
+        QuantumPermissionDescriptor.core(
+          id: 'files',
+          label: 'Files',
+          kind: QuantumPermissionKind.files,
+          description: 'Read and write local files and document storage.',
+          aliases: <String>{'storage', 'filesystem'},
+          nativeIds: <String, String>{
+            'android': 'android.permission.READ_EXTERNAL_STORAGE',
+            'ios': 'UIDocumentPicker',
+            'web': 'file-system',
+          },
+        ),
+        QuantumPermissionDescriptor.core(
+          id: 'biometric',
+          label: 'Biometric',
+          kind: QuantumPermissionKind.biometric,
+          description: 'Unlock protected actions using device biometrics.',
+          aliases: <String>{'faceId', 'touchId'},
+          nativeIds: <String, String>{
+            'android': 'android.permission.USE_BIOMETRIC',
+            'ios': 'LocalAuthentication',
+            'web': 'biometric',
+          },
+        ),
+        QuantumPermissionDescriptor.core(
+          id: 'sensors',
+          label: 'Sensors',
+          kind: QuantumPermissionKind.sensors,
+          description: 'Access accelerometer, motion, and similar sensors.',
+          nativeIds: <String, String>{
+            'android': 'android.permission.BODY_SENSORS',
+            'ios': 'CMMotionActivityManager',
+            'web': 'sensors',
+          },
+        ),
+        QuantumPermissionDescriptor.core(
+          id: 'network',
+          label: 'Network',
+          kind: QuantumPermissionKind.network,
+          description: 'Use device networking and remote connections.',
+          aliases: <String>{'internet', 'remote'},
+          nativeIds: <String, String>{
+            'android': 'android.permission.INTERNET',
+            'ios': 'network',
+            'web': 'network',
+          },
+        ),
+      ];
+}
+
+bool _mapEquals(Map<String, dynamic> a, Map<String, dynamic> b) {
+  if (identical(a, b)) return true;
+  if (a.length != b.length) return false;
+  for (final entry in a.entries) {
+    if (!b.containsKey(entry.key)) return false;
+    final dynamic other = b[entry.key];
+    final dynamic value = entry.value;
+    if (value is Map && other is Map) {
+      if (!_mapEquals(
+          Map<String, dynamic>.from(value), Map<String, dynamic>.from(other))) {
+        return false;
+      }
+      continue;
+    }
+    if (value is List && other is List) {
+      if (value.length != other.length) return false;
+      for (var i = 0; i < value.length; i++) {
+        final dynamic left = value[i];
+        final dynamic right = other[i];
+        if (left is Map && right is Map) {
+          if (!_mapEquals(Map<String, dynamic>.from(left),
+              Map<String, dynamic>.from(right))) {
+            return false;
+          }
+        } else if (left != right) {
+          return false;
+        }
+      }
+      continue;
+    }
+    if (value != other) return false;
+  }
+  return true;
+}
+
+int _mapHash(Map<String, dynamic> value) {
+  var hash = 0;
+  final keys = value.keys.map((e) => e.toString()).toList(growable: false)
+    ..sort();
+  for (final key in keys) {
+    hash = Object.hash(hash, key, value[key]);
+  }
+  return hash;
+}
+
+QuantumPermissionState _parsePermissionState(String raw) {
+  switch (raw.toLowerCase()) {
+    case 'granted':
+    case 'allowed':
+    case 'ok':
+      return QuantumPermissionState.granted;
+    case 'limited':
+      return QuantumPermissionState.limited;
+    case 'restricted':
+      return QuantumPermissionState.restricted;
+    case 'permanentlydenied':
+    case 'permanent':
+    case 'blocked':
+      return QuantumPermissionState.permanentlyDenied;
+    case 'denied':
+    case 'refused':
+      return QuantumPermissionState.denied;
+    case 'unavailable':
+    case 'missing':
+      return QuantumPermissionState.unavailable;
+    default:
+      return QuantumPermissionState.unknown;
+  }
+}
+
+String _appStableStringify(dynamic value) {
+  if (value is Map) {
+    final keys = value.keys.map((e) => e.toString()).toList(growable: false)
+      ..sort();
+    return '{${keys.map((k) => '${jsonEncode(k)}:${_appStableStringify(value[k])}').join(',')}}';
+  }
+  if (value is List) {
+    return '[${value.map(_appStableStringify).join(',')}]';
+  }
+  return jsonEncode(value);
+}
+
+Map<String, dynamic> _contextToJson(QuantumPermissionContext context) {
+  return <String, dynamic>{
+    'userId': context.userId,
+    'scope': context.scope,
+    'resource': context.resource,
+    'operation': context.operation,
+    'feature': context.feature,
+    'schema': context.schema,
+    'now': context.now.toIso8601String(),
+    'env': context.env,
+    'data': context.data,
+    'meta': context.meta,
+    'claims': context.claims,
+    'roles': context.roles.toList(growable: false),
+    'permissions': context.permissions.toList(growable: false),
+    'features': context.features.toList(growable: false),
+    'subscriptions': context.subscriptions.toList(growable: false),
+  };
+}
+
 extension QuantumSessionPermissionExtensions on SessionContext {
   QuantumPermissionContext permissionContext({
     Map<String, dynamic> env = const <String, dynamic>{},
@@ -1009,7 +2556,31 @@ extension QuantumSessionPermissionExtensions on SessionContext {
     String? schema,
     Map<String, dynamic> meta = const <String, dynamic>{},
   }) {
-    return QuantumPermissionEngine.instance.allows(
+    return canApp(
+      rule,
+      env: env,
+      data: data,
+      scope: scope,
+      resource: resource,
+      operation: operation,
+      feature: feature,
+      schema: schema,
+      meta: meta,
+    );
+  }
+
+  bool canApp(
+    dynamic rule, {
+    Map<String, dynamic> env = const <String, dynamic>{},
+    Map<String, dynamic> data = const <String, dynamic>{},
+    String? scope,
+    String? resource,
+    String? operation,
+    String? feature,
+    String? schema,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) {
+    return QuantumAppPermissionCenter.instance.can(
       rule,
       permissionContext(
         env: env,
@@ -1025,12 +2596,31 @@ extension QuantumSessionPermissionExtensions on SessionContext {
     );
   }
 
+  bool isAdminApp({
+    Map<String, dynamic> env = const <String, dynamic>{},
+    Map<String, dynamic> data = const <String, dynamic>{},
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) {
+    return QuantumAppPermissionCenter.instance.isAdmin(
+      session: this,
+      env: env,
+      data: data,
+      meta: meta,
+    );
+  }
+
   bool hasRoleValue(String role) => roles.contains(role);
   bool hasPermissionValue(String permission) =>
       permissions.contains(permission);
   bool hasFeatureValue(String feature) => features.contains(feature);
   bool hasSubscriptionValue(String subscription) =>
       subscriptions.contains(subscription);
+
+  bool get isAdmin =>
+      QuantumAppPermissionCenter.instance.isAdmin(session: this);
+
+  bool canUseFeature(String feature) =>
+      QuantumAppPermissionCenter.instance.hasFeature(feature, session: this);
 
   List<String> get roles =>
       QuantumPermissionContext.fromSession(this).roles.toList(growable: false);
@@ -1043,6 +2633,66 @@ extension QuantumSessionPermissionExtensions on SessionContext {
   List<String> get subscriptions => QuantumPermissionContext.fromSession(this)
       .subscriptions
       .toList(growable: false);
+
+  Future<QuantumPermissionSnapshot> askPermission(
+    String permissionId, {
+    QuantumPermissionContext? context,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) {
+    return QuantumPermissionCenter.instance.request(
+      permissionId,
+      context: context ??
+          QuantumPermissionContext.fromSession(
+            this,
+            meta: meta,
+          ),
+      meta: meta,
+    );
+  }
+
+  Future<QuantumPermissionSnapshot> checkPermission(
+    String permissionId, {
+    QuantumPermissionContext? context,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+    bool forceRefresh = false,
+  }) {
+    return QuantumPermissionCenter.instance.check(
+      permissionId,
+      context: context ??
+          QuantumPermissionContext.fromSession(
+            this,
+            meta: meta,
+          ),
+      meta: meta,
+      forceRefresh: forceRefresh,
+    );
+  }
+
+  Future<Map<String, QuantumPermissionSnapshot>> syncPermissions(
+    Iterable<String>? permissionIds, {
+    QuantumPermissionContext? context,
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) {
+    return QuantumPermissionCenter.instance.sync(
+      permissionIds: permissionIds,
+      context: context ??
+          QuantumPermissionContext.fromSession(
+            this,
+            meta: meta,
+          ),
+      meta: meta,
+    );
+  }
+
+  Future<bool> openPermissionSettings(
+    String permissionId, {
+    Map<String, dynamic> meta = const <String, dynamic>{},
+  }) {
+    return QuantumPermissionCenter.instance.openSettings(
+      permissionId,
+      meta: meta,
+    );
+  }
 
   SessionContext withClaims(Map<String, dynamic> newClaims) => SessionContext(
         userId: userId,

@@ -1,0 +1,548 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/runtime/omni_cores/animation_core.dart
+  docs_file: docs/src/runtime/omni_cores/animation_core.dart.md
+  source_entry:
+    line_count: 514
+    byte_count: 16860
+    class_count: 11
+    enum_count: 0
+    function_count: 19
+    category: visual
+    test_count: 10
+  scenario_count: 10
+source:
+  path: src/runtime/omni_cores/animation_core.dart
+  docs_path: docs/src/runtime/omni_cores/animation_core.dart.md
+  label: src/runtime/omni_cores/animation_core.dart
+scenarios:
+- uuid: 8ad114ab-2ed2-5b3c-8b37-f76da8b48d86
+  file: lib/src/runtime/omni_cores/animation_core.dart
+  docs_file: docs/src/runtime/omni_cores/animation_core.dart.md
+  title: 'Animation Core: public contract remains stable under valid input'
+  slug: contract
+  category: visual
+  severity: critical
+  description: Verify that animation core keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/animation_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/animation_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/animation_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - contract
+  - animation core
+- uuid: 6f5e9781-bb40-525e-949d-30eae276d6eb
+  file: lib/src/runtime/omni_cores/animation_core.dart
+  docs_file: docs/src/runtime/omni_cores/animation_core.dart.md
+  title: 'Animation Core: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: visual
+  severity: critical
+  description: Verify that animation core keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/animation_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/animation_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/animation_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - invalid_input
+  - animation core
+- uuid: 9809c7a7-edfb-5225-ba9a-81de486011ff
+  file: lib/src/runtime/omni_cores/animation_core.dart
+  docs_file: docs/src/runtime/omni_cores/animation_core.dart.md
+  title: 'Animation Core: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: visual
+  severity: high
+  description: Verify that animation core keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/animation_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/animation_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/animation_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - reentrant
+  - animation core
+- uuid: 25f3c426-949c-50d5-8e1a-6ba0104889be
+  file: lib/src/runtime/omni_cores/animation_core.dart
+  docs_file: docs/src/runtime/omni_cores/animation_core.dart.md
+  title: 'Animation Core: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: visual
+  severity: high
+  description: Verify that animation core keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/animation_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/animation_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/animation_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - cleanup
+  - animation core
+- uuid: c5973301-fb5b-53ab-b6bb-845d6753ff40
+  file: lib/src/runtime/omni_cores/animation_core.dart
+  docs_file: docs/src/runtime/omni_cores/animation_core.dart.md
+  title: 'Animation Core: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: visual
+  severity: high
+  description: Verify that animation core keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/animation_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/animation_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/animation_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - performance
+  - animation core
+- uuid: 5df8d99a-9608-54b3-a342-d7ffc8b88942
+  file: lib/src/runtime/omni_cores/animation_core.dart
+  docs_file: docs/src/runtime/omni_cores/animation_core.dart.md
+  title: 'Animation Core: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: visual
+  severity: medium
+  description: Verify that animation core keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/animation_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/animation_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/animation_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - memory
+  - animation core
+- uuid: 978fd007-f878-525b-aa8d-a70a2288eee8
+  file: lib/src/runtime/omni_cores/animation_core.dart
+  docs_file: docs/src/runtime/omni_cores/animation_core.dart.md
+  title: 'Animation Core: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: visual
+  severity: medium
+  description: Verify that animation core keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/animation_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/animation_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/animation_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - docs_parity
+  - animation core
+- uuid: c6b3d109-2db1-5253-983e-15994b9f3bea
+  file: lib/src/runtime/omni_cores/animation_core.dart
+  docs_file: docs/src/runtime/omni_cores/animation_core.dart.md
+  title: 'Animation Core: rendering remains correct for large, dense, and animated content'
+  slug: render
+  category: visual
+  severity: medium
+  description: Verify that animation core keeps its documented runtime behavior while handling render conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/animation_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/animation_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/animation_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - render
+  - animation core
+- uuid: ac99bee8-2fe7-5294-93ae-3cb1575f569e
+  file: lib/src/runtime/omni_cores/animation_core.dart
+  docs_file: docs/src/runtime/omni_cores/animation_core.dart.md
+  title: 'Animation Core: pointer hover and selection feedback stay synchronized with paint state'
+  slug: hover
+  category: visual
+  severity: medium
+  description: Verify that animation core keeps its documented runtime behavior while handling hover conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/animation_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/animation_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/animation_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - hover
+  - animation core
+- uuid: c3502181-2756-5902-a179-ed92e2c1ee66
+  file: lib/src/runtime/omni_cores/animation_core.dart
+  docs_file: docs/src/runtime/omni_cores/animation_core.dart.md
+  title: 'Animation Core: frame budget remains acceptable when the view is stressed'
+  slug: frame
+  category: visual
+  severity: medium
+  description: Verify that animation core keeps its documented runtime behavior while handling frame conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/animation_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/animation_core.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework.
+    headings:
+    - '`src/runtime/omni_cores/animation_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - frame
+  - animation core

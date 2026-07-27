@@ -1,0 +1,69 @@
+schema_version: 1
+doc_kind: runtime-execution-file-test-manifest
+file: lib/plugins/native/quantum_photos
+source_path: plugins/native/quantum_photos
+launch_mode: app_startup
+execution_only: true
+area: native
+test_doc_status: draft
+source_metadata:
+  sha256: 9513673e9acfd04a18ee7dd23845feaef5f2d850cb17f40017b5bdaa394f67c9
+  line_count: 78
+  imports:
+  - package:flutter/foundation.dart
+  - ../../platform/quantum_native_bridge.dart
+  - ../../foundation/quantum_async.dart
+  symbols:
+  - MediaFile
+  - PickerConfig
+  - _PickerCodec
+  - _PickMediaBridge
+  - QuantumPhotos
+  - toMap
+runtime_focus:
+- missing file or bytes
+- permission denied / unavailable device
+- oversized payload or allocation pressure
+- format decoding failure
+test_cases:
+- id: case-1
+  title: null input
+  stimulus: null / missing input
+  runtime_failure_target: null_pointer_access
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-2
+  title: malformed input
+  stimulus: invalid / malformed payload
+  runtime_failure_target: parse_or_type_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-3
+  title: boundary input
+  stimulus: empty / oversized / zero-value edge case
+  runtime_failure_target: range_or_state_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-4
+  title: resource pressure
+  stimulus: large batch / repeated execution / allocation stress
+  runtime_failure_target: out_of_memory_or_allocation_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+assertions:
+  must_execute_live_code: true
+  must_capture_runtime_failure: true
+  must_not_use_static_verification: true
+  must_verify_cleanup: true

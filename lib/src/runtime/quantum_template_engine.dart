@@ -9,8 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart';
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 // Moved from quantum_omni_registry.dart: template feature
 
 // ─────────────────────────────────────────────────────────────────────── §3 ─

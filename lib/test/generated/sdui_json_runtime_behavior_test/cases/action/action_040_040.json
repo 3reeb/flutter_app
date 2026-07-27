@@ -1,0 +1,32 @@
+{
+  "__meta": {
+    "id": "action-040-focus-blur",
+    "title": "action:focus with onFocus and onBlur compiles correctly",
+    "description": "Focus handlers drive accessibility and form validation. Both onFocus and onBlur must survive. Missing onBlur prevents field validation from firing.",
+    "tags": ["action", "focus", "onFocus", "onBlur", "accessibility"],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "action:focus",
+    "props": {
+      "onFocus": { "type": "action", "name": "field.markActive" },
+      "onBlur": { "type": "action", "name": "field.validate" }
+    },
+    "children": [
+      { "type": "field", "props": { "__subType": "email", "placeholder": "Enter email" } }
+    ]
+  },
+  "expected": {
+    "type": "action",
+    "props": {
+      "__subType": "focus",
+      "onFocus": { "type": "action", "name": "field.markActive" },
+      "onBlur": { "type": "action", "name": "field.validate" }
+    },
+    "debugPath": "root",
+    "children": [
+      { "type": "field", "props": { "__subType": "email", "placeholder": "Enter email" }, "debugPath": "root[0]" }
+    ]
+  }
+}

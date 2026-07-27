@@ -1,0 +1,41 @@
+{
+  "__meta": {
+    "id": "basic-008-split-008",
+    "title": "Split guard keeps minimum layout safety #008",
+    "description": "box:split should always add the minimum guard classes and preserve children.",
+    "tags": [
+      "basic",
+      "split",
+      "layout",
+      "guard"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "box:split",
+    "style": "gap-6",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Primary 008"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:split",
+    "props": {},
+    "debugPath": "root",
+    "style": "gap-6 min-w-0 min-h-0",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Primary 008"
+        },
+        "debugPath": "root[0]"
+      }
+    ]
+  }
+}

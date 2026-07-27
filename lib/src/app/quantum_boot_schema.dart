@@ -10,9 +10,7 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
-
 import '../../quantum.dart';
 import '../runtime/quantum_core_schema_registry.dart';
 

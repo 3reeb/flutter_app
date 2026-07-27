@@ -19,11 +19,9 @@ library quantum_config;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-
 import '../foundation/quantum_yaml_engine.dart';
 import '../ui/quantum_navigation_engine.dart';
 import '../plugins/quantum_api_engine.dart';

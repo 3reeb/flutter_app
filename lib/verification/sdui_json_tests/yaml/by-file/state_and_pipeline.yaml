@@ -1,0 +1,152 @@
+__meta:
+  id: sdui-json-state-and-pipeline
+  title: SDUI state and pipeline contract
+  description: State mutation, read APIs, and record pipeline behavior that SDUI bindings depend on.
+  tags:
+  - sdui
+  - json
+  - state
+  - pipeline
+  allowBlank: true
+groups:
+- id: state-store-contract
+  title: State store contract
+  cases:
+  - id: state-mutation-catalog
+    title: All state mutation entry points stay explicit
+    sourcePath: src/runtime/quantum_data_state.dart
+    assertions:
+    - kind: source_contains_all
+      values:
+      - QLDataStore
+      - QLDataScope
+      - QLSliceRegistry
+      - QLDataSourceRegistry
+      - QLStoreRegistry
+      - QLSignalProxy
+    - kind: source_contains_all
+      values:
+      - signal
+      - get
+      - set
+      - merge
+      - transaction
+      - saveSnapshot
+      - rollback
+      - refresh
+      - push
+    - kind: source_contains_all
+      values:
+      - replace
+      - mergeMap
+      - hybrid
+      - append
+      - prepend
+      - appendById
+      - create
+      - update
+      - upsert
+      - delete
+      - reorder
+      - publish
+      - patch
+      - toggle
+      - increment
+      - decrement
+      - aggregate
+  - id: state-read-catalog
+    title: All read and subscription entry points stay explicit
+    sourcePath: src/runtime/quantum_data_state.dart
+    assertions:
+    - kind: source_contains_all
+      values:
+      - resolve
+      - read
+      - query
+      - subscribe
+      - listen
+      - snapshot
+      - keys
+    - kind: source_contains_all
+      values:
+      - first
+      - count
+      - notNull
+      - identity
+      - moduleStore
+      - localStore
+      - localData
+- id: pipeline-contract
+  title: Pipeline contract
+  cases:
+  - id: pipeline-shape-and-metadata
+    title: The pipeline exposes the data that SDUI needs to render pages
+    sourcePath: src/runtime/quantum_data_pipeline.dart
+    assertions:
+    - kind: source_contains_all
+      values:
+      - QLDataPipeline
+      - QLPipelineDelegate
+      - QLPipelineRegistry
+      - QLDataPipelineReadPlan
+    - kind: source_contains_all
+      values:
+      - pageSize
+      - filters
+      - searchQuery
+      - sortFieldIndex
+      - sortAsc
+      - page
+      - aggregates
+    - kind: source_contains_all
+      values:
+      - snapshot
+      - visibleCount
+      - _searchCache
+      - _indices
+      - _aggregateOps
+      - _requestedPages
+  - id: pipeline-aggregation-and-pagination
+    title: Aggregation and pagination stay wired together
+    sourcePath: src/runtime/quantum_data_pipeline.dart
+    assertions:
+    - kind: source_contains_all
+      values:
+      - sum
+      - avg
+      - min
+      - max
+      - count
+      - _quickSortIndices
+      - _requestServerPage
+      - _rememberRequestedPage
+    - kind: source_contains_all
+      values:
+      - pageSize
+      - page.value
+      - partial hydration
+      - ingestion
+      - patching
+- id: runtime-bridge-integration
+  title: Runtime bridge integration
+  cases:
+  - id: vm-data-binding-entry-points
+    title: The VM continues to bind state to runtime nodes
+    sourcePath: src/runtime/quantum_vm.dart
+    assertions:
+    - kind: source_contains_all
+      values:
+      - state
+      - bind
+      - scope
+      - resolveAOT
+      - QLDataBinder
+      - QLDataScope
+    - kind: source_contains_all
+      values:
+      - $repeat
+      - $stream
+      - $reactive_map
+      - $watch
+      - $scope
+      - $spread

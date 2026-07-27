@@ -1,0 +1,976 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  source_entry:
+    line_count: 7157
+    byte_count: 229556
+    class_count: 20
+    enum_count: 1
+    function_count: 20
+    category: ui
+    test_count: 18
+  scenario_count: 18
+source:
+  path: src/runtime/quantum_vm.dart
+  docs_path: docs/src/runtime/quantum_vm.dart.md
+  label: src/runtime/quantum_vm.dart
+scenarios:
+- uuid: 0a36bef0-54a6-5237-a179-74c81e69710a
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum vm keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - contract
+  - quantum vm
+- uuid: edffc82b-17d0-51cf-b2d4-d7d4bdaaedc1
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum vm keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - invalid_input
+  - quantum vm
+- uuid: 95840b78-0442-5300-8d44-c3f629388df0
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum vm keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - reentrant
+  - quantum vm
+- uuid: 385ce48e-c3b9-58db-9fb3-5cc6f1364c1c
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum vm keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - cleanup
+  - quantum vm
+- uuid: a1d20802-3bc3-52af-8f47-bbd619a246a6
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum vm keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - performance
+  - quantum vm
+- uuid: 6a793dfc-230e-5e9f-95fd-d8a0b7628de5
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum vm keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - memory
+  - quantum vm
+- uuid: 10635d7d-16fe-541c-a6bb-00b9a874a0b0
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum vm keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - docs_parity
+  - quantum vm
+- uuid: ad6f84b5-5525-555a-943b-67abaa0de1b9
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: layout remains correct under narrow, wide, and constrained bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum vm keeps its documented runtime behavior while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - layout
+  - quantum vm
+- uuid: ab589d37-1a48-55d6-a535-1a7a09a56d0c
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: semantics and accessibility output remain stable across rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that quantum vm keeps its documented runtime behavior while handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - semantics
+  - quantum vm
+- uuid: 01a80071-b597-5028-a01b-e917afd38342
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: gesture handling and hit testing stay correct during interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that quantum vm keeps its documented runtime behavior while handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - gesture
+  - quantum vm
+- uuid: e2e2b8ad-5021-594f-b703-c230b8bf1b27
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: resize or drag interactions preserve geometry and state'
+  slug: resize
+  category: ui
+  severity: medium
+  description: Verify that quantum vm keeps its documented runtime behavior while handling resize conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - resize
+  - quantum vm
+- uuid: 7f2a9290-40ba-52a2-8241-4dcee43cbe0e
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: medium
+  description: Verify that quantum vm keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - contract
+  - quantum vm
+- uuid: 2dadf5c9-fe13-5b61-af46-0239e6c4aa53
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: medium
+  description: Verify that quantum vm keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - invalid_input
+  - quantum vm
+- uuid: 8505d925-6547-568c-be32-69fd831ae566
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: medium
+  description: Verify that quantum vm keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - reentrant
+  - quantum vm
+- uuid: e0ad0de6-2aa2-5c95-95ce-59717bcc513b
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: medium
+  description: Verify that quantum vm keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - cleanup
+  - quantum vm
+- uuid: 164f6fec-106c-5181-ab5e-d18951d76ddb
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: medium
+  description: Verify that quantum vm keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - performance
+  - quantum vm
+- uuid: dabbab28-a245-5038-9adb-0b73161f29c2
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum vm keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - memory
+  - quantum vm
+- uuid: baf7068b-522c-5f26-a14d-35dca7f5a959
+  file: lib/src/runtime/quantum_vm.dart
+  docs_file: docs/src/runtime/quantum_vm.dart.md
+  title: 'Quantum Vm: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum vm keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the framework VM and rendering runtime. It manages module registration, schema views, widget rendering, action dispatch, plugin metadata, caches, and a large amount of the framework’s compile-time-to-runtime translation work.
+    headings:
+    - '`src/runtime/quantum_vm.dart`'
+    - What this file is
+    - What the VM does for schemas
+    - Why this matters for the new field system
+    - Core runtime features
+  tags:
+  - ui
+  - docs_parity
+  - quantum vm

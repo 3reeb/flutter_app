@@ -3,7 +3,6 @@ library quantum_schema;
 
 import 'dart:collection';
 import 'dart:typed_data';
-
 import '../../quantum.dart';
 
 class QLBlockPayload {
@@ -78,12 +77,22 @@ class QLSchemaFieldSpec {
   bool get hasMany => (flags & QLFieldFlags.hasMany) != 0;
   bool get isReadOnly => (flags & QLFieldFlags.isReadOnly) != 0;
   bool get isMedia =>
-      mediaType != null || mediaPolicy.isNotEmpty || allowedMimeTypes.isNotEmpty;
+      type == QLFieldType.media ||
+      mediaType != null ||
+      mediaPolicy.isNotEmpty ||
+      allowedMimeTypes.isNotEmpty;
   bool get supportsAdaptiveQuality =>
       streamingPolicy['adaptiveQuality'] == true ||
       streamingPolicy['adaptive'] == true;
   bool get supportsRangeCaching =>
       cachePolicy['rangeCaching'] == true || cachePolicy['reels'] == true;
+  bool get supportsLazyLoad =>
+      isMedia ||
+      hasMany ||
+      mediaPolicy['lazyLoad'] == true ||
+      mediaPolicy['lazy'] == true ||
+      cachePolicy['lazyLoad'] == true ||
+      cachePolicy['lazy'] == true;
 }
 
 class QLSchemaBlueprint {
@@ -148,6 +157,120 @@ class QLSchemaBlueprint {
   List<String> fieldPaths() =>
       fields.map((e) => e.path).toList(growable: false);
 
+  dynamic _parseFieldValue(QLSchemaFieldSpec spec, dynamic raw) {
+    if (spec.type == QLFieldType.array) {
+      return _parseValue(spec, raw);
+    }
+    if (spec.type == QLFieldType.block) {
+      return _parseBlockValue(spec, raw);
+    }
+    if (spec.hasMany) {
+      if (raw is List) {
+        final parsed = raw
+            .map((e) => _parseItem(spec, e))
+            .where((e) => e != null)
+            .toList(growable: false);
+        return parsed;
+      }
+      final parsed = _parseItem(spec, raw);
+      return parsed == null ? null : <dynamic>[parsed];
+    }
+    return _parseValue(spec, raw);
+  }
+
+  dynamic _serializeFieldValue(QLSchemaFieldSpec spec, dynamic raw) {
+    if (spec.type == QLFieldType.array) {
+      return _serializeValue(spec, raw);
+    }
+    if (spec.type == QLFieldType.block) {
+      return _serializeBlockValue(spec, raw);
+    }
+    if (spec.hasMany) {
+      if (raw is List) {
+        final serialized = raw
+            .map((e) => _serializeItem(spec, e))
+            .where((e) => e != null)
+            .toList(growable: false);
+        return serialized;
+      }
+      final serialized = _serializeItem(spec, raw);
+      return serialized == null ? null : <dynamic>[serialized];
+    }
+    return _serializeValue(spec, raw);
+  }
+
+  List<String> _validateFieldValue(
+    QLSchemaFieldSpec spec,
+    dynamic value,
+    String basePath,
+  ) {
+    final errs = <String>[];
+
+    if (spec.isRequired && _isEmpty(value)) {
+      errs.add('$basePath: required');
+      return errs;
+    }
+
+    if (value == null) return errs;
+
+    if (spec.hasMany && value is List) {
+      for (int i = 0; i < value.length; i++) {
+        errs.addAll(_validateItem(spec, value[i], '$basePath[$i]'));
+      }
+      return errs;
+    }
+
+    if (spec.type == QLFieldType.array &&
+        value is List &&
+        spec.itemSpec != null) {
+      for (int i = 0; i < value.length; i++) {
+        errs.addAll(_validateItem(spec.itemSpec!, value[i], '$basePath[$i]'));
+      }
+      return errs;
+    }
+
+    if ((spec.type == QLFieldType.block || spec.hasMany) && value is List) {
+      for (int i = 0; i < value.length; i++) {
+        final item = value[i];
+        if (item is Map) {
+          final blockType = item['blockType']?.toString();
+          final data = item['data'];
+          if (blockType == null) {
+            errs.add('$basePath[$i]: missing blockType');
+            continue;
+          }
+          if (spec.allowedBlocks.isNotEmpty &&
+              !spec.allowedBlocks.contains(blockType)) {
+            errs.add('$basePath[$i]: invalid blockType');
+            continue;
+          }
+          if (data is Map) {
+            final blockSchema =
+                QLSchemaRegistry.instance.getSchema(blockType) ??
+                    QLSchemaCompiler.resolveSchema(blockType);
+            if (blockSchema != null) {
+              final blockErrs =
+                  blockSchema.validate(Map<String, dynamic>.from(data));
+              errs.addAll(blockErrs.map((e) => '$basePath[$i].data.$e'));
+            } else if (spec.itemSpec != null) {
+              errs.addAll(_validateItem(
+                spec.itemSpec!,
+                data,
+                '$basePath[$i].data',
+              ));
+            }
+          }
+        } else {
+          errs.add('$basePath[$i]: invalid block payload');
+        }
+      }
+      return errs;
+    }
+
+    errs.addAll(_validateItem(spec, value, basePath));
+    return errs;
+  }
+
   Map<String, dynamic> parse(
     Map<String, dynamic> json, {
     QLProjection? projection,
@@ -165,11 +288,13 @@ class QLSchemaBlueprint {
       final raw = _readAt(json, QLPathUtils.resolve(spec.path));
       if (raw == null) continue;
 
-      if (spec.children.isNotEmpty && spec.type == QLFieldType.object) {
+      if (spec.children.isNotEmpty &&
+          spec.type == QLFieldType.object &&
+          !spec.hasMany) {
         continue; // Objects are flattened, their children are processed individually
       }
 
-      final parsed = _parseValue(spec, raw);
+      final parsed = _parseFieldValue(spec, raw);
       if (parsed == null && raw != null)
         continue; // Drop garbage types completely
       if (parsed == null && spec.isRequired) continue;
@@ -204,11 +329,13 @@ class QLSchemaBlueprint {
       final raw = _readAt(data, QLPathUtils.resolve(spec.path));
       if (raw == null) continue;
 
-      if (spec.children.isNotEmpty && spec.type == QLFieldType.object) {
+      if (spec.children.isNotEmpty &&
+          spec.type == QLFieldType.object &&
+          !spec.hasMany) {
         continue;
       }
 
-      final encoded = _serializeValue(spec, raw);
+      final encoded = _serializeFieldValue(spec, raw);
       if (encoded == null && raw != null) continue;
       if (encoded == null) continue;
       _writeAt(out, QLPathUtils.resolve(spec.path), encoded);
@@ -227,116 +354,10 @@ class QLSchemaBlueprint {
       if (projection != null && !projection.isSelected(spec.index)) continue;
       if (spec.isVirtual) continue;
       if (spec.isComputed) continue;
-
-      if (spec.path.contains('[]'))
-        continue; // Skip array children, validated natively by Array loop below
+      if (spec.path.contains('[]')) continue;
 
       final val = _readAt(record, QLPathUtils.resolve(spec.path));
-
-      if (spec.isRequired && _isEmpty(val)) {
-        errs.add('${spec.path}: required');
-        continue;
-      }
-
-      if (val == null) continue;
-
-      if (spec.type == QLFieldType.enumeration && spec.options.isNotEmpty) {
-        if (!spec.options.contains(val.toString())) {
-          errs.add('${spec.path}: invalid option');
-        }
-      }
-
-      if (val is num) {
-        if (spec.min != null && val < spec.min!) {
-          errs.add('${spec.path}: min ${spec.min}');
-        }
-        if (spec.max != null && val > spec.max!) {
-          errs.add('${spec.path}: max ${spec.max}');
-        }
-      } else if (val is String) {
-        if (spec.min != null && val.length < spec.min!) {
-          errs.add('${spec.path}: min length ${spec.min}');
-        }
-        if (spec.max != null && val.length > spec.max!) {
-          errs.add('${spec.path}: max length ${spec.max}');
-        }
-      }
-
-      if (spec.isMedia && val is Map) {
-        final normalizedMedia = Map<String, dynamic>.from(val);
-        final mimeType = (normalizedMedia['mimeType'] ??
-                normalizedMedia['contentType'] ??
-                normalizedMedia['type'])
-            ?.toString();
-        final rawSize = normalizedMedia['sizeBytes'] ??
-            normalizedMedia['size'] ??
-            normalizedMedia['length'];
-        final sizeBytes = rawSize is num ? rawSize : num.tryParse(rawSize?.toString() ?? '');
-        if (spec.allowedMimeTypes.isNotEmpty &&
-            (mimeType == null || !spec.allowedMimeTypes.contains(mimeType))) {
-          errs.add('${spec.path}: invalid mimeType');
-        }
-        if (spec.minSizeBytes != null &&
-            sizeBytes != null &&
-            sizeBytes < spec.minSizeBytes!) {
-          errs.add('${spec.path}: minBytes ${spec.minSizeBytes}');
-        }
-        if (spec.maxSizeBytes != null &&
-            sizeBytes != null &&
-            sizeBytes > spec.maxSizeBytes!) {
-          errs.add('${spec.path}: maxBytes ${spec.maxSizeBytes}');
-        }
-      }
-
-      if (spec.type == QLFieldType.array &&
-          val is List &&
-          spec.itemSpec != null) {
-        for (int i = 0; i < val.length; i++) {
-          final subErrs = _validateItem(
-            spec.itemSpec!,
-            val[i],
-            '${spec.path}[$i]',
-          );
-          errs.addAll(subErrs);
-        }
-      }
-
-      if ((spec.type == QLFieldType.block || spec.hasMany) && val is List) {
-        for (int i = 0; i < val.length; i++) {
-          final item = val[i];
-          if (item is Map) {
-            final blockType = item['blockType']?.toString();
-            final data = item['data'];
-            if (blockType == null) {
-              errs.add('${spec.path}[$i]: missing blockType');
-              continue;
-            }
-            if (spec.allowedBlocks.isNotEmpty &&
-                !spec.allowedBlocks.contains(blockType)) {
-              errs.add('${spec.path}[$i]: invalid blockType');
-              continue;
-            }
-            if (data is Map) {
-              final blockSchema =
-                  QLSchemaRegistry.instance.getSchema(blockType) ??
-                      QLSchemaCompiler.resolveSchema(blockType);
-              if (blockSchema != null) {
-                final blockErrs =
-                    blockSchema.validate(Map<String, dynamic>.from(data));
-                errs.addAll(blockErrs.map((e) => '${spec.path}[$i].data.$e'));
-              } else if (spec.itemSpec != null) {
-                errs.addAll(_validateItem(
-                  spec.itemSpec!,
-                  data,
-                  '${spec.path}[$i].data',
-                ));
-              }
-            }
-          } else {
-            errs.add('${spec.path}[$i]: invalid block payload');
-          }
-        }
-      }
+      errs.addAll(_validateFieldValue(spec, val, spec.path));
     }
 
     return errs;
@@ -349,12 +370,16 @@ class QLSchemaBlueprint {
   ) {
     final errs = <String>[];
 
-    if (spec.isRequired && _isEmpty(value)) {
-      errs.add('$basePath: required');
+    if (value == null) return errs;
+
+    if (value is List &&
+        spec.type != QLFieldType.array &&
+        spec.type != QLFieldType.block) {
+      for (int i = 0; i < value.length; i++) {
+        errs.addAll(_validateItem(spec, value[i], '$basePath[$i]'));
+      }
       return errs;
     }
-
-    if (value == null) return errs;
 
     if (spec.type == QLFieldType.enumeration && spec.options.isNotEmpty) {
       if (!spec.options.contains(value.toString())) {
@@ -362,7 +387,64 @@ class QLSchemaBlueprint {
       }
     }
 
-    if (value is num) {
+    if (spec.type == QLFieldType.char) {
+      final text = value.toString();
+      if (text.isEmpty) {
+        errs.add('$basePath: empty char');
+      } else if (text.length != 1) {
+        errs.add('$basePath: must be a single character');
+      }
+    } else if (spec.type == QLFieldType.smallInt) {
+      final intValue = value is int ? value : int.tryParse(value.toString());
+      if (intValue == null) {
+        errs.add('$basePath: invalid smallInt');
+      } else if (intValue < -32768 || intValue > 32767) {
+        errs.add('$basePath: out of range (-32768..32767)');
+      }
+    } else if (spec.type == QLFieldType.bigInt) {
+      final big = value is BigInt
+          ? value
+          : (value is num
+              ? BigInt.from(value.toInt())
+              : BigInt.tryParse(value.toString()));
+      if (big == null) {
+        errs.add('$basePath: invalid bigInt');
+      }
+    } else if (spec.type == QLFieldType.decimal) {
+      final text = value.toString().trim();
+      if (text.isEmpty || double.tryParse(text) == null) {
+        errs.add('$basePath: invalid decimal');
+      }
+    } else if (spec.type == QLFieldType.flags) {
+      final normalized = _normalizeFlagsValue(value, spec: spec);
+      if (normalized == null) {
+        errs.add('$basePath: invalid flags');
+      }
+    } else if (spec.type == QLFieldType.media) {
+      if (value is Map) {
+        final media = Map<String, dynamic>.from(value);
+        final mimeType =
+            (media['mimeType'] ?? media['contentType'] ?? media['type'])
+                ?.toString();
+        final rawSize = media['sizeBytes'] ?? media['size'] ?? media['length'];
+        final sizeBytes =
+            rawSize is num ? rawSize : num.tryParse(rawSize?.toString() ?? '');
+        if (spec.allowedMimeTypes.isNotEmpty &&
+            (mimeType == null || !spec.allowedMimeTypes.contains(mimeType))) {
+          errs.add('$basePath: invalid mimeType');
+        }
+        if (spec.minSizeBytes != null &&
+            sizeBytes != null &&
+            sizeBytes < spec.minSizeBytes!) {
+          errs.add('$basePath: minBytes ${spec.minSizeBytes}');
+        }
+        if (spec.maxSizeBytes != null &&
+            sizeBytes != null &&
+            sizeBytes > spec.maxSizeBytes!) {
+          errs.add('$basePath: maxBytes ${spec.maxSizeBytes}');
+        }
+      }
+    } else if (value is num) {
       if (spec.min != null && value < spec.min!) {
         errs.add('$basePath: min ${spec.min}');
       }
@@ -375,6 +457,35 @@ class QLSchemaBlueprint {
       }
       if (spec.max != null && value.length > spec.max!) {
         errs.add('$basePath: max length ${spec.max}');
+      }
+    }
+
+    if (spec.type == QLFieldType.block && value is Map) {
+      final blockType = value['blockType']?.toString();
+      final data = value['data'];
+      if (blockType == null) {
+        errs.add('$basePath: missing blockType');
+      } else if (spec.allowedBlocks.isNotEmpty &&
+          !spec.allowedBlocks.contains(blockType)) {
+        errs.add('$basePath: invalid blockType');
+      } else if (data is Map) {
+        final blockSchema = QLSchemaRegistry.instance.getSchema(blockType) ??
+            QLSchemaCompiler.resolveSchema(blockType);
+        if (blockSchema != null) {
+          final blockErrs =
+              blockSchema.validate(Map<String, dynamic>.from(data));
+          errs.addAll(blockErrs.map((e) => '$basePath.data.$e'));
+        } else if (spec.itemSpec != null) {
+          errs.addAll(_validateItem(spec.itemSpec!, data, '$basePath.data'));
+        }
+      }
+    }
+
+    if (spec.type == QLFieldType.array &&
+        value is List &&
+        spec.itemSpec != null) {
+      for (int i = 0; i < value.length; i++) {
+        errs.addAll(_validateItem(spec.itemSpec!, value[i], '$basePath[$i]'));
       }
     }
 
@@ -394,6 +505,24 @@ class QLSchemaBlueprint {
       case QLFieldType.number:
         if (raw is num) return raw.toDouble();
         return double.tryParse(raw.toString());
+      case QLFieldType.bigInt:
+        if (raw is BigInt) return raw;
+        if (raw is int) return BigInt.from(raw);
+        if (raw is num) return BigInt.from(raw.toInt());
+        return BigInt.tryParse(raw.toString());
+      case QLFieldType.smallInt:
+        if (raw is int) return raw;
+        if (raw is num) return raw.toInt();
+        return int.tryParse(raw.toString());
+      case QLFieldType.decimal:
+        return raw is String ? raw.trim() : raw.toString();
+      case QLFieldType.char:
+        final text = raw.toString();
+        return text.isEmpty ? null : text.substring(0, 1);
+      case QLFieldType.flags:
+        return _normalizeFlagsValue(raw, spec: spec);
+      case QLFieldType.media:
+        return _normalizeMediaValue(spec, raw);
       case QLFieldType.boolean:
         if (raw is bool) return raw;
         return raw.toString().toLowerCase() == 'true';
@@ -430,10 +559,29 @@ class QLSchemaBlueprint {
 
   dynamic _serializeValue(QLSchemaFieldSpec spec, dynamic raw) {
     switch (spec.type) {
-      case QLFieldType.number: // 🚀 FIX: Coerce strings to double on serialize
+      case QLFieldType.number:
         if (raw is num) return raw.toDouble();
         return double.tryParse(raw.toString());
-      case QLFieldType.boolean: // 🚀 FIX: Coerce strings to bool on serialize
+      case QLFieldType.bigInt:
+        if (raw is BigInt) return raw.toString();
+        if (raw is int) return raw.toString();
+        if (raw is num) return raw.toInt().toString();
+        final parsed = BigInt.tryParse(raw.toString());
+        return parsed?.toString() ?? raw.toString();
+      case QLFieldType.smallInt:
+        if (raw is int) return raw;
+        if (raw is num) return raw.toInt();
+        return int.tryParse(raw.toString());
+      case QLFieldType.decimal:
+        return raw is String ? raw.trim() : raw.toString();
+      case QLFieldType.char:
+        final text = raw.toString();
+        return text.isEmpty ? null : text.substring(0, 1);
+      case QLFieldType.flags:
+        return _normalizeFlagsValue(raw, spec: spec);
+      case QLFieldType.media:
+        return _serializeMediaValue(spec, raw);
+      case QLFieldType.boolean:
         if (raw is bool) return raw;
         return raw.toString().toLowerCase() == 'true';
       case QLFieldType.date:
@@ -453,6 +601,90 @@ class QLSchemaBlueprint {
       default:
         return raw;
     }
+  }
+
+  Map<String, dynamic>? _normalizeMediaValue(
+    QLSchemaFieldSpec spec,
+    dynamic raw,
+  ) {
+    if (raw == null) return null;
+    if (raw is Map) {
+      final media = Map<String, dynamic>.from(raw);
+      media.putIfAbsent('mediaType', () => spec.mediaType);
+      media.putIfAbsent('type', () => spec.mediaType ?? media['type']);
+      final src = media['src'] ?? media['url'] ?? media['path'];
+      if (src != null) {
+        media.putIfAbsent('src', () => src);
+        media.putIfAbsent('url', () => src);
+      }
+      if (media['mimeType'] == null && spec.allowedMimeTypes.isNotEmpty) {
+        media['mimeType'] = spec.allowedMimeTypes.first;
+      }
+      final rawSize = media['sizeBytes'] ?? media['size'] ?? media['length'];
+      if (rawSize is num) {
+        media.putIfAbsent('sizeBytes', () => rawSize.toInt());
+      } else if (rawSize != null) {
+        final parsed = num.tryParse(rawSize.toString());
+        if (parsed != null) media['sizeBytes'] = parsed.toInt();
+      }
+      return media;
+    }
+    if (raw is String) {
+      return <String, dynamic>{
+        'src': raw,
+        'url': raw,
+        if (spec.mediaType != null) 'mediaType': spec.mediaType,
+      };
+    }
+    if (raw is Uint8List) {
+      return <String, dynamic>{
+        'bytes': raw,
+        'sizeBytes': raw.lengthInBytes,
+        if (spec.mediaType != null) 'mediaType': spec.mediaType,
+      };
+    }
+    return <String, dynamic>{
+      'value': raw,
+      if (spec.mediaType != null) 'mediaType': spec.mediaType,
+    };
+  }
+
+  dynamic _serializeMediaValue(QLSchemaFieldSpec spec, dynamic raw) {
+    final media = _normalizeMediaValue(spec, raw);
+    if (media == null) return null;
+    return media;
+  }
+
+  int? _normalizeFlagsValue(dynamic raw, {QLSchemaFieldSpec? spec}) {
+    if (raw == null) return null;
+    if (raw is int) return raw;
+    if (raw is BigInt) return raw.toInt();
+    if (raw is num) return raw.toInt();
+    if (raw is bool) return raw ? 1 : 0;
+    if (raw is List) {
+      var out = 0;
+      for (final item in raw) {
+        final normalized = _normalizeFlagsValue(item, spec: spec);
+        if (normalized != null) out |= normalized;
+      }
+      return out;
+    }
+    final text = raw.toString().trim();
+    if (text.isEmpty) return 0;
+    final parsed = int.tryParse(text);
+    if (parsed != null) return parsed;
+    final options = spec?.options ?? const <String>[];
+    final index =
+        options.indexWhere((opt) => opt.toLowerCase() == text.toLowerCase());
+    if (index >= 0) return 1 << index;
+    final flagMap = spec?.meta['flagMap'];
+    if (flagMap is Map) {
+      final dynamic mapped = flagMap[text] ?? flagMap[text.toLowerCase()];
+      if (mapped is int) return mapped;
+      if (mapped is num) return mapped.toInt();
+      if (mapped is String) return int.tryParse(mapped);
+    }
+    return 0;
   }
 
   dynamic _parseItem(QLSchemaFieldSpec spec, dynamic raw) {
@@ -762,12 +994,21 @@ abstract final class QLSchemaCompiler {
       if (mediaPolicy['allowedMimeTypes'] is List)
         ...(mediaPolicy['allowedMimeTypes'] as List).map((e) => e.toString()),
     }.toList(growable: false);
-    final minSizeBytes = _intFromAny(asMap['minSizeBytes'] ?? asMap['minBytes'] ?? mediaPolicy['minBytes'] ?? mediaPolicy['minSizeBytes']);
-    final maxSizeBytes = _intFromAny(asMap['maxSizeBytes'] ?? asMap['maxBytes'] ?? mediaPolicy['maxBytes'] ?? mediaPolicy['maxSizeBytes']);
-    final thumbnailIcon = (asMap['thumbnailIcon'] ?? mediaPolicy['thumbnailIcon'])?.toString();
-    final thumbnailPath = (asMap['thumbnailPath'] ?? mediaPolicy['thumbnailPath'])?.toString();
+    final minSizeBytes = _intFromAny(asMap['minSizeBytes'] ??
+        asMap['minBytes'] ??
+        mediaPolicy['minBytes'] ??
+        mediaPolicy['minSizeBytes']);
+    final maxSizeBytes = _intFromAny(asMap['maxSizeBytes'] ??
+        asMap['maxBytes'] ??
+        mediaPolicy['maxBytes'] ??
+        mediaPolicy['maxSizeBytes']);
+    final thumbnailIcon =
+        (asMap['thumbnailIcon'] ?? mediaPolicy['thumbnailIcon'])?.toString();
+    final thumbnailPath =
+        (asMap['thumbnailPath'] ?? mediaPolicy['thumbnailPath'])?.toString();
     final qualityPolicy = _mergeMaps(asMap['quality'], mediaPolicy['quality']);
-    final streamingPolicy = _mergeMaps(asMap['streaming'], mediaPolicy['streaming']);
+    final streamingPolicy =
+        _mergeMaps(asMap['streaming'], mediaPolicy['streaming']);
     final cachePolicy = _mergeMaps(asMap['cache'], mediaPolicy['cache']);
     if (blocks != null) {
       if (blocks is List) {
@@ -858,7 +1099,11 @@ abstract final class QLSchemaCompiler {
     if (val['virtual'] == true) flags |= QLFieldFlags.isVirtual;
     if (val['computed'] != null) flags |= QLFieldFlags.isComputed;
     if (val['required'] == true) flags |= QLFieldFlags.isRequired;
-    if (val['hasMany'] == true) flags |= QLFieldFlags.hasMany;
+    if (val['hasMany'] == true ||
+        val['many'] == true ||
+        val['multiple'] == true) {
+      flags |= QLFieldFlags.hasMany;
+    }
     if (val['unique'] == true) flags |= QLFieldFlags.isUnique;
     if (val['index'] == true || val['indexed'] == true) {
       flags |= QLFieldFlags.isIndexed;
@@ -869,16 +1114,45 @@ abstract final class QLSchemaCompiler {
   }
 
   static int _parseType(String t) {
-    switch (t) {
+    final type = t.trim().toLowerCase().replaceAll(RegExp(r'[\s_\-]+'), '');
+    switch (type) {
       case 'string':
       case 'text':
         return QLFieldType.string;
       case 'textarea':
         return QLFieldType.textarea;
       case 'number':
+      case 'float':
       case 'int':
+      case 'int32':
       case 'double':
         return QLFieldType.number;
+      case 'bigint':
+      case 'biginteger':
+      case 'int64':
+      case 'long':
+        return QLFieldType.bigInt;
+      case 'smallint':
+      case 'short':
+      case 'int16':
+        return QLFieldType.smallInt;
+      case 'decimal':
+      case 'numeric':
+      case 'money':
+      case 'currency':
+        return QLFieldType.decimal;
+      case 'char':
+      case 'character':
+        return QLFieldType.char;
+      case 'flags':
+      case 'bitflags':
+      case 'bitmask':
+      case 'mask':
+        return QLFieldType.flags;
+      case 'media':
+      case 'asset':
+      case 'file':
+        return QLFieldType.media;
       case 'bool':
       case 'boolean':
         return QLFieldType.boolean;
@@ -964,25 +1238,33 @@ class QLSchemaRegistry {
       'name': name,
       'description': _rawBlueprints[name]?['description']?.toString() ?? '',
       'engine': 'QLSchemaRegistry',
-      'tags': (_rawBlueprints[name]?['tags'] as List?)?.map((e) => e.toString()).toList(growable: false) ?? const [],
+      'tags': (_rawBlueprints[name]?['tags'] as List?)
+              ?.map((e) => e.toString())
+              .toList(growable: false) ??
+          const [],
       'params': {
         'fieldCount': schema.fieldCount,
         'paths': schema.fieldPaths(),
       },
       'metadata': _rawBlueprints[name] ?? const {},
-      'fields': schema.fields.map((f) => {
-        'name': f.name,
-        'path': f.path,
-        'type': f.type,
-        'flags': f.flags,
-        'meta': f.meta,
-      }).toList(growable: false),
+      'fields': schema.fields
+          .map((f) => {
+                'name': f.name,
+                'path': f.path,
+                'type': f.type,
+                'flags': f.flags,
+                'meta': f.meta,
+              })
+          .toList(growable: false),
     };
   }
 
   Map<String, dynamic> snapshot() => {
         'count': _schemas.length + _rawBlueprints.length,
-        'items': allSchemaNames.map((n) => describe(n)).whereType<Map<String, dynamic>>().toList(growable: false),
+        'items': allSchemaNames
+            .map((n) => describe(n))
+            .whereType<Map<String, dynamic>>()
+            .toList(growable: false),
       };
 
   void compileAllPending() {
@@ -1008,7 +1290,163 @@ class QLSchemaRegistry {
 /// Read-only inspector extension on [QLSchemaRegistry] for the QEE.
 extension QLSchemaRegistryInspector on QLSchemaRegistry {
   /// All currently registered schema names.
-  List<String> get allSchemaNames =>
-      List<String>.unmodifiable(_schemas.keys);
+  List<String> get allSchemaNames => List<String>.unmodifiable(_schemas.keys);
 }
 
+class QLSchemaReadPlan {
+  final String schemaName;
+  final List<String> requested;
+  final List<String> expanded;
+  final List<String> satisfied;
+  final List<String> missing;
+
+  const QLSchemaReadPlan({
+    required this.schemaName,
+    required this.requested,
+    required this.expanded,
+    required this.satisfied,
+    required this.missing,
+  });
+
+  bool get needsNetwork => missing.isNotEmpty;
+
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'schema': schemaName,
+        'requested': requested,
+        'expanded': expanded,
+        'satisfied': satisfied,
+        'missing': missing,
+        'needsNetwork': needsNetwork,
+      };
+}
+
+extension QLSchemaBlueprintSmartSelect on QLSchemaBlueprint {
+  List<String> normalizeSelection(Iterable<String>? select) {
+    final raw = select
+            ?.map((e) => e.trim())
+            .where((e) => e.isNotEmpty)
+            .toList(growable: false) ??
+        const <String>[];
+    if (raw.isEmpty) {
+      return fieldPaths().where((path) {
+        final spec = field(path);
+        return spec != null && !spec.isVirtual && !spec.isComputed;
+      }).toList(growable: false);
+    }
+    return expandSelection(raw);
+  }
+
+  List<String> missingSelection({
+    Map<String, dynamic>? cachedRecord,
+    Iterable<String>? select,
+  }) {
+    final desired = normalizeSelection(select);
+    if (desired.isEmpty) return const <String>[];
+    if (cachedRecord == null || cachedRecord.isEmpty) return desired;
+
+    final missing = <String>[];
+    for (final path in desired) {
+      final value = _readAt(cachedRecord, QLPathUtils.resolve(path));
+      if (value == null) {
+        missing.add(path);
+      }
+    }
+    return missing.toList(growable: false);
+  }
+
+  QLSchemaReadPlan buildReadPlan({
+    Map<String, dynamic>? cachedRecord,
+    Iterable<String>? select,
+  }) {
+    final requested =
+        select?.map((e) => e.toString()).toList(growable: false) ??
+            const <String>[];
+    final expanded = normalizeSelection(requested);
+    final satisfied = <String>[];
+    final missing = <String>[];
+
+    for (final path in expanded) {
+      final value = cachedRecord == null
+          ? null
+          : _readAt(cachedRecord, QLPathUtils.resolve(path));
+      if (value == null) {
+        missing.add(path);
+      } else {
+        satisfied.add(path);
+      }
+    }
+
+    return QLSchemaReadPlan(
+      schemaName: name,
+      requested: requested,
+      expanded: expanded,
+      satisfied: satisfied,
+      missing: missing,
+    );
+  }
+
+  Map<String, dynamic> projectRecord(
+    Map<String, dynamic> record, {
+    Iterable<String>? select,
+    bool includeComputed = false,
+  }) {
+    final projection = QLProjection(fieldCount);
+    for (final path in normalizeSelection(select)) {
+      final spec = field(path);
+      if (spec != null && spec.index >= 0) {
+        projection.select(spec.index);
+      }
+    }
+    final out = parse(record, projection: projection);
+    if (!includeComputed) return out;
+
+    final full = parse(record);
+    return _qlDeepMergeSchemaMaps(out, full);
+  }
+
+  Map<String, dynamic> mergeProjectedRecord(
+    Map<String, dynamic> cached,
+    Map<String, dynamic> incoming, {
+    Iterable<String>? select,
+  }) {
+    final desired = normalizeSelection(select);
+    if (desired.isEmpty) {
+      return _qlDeepMergeSchemaMaps(cached, incoming);
+    }
+
+    final merged = Map<String, dynamic>.from(cached);
+    for (final path in desired) {
+      final value = _readAt(incoming, QLPathUtils.resolve(path));
+      if (value == null) continue;
+      _writeAt(merged, QLPathUtils.resolve(path), value);
+    }
+    return _qlDeepMergeSchemaMaps(merged, incoming);
+  }
+}
+
+Map<String, dynamic> _qlDeepMergeSchemaMaps(
+  Map<String, dynamic> left,
+  Map<String, dynamic> right,
+) {
+  final out = Map<String, dynamic>.from(left);
+  for (final entry in right.entries) {
+    final key = entry.key;
+    final next = entry.value;
+    final current = out[key];
+    if (current is Map && next is Map) {
+      out[key] = _qlDeepMergeSchemaMaps(
+        Map<String, dynamic>.from(current),
+        Map<String, dynamic>.from(next),
+      );
+    } else if (current is List && next is List) {
+      final merged = List<dynamic>.from(current);
+      for (final item in next) {
+        merged.add(item);
+      }
+      out[key] = merged;
+    } else {
+      out[key] = next;
+    }
+  }
+  return out;
+}

@@ -36,12 +36,10 @@ import 'dart:collection';
 import 'dart:io' show ProcessInfo;
 import 'dart:typed_data';
 import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show MaterialApp;
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
-
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  EVENT KINDS
 // ────────────────────────────────────────────────────────────────────────────

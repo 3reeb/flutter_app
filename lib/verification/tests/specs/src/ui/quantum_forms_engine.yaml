@@ -1,0 +1,800 @@
+file: lib/src/ui/quantum_forms_engine.dart
+docs_file: docs/src/ui/quantum_forms_engine.dart.md
+line_count: 2535
+category: ui
+tests:
+- uuid: 6098428d-45d1-5313-95c7-bfe1c2a2956f
+  file: lib/src/ui/quantum_forms_engine.dart
+  docs_file: docs/src/ui/quantum_forms_engine.dart.md
+  title: 'Quantum Forms Engine: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum forms engine keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_forms_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_forms_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file is the runtime form engine. It translates schema field specs
+      into controllers, validators, array controllers, group controls, and field widgets
+      while keeping changes fast and memory-conscious.
+    headings:
+    - '`src/ui/quantum_forms_engine.dart`'
+    - What this file is
+    - What changed in this update
+    - Core controller responsibilities
+    - Scalar controllers
+  tags:
+  - ui
+  - contract
+  - quantum forms engine
+- uuid: 9c41cba9-cb7d-5950-a58c-ab06f4ab83ae
+  file: lib/src/ui/quantum_forms_engine.dart
+  docs_file: docs/src/ui/quantum_forms_engine.dart.md
+  title: 'Quantum Forms Engine: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum forms engine keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_forms_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_forms_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file is the runtime form engine. It translates schema field specs
+      into controllers, validators, array controllers, group controls, and field widgets
+      while keeping changes fast and memory-conscious.
+    headings:
+    - '`src/ui/quantum_forms_engine.dart`'
+    - What this file is
+    - What changed in this update
+    - Core controller responsibilities
+    - Scalar controllers
+  tags:
+  - ui
+  - invalid_input
+  - quantum forms engine
+- uuid: 2aec7d2e-dd70-532d-b949-ee9cf879d58d
+  file: lib/src/ui/quantum_forms_engine.dart
+  docs_file: docs/src/ui/quantum_forms_engine.dart.md
+  title: 'Quantum Forms Engine: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum forms engine keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_forms_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_forms_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file is the runtime form engine. It translates schema field specs
+      into controllers, validators, array controllers, group controls, and field widgets
+      while keeping changes fast and memory-conscious.
+    headings:
+    - '`src/ui/quantum_forms_engine.dart`'
+    - What this file is
+    - What changed in this update
+    - Core controller responsibilities
+    - Scalar controllers
+  tags:
+  - ui
+  - reentrant
+  - quantum forms engine
+- uuid: ccaf3a91-3fe4-5ce9-a2da-daf643d94188
+  file: lib/src/ui/quantum_forms_engine.dart
+  docs_file: docs/src/ui/quantum_forms_engine.dart.md
+  title: 'Quantum Forms Engine: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum forms engine keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_forms_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_forms_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file is the runtime form engine. It translates schema field specs
+      into controllers, validators, array controllers, group controls, and field widgets
+      while keeping changes fast and memory-conscious.
+    headings:
+    - '`src/ui/quantum_forms_engine.dart`'
+    - What this file is
+    - What changed in this update
+    - Core controller responsibilities
+    - Scalar controllers
+  tags:
+  - ui
+  - cleanup
+  - quantum forms engine
+- uuid: 9f4ab547-636a-5203-8399-3bbecd5a521e
+  file: lib/src/ui/quantum_forms_engine.dart
+  docs_file: docs/src/ui/quantum_forms_engine.dart.md
+  title: 'Quantum Forms Engine: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum forms engine keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_forms_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_forms_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file is the runtime form engine. It translates schema field specs
+      into controllers, validators, array controllers, group controls, and field widgets
+      while keeping changes fast and memory-conscious.
+    headings:
+    - '`src/ui/quantum_forms_engine.dart`'
+    - What this file is
+    - What changed in this update
+    - Core controller responsibilities
+    - Scalar controllers
+  tags:
+  - ui
+  - performance
+  - quantum forms engine
+- uuid: fc4eb1a7-9a2b-5399-b1b7-8537aec355b4
+  file: lib/src/ui/quantum_forms_engine.dart
+  docs_file: docs/src/ui/quantum_forms_engine.dart.md
+  title: 'Quantum Forms Engine: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum forms engine keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_forms_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_forms_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file is the runtime form engine. It translates schema field specs
+      into controllers, validators, array controllers, group controls, and field widgets
+      while keeping changes fast and memory-conscious.
+    headings:
+    - '`src/ui/quantum_forms_engine.dart`'
+    - What this file is
+    - What changed in this update
+    - Core controller responsibilities
+    - Scalar controllers
+  tags:
+  - ui
+  - memory
+  - quantum forms engine
+- uuid: e1480357-87ac-5682-9eb1-a7d869036726
+  file: lib/src/ui/quantum_forms_engine.dart
+  docs_file: docs/src/ui/quantum_forms_engine.dart.md
+  title: 'Quantum Forms Engine: the runtime surface still matches the documented API
+    and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum forms engine keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_forms_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_forms_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file is the runtime form engine. It translates schema field specs
+      into controllers, validators, array controllers, group controls, and field widgets
+      while keeping changes fast and memory-conscious.
+    headings:
+    - '`src/ui/quantum_forms_engine.dart`'
+    - What this file is
+    - What changed in this update
+    - Core controller responsibilities
+    - Scalar controllers
+  tags:
+  - ui
+  - docs_parity
+  - quantum forms engine
+- uuid: daec276e-5687-5ffe-97ae-934a85272a00
+  file: lib/src/ui/quantum_forms_engine.dart
+  docs_file: docs/src/ui/quantum_forms_engine.dart.md
+  title: 'Quantum Forms Engine: layout remains correct under narrow, wide, and constrained
+    bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum forms engine keeps its documented runtime behavior
+    while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_forms_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_forms_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file is the runtime form engine. It translates schema field specs
+      into controllers, validators, array controllers, group controls, and field widgets
+      while keeping changes fast and memory-conscious.
+    headings:
+    - '`src/ui/quantum_forms_engine.dart`'
+    - What this file is
+    - What changed in this update
+    - Core controller responsibilities
+    - Scalar controllers
+  tags:
+  - ui
+  - layout
+  - quantum forms engine
+- uuid: c334ec75-f4f2-5d51-9001-bf548ae32916
+  file: lib/src/ui/quantum_forms_engine.dart
+  docs_file: docs/src/ui/quantum_forms_engine.dart.md
+  title: 'Quantum Forms Engine: semantics and accessibility output remain stable across
+    rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that quantum forms engine keeps its documented runtime behavior
+    while handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_forms_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_forms_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file is the runtime form engine. It translates schema field specs
+      into controllers, validators, array controllers, group controls, and field widgets
+      while keeping changes fast and memory-conscious.
+    headings:
+    - '`src/ui/quantum_forms_engine.dart`'
+    - What this file is
+    - What changed in this update
+    - Core controller responsibilities
+    - Scalar controllers
+  tags:
+  - ui
+  - semantics
+  - quantum forms engine
+- uuid: 5d56c67a-b25e-559a-bbbf-8fd0f5d98b9b
+  file: lib/src/ui/quantum_forms_engine.dart
+  docs_file: docs/src/ui/quantum_forms_engine.dart.md
+  title: 'Quantum Forms Engine: gesture handling and hit testing stay correct during
+    interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that quantum forms engine keeps its documented runtime behavior
+    while handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_forms_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_forms_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file is the runtime form engine. It translates schema field specs
+      into controllers, validators, array controllers, group controls, and field widgets
+      while keeping changes fast and memory-conscious.
+    headings:
+    - '`src/ui/quantum_forms_engine.dart`'
+    - What this file is
+    - What changed in this update
+    - Core controller responsibilities
+    - Scalar controllers
+  tags:
+  - ui
+  - gesture
+  - quantum forms engine
+- uuid: 435c6d60-53fe-5645-a6ce-937c658c9e5d
+  file: lib/src/ui/quantum_forms_engine.dart
+  docs_file: docs/src/ui/quantum_forms_engine.dart.md
+  title: 'Quantum Forms Engine: resize or drag interactions preserve geometry and
+    state'
+  slug: resize
+  category: ui
+  severity: medium
+  description: Verify that quantum forms engine keeps its documented runtime behavior
+    while handling resize conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_forms_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_forms_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file is the runtime form engine. It translates schema field specs
+      into controllers, validators, array controllers, group controls, and field widgets
+      while keeping changes fast and memory-conscious.
+    headings:
+    - '`src/ui/quantum_forms_engine.dart`'
+    - What this file is
+    - What changed in this update
+    - Core controller responsibilities
+    - Scalar controllers
+  tags:
+  - ui
+  - resize
+  - quantum forms engine
+- uuid: c9fa84df-2888-5874-9346-36328ce39354
+  file: lib/src/ui/quantum_forms_engine.dart
+  docs_file: docs/src/ui/quantum_forms_engine.dart.md
+  title: 'Quantum Forms Engine: field validation emits the right state transitions'
+  slug: validation
+  category: ui
+  severity: medium
+  description: Verify that quantum forms engine keeps its documented runtime behavior
+    while handling validation conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_forms_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_forms_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file is the runtime form engine. It translates schema field specs
+      into controllers, validators, array controllers, group controls, and field widgets
+      while keeping changes fast and memory-conscious.
+    headings:
+    - '`src/ui/quantum_forms_engine.dart`'
+    - What this file is
+    - What changed in this update
+    - Core controller responsibilities
+    - Scalar controllers
+  tags:
+  - ui
+  - validation
+  - quantum forms engine
+- uuid: 2af85524-9c61-5221-a986-479d1ff4e883
+  file: lib/src/ui/quantum_forms_engine.dart
+  docs_file: docs/src/ui/quantum_forms_engine.dart.md
+  title: 'Quantum Forms Engine: binding and unbinding do not leak listeners'
+  slug: bind_unbind
+  category: ui
+  severity: medium
+  description: Verify that quantum forms engine keeps its documented runtime behavior
+    while handling bind unbind conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_forms_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_forms_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file is the runtime form engine. It translates schema field specs
+      into controllers, validators, array controllers, group controls, and field widgets
+      while keeping changes fast and memory-conscious.
+    headings:
+    - '`src/ui/quantum_forms_engine.dart`'
+    - What this file is
+    - What changed in this update
+    - Core controller responsibilities
+    - Scalar controllers
+  tags:
+  - ui
+  - bind_unbind
+  - quantum forms engine
+- uuid: 84a4662a-2aa9-5cd4-8d4b-3d8622c7c66b
+  file: lib/src/ui/quantum_forms_engine.dart
+  docs_file: docs/src/ui/quantum_forms_engine.dart.md
+  title: 'Quantum Forms Engine: rapid input updates remain responsive'
+  slug: input_latency
+  category: ui
+  severity: medium
+  description: Verify that quantum forms engine keeps its documented runtime behavior
+    while handling input latency conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_forms_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_forms_engine.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This file is the runtime form engine. It translates schema field specs
+      into controllers, validators, array controllers, group controls, and field widgets
+      while keeping changes fast and memory-conscious.
+    headings:
+    - '`src/ui/quantum_forms_engine.dart`'
+    - What this file is
+    - What changed in this update
+    - Core controller responsibilities
+    - Scalar controllers
+  tags:
+  - ui
+  - input_latency
+  - quantum forms engine

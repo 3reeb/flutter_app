@@ -1,0 +1,224 @@
+schema_version: 2
+doc_kind: file-test-supplement
+supplement_of: lib/src/foundation/quantum_schema.dart
+file: lib/src/foundation/quantum_schema.dart
+layer: foundation
+profile: schema-core
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/foundation/quantum_schema.dart
+  sha256: 8c331d3f6ba80ced9a9564e22cece44a2405a3426b6e6830d55a2b0bafe056c5
+  line_count: 1433
+  imports:
+    - dart:collection
+    - dart:typed_data
+    - ../../quantum.dart
+  exports: []
+  parts: []
+  part_of: []
+  category: foundation
+  profile: schema-core
+  large_profile: true
+  keywords:
+    - media
+    - hasmany
+    - bigint
+    - smallint
+    - decimal
+    - char
+    - flags
+    - cache
+    - lazy
+    - projection
+    - registry
+    - policy
+    - stream
+    - native
+    - io
+    - json
+groups:
+  - name: type-matrix
+    description: bigInt, smallInt, decimal, char, flags, media, and hasMany combinations
+    rows:
+      - id: quantum_schema.type-matrix.001
+        purpose: Validate the scalar matrix for bigInt, smallInt, decimal, char, flags, and media.
+        target_symbols: &id001
+          - QLBlockPayload
+          - QLSchemaFieldSpec
+          - QLSchemaBlueprint
+          - QLSchemaCompiler
+          - QLSchemaRegistry
+          - QLSchemaReadPlan
+          - QLSchemaRegistryInspector
+          - QLSchemaBlueprintSmartSelect
+        setup: Build a schema or controller fixture that contains every supported extended scalar type.
+        input: A field collection that includes bigInt, smallInt, decimal, char, flags, and media, plus hasMany variants.
+        body: Expand, parse, bind, and serialize each type through the normal public path.
+        expected: Every type keeps its distinct runtime shape and its metadata survives round-trip behavior.
+        assertions:
+          - each extended scalar is accepted or rejected intentionally
+          - hasMany variants preserve list semantics
+          - media keeps metadata
+        metrics:
+          - per-type latency
+          - allocation pressure
+          - round-trip stability
+        risks:
+          - type coercion drift
+          - stringification loss
+          - list flattening
+        cleanup: Reset state and clear caches.
+      - id: quantum_schema.type-matrix.002
+        purpose: Verify mixed scalar collections and list semantics do not flatten or coerce unexpectedly.
+        target_symbols: *id001
+        setup: Use mixed valid and invalid items with list-style payloads.
+        input: A hasMany list with mixed element states.
+        body: Attempt parse, bind, and serialize on the mixed list.
+        expected: Valid elements stay valid and invalid elements fail in a traceable way.
+        assertions:
+          - valid items stay intact
+          - invalid items are rejected explicitly
+        metrics:
+          - list scan cost
+          - failure localization
+        risks:
+          - silent partial acceptance
+          - loss of element boundaries
+        cleanup: Reset state and clear caches.
+      - id: quantum_schema.type-matrix.003
+        purpose: Check legacy aliases and field-name synonyms for backward compatibility.
+        target_symbols: *id001
+        setup: Use old names, alternate type labels, and legacy media keys.
+        input: Legacy field names and aliases.
+        body: Resolve the type through the same parser used by new callers.
+        expected: Legacy aliases map to the same canonical behavior or fail explicitly.
+        assertions:
+          - alias mapping is stable
+          - canonical behavior remains consistent
+        metrics:
+          - alias resolution time
+        risks:
+          - broken legacy input
+          - hidden renaming bug
+        cleanup: Reset state and clear caches.
+  - name: projection
+    description: field selection and path narrowing behavior
+    rows:
+      - id: quantum_schema.projection.001
+        purpose: Exercise the `projection` branch under the normal public contract.
+        target_symbols: &id002
+          - QLBlockPayload
+          - QLSchemaFieldSpec
+          - QLSchemaBlueprint
+          - QLSchemaCompiler
+          - QLSchemaRegistry
+          - QLSchemaReadPlan
+          - QLSchemaRegistryInspector
+          - QLSchemaBlueprintSmartSelect
+        setup: Prepare a realistic fixture with the minimum data needed for this branch.
+        input: A focused input that triggers the main branch.
+        body: Run the public path for this branch and inspect outputs and side effects.
+        expected: The branch behaves deterministically and preserves its explicit invariants.
+        assertions:
+          - branch-specific invariants hold
+        metrics:
+          - branch latency
+          - side-effect count
+        risks:
+          - branch drift
+          - missing output
+        cleanup: Reset state and clear caches.
+      - id: quantum_schema.projection.002
+        purpose: Check the `projection` branch under a malformed or partial input.
+        target_symbols: *id002
+        setup: Use incomplete, malformed, or mixed-shape fixtures.
+        input: A malformed variant that still reaches the branch.
+        body: Run the same branch with the malformed input.
+        expected: The branch rejects or normalizes intentionally without silent corruption.
+        assertions:
+          - branch fails explicitly or normalizes intentionally
+        metrics:
+          - error localization
+        risks:
+          - partial mutation
+          - silent coercion
+        cleanup: Reset state and clear caches.
+      - id: quantum_schema.projection.003
+        purpose: Re-run the `projection` branch twice to prove stable repeated behavior.
+        target_symbols: *id002
+        setup: Prime state once, then repeat the same branch.
+        input: Repeated identical branch input.
+        body: Compare first and second execution results, cache hits, and event order.
+        expected: No duplicate side effect appears and the result stays stable.
+        assertions:
+          - repeatability holds
+          - no duplicate side effects
+        metrics:
+          - repeat latency
+          - cache-hit ratio
+        risks:
+          - double emit
+          - stale branch result
+        cleanup: Reset state and clear caches.
+  - name: serialization
+    description: parse/serialize compatibility and legacy shapes
+    rows:
+      - id: quantum_schema.serialization.001
+        purpose: Round-trip lib/src/foundation/quantum_schema.dart structures through parse and serialize paths.
+        target_symbols: &id003
+          - QLBlockPayload
+          - QLSchemaFieldSpec
+          - QLSchemaBlueprint
+          - QLSchemaCompiler
+          - QLSchemaRegistry
+          - QLSchemaReadPlan
+          - QLSchemaRegistryInspector
+          - QLSchemaBlueprintSmartSelect
+        setup: Construct a representative object with every stable field category.
+        input: A valid object that includes optional and required fields.
+        body: Serialize to a transport shape and parse it back.
+        expected: The result is equivalent and no data disappears.
+        assertions:
+          - round-trip equivalence
+          - no field loss
+        metrics:
+          - round-trip latency
+        risks:
+          - field drop
+          - shape mutation
+        cleanup: Reset state and clear caches.
+      - id: quantum_schema.serialization.002
+        purpose: Preserve ordering and canonicalization rules where ordering matters.
+        target_symbols: *id003
+        setup: Use deliberate key order and a mixed legacy/new field set.
+        input: Ordered data with key permutations.
+        body: Serialize multiple times and compare stable ordering or documented normalization.
+        expected: Ordering stays deterministic.
+        assertions:
+          - serialization order is stable
+        metrics:
+          - re-encode variability
+        risks:
+          - non-deterministic output
+        cleanup: Reset state and clear caches.
+      - id: quantum_schema.serialization.003
+        purpose: Check nullability and absent-field behavior explicitly.
+        target_symbols: *id003
+        setup: Omit optional fields and include explicit nulls where allowed.
+        input: Missing versus explicit-null payloads.
+        body: Serialize and parse both shapes.
+        expected: Absent and null are treated per contract and never conflated silently.
+        assertions:
+          - null is distinct from absent when required
+        metrics:
+          - branch coverage
+        risks:
+          - null/absent confusion
+        cleanup: Reset state and clear caches.
+focus: field typing, projection, read-plan compilation, compatibility, serialization, hasMany handling, and the extended scalar/media type matrix.
+expansion_mode: supplemental
+shared_templates:
+  - docs_tests/yaml/shared/case_template.yaml
+  - docs_tests/yaml/shared/group_catalog.yaml
+  - docs_tests/yaml/shared/axis_catalog.yaml

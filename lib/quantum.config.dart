@@ -6,8 +6,7 @@
 // This template shows the intended developer-facing shape with stronger defaults.
 // ════════════════════════════════════════════════════════════════════════════
 
-import 'quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 // ────────────────────────────────────────────────────────────────────────────
 // Example starter object
 // ────────────────────────────────────────────────────────────────────────────

@@ -1,0 +1,426 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+  docs_file: docs/src/plugins/internal/quantum_socket_stream_hub.dart.md
+  source_entry:
+    line_count: 46
+    byte_count: 1923
+    class_count: 1
+    enum_count: 0
+    function_count: 9
+    category: transport
+    test_count: 8
+  scenario_count: 8
+source:
+  path: src/plugins/internal/quantum_socket_stream_hub.dart
+  docs_path: docs/src/plugins/internal/quantum_socket_stream_hub.dart.md
+  label: src/plugins/internal/quantum_socket_stream_hub.dart
+scenarios:
+- uuid: dbdc5de4-47ca-5376-aec3-669fde09c029
+  file: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+  docs_file: docs/src/plugins/internal/quantum_socket_stream_hub.dart.md
+  title: 'Quantum Socket Stream Hub: public contract remains stable under valid input'
+  slug: contract
+  category: transport
+  severity: critical
+  description: Verify that quantum socket stream hub keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/internal/quantum_socket_stream_hub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/internal/quantum_socket_stream_hub.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: / Shared stream hub for socket drivers.'
+    headings:
+    - '`src/plugins/internal/quantum_socket_stream_hub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - contract
+  - quantum socket stream hub
+- uuid: fed74138-0e99-59bc-902c-78f07bffcc46
+  file: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+  docs_file: docs/src/plugins/internal/quantum_socket_stream_hub.dart.md
+  title: 'Quantum Socket Stream Hub: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: transport
+  severity: critical
+  description: Verify that quantum socket stream hub keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/internal/quantum_socket_stream_hub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/internal/quantum_socket_stream_hub.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: / Shared stream hub for socket drivers.'
+    headings:
+    - '`src/plugins/internal/quantum_socket_stream_hub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - invalid_input
+  - quantum socket stream hub
+- uuid: 23ff3aed-a7d4-5e49-a975-c9259ed5c7c1
+  file: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+  docs_file: docs/src/plugins/internal/quantum_socket_stream_hub.dart.md
+  title: 'Quantum Socket Stream Hub: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: transport
+  severity: high
+  description: Verify that quantum socket stream hub keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/internal/quantum_socket_stream_hub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/internal/quantum_socket_stream_hub.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: / Shared stream hub for socket drivers.'
+    headings:
+    - '`src/plugins/internal/quantum_socket_stream_hub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - reentrant
+  - quantum socket stream hub
+- uuid: cfa33b3b-edf7-52a1-a351-c53b06f053c5
+  file: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+  docs_file: docs/src/plugins/internal/quantum_socket_stream_hub.dart.md
+  title: 'Quantum Socket Stream Hub: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: transport
+  severity: high
+  description: Verify that quantum socket stream hub keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/internal/quantum_socket_stream_hub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/internal/quantum_socket_stream_hub.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: / Shared stream hub for socket drivers.'
+    headings:
+    - '`src/plugins/internal/quantum_socket_stream_hub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - cleanup
+  - quantum socket stream hub
+- uuid: 7656a4d4-8a37-5f7f-8b05-fb0704bb56cb
+  file: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+  docs_file: docs/src/plugins/internal/quantum_socket_stream_hub.dart.md
+  title: 'Quantum Socket Stream Hub: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: transport
+  severity: high
+  description: Verify that quantum socket stream hub keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/internal/quantum_socket_stream_hub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/internal/quantum_socket_stream_hub.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: / Shared stream hub for socket drivers.'
+    headings:
+    - '`src/plugins/internal/quantum_socket_stream_hub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - performance
+  - quantum socket stream hub
+- uuid: f379613d-2848-503d-9ddb-942eef870f4a
+  file: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+  docs_file: docs/src/plugins/internal/quantum_socket_stream_hub.dart.md
+  title: 'Quantum Socket Stream Hub: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: transport
+  severity: medium
+  description: Verify that quantum socket stream hub keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/internal/quantum_socket_stream_hub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/internal/quantum_socket_stream_hub.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: / Shared stream hub for socket drivers.'
+    headings:
+    - '`src/plugins/internal/quantum_socket_stream_hub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - memory
+  - quantum socket stream hub
+- uuid: be73ff8b-8918-5eaf-b44f-3f9e01bd6f09
+  file: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+  docs_file: docs/src/plugins/internal/quantum_socket_stream_hub.dart.md
+  title: 'Quantum Socket Stream Hub: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: transport
+  severity: medium
+  description: Verify that quantum socket stream hub keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/internal/quantum_socket_stream_hub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/internal/quantum_socket_stream_hub.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: / Shared stream hub for socket drivers.'
+    headings:
+    - '`src/plugins/internal/quantum_socket_stream_hub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - docs_parity
+  - quantum socket stream hub
+- uuid: b3dffd6d-c2dc-510c-8c9d-4b00e8c037bb
+  file: lib/src/plugins/internal/quantum_socket_stream_hub.dart
+  docs_file: docs/src/plugins/internal/quantum_socket_stream_hub.dart.md
+  title: 'Quantum Socket Stream Hub: offline, timeout, and partial-response conditions are handled safely'
+  slug: offline
+  category: transport
+  severity: medium
+  description: Verify that quantum socket stream hub keeps its documented runtime behavior while handling offline conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/internal/quantum_socket_stream_hub.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/internal/quantum_socket_stream_hub.dart.md.
+    stimulus:
+    - Open a request against success, timeout, offline, and partial-stream paths.
+    - Close the transport in both normal and forced shutdown paths.
+    data:
+      method: GET/POST/PUT/DELETE edge cases
+      payload_profile:
+      - empty
+      - small json
+      - large multipart
+      - cancelled stream
+  expected_output:
+    response: Correct response or structured failure is returned.
+    cleanup: Sockets, streams, and request sinks are closed exactly once.
+    retry: Retries do not duplicate side effects or leak handles.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: / Shared stream hub for socket drivers.'
+    headings:
+    - '`src/plugins/internal/quantum_socket_stream_hub.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - transport
+  - offline
+  - quantum socket stream hub

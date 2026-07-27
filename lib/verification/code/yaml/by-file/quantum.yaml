@@ -1,0 +1,645 @@
+schema_version: 2
+doc_kind: file-test-manifest
+file: lib/quantum.dart
+layer: product
+profile: code
+test_doc_status: draft
+last_reviewed: '2026-07-27'
+source_metadata:
+  path: quantum.dart
+  sha256: 2bd606d0151c6108f85e113b62c6b6bacdca57427199ab41c0e52d2006bb51bf
+  line_count: 104
+  imports: []
+  exports:
+  - src/foundation/quantum_async.dart
+  - src/foundation/quantum_core.dart
+  - src/foundation/quantum_error_boundary.dart
+  - src/foundation/quantum_isolate_worker.dart
+  - src/foundation/quantum_isolate_bridge.dart
+  - src/foundation/quantum_json_dsl.dart
+  - src/foundation/quantum_matrix_engine.dart
+  - src/foundation/quantum_primitives.dart
+  - src/foundation/quantum_atoms.dart
+  - src/foundation/quantum_reactive_graph.dart
+  - src/foundation/quantum_render_scheduler.dart
+  - src/foundation/quantum_schema.dart
+  - src/foundation/quantum_yaml_engine.dart
+  - src/ui/quantum_animation_engine.dart
+  - src/ui/quantum_behaviors.dart
+  - src/ui/quantum_components.dart
+  - src/ui/quantum_field_ui_engine.dart
+  - src/ui/quantum_forms_engine.dart
+  - src/ui/quantum_layout_engine.dart
+  - src/ui/quantum_navigation_engine.dart
+  - src/ui/quantum_overlays.dart
+  - src/ui/quantum_scene_layer.dart
+  - src/ui/quantum_shape_engine.dart
+  - src/ui/quantum_telemetry_engine.dart
+  - src/ui/quantum_theme_engine.dart
+  - src/runtime/quantum_data_orchestrator.dart
+  - src/runtime/quantum_data_pipeline.dart
+  - src/runtime/quantum_data_state.dart
+  - src/runtime/quantum_domain_builder.dart
+  - src/runtime/quantum_embodiment_engine.dart
+  - src/runtime/quantum_embodiment_examples.dart
+  - src/runtime/quantum_omni_manifold.dart
+  - src/runtime/quantum_design_system_manifest.dart
+  - src/runtime/quantum_omni_registry.dart
+  - src/runtime/quantum_core_file_registry.dart
+  - src/runtime/quantum_core_schema_registry.dart
+  - src/runtime/quantum_sdui_engine.dart
+  - src/runtime/quantum_sdui_type_engine.dart
+  - src/runtime/quantum_permissions.dart
+  - src/runtime/quantum_vm.dart
+  - src/runtime/quantum_vm_init.dart
+  - src/runtime/quantum_template_engine.dart
+  - src/runtime/quantum_workspace_engine.dart
+  - src/runtime/quantum_test_engine.dart
+  - src/runtime/quantum_test_engine_shared.dart
+  - src/runtime/quantum_test_engine_stub.dart
+  - src/runtime/quantum_widget_image_exporter.dart
+  - src/runtime/quantum_export_web_bridge.dart
+  - src/app/quantum_app_entry.dart
+  - src/app/quantum_boot_schema.dart
+  - src/app/quantum_app_shell.dart
+  - src/app/quantum_file_router.dart
+  - src/app/config.dart
+  - src/platform/quantum_connect_engine.dart
+  - src/platform/quantum_native_bridge.dart
+  - src/features/charts/quantum_charts.dart
+  - src/features/media/quantum_image_engine.dart
+  - src/features/media/quantum_media_engine.dart
+  - src/plugins/quantum_api_engine.dart
+  - src/plugins/quantum_api_shell.dart
+  - src/plugins/quantum_auth_engine.dart
+  - src/plugins/quantum_domain.dart
+  - src/plugins/quantum_media_api.dart
+  - src/plugins/quantum_socket_engine.dart
+  - src/plugins/adapters/quantum_firebase_adapters.dart
+  - src/plugins/adapters/quantum_local_adapters.dart
+  - src/plugins/adapters/quantum_mock_adapters.dart
+  - src/plugins/adapters/quantum_universal_adapters.dart
+  - src/plugins/native/quantum_calendar.dart
+  - src/plugins/native/quantum_camera.dart
+  - src/plugins/native/quantum_contacts.dart
+  - src/plugins/native/quantum_file_access.dart
+  - src/plugins/native/quantum_location.dart
+  - src/plugins/native/quantum_microphone.dart
+  - src/plugins/native/quantum_notifications.dart
+  - src/plugins/native/quantum_phone.dart
+  - src/plugins/native/quantum_photos.dart
+  parts: []
+  part_of: []
+  category: code
+  profile: code
+  large_profile: false
+  keywords:
+  - quantum
+surface_summary:
+  classes_enums_typedefs_mixins_extensions_functions:
+  - quantum
+  count: 1
+focus: runtime execution, file contract, and production regression coverage.
+coverage_targets:
+- public API
+- failure paths
+- performance
+- integration boundaries
+- regression traps
+- compatibility
+- serialization
+- teardown
+test_dimensions:
+  input_shapes:
+  - 'null'
+  - empty
+  - single-item
+  - multi-item
+  - mixed-type
+  - legacy-shape
+  - malformed
+  - duplicate
+  - large-batch
+  execution_modes:
+  - cold
+  - warm
+  - cached
+  - invalidated
+  - lazy
+  - eager
+  - replayed
+  outcomes:
+  - accept
+  - reject
+  - normalize
+  - defer
+  - reuse
+  - evict
+  - round-trip
+  measurement_axes:
+  - latency
+  - allocations
+  - cache-hits
+  - recompute-count
+  - event-order
+reusable_presets:
+  smoke_base:
+    purpose: Prove the canonical public path works and stays stable across repeated runs.
+    assertions:
+    - observable result is stable
+    - no hidden mutation
+    - no duplicate side effects
+  edge_base:
+    purpose: Prove malformed input fails explicitly or normalizes intentionally.
+    assertions:
+    - failure is explicit
+    - no silent coercion
+    - no stale state
+  perf_base:
+    purpose: Measure the hot path and bound allocations or repeated work.
+    assertions:
+    - warm path is not worse than cold path
+    - allocation growth stays bounded
+  integration_base:
+    purpose: Validate behavior across local imports and neighboring runtime layers.
+    assertions:
+    - boundary contract holds
+    - cross-file side effects remain stable
+groups:
+- name: product
+  description: code file execution suite
+  rows:
+  - id: quantum.source_contains_all.001
+    purpose: Prove the file declares the documented public surface and imports remain present.
+    target_symbols:
+    - quantum
+    setup: Load quantum.dart and prepare the source fingerprint model.
+    input: Check that the declared public surface appears in the source text.
+    body: Execute the source_contains_all scenario using the shared source fingerprint harness.
+    expected: All declared symbols are found in the source text.
+    assertions:
+    - public surface is present
+    - all tokens exist
+    - no missing declarations
+    metrics:
+    - symbol count
+    - import count
+    - token coverage
+    risks:
+    - symbol drift
+    - missing export
+    - false-negative surface map
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - source_contains_all
+    - quantum
+    operation: source_contains_all
+    payload:
+      operation: source_contains_all
+      sourcePath: lib/quantum.dart
+      sourceHash: 2bd606d0151c6108f85e113b62c6b6bacdca57427199ab41c0e52d2006bb51bf
+      lineCount: 104
+      symbols: &id001
+      - quantum
+      imports: []
+      exports:
+      - src/foundation/quantum_async.dart
+      - src/foundation/quantum_core.dart
+      - src/foundation/quantum_error_boundary.dart
+      - src/foundation/quantum_isolate_worker.dart
+      - src/foundation/quantum_isolate_bridge.dart
+      - src/foundation/quantum_json_dsl.dart
+      - src/foundation/quantum_matrix_engine.dart
+      - src/foundation/quantum_primitives.dart
+      - src/foundation/quantum_atoms.dart
+      - src/foundation/quantum_reactive_graph.dart
+      - src/foundation/quantum_render_scheduler.dart
+      - src/foundation/quantum_schema.dart
+      repeat: 1
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 0
+      layout: null
+    variant: code-execution
+  - id: quantum.source_not_contains_forbidden.002
+    purpose: Prove the file avoids deprecated or forbidden legacy markers.
+    target_symbols:
+    - quantum
+    setup: Load quantum.dart and prepare the source fingerprint model.
+    input: Check that forbidden legacy markers are absent.
+    body: Execute the source_not_contains_forbidden scenario using the shared source fingerprint harness.
+    expected: No forbidden marker is found in the source text.
+    assertions:
+    - no deprecated marker
+    - no hidden TODO
+    - no forbidden legacy path
+    metrics:
+    - forbidden token count
+    - legacy marker count
+    risks:
+    - legacy residue
+    - hidden TODO
+    - dead code marker
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - source_not_contains_forbidden
+    - quantum
+    operation: source_not_contains_forbidden
+    payload:
+      operation: source_not_contains_forbidden
+      sourcePath: lib/quantum.dart
+      sourceHash: 2bd606d0151c6108f85e113b62c6b6bacdca57427199ab41c0e52d2006bb51bf
+      lineCount: 104
+      symbols: *id001
+      imports: []
+      exports:
+      - src/foundation/quantum_async.dart
+      - src/foundation/quantum_core.dart
+      - src/foundation/quantum_error_boundary.dart
+      - src/foundation/quantum_isolate_worker.dart
+      - src/foundation/quantum_isolate_bridge.dart
+      - src/foundation/quantum_json_dsl.dart
+      - src/foundation/quantum_matrix_engine.dart
+      - src/foundation/quantum_primitives.dart
+      - src/foundation/quantum_atoms.dart
+      - src/foundation/quantum_reactive_graph.dart
+      - src/foundation/quantum_render_scheduler.dart
+      - src/foundation/quantum_schema.dart
+      repeat: 1
+      budgetMs: 0
+      forbiddenTokens:
+      - TODO
+      - FIXME
+      - throw UnimplementedError
+      minLines: 0
+      layout: null
+    variant: code-execution
+  - id: quantum.fingerprint_stable.003
+    purpose: Prove repeated file reads keep the fingerprint unchanged.
+    target_symbols:
+    - quantum
+    setup: Load quantum.dart and prepare the source fingerprint model.
+    input: Read the file twice and compare the SHA-256 digest.
+    body: Execute the fingerprint_stable scenario using the shared source fingerprint harness.
+    expected: The fingerprint stays identical across repeated reads.
+    assertions:
+    - sha256 stays stable
+    - repeat read is identical
+    - source bytes are consistent
+    metrics:
+    - sha256
+    - line count
+    - repeat-read parity
+    risks:
+    - cache pollution
+    - non-deterministic file read
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - fingerprint_stable
+    - quantum
+    operation: fingerprint_stable
+    payload:
+      operation: fingerprint_stable
+      sourcePath: lib/quantum.dart
+      sourceHash: 2bd606d0151c6108f85e113b62c6b6bacdca57427199ab41c0e52d2006bb51bf
+      lineCount: 104
+      symbols: *id001
+      imports: []
+      exports:
+      - src/foundation/quantum_async.dart
+      - src/foundation/quantum_core.dart
+      - src/foundation/quantum_error_boundary.dart
+      - src/foundation/quantum_isolate_worker.dart
+      - src/foundation/quantum_isolate_bridge.dart
+      - src/foundation/quantum_json_dsl.dart
+      - src/foundation/quantum_matrix_engine.dart
+      - src/foundation/quantum_primitives.dart
+      - src/foundation/quantum_atoms.dart
+      - src/foundation/quantum_reactive_graph.dart
+      - src/foundation/quantum_render_scheduler.dart
+      - src/foundation/quantum_schema.dart
+      repeat: 2
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 0
+      layout: null
+    variant: code-execution
+  - id: quantum.manifest_roundtrip.004
+    purpose: Prove manifest JSON/YAML round-trip preserves structure.
+    target_symbols:
+    - quantum
+    setup: Load quantum.dart and prepare the source fingerprint model.
+    input: Serialize the manifest to JSON and back without loss.
+    body: Execute the manifest_roundtrip scenario using the shared source fingerprint harness.
+    expected: The manifest and its nested rows round-trip without structural loss.
+    assertions:
+    - json round-trip preserves shape
+    - rows remain intact
+    - metadata remains intact
+    metrics:
+    - json encode count
+    - json decode count
+    risks:
+    - lossy serialization
+    - row corruption
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - manifest_roundtrip
+    - quantum
+    operation: manifest_roundtrip
+    payload:
+      operation: manifest_roundtrip
+      sourcePath: lib/quantum.dart
+      sourceHash: 2bd606d0151c6108f85e113b62c6b6bacdca57427199ab41c0e52d2006bb51bf
+      lineCount: 104
+      symbols: *id001
+      imports: []
+      exports:
+      - src/foundation/quantum_async.dart
+      - src/foundation/quantum_core.dart
+      - src/foundation/quantum_error_boundary.dart
+      - src/foundation/quantum_isolate_worker.dart
+      - src/foundation/quantum_isolate_bridge.dart
+      - src/foundation/quantum_json_dsl.dart
+      - src/foundation/quantum_matrix_engine.dart
+      - src/foundation/quantum_primitives.dart
+      - src/foundation/quantum_atoms.dart
+      - src/foundation/quantum_reactive_graph.dart
+      - src/foundation/quantum_render_scheduler.dart
+      - src/foundation/quantum_schema.dart
+      repeat: 1
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 0
+      layout: null
+    variant: code-execution
+  - id: quantum.line_count_minimum.005
+    purpose: Prove the source stays above its documented line-count floor.
+    target_symbols:
+    - quantum
+    setup: Load quantum.dart and prepare the source fingerprint model.
+    input: Verify the file stays at or above its documented line-count floor.
+    body: Execute the line_count_minimum scenario using the shared source fingerprint harness.
+    expected: The line count stays at or above the recorded floor.
+    assertions:
+    - line count floor is respected
+    - file is not truncated
+    - source remains complete
+    metrics:
+    - line count
+    - minimum threshold
+    risks:
+    - truncation
+    - incomplete file copy
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - line_count_minimum
+    - quantum
+    operation: line_count_minimum
+    payload:
+      operation: line_count_minimum
+      sourcePath: lib/quantum.dart
+      sourceHash: 2bd606d0151c6108f85e113b62c6b6bacdca57427199ab41c0e52d2006bb51bf
+      lineCount: 104
+      symbols: *id001
+      imports: []
+      exports:
+      - src/foundation/quantum_async.dart
+      - src/foundation/quantum_core.dart
+      - src/foundation/quantum_error_boundary.dart
+      - src/foundation/quantum_isolate_worker.dart
+      - src/foundation/quantum_isolate_bridge.dart
+      - src/foundation/quantum_json_dsl.dart
+      - src/foundation/quantum_matrix_engine.dart
+      - src/foundation/quantum_primitives.dart
+      - src/foundation/quantum_atoms.dart
+      - src/foundation/quantum_reactive_graph.dart
+      - src/foundation/quantum_render_scheduler.dart
+      - src/foundation/quantum_schema.dart
+      repeat: 1
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 103
+      layout: null
+    variant: code-execution
+  - id: quantum.concurrent_read_stable.006
+    purpose: Prove concurrent reads observe the same file fingerprint.
+    target_symbols:
+    - quantum
+    setup: Load quantum.dart and prepare the source fingerprint model.
+    input: Run repeated concurrent reads and compare the digest.
+    body: Execute the concurrent_read_stable scenario using the shared source fingerprint harness.
+    expected: Concurrent reads return the same fingerprint.
+    assertions:
+    - concurrent reads agree
+    - no race in fingerprint
+    - no divergent digest
+    metrics:
+    - read count
+    - digest parity
+    risks:
+    - race condition
+    - non-deterministic IO
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - concurrent_read_stable
+    - quantum
+    operation: concurrent_read_stable
+    payload:
+      operation: concurrent_read_stable
+      sourcePath: lib/quantum.dart
+      sourceHash: 2bd606d0151c6108f85e113b62c6b6bacdca57427199ab41c0e52d2006bb51bf
+      lineCount: 104
+      symbols: *id001
+      imports: []
+      exports:
+      - src/foundation/quantum_async.dart
+      - src/foundation/quantum_core.dart
+      - src/foundation/quantum_error_boundary.dart
+      - src/foundation/quantum_isolate_worker.dart
+      - src/foundation/quantum_isolate_bridge.dart
+      - src/foundation/quantum_json_dsl.dart
+      - src/foundation/quantum_matrix_engine.dart
+      - src/foundation/quantum_primitives.dart
+      - src/foundation/quantum_atoms.dart
+      - src/foundation/quantum_reactive_graph.dart
+      - src/foundation/quantum_render_scheduler.dart
+      - src/foundation/quantum_schema.dart
+      repeat: 2
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 0
+      layout: null
+    variant: code-execution
+  - id: quantum.metadata_alignment.007
+    purpose: Prove declared metadata matches the source file on disk.
+    target_symbols:
+    - quantum
+    setup: Load quantum.dart and prepare the source fingerprint model.
+    input: Verify metadata path, line count, and hash align with disk contents.
+    body: Execute the metadata_alignment scenario using the shared source fingerprint harness.
+    expected: Metadata path, hash, and line count match the file on disk.
+    assertions:
+    - path matches
+    - hash matches
+    - line count matches
+    metrics:
+    - path parity
+    - hash parity
+    - line parity
+    risks:
+    - stale metadata
+    - wrong path binding
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - metadata_alignment
+    - quantum
+    operation: metadata_alignment
+    payload:
+      operation: metadata_alignment
+      sourcePath: lib/quantum.dart
+      sourceHash: 2bd606d0151c6108f85e113b62c6b6bacdca57427199ab41c0e52d2006bb51bf
+      lineCount: 104
+      symbols: *id001
+      imports: []
+      exports:
+      - src/foundation/quantum_async.dart
+      - src/foundation/quantum_core.dart
+      - src/foundation/quantum_error_boundary.dart
+      - src/foundation/quantum_isolate_worker.dart
+      - src/foundation/quantum_isolate_bridge.dart
+      - src/foundation/quantum_json_dsl.dart
+      - src/foundation/quantum_matrix_engine.dart
+      - src/foundation/quantum_primitives.dart
+      - src/foundation/quantum_atoms.dart
+      - src/foundation/quantum_reactive_graph.dart
+      - src/foundation/quantum_render_scheduler.dart
+      - src/foundation/quantum_schema.dart
+      repeat: 1
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 0
+      layout: null
+    variant: code-execution
+  - id: quantum.surface_symbol_presence.008
+    purpose: Prove all declared surface symbols are present in the source text.
+    target_symbols:
+    - quantum
+    setup: Load quantum.dart and prepare the source fingerprint model.
+    input: Check that each declared surface symbol is present in the source text.
+    body: Execute the surface_symbol_presence scenario using the shared source fingerprint harness.
+    expected: Every declared surface symbol is present in the source text.
+    assertions:
+    - declared symbols are present
+    - surface stays truthful
+    - manifest matches source
+    metrics:
+    - surface count
+    - declared symbol count
+    risks:
+    - surface mismatch
+    - manifest drift
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - surface_symbol_presence
+    - quantum
+    operation: surface_symbol_presence
+    payload:
+      operation: surface_symbol_presence
+      sourcePath: lib/quantum.dart
+      sourceHash: 2bd606d0151c6108f85e113b62c6b6bacdca57427199ab41c0e52d2006bb51bf
+      lineCount: 104
+      symbols: *id001
+      imports: []
+      exports:
+      - src/foundation/quantum_async.dart
+      - src/foundation/quantum_core.dart
+      - src/foundation/quantum_error_boundary.dart
+      - src/foundation/quantum_isolate_worker.dart
+      - src/foundation/quantum_isolate_bridge.dart
+      - src/foundation/quantum_json_dsl.dart
+      - src/foundation/quantum_matrix_engine.dart
+      - src/foundation/quantum_primitives.dart
+      - src/foundation/quantum_atoms.dart
+      - src/foundation/quantum_reactive_graph.dart
+      - src/foundation/quantum_render_scheduler.dart
+      - src/foundation/quantum_schema.dart
+      repeat: 1
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 0
+      layout: null
+    variant: code-execution
+  - id: quantum.documentation_alignment.009
+    purpose: Prove the code file remains aligned with its manifest and documented contract.
+    target_symbols:
+    - quantum
+    setup: Load quantum.dart and prepare the source fingerprint model.
+    input: Ensure the source surface remains aligned with the manifest and docs.
+    body: Execute the documentation_alignment scenario using the shared source fingerprint harness.
+    expected: The manifest and source stay aligned.
+    assertions:
+    - manifest stays aligned
+    - source stays aligned
+    - docs stay aligned
+    metrics:
+    - doc count
+    - source count
+    risks:
+    - doc drift
+    - source drift
+    cleanup: Reset caches, drop references, and restore the working directory.
+    tags:
+    - code
+    - documentation_alignment
+    - quantum
+    operation: documentation_alignment
+    payload:
+      operation: documentation_alignment
+      sourcePath: lib/quantum.dart
+      sourceHash: 2bd606d0151c6108f85e113b62c6b6bacdca57427199ab41c0e52d2006bb51bf
+      lineCount: 104
+      symbols: *id001
+      imports: []
+      exports:
+      - src/foundation/quantum_async.dart
+      - src/foundation/quantum_core.dart
+      - src/foundation/quantum_error_boundary.dart
+      - src/foundation/quantum_isolate_worker.dart
+      - src/foundation/quantum_isolate_bridge.dart
+      - src/foundation/quantum_json_dsl.dart
+      - src/foundation/quantum_matrix_engine.dart
+      - src/foundation/quantum_primitives.dart
+      - src/foundation/quantum_atoms.dart
+      - src/foundation/quantum_reactive_graph.dart
+      - src/foundation/quantum_render_scheduler.dart
+      - src/foundation/quantum_schema.dart
+      repeat: 1
+      budgetMs: 0
+      forbiddenTokens: []
+      minLines: 0
+      layout: null
+    variant: code-execution
+regeneration_triggers:
+- source hash changed
+- surface symbol set changed
+- imports changed
+- line count changed
+- docs changed
+supplements: []
+notes:
+- Generated as a production-oriented execution spec.
+- Includes runtime-oriented checks for fingerprint stability and repeatability.
+- Separate from code-test and docs-test trees.
+profiles:
+- code
+- production
+- regression

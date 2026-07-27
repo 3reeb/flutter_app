@@ -1,0 +1,79 @@
+{
+  "__meta": {
+    "id": "state_and_pipeline-022-state-row-022",
+    "title": "Unnamed stateful row root #022",
+    "description": "An unnamed state root should still be wrapped and keep the default root path.",
+    "tags": [
+      "state",
+      "pipeline",
+      "store",
+      "row"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "state": {
+      "mode": "grid",
+      "items": [
+        22,
+        23,
+        24
+      ]
+    },
+    "type": "box:row",
+    "style": "gap-4",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "A022"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "B022"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "mode": "grid",
+        "items": [
+          22,
+          23,
+          24
+        ]
+      }
+    },
+    "debugPath": "root.store_provider",
+    "children": [
+      {
+        "type": "box:row",
+        "props": {},
+        "debugPath": "root",
+        "style": "gap-4",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "A022"
+            },
+            "debugPath": "root[0]"
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "B022"
+            },
+            "debugPath": "root[1]"
+          }
+        ]
+      }
+    ]
+  }
+}

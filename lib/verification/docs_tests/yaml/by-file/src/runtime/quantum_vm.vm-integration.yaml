@@ -1,0 +1,112 @@
+schema_version: 2
+doc_kind: file-test-supplement
+supplement_of: lib/src/runtime/quantum_vm.dart
+file: lib/src/runtime/quantum_vm.dart
+layer: runtime
+profile: vm-core
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/runtime/quantum_vm.dart
+  sha256: 232c6d99fdebb6e2692cb347c2ac99c43250ccd44a99613968c407a4aa0a0028
+  line_count: 7157
+  imports:
+    - dart:async
+    - dart:convert
+    - package:flutter/foundation.dart
+    - package:flutter/material.dart
+    - package:flutter/services.dart
+    - package:collection/collection.dart
+    - ../../quantum.dart
+  exports: []
+  parts:
+    - quantum_vm_components.dart
+  part_of: []
+  category: runtime
+  profile: vm-core
+  large_profile: true
+  keywords:
+    - media
+    - decimal
+    - char
+    - cache
+    - lazy
+    - projection
+    - registry
+    - slice
+    - orchestrator
+    - pipeline
+    - macro
+    - policy
+    - module
+    - token
+    - permission
+    - transport
+    - stream
+    - retry
+    - fallback
+    - platform
+    - native
+    - web
+    - io
+    - input
+groups:
+  - name: regression
+    description: silent permission bypass, stale caches, and token drift
+    rows:
+      - id: quantum_vm.regression.001
+        purpose: Exercise the `regression` branch under the file-specific contract.
+        target_symbols: &id001
+          - QuantumSecurityException
+          - QLSchemaSlice
+          - QLLazySchemaView
+          - QLModuleAccessPolicy
+          - QLModuleRecord
+          - QLModuleRegistry
+          - QLRegistryEntry
+          - QuantumExtensionBundle
+        setup: Prepare a realistic fixture that targets this branch.
+        input: A representative valid input for the branch.
+        body: Run the branch using the public API.
+        expected: The output matches the documented contract.
+        assertions:
+          - branch contract holds
+        metrics:
+          - latency
+        risks:
+          - silent mismatch
+        cleanup: Reset state and clear caches.
+      - id: quantum_vm.regression.002
+        purpose: Exercise the `regression` branch with malformed or partial input.
+        target_symbols: *id001
+        setup: Prepare a malformed or partial variant.
+        input: Invalid or incomplete data.
+        body: Run the same public API path.
+        expected: The branch fails explicitly or normalizes intentionally.
+        assertions:
+          - failure is explicit
+        metrics:
+          - error path latency
+        risks:
+          - silent coercion
+        cleanup: Reset state and clear caches.
+      - id: quantum_vm.regression.003
+        purpose: Repeat the `regression` branch to prove stable behavior.
+        target_symbols: *id001
+        setup: Prime and repeat the same fixture.
+        input: Identical repeated input.
+        body: Compare output, side effects, and allocation behavior.
+        expected: Repeated execution stays stable and bounded.
+        assertions:
+          - repeatability
+        metrics:
+          - repeat latency
+        risks:
+          - duplicate side effects
+        cleanup: Reset state and clear caches.
+focus: module registry behavior, macro expansion, policy gating, token parsing, cache invalidation, and lazy schema views.
+expansion_mode: supplemental
+shared_templates:
+  - docs_tests/yaml/shared/case_template.yaml
+  - docs_tests/yaml/shared/group_catalog.yaml
+  - docs_tests/yaml/shared/axis_catalog.yaml

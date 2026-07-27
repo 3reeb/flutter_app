@@ -1,0 +1,184 @@
+schema_version: 2
+doc_kind: file-test-supplement
+supplement_of: lib/src/runtime/quantum_data_state.dart
+file: lib/src/runtime/quantum_data_state.dart
+layer: runtime
+profile: data-state-core
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/runtime/quantum_data_state.dart
+  sha256: 3775559a94d3a379bcae0c57e2a6e5a478edadddea15f687bcbb3006c965d6b4
+  line_count: 3377
+  imports:
+    - dart:async
+    - dart:collection
+    - dart:typed_data
+    - package:flutter/foundation.dart
+    - package:flutter/material.dart
+    - ../../quantum.dart
+  exports: []
+  parts: []
+  part_of: []
+  category: runtime
+  profile: data-state-core
+  large_profile: true
+  keywords:
+    - media
+    - cache
+    - projection
+    - registry
+    - slice
+    - orchestrator
+    - pipeline
+    - policy
+    - module
+    - token
+    - stream
+    - fallback
+    - native
+    - io
+    - signal
+    - commit
+    - store
+    - state
+    - async
+    - json
+groups:
+  - name: cache-coherence
+    description: memoization, invalidation, and stale-entry rejection
+    rows:
+      - id: quantum_data_state.cache-coherence.001
+        purpose: Profile the hot path for `src/runtime/quantum_data_state.dart` with a large but realistic workload.
+        target_symbols: &id001
+          - QLRuntimeSupport
+          - QLRuntimeCacheStats
+          - QLRuntimeCacheConfig
+          - _QLRuntimeCacheEntry
+          - QLRuntimeCacheSizer
+          - QLNullContext
+          - QLRuntimeCache
+          - QLActionPlugin
+        setup: Prepare a large input set with stable shape and repeated access patterns.
+        input: Large valid dataset and repeated reads.
+        body: Measure the primary operation repeatedly and compare cold vs warm behavior.
+        expected: Warm-path behavior improves or remains stable, with no hidden quadratic work.
+        assertions:
+          - warm path is faster or equal
+          - no repeated recomputation
+        metrics:
+          - wall time
+          - allocations
+          - cache hits
+        risks:
+          - quadratic scan
+          - unbounded copying
+          - hidden eager load
+        cleanup: Reset state and clear caches.
+      - id: quantum_data_state.cache-coherence.002
+        purpose: Ensure cached or memoized work in `src/runtime/quantum_data_state.dart` is invalidated precisely when input changes.
+        target_symbols: *id001
+        setup: Prime the cache, then change one field or dependency at a time.
+        input: Same input after one controlled mutation.
+        body: Read twice, mutate once, then read again.
+        expected: Only the changed branch recomputes; unrelated branches stay cached.
+        assertions:
+          - cache invalidates precisely
+          - unrelated work stays reused
+        metrics:
+          - recompute count
+          - cache-hit ratio
+        risks:
+          - stale cache
+          - over-invalidation
+        cleanup: Reset state and clear caches.
+      - id: quantum_data_state.cache-coherence.003
+        purpose: Check that lazy materialization only happens on demand and not before the first access boundary.
+        target_symbols: *id001
+        setup: Prime a lazy fixture without touching the heavy branch.
+        input: A handle or metadata-only input before heavy data access.
+        body: Inspect the object, then touch the heavy branch once.
+        expected: No heavy work occurs before access, and the first access is explicit and measurable.
+        assertions:
+          - no eager load before access
+          - first access triggers exactly one load
+        metrics:
+          - first-access latency
+          - eager-load count
+        risks:
+          - hidden prefetch
+          - double fetch
+        cleanup: Reset state and clear caches.
+  - name: lazy-load
+    description: first-read boundary and deferred hydration
+    rows:
+      - id: quantum_data_state.lazy-load.001
+        purpose: Profile the hot path for `src/runtime/quantum_data_state.dart` with a large but realistic workload.
+        target_symbols: &id002
+          - QLRuntimeSupport
+          - QLRuntimeCacheStats
+          - QLRuntimeCacheConfig
+          - _QLRuntimeCacheEntry
+          - QLRuntimeCacheSizer
+          - QLNullContext
+          - QLRuntimeCache
+          - QLActionPlugin
+        setup: Prepare a large input set with stable shape and repeated access patterns.
+        input: Large valid dataset and repeated reads.
+        body: Measure the primary operation repeatedly and compare cold vs warm behavior.
+        expected: Warm-path behavior improves or remains stable, with no hidden quadratic work.
+        assertions:
+          - warm path is faster or equal
+          - no repeated recomputation
+        metrics:
+          - wall time
+          - allocations
+          - cache hits
+        risks:
+          - quadratic scan
+          - unbounded copying
+          - hidden eager load
+        cleanup: Reset state and clear caches.
+      - id: quantum_data_state.lazy-load.002
+        purpose: Ensure cached or memoized work in `src/runtime/quantum_data_state.dart` is invalidated precisely when input changes.
+        target_symbols: *id002
+        setup: Prime the cache, then change one field or dependency at a time.
+        input: Same input after one controlled mutation.
+        body: Read twice, mutate once, then read again.
+        expected: Only the changed branch recomputes; unrelated branches stay cached.
+        assertions:
+          - cache invalidates precisely
+          - unrelated work stays reused
+        metrics:
+          - recompute count
+          - cache-hit ratio
+        risks:
+          - stale cache
+          - over-invalidation
+        cleanup: Reset state and clear caches.
+      - id: quantum_data_state.lazy-load.003
+        purpose: Check that lazy materialization only happens on demand and not before the first access boundary.
+        target_symbols: *id002
+        setup: Prime a lazy fixture without touching the heavy branch.
+        input: A handle or metadata-only input before heavy data access.
+        body: Inspect the object, then touch the heavy branch once.
+        expected: No heavy work occurs before access, and the first access is explicit and measurable.
+        assertions:
+          - no eager load before access
+          - first access triggers exactly one load
+        metrics:
+          - first-access latency
+          - eager-load count
+        risks:
+          - hidden prefetch
+          - double fetch
+        cleanup: Reset state and clear caches.
+  - name: media-routing
+    description: media payload routing and metadata preservation
+    rows: []
+focus: state snapshots, cache coherence, lazy load boundaries, slice mutation, media routing, and invalidation safety.
+expansion_mode: supplemental
+shared_templates:
+  - docs_tests/yaml/shared/case_template.yaml
+  - docs_tests/yaml/shared/group_catalog.yaml
+  - docs_tests/yaml/shared/axis_catalog.yaml

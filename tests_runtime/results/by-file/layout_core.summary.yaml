@@ -1,0 +1,6 @@
+file: "layout_core.dart"
+manifestPath: "tests_runtime/yaml/by-file/src/runtime/omni_cores/layout_core.yaml"
+total: 18
+passed: 13
+failed: 5
+sourcePath: "src/runtime/omni_cores/layout_core.dart"

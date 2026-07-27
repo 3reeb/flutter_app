@@ -1,0 +1,548 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/plugins/quantum_media_api.dart
+  docs_file: docs/src/plugins/quantum_media_api.dart.md
+  source_entry:
+    line_count: 941
+    byte_count: 28684
+    class_count: 14
+    enum_count: 3
+    function_count: 20
+    category: visual
+    test_count: 10
+  scenario_count: 10
+source:
+  path: src/plugins/quantum_media_api.dart
+  docs_path: docs/src/plugins/quantum_media_api.dart.md
+  label: src/plugins/quantum_media_api.dart
+scenarios:
+- uuid: c7aad091-9817-595b-af17-531fd6108ab6
+  file: lib/src/plugins/quantum_media_api.dart
+  docs_file: docs/src/plugins/quantum_media_api.dart.md
+  title: 'Quantum Media Api: public contract remains stable under valid input'
+  slug: contract
+  category: visual
+  severity: critical
+  description: Verify that quantum media api keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_media_api.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_media_api.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: QUANTUM MEDIA API v10.0 - SECURE BACKEND PROXY, CACHE & LIVE ENGINE'
+    headings:
+    - '`src/plugins/quantum_media_api.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - contract
+  - quantum media api
+- uuid: 9289ad6b-d04f-569e-9f64-c3b7fb2c5d8c
+  file: lib/src/plugins/quantum_media_api.dart
+  docs_file: docs/src/plugins/quantum_media_api.dart.md
+  title: 'Quantum Media Api: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: visual
+  severity: critical
+  description: Verify that quantum media api keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_media_api.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_media_api.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: QUANTUM MEDIA API v10.0 - SECURE BACKEND PROXY, CACHE & LIVE ENGINE'
+    headings:
+    - '`src/plugins/quantum_media_api.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - invalid_input
+  - quantum media api
+- uuid: 7b84f816-2830-5743-a90f-d7cd106d1c5b
+  file: lib/src/plugins/quantum_media_api.dart
+  docs_file: docs/src/plugins/quantum_media_api.dart.md
+  title: 'Quantum Media Api: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: visual
+  severity: high
+  description: Verify that quantum media api keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_media_api.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_media_api.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: QUANTUM MEDIA API v10.0 - SECURE BACKEND PROXY, CACHE & LIVE ENGINE'
+    headings:
+    - '`src/plugins/quantum_media_api.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - reentrant
+  - quantum media api
+- uuid: 64b74511-6941-5d11-8237-13aa45516512
+  file: lib/src/plugins/quantum_media_api.dart
+  docs_file: docs/src/plugins/quantum_media_api.dart.md
+  title: 'Quantum Media Api: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: visual
+  severity: high
+  description: Verify that quantum media api keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_media_api.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_media_api.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: QUANTUM MEDIA API v10.0 - SECURE BACKEND PROXY, CACHE & LIVE ENGINE'
+    headings:
+    - '`src/plugins/quantum_media_api.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - cleanup
+  - quantum media api
+- uuid: 6bea7418-c2a5-54ad-b244-0f5837a689e2
+  file: lib/src/plugins/quantum_media_api.dart
+  docs_file: docs/src/plugins/quantum_media_api.dart.md
+  title: 'Quantum Media Api: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: visual
+  severity: high
+  description: Verify that quantum media api keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_media_api.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_media_api.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: QUANTUM MEDIA API v10.0 - SECURE BACKEND PROXY, CACHE & LIVE ENGINE'
+    headings:
+    - '`src/plugins/quantum_media_api.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - performance
+  - quantum media api
+- uuid: 140e86ab-8145-58ab-83e2-44aa1d278c02
+  file: lib/src/plugins/quantum_media_api.dart
+  docs_file: docs/src/plugins/quantum_media_api.dart.md
+  title: 'Quantum Media Api: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: visual
+  severity: medium
+  description: Verify that quantum media api keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_media_api.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_media_api.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: QUANTUM MEDIA API v10.0 - SECURE BACKEND PROXY, CACHE & LIVE ENGINE'
+    headings:
+    - '`src/plugins/quantum_media_api.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - memory
+  - quantum media api
+- uuid: 0ee458be-ef05-5ca3-b47b-a1daa32bc5b2
+  file: lib/src/plugins/quantum_media_api.dart
+  docs_file: docs/src/plugins/quantum_media_api.dart.md
+  title: 'Quantum Media Api: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: visual
+  severity: medium
+  description: Verify that quantum media api keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_media_api.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_media_api.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: QUANTUM MEDIA API v10.0 - SECURE BACKEND PROXY, CACHE & LIVE ENGINE'
+    headings:
+    - '`src/plugins/quantum_media_api.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - docs_parity
+  - quantum media api
+- uuid: 3de0231f-8ccf-5c51-ac2b-9232cd3965d3
+  file: lib/src/plugins/quantum_media_api.dart
+  docs_file: docs/src/plugins/quantum_media_api.dart.md
+  title: 'Quantum Media Api: rendering remains correct for large, dense, and animated content'
+  slug: render
+  category: visual
+  severity: medium
+  description: Verify that quantum media api keeps its documented runtime behavior while handling render conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_media_api.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_media_api.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: QUANTUM MEDIA API v10.0 - SECURE BACKEND PROXY, CACHE & LIVE ENGINE'
+    headings:
+    - '`src/plugins/quantum_media_api.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - render
+  - quantum media api
+- uuid: 7aab0908-80e5-58c7-acc2-f85edf4cc6c7
+  file: lib/src/plugins/quantum_media_api.dart
+  docs_file: docs/src/plugins/quantum_media_api.dart.md
+  title: 'Quantum Media Api: pointer hover and selection feedback stay synchronized with paint state'
+  slug: hover
+  category: visual
+  severity: medium
+  description: Verify that quantum media api keeps its documented runtime behavior while handling hover conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_media_api.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_media_api.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: QUANTUM MEDIA API v10.0 - SECURE BACKEND PROXY, CACHE & LIVE ENGINE'
+    headings:
+    - '`src/plugins/quantum_media_api.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - hover
+  - quantum media api
+- uuid: 33dad2f4-e3a0-5507-9af6-28b6dee0fdfd
+  file: lib/src/plugins/quantum_media_api.dart
+  docs_file: docs/src/plugins/quantum_media_api.dart.md
+  title: 'Quantum Media Api: frame budget remains acceptable when the view is stressed'
+  slug: frame
+  category: visual
+  severity: medium
+  description: Verify that quantum media api keeps its documented runtime behavior while handling frame conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_media_api.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_media_api.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A plugin/runtime integration module. These files connect the core framework to APIs, sockets, auth, media, domain logic, or plugin adapters. Author-intent note: QUANTUM MEDIA API v10.0 - SECURE BACKEND PROXY, CACHE & LIVE ENGINE'
+    headings:
+    - '`src/plugins/quantum_media_api.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - frame
+  - quantum media api

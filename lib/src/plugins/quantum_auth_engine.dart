@@ -8,7 +8,6 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import '../foundation/quantum_isolate_bridge.dart';
-
 typedef JsonMap = Map<String, dynamic>;
 typedef NowFn = DateTime Function();
 typedef LoggerFn = void Function(String message);

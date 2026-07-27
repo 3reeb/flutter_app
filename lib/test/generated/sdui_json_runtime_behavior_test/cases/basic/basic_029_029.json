@@ -1,0 +1,49 @@
+{
+  "__meta": {
+    "id": "basic-029-metadata-029",
+    "title": "Name and slot metadata survive compilation #029",
+    "description": "Top-level name and slot values should be copied into props, and nested slots must keep their own slot metadata.",
+    "tags": [
+      "basic",
+      "metadata",
+      "slots"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "text",
+    "name": "headline_029",
+    "slot": "hero",
+    "props": {
+      "text": "Title 029"
+    },
+    "slots": {
+      "badge": {
+        "type": "text",
+        "slot": "badge",
+        "props": {
+          "text": "New 029"
+        }
+      }
+    }
+  },
+  "expected": {
+    "type": "text",
+    "props": {
+      "text": "Title 029",
+      "name": "headline_029",
+      "slot": "hero"
+    },
+    "debugPath": "headline_029",
+    "slots": {
+      "badge": {
+        "type": "text",
+        "props": {
+          "text": "New 029",
+          "slot": "badge"
+        },
+        "debugPath": "headline_029.slots[badge]"
+      }
+    }
+  }
+}

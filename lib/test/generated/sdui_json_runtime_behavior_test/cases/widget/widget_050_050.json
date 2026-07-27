@@ -1,0 +1,27 @@
+{
+  "__meta": {
+    "id": "widget-050-virtual-grid-cell-size",
+    "title": "box:virtual_grid cellWidth and cellHeight compile correctly",
+    "description": "Virtual grid layout uses cellWidth/cellHeight to position children. Missing them defaults to 0x0 cells, collapsing the grid.",
+    "tags": ["widget", "virtual_grid", "sizing", "cell"],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "box:virtual_grid",
+    "props": { "cellWidth": 200, "cellHeight": 150, "gap": 16 },
+    "children": [
+      { "type": "text", "props": { "text": "Card 1" } },
+      { "type": "text", "props": { "text": "Card 2" } }
+    ]
+  },
+  "expected": {
+    "type": "box:virtual_grid",
+    "props": { "cellWidth": 200, "cellHeight": 150, "gap": 16 },
+    "debugPath": "root",
+    "children": [
+      { "type": "text", "props": { "text": "Card 1" }, "debugPath": "root[0]" },
+      { "type": "text", "props": { "text": "Card 2" }, "debugPath": "root[1]" }
+    ]
+  }
+}

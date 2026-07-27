@@ -56,6 +56,12 @@ abstract final class QLFieldType {
   static const int secure = 13;
   static const int lookup = 14;
   static const int textarea = 15;
+  static const int media = 16;
+  static const int bigInt = 17;
+  static const int smallInt = 18;
+  static const int decimal = 19;
+  static const int char = 20;
+  static const int flags = 21;
 }
 
 abstract final class QLFieldFlags {

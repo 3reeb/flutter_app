@@ -1,0 +1,169 @@
+schema_version: 2
+doc_kind: file-test-supplement
+supplement_of: lib/src/foundation/quantum_core.dart
+file: lib/src/foundation/quantum_core.dart
+layer: foundation
+profile: foundation-core
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/foundation/quantum_core.dart
+  sha256: 92e5147d39575fc00687a43bc6b09bb7ac2ddc2ea8d4c504352ccbe1802e81df
+  line_count: 657
+  imports:
+    - dart:async
+    - dart:collection
+    - dart:convert
+    - dart:typed_data
+    - package:yaml/yaml.dart
+  exports: []
+  parts: []
+  part_of: []
+  category: foundation
+  profile: foundation-core
+  large_profile: true
+  keywords:
+    - media
+    - hasmany
+    - bigint
+    - smallint
+    - decimal
+    - char
+    - flags
+    - cache
+    - projection
+    - validator
+    - policy
+    - token
+    - stream
+    - native
+    - io
+    - signal
+    - state
+    - async
+    - yaml
+    - json
+groups:
+  - name: integration
+    description: foundational dependency contracts
+    rows:
+      - id: quantum_core.integration.001
+        purpose: "Prove `src/foundation/quantum_core.dart` cooperates with its imported neighbors: dart:async, dart:collection, dart:convert, dart:typed_data, package:yaml/yaml.dart."
+        target_symbols: &id001
+          - QLNodeState
+          - QLNodeError
+          - QLFieldType
+          - QLFieldFlags
+          - QLPathUtils
+          - QLDisposable
+          - QLProjection
+          - QLChangeBatch
+        setup: Stub or pin the neighboring files or adapters that this file imports.
+        input: A real cross-file call path using the normal import graph.
+        body: Run the public contract end-to-end across the import boundary.
+        expected: The outcome matches the same contract when driven by the neighbor file.
+        assertions:
+          - import boundary stays stable
+          - contract survives neighboring-file execution
+        metrics:
+          - cross-file call count
+          - boundary latency
+        risks:
+          - mismatched contract
+          - boundary state leak
+        cleanup: Reset state and clear caches.
+      - id: quantum_core.integration.002
+        purpose: Confirm the integration path handles fallback and partial availability without breaking the caller.
+        target_symbols: *id001
+        setup: Disable one dependency path and keep at least one alternate route available.
+        input: A partially available dependency graph.
+        body: Exercise the fallback branch rather than the ideal branch.
+        expected: The fallback path remains deterministic and explicit.
+        assertions:
+          - fallback path is reachable
+          - partial availability is handled
+        metrics:
+          - retry count
+          - fallback selection time
+        risks:
+          - unexpected hard failure
+          - wrong branch selection
+        cleanup: Reset state and clear caches.
+      - id: quantum_core.integration.003
+        purpose: Validate that repeated integration calls do not leak state or amplify side effects.
+        target_symbols: *id001
+        setup: Invoke the same integration flow multiple times under the same fixture.
+        input: Repeated identical integration calls.
+        body: Run the same cross-file path twice and compare outputs and side effects.
+        expected: The second call is not worse than the first and does not allocate or register extra work unless intended.
+        assertions:
+          - repeatability
+          - no duplicate registration
+          - no stale state
+        metrics:
+          - incremental allocations
+          - duplicate side-effect count
+        risks:
+          - listener leaks
+          - duplicate registrations
+          - stale snapshots
+        cleanup: Reset state and clear caches.
+  - name: regression
+    description: silent breakage in helper behavior
+    rows:
+      - id: quantum_core.regression.001
+        purpose: Exercise the `regression` branch under the file-specific contract.
+        target_symbols: &id002
+          - QLNodeState
+          - QLNodeError
+          - QLFieldType
+          - QLFieldFlags
+          - QLPathUtils
+          - QLDisposable
+          - QLProjection
+          - QLChangeBatch
+        setup: Prepare a realistic fixture that targets this branch.
+        input: A representative valid input for the branch.
+        body: Run the branch using the public API.
+        expected: The output matches the documented contract.
+        assertions:
+          - branch contract holds
+        metrics:
+          - latency
+        risks:
+          - silent mismatch
+        cleanup: Reset state and clear caches.
+      - id: quantum_core.regression.002
+        purpose: Exercise the `regression` branch with malformed or partial input.
+        target_symbols: *id002
+        setup: Prepare a malformed or partial variant.
+        input: Invalid or incomplete data.
+        body: Run the same public API path.
+        expected: The branch fails explicitly or normalizes intentionally.
+        assertions:
+          - failure is explicit
+        metrics:
+          - error path latency
+        risks:
+          - silent coercion
+        cleanup: Reset state and clear caches.
+      - id: quantum_core.regression.003
+        purpose: Repeat the `regression` branch to prove stable behavior.
+        target_symbols: *id002
+        setup: Prime and repeat the same fixture.
+        input: Identical repeated input.
+        body: Compare output, side effects, and allocation behavior.
+        expected: Repeated execution stays stable and bounded.
+        assertions:
+          - repeatability
+        metrics:
+          - repeat latency
+        risks:
+          - duplicate side effects
+        cleanup: Reset state and clear caches.
+focus: core primitives, descriptors, error handling, registry behavior, cache-friendly helpers, and stable low-level contracts.
+expansion_mode: supplemental
+shared_templates:
+  - docs_tests/yaml/shared/case_template.yaml
+  - docs_tests/yaml/shared/group_catalog.yaml
+  - docs_tests/yaml/shared/axis_catalog.yaml

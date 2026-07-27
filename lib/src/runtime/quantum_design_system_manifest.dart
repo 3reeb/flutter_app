@@ -7,7 +7,6 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'package:flutter/foundation.dart';
-
 @immutable
 class QuantumDesignSystemBundle {
   final String id;

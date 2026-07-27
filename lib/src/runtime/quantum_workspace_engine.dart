@@ -7,10 +7,8 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
 import '../foundation/quantum_primitives.dart';
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 abstract final class QLSpaceFlags {
   static const int none = 0;
   static const int isHidden = 1 << 0;

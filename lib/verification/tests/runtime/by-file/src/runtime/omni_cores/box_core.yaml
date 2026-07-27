@@ -1,0 +1,550 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/runtime/omni_cores/box_core.dart
+  docs_file: docs/src/runtime/omni_cores/box_core.dart.md
+  source_entry:
+    line_count: 719
+    byte_count: 25342
+    class_count: 2
+    enum_count: 0
+    function_count: 7
+    category: ui
+    test_count: 10
+  scenario_count: 10
+source:
+  path: src/runtime/omni_cores/box_core.dart
+  docs_path: docs/src/runtime/omni_cores/box_core.dart.md
+  label: src/runtime/omni_cores/box_core.dart
+scenarios:
+- uuid: 2312adcc-0728-5e8c-a164-aec0d77f8081
+  file: lib/src/runtime/omni_cores/box_core.dart
+  docs_file: docs/src/runtime/omni_cores/box_core.dart.md
+  title: 'Box Core: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that box core keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/box_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/box_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY'
+    headings:
+    - '`src/runtime/omni_cores/box_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - box core
+- uuid: 3d3ef8d9-1c8f-5e63-9e9c-75cc8678a425
+  file: lib/src/runtime/omni_cores/box_core.dart
+  docs_file: docs/src/runtime/omni_cores/box_core.dart.md
+  title: 'Box Core: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that box core keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/box_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/box_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY'
+    headings:
+    - '`src/runtime/omni_cores/box_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - box core
+- uuid: 399449f5-a728-5824-ab60-66a859b8fd71
+  file: lib/src/runtime/omni_cores/box_core.dart
+  docs_file: docs/src/runtime/omni_cores/box_core.dart.md
+  title: 'Box Core: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that box core keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/box_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/box_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY'
+    headings:
+    - '`src/runtime/omni_cores/box_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - box core
+- uuid: fe92351b-34a4-5f57-ace4-bc00cdc33529
+  file: lib/src/runtime/omni_cores/box_core.dart
+  docs_file: docs/src/runtime/omni_cores/box_core.dart.md
+  title: 'Box Core: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that box core keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/box_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/box_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY'
+    headings:
+    - '`src/runtime/omni_cores/box_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - box core
+- uuid: 667fc2f6-ef6a-5f9a-a720-518ab40faf8b
+  file: lib/src/runtime/omni_cores/box_core.dart
+  docs_file: docs/src/runtime/omni_cores/box_core.dart.md
+  title: 'Box Core: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that box core keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/box_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/box_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY'
+    headings:
+    - '`src/runtime/omni_cores/box_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - box core
+- uuid: 83ad1e6a-efc7-53bd-97f6-a370b8fc5436
+  file: lib/src/runtime/omni_cores/box_core.dart
+  docs_file: docs/src/runtime/omni_cores/box_core.dart.md
+  title: 'Box Core: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that box core keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/box_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/box_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY'
+    headings:
+    - '`src/runtime/omni_cores/box_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - box core
+- uuid: ad174586-6560-5909-9f4c-7de06b34fc97
+  file: lib/src/runtime/omni_cores/box_core.dart
+  docs_file: docs/src/runtime/omni_cores/box_core.dart.md
+  title: 'Box Core: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that box core keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/box_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/box_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY'
+    headings:
+    - '`src/runtime/omni_cores/box_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - box core
+- uuid: cb6175c0-4ac8-51c4-97c5-05378273726b
+  file: lib/src/runtime/omni_cores/box_core.dart
+  docs_file: docs/src/runtime/omni_cores/box_core.dart.md
+  title: 'Box Core: layout remains correct under narrow, wide, and constrained bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that box core keeps its documented runtime behavior while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/box_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/box_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY'
+    headings:
+    - '`src/runtime/omni_cores/box_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - box core
+- uuid: a984793e-1dd6-555e-a1c1-68b760a908f4
+  file: lib/src/runtime/omni_cores/box_core.dart
+  docs_file: docs/src/runtime/omni_cores/box_core.dart.md
+  title: 'Box Core: semantics and accessibility output remain stable across rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that box core keeps its documented runtime behavior while handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/box_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/box_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY'
+    headings:
+    - '`src/runtime/omni_cores/box_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - semantics
+  - box core
+- uuid: 5b586585-ae8e-5076-a655-6c425217b042
+  file: lib/src/runtime/omni_cores/box_core.dart
+  docs_file: docs/src/runtime/omni_cores/box_core.dart.md
+  title: 'Box Core: gesture handling and hit testing stay correct during interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that box core keeps its documented runtime behavior while handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/omni_cores/box_core.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/omni_cores/box_core.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A core primitives file. These modules define low-level types, flags, value objects, or utility abstractions used throughout the framework. Author-intent note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY'
+    headings:
+    - '`src/runtime/omni_cores/box_core.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - gesture
+  - box core

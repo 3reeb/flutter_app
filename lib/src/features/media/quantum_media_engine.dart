@@ -7,17 +7,14 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
-
 // Ecosystem Primitives
 import '../../foundation/quantum_primitives.dart';
 import '../../foundation/quantum_async.dart';
-import '../../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 // 🚀 IMPORT YOUR BACKEND API FILE HERE
 import '../../plugins/quantum_media_api.dart'; // 🚀 IMPORT YOUR BACKEND API FILE HERE
 
@@ -149,7 +146,7 @@ abstract final class QLSubtitleParser {
 //  FRONTEND: THE UNIFIED CONTROLLER
 // ────────────────────────────────────────────────────────────────────────────
 
-class QLMediaController {
+class QLMediaPlaybackController {
   final QLMediaSource source;
 
   final QLSignal<Duration> position = QLSignal(Duration.zero);
@@ -168,7 +165,7 @@ class QLMediaController {
   Timer? _syncWatchdog;
   bool _isDisposed = false;
 
-  QLMediaController(this.source);
+  QLMediaPlaybackController(this.source);
 
   VideoFormat? _mapFormat(QLStreamFormat f) {
     switch (f) {
@@ -256,7 +253,7 @@ class QLMediaController {
 
       if (playOnReady || source.autoPlay) play();
     } catch (e) {
-      debugPrint('🚨 QLMediaController Init Failed: $e');
+      debugPrint('🚨 QLMediaPlaybackController Init Failed: $e');
       rethrow;
     }
   }
@@ -356,13 +353,13 @@ class QLMediaController {
 class QuantumMediaOrchestrator {
   final QLMediaPolicy policy;
   final List<QLMediaSource> playlist;
-  final Map<int, QLMediaController> _activeControllers = {};
+  final Map<int, QLMediaPlaybackController> _activeControllers = {};
   int _currentIndex = 0;
 
   QuantumMediaOrchestrator({required this.playlist, QLMediaPolicy? policy})
       : policy = policy ?? QLMediaPolicy.feed();
 
-  QLMediaController? getController(int index) => _activeControllers[index];
+  QLMediaPlaybackController? getController(int index) => _activeControllers[index];
 
   void onIndexChanged(int newIndex) {
     _currentIndex = newIndex;
@@ -394,7 +391,7 @@ class QuantumMediaOrchestrator {
     for (int i = minKeepAlive; i <= maxPreload; i++) {
       if (playlist[i].videoUrl != null) upcomingUrls.add(playlist[i].videoUrl!);
       if (!_activeControllers.containsKey(i)) {
-        final ctrl = QLMediaController(playlist[i]);
+        final ctrl = QLMediaPlaybackController(playlist[i]);
         _activeControllers[i] = ctrl;
         ctrl.initialize();
       }
@@ -443,13 +440,13 @@ class QLVideoLifecycleWrapper extends StatefulWidget {
 }
 
 class _QLVideoLifecycleWrapperState extends State<QLVideoLifecycleWrapper> {
-  late final QLMediaController _controller;
+  late final QLMediaPlaybackController _controller;
   bool _hasError = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = QLMediaController(widget.source);
+    _controller = QLMediaPlaybackController(widget.source);
     _initializeSafe();
   }
 
@@ -532,7 +529,7 @@ class _QLVideoLifecycleWrapperState extends State<QLVideoLifecycleWrapper> {
 }
 
 class QLVideoSurface extends StatelessWidget {
-  final QLMediaController controller;
+  final QLMediaPlaybackController controller;
   final BoxFit fit;
   final Widget? placeholder;
 
@@ -570,7 +567,7 @@ class QLVideoSurface extends StatelessWidget {
 }
 
 class QLSubtitleOverlay extends StatelessWidget {
-  final QLMediaController controller;
+  final QLMediaPlaybackController controller;
   const QLSubtitleOverlay({super.key, required this.controller});
 
   @override

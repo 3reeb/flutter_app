@@ -1,0 +1,376 @@
+schema_version: 2
+doc_kind: file-test-manifest
+file: lib/src/ui/internal/quantum_focus_sync.dart
+layer: ui
+profile: ui-internal
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/ui/internal/quantum_focus_sync.dart
+  sha256: fd64860fa297fa3bd34c8341e8b6974727c6386d4365968bf7d5f3e0e8da126b
+  line_count: 28
+  imports:
+    - package:flutter/material.dart
+    - ../../../quantum.dart
+  exports: []
+  parts: []
+  part_of: []
+  category: ui
+  profile: ui-internal
+  large_profile: false
+  keywords:
+    - io
+    - focus
+surface_summary:
+  classes_enums_typedefs_mixins_extensions_functions:
+    - qlMirrorFocusNodeToController
+    - qlMirrorControllerToFocusNode
+  count: 2
+focus: UI composition, state sync, hydration, rendering stability, and input behavior.
+coverage_targets:
+  - public API
+  - failure paths
+  - performance
+  - integration boundaries
+  - regression traps
+  - compatibility
+  - lazy-load
+  - cache
+  - serialization
+test_dimensions:
+  input_shapes:
+    - "null"
+    - empty
+    - single-item
+    - multi-item
+    - mixed-type
+    - legacy-shape
+    - malformed
+    - duplicate
+    - large-batch
+  execution_modes:
+    - cold
+    - warm
+    - cached
+    - invalidated
+    - lazy
+    - eager
+    - replayed
+  outcomes:
+    - accept
+    - reject
+    - normalize
+    - defer
+    - reuse
+    - evict
+    - round-trip
+  measurement_axes:
+    - latency
+    - allocations
+    - cache-hits
+    - recompute-count
+    - event-order
+reusable_presets:
+  smoke_base:
+    purpose: Prove the canonical public path works and stays stable across repeated runs.
+    assertions:
+      - observable result is stable
+      - no hidden mutation
+      - no duplicate side effects
+  edge_base:
+    purpose: Prove malformed input fails explicitly or normalizes intentionally.
+    assertions:
+      - failure is explicit
+      - no silent coercion
+      - no stale state
+  perf_base:
+    purpose: Measure the hot path and bound allocations or repeated work.
+    assertions:
+      - warm path is not worse than cold path
+      - allocation growth stays bounded
+  integration_base:
+    purpose: Validate behavior across local imports and neighboring runtime layers.
+    assertions:
+      - boundary contract holds
+      - cross-file side effects remain stable
+groups:
+  - name: smoke
+    description: internal sync helper sanity
+    rows:
+      - id: quantum_focus_sync.smoke.001
+        purpose: Prove the primary contract of `src/ui/internal/quantum_focus_sync.dart` can be created and exercised with canonical values.
+        target_symbols: &id001
+          - qlMirrorFocusNodeToController
+          - qlMirrorControllerToFocusNode
+        setup: Build the minimal valid object graph or runtime context required by this file.
+        input: Canonical values that stay within the most common public-path defaults.
+        body: Call the main entry path twice with the same state to verify repeatability and reuse.
+        expected: The result is stable across repeated calls and no hidden mutation appears.
+        assertions:
+          - observable output matches the documented contract
+          - repeat call returns the same shape
+          - no unexpected extra work is visible
+        metrics:
+          - call count
+          - cache hits
+          - allocation delta
+        risks:
+          - silent eager load
+          - duplicate side effects
+          - state mutation on read
+        cleanup: Reset state and clear caches.
+      - id: quantum_focus_sync.smoke.002
+        purpose: Confirm the file survives the smallest valid payload and the largest documented trivial payload.
+        target_symbols: *id001
+        setup: Prepare one-item and small-batch fixtures.
+        input: A single item followed by a short repeated batch.
+        body: Execute the same path with one item, then with a small repeated batch.
+        expected: Both inputs are handled without shape loss or unexpected divergence.
+        assertions:
+          - one-item path works
+          - batch path works
+          - batch does not degrade shape
+        metrics:
+          - latency
+          - allocation count
+        risks:
+          - off-by-one handling
+          - shape drift on repeated values
+        cleanup: Reset state and clear caches.
+      - id: quantum_focus_sync.smoke.003
+        purpose: Ensure the public API does not require hidden global state to produce a valid result.
+        target_symbols: *id001
+        setup: Run in a clean process with no previously initialized caches or registries.
+        input: Fresh process state.
+        body: Invoke the same contract after process-style reset conditions.
+        expected: No hidden singleton is required for success.
+        assertions:
+          - no implicit global dependency
+          - fresh start still succeeds
+        metrics:
+          - startup cost
+        risks:
+          - state leakage across test cases
+        cleanup: Reset state and clear caches.
+  - name: edges
+    description: missing focus target and invalid sync state
+    rows:
+      - id: quantum_focus_sync.edges.001
+        purpose: Reject `null`, empty, or missing inputs for `src/ui/internal/quantum_focus_sync.dart` in a controlled way.
+        target_symbols: &id002
+          - qlMirrorFocusNodeToController
+          - qlMirrorControllerToFocusNode
+        setup: Prepare explicit null/empty fixtures and any required default context.
+        input: null, empty, and omitted values.
+        body: Pass malformed inputs through the normal entry path, not a special helper.
+        expected: The file responds with explicit failure or documented fallback, never silent corruption.
+        assertions:
+          - null is handled intentionally
+          - empty input is not accepted as valid data
+          - failure mode is explicit
+        metrics:
+          - failure latency
+          - error count
+        risks:
+          - silent fallback
+          - implicit coercion
+          - crash without context
+        cleanup: Reset state and clear caches.
+      - id: quantum_focus_sync.edges.002
+        purpose: Exercise malformed types and mixed shapes against the file-specific contract.
+        target_symbols: *id002
+        setup: Prepare values with wrong scalar types, mixed lists, and partially missing nested fields.
+        input: A mixed-shape payload with the wrong scalar type in one branch.
+        body: Feed the malformed structure into the same contract path used by real callers.
+        expected: The contract either normalizes intentionally or rejects with a traceable error.
+        assertions:
+          - wrong type does not pass silently
+          - mixed structures do not corrupt state
+        metrics:
+          - branch coverage
+          - error reporting
+        risks:
+          - silent coercion
+          - partial mutation
+        cleanup: Clear test fixtures and release observers.
+      - id: quantum_focus_sync.edges.003
+        purpose: Check duplicate, repeated, and out-of-order data for stability and idempotence.
+        target_symbols: *id002
+        setup: Build duplicated and shuffled fixtures.
+        input: Duplicate entries and shuffled order.
+        body: Run the same operation more than once and compare observable state.
+        expected: Duplicate inputs do not produce duplicate side effects unless explicitly required.
+        assertions:
+          - idempotence is preserved
+          - duplicate items do not duplicate state
+        metrics:
+          - duplicate suppression
+          - repeat-call stability
+        risks:
+          - double insert
+          - order sensitivity
+        cleanup: Reset state and clear caches.
+  - name: input
+    description: focus transfer and event ordering
+    rows:
+      - id: quantum_focus_sync.input.001
+        purpose: Validate focus and event propagation for `src/ui/internal/quantum_focus_sync.dart`.
+        target_symbols: &id003
+          - qlMirrorFocusNodeToController
+          - qlMirrorControllerToFocusNode
+        setup: Prepare a focused widget/controller fixture.
+        input: A focused input sequence and one blur event.
+        body: Dispatch focus, input, and blur in the same order a user would.
+        expected: Focus transitions remain explicit and the event chain stays stable.
+        assertions:
+          - focus reaches the correct target
+          - blur clears or preserves state per contract
+        metrics:
+          - event ordering
+          - listener count
+        risks:
+          - focus loop
+          - lost event
+        cleanup: Reset state and clear caches.
+      - id: quantum_focus_sync.input.002
+        purpose: Check invalid or malformed input does not create a hidden UI state.
+        target_symbols: *id003
+        setup: Use a bad schema, empty model, or invalid value.
+        input: Invalid input state.
+        body: Feed the invalid state through the normal interaction path.
+        expected: The UI rejects or normalizes the state visibly and intentionally.
+        assertions:
+          - invalid input is not silently accepted
+        metrics:
+          - validation cost
+        risks:
+          - hidden fallback state
+        cleanup: Reset state and clear caches.
+      - id: quantum_focus_sync.input.003
+        purpose: Repeat the same input path multiple times to prove no duplicate state or listener buildup.
+        target_symbols: *id003
+        setup: Trigger the same UI interaction more than once.
+        input: Repeated identical input gestures.
+        body: Compare emitted state and listener counts after each repeat.
+        expected: State stays bounded and listeners do not accumulate unexpectedly.
+        assertions:
+          - listener count remains bounded
+          - state remains bounded
+        metrics:
+          - listener count
+          - allocation delta
+        risks:
+          - listener leak
+          - duplicate dispatch
+        cleanup: Reset state and clear caches.
+  - name: integration
+    description: field and hydration consumers
+    rows:
+      - id: quantum_focus_sync.integration.001
+        purpose: "Prove `src/ui/internal/quantum_focus_sync.dart` cooperates with its imported neighbors: package:flutter/material.dart, ../../../quantum.dart."
+        target_symbols: &id004
+          - qlMirrorFocusNodeToController
+          - qlMirrorControllerToFocusNode
+        setup: Stub or pin the neighboring files or adapters that this file imports.
+        input: A real cross-file call path using the normal import graph.
+        body: Run the public contract end-to-end across the import boundary.
+        expected: The outcome matches the same contract when driven by the neighbor file.
+        assertions:
+          - import boundary stays stable
+          - contract survives neighboring-file execution
+        metrics:
+          - cross-file call count
+          - boundary latency
+        risks:
+          - mismatched contract
+          - boundary state leak
+        cleanup: Reset state and clear caches.
+      - id: quantum_focus_sync.integration.002
+        purpose: Confirm the integration path handles fallback and partial availability without breaking the caller.
+        target_symbols: *id004
+        setup: Disable one dependency path and keep at least one alternate route available.
+        input: A partially available dependency graph.
+        body: Exercise the fallback branch rather than the ideal branch.
+        expected: The fallback path remains deterministic and explicit.
+        assertions:
+          - fallback path is reachable
+          - partial availability is handled
+        metrics:
+          - retry count
+          - fallback selection time
+        risks:
+          - unexpected hard failure
+          - wrong branch selection
+        cleanup: Reset state and clear caches.
+      - id: quantum_focus_sync.integration.003
+        purpose: Validate that repeated integration calls do not leak state or amplify side effects.
+        target_symbols: *id004
+        setup: Invoke the same integration flow multiple times under the same fixture.
+        input: Repeated identical integration calls.
+        body: Run the same cross-file path twice and compare outputs and side effects.
+        expected: The second call is not worse than the first and does not allocate or register extra work unless intended.
+        assertions:
+          - repeatability
+          - no duplicate registration
+          - no stale state
+        metrics:
+          - incremental allocations
+          - duplicate side-effect count
+        risks:
+          - listener leaks
+          - duplicate registrations
+          - stale snapshots
+        cleanup: Reset state and clear caches.
+  - name: regression
+    description: focus loops and stale sync
+    rows:
+      - id: quantum_focus_sync.regression.001
+        purpose: Exercise the `regression` branch under the file-specific contract.
+        target_symbols: &id005
+          - qlMirrorFocusNodeToController
+          - qlMirrorControllerToFocusNode
+        setup: Prepare a realistic fixture that targets this branch.
+        input: A representative valid input for the branch.
+        body: Run the branch using the public API.
+        expected: The output matches the documented contract.
+        assertions:
+          - branch contract holds
+        metrics:
+          - latency
+        risks:
+          - silent mismatch
+        cleanup: Reset state and clear caches.
+      - id: quantum_focus_sync.regression.002
+        purpose: Exercise the `regression` branch with malformed or partial input.
+        target_symbols: *id005
+        setup: Prepare a malformed or partial variant.
+        input: Invalid or incomplete data.
+        body: Run the same public API path.
+        expected: The branch fails explicitly or normalizes intentionally.
+        assertions:
+          - failure is explicit
+        metrics:
+          - error path latency
+        risks:
+          - silent coercion
+        cleanup: Reset state and clear caches.
+      - id: quantum_focus_sync.regression.003
+        purpose: Repeat the `regression` branch to prove stable behavior.
+        target_symbols: *id005
+        setup: Prime and repeat the same fixture.
+        input: Identical repeated input.
+        body: Compare output, side effects, and allocation behavior.
+        expected: Repeated execution stays stable and bounded.
+        assertions:
+          - repeatability
+        metrics:
+          - repeat latency
+        risks:
+          - duplicate side effects
+        cleanup: Reset state and clear caches.
+regeneration_triggers:
+  - signature changes
+  - import changes that affect behavior
+  - serialization or cache logic changes
+  - new branches, platform paths, or fallback rules
+supplements: []

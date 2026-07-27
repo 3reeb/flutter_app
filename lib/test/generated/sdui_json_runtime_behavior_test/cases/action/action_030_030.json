@@ -1,0 +1,32 @@
+{
+  "__meta": {
+    "id": "action-030-hover-enter-leave",
+    "title": "action:hover with onEnter and onLeave compiles correctly",
+    "description": "Hover interaction requires both onEnter and onLeave. Missing either causes half-baked hover behavior — tooltip shows but never hides, or vice versa.",
+    "tags": ["action", "hover", "onEnter", "onLeave"],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "action:hover",
+    "props": {
+      "onEnter": { "type": "action", "name": "tooltip.show" },
+      "onLeave": { "type": "action", "name": "tooltip.hide" }
+    },
+    "children": [
+      { "type": "text", "props": { "text": "Hover me" } }
+    ]
+  },
+  "expected": {
+    "type": "action",
+    "props": {
+      "__subType": "hover",
+      "onEnter": { "type": "action", "name": "tooltip.show" },
+      "onLeave": { "type": "action", "name": "tooltip.hide" }
+    },
+    "debugPath": "root",
+    "children": [
+      { "type": "text", "props": { "text": "Hover me" }, "debugPath": "root[0]" }
+    ]
+  }
+}

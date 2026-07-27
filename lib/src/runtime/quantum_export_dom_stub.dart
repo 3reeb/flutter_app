@@ -7,7 +7,6 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'package:flutter/foundation.dart';
-
 void writePngToDom(String base64Png) {
   debugPrint('[QuantumExportBridge] PNG ready (${base64Png.length} chars) — '
       'non-web platform, DOM write skipped.');

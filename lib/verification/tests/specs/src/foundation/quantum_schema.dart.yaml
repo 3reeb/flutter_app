@@ -1,0 +1,729 @@
+file: lib/src/foundation/quantum_schema.dart
+docs_file: docs/src/foundation/quantum_schema.dart.md
+line_count: 1433
+category: parser
+tests:
+- uuid: 37aba325-0a03-5eba-b8cb-dcc02202ff80
+  file: lib/src/foundation/quantum_schema.dart
+  docs_file: docs/src/foundation/quantum_schema.dart.md
+  title: 'Quantum Schema: public contract remains stable under valid input'
+  slug: contract
+  category: parser
+  severity: critical
+  description: Verify that quantum schema keeps its documented runtime behavior while
+    handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the schema compiler, runtime schema registry, validation engine,
+      parse/serialize bridge, and smart-select planner for the framework. It turns
+      a declarative field description into a flattened, indexed blueprint that other
+      layers can validate, hydrate, cache, and partially fetch.
+    headings:
+    - '`src/foundation/quantum_schema.dart`'
+    - What this file is
+    - What changed in this update
+    - Public model types
+    - '`QLBlockPayload`'
+  tags:
+  - parser
+  - contract
+  - quantum schema
+- uuid: 0f033944-ef19-57fa-a2e0-445c9fa03d9f
+  file: lib/src/foundation/quantum_schema.dart
+  docs_file: docs/src/foundation/quantum_schema.dart.md
+  title: 'Quantum Schema: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: parser
+  severity: critical
+  description: Verify that quantum schema keeps its documented runtime behavior while
+    handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the schema compiler, runtime schema registry, validation engine,
+      parse/serialize bridge, and smart-select planner for the framework. It turns
+      a declarative field description into a flattened, indexed blueprint that other
+      layers can validate, hydrate, cache, and partially fetch.
+    headings:
+    - '`src/foundation/quantum_schema.dart`'
+    - What this file is
+    - What changed in this update
+    - Public model types
+    - '`QLBlockPayload`'
+  tags:
+  - parser
+  - invalid_input
+  - quantum schema
+- uuid: ccd429dd-4500-55e9-ad83-c624e8f592d5
+  file: lib/src/foundation/quantum_schema.dart
+  docs_file: docs/src/foundation/quantum_schema.dart.md
+  title: 'Quantum Schema: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: parser
+  severity: high
+  description: Verify that quantum schema keeps its documented runtime behavior while
+    handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the schema compiler, runtime schema registry, validation engine,
+      parse/serialize bridge, and smart-select planner for the framework. It turns
+      a declarative field description into a flattened, indexed blueprint that other
+      layers can validate, hydrate, cache, and partially fetch.
+    headings:
+    - '`src/foundation/quantum_schema.dart`'
+    - What this file is
+    - What changed in this update
+    - Public model types
+    - '`QLBlockPayload`'
+  tags:
+  - parser
+  - reentrant
+  - quantum schema
+- uuid: 9abf0d17-bd16-59d3-ad73-751c3d1cc0a3
+  file: lib/src/foundation/quantum_schema.dart
+  docs_file: docs/src/foundation/quantum_schema.dart.md
+  title: 'Quantum Schema: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: parser
+  severity: high
+  description: Verify that quantum schema keeps its documented runtime behavior while
+    handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the schema compiler, runtime schema registry, validation engine,
+      parse/serialize bridge, and smart-select planner for the framework. It turns
+      a declarative field description into a flattened, indexed blueprint that other
+      layers can validate, hydrate, cache, and partially fetch.
+    headings:
+    - '`src/foundation/quantum_schema.dart`'
+    - What this file is
+    - What changed in this update
+    - Public model types
+    - '`QLBlockPayload`'
+  tags:
+  - parser
+  - cleanup
+  - quantum schema
+- uuid: d7d21c87-07ca-5b66-94a0-64d28c1802d9
+  file: lib/src/foundation/quantum_schema.dart
+  docs_file: docs/src/foundation/quantum_schema.dart.md
+  title: 'Quantum Schema: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: parser
+  severity: high
+  description: Verify that quantum schema keeps its documented runtime behavior while
+    handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the schema compiler, runtime schema registry, validation engine,
+      parse/serialize bridge, and smart-select planner for the framework. It turns
+      a declarative field description into a flattened, indexed blueprint that other
+      layers can validate, hydrate, cache, and partially fetch.
+    headings:
+    - '`src/foundation/quantum_schema.dart`'
+    - What this file is
+    - What changed in this update
+    - Public model types
+    - '`QLBlockPayload`'
+  tags:
+  - parser
+  - performance
+  - quantum schema
+- uuid: 043853e1-0402-5bd0-bc9b-f85d74d52ce9
+  file: lib/src/foundation/quantum_schema.dart
+  docs_file: docs/src/foundation/quantum_schema.dart.md
+  title: 'Quantum Schema: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: parser
+  severity: medium
+  description: Verify that quantum schema keeps its documented runtime behavior while
+    handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the schema compiler, runtime schema registry, validation engine,
+      parse/serialize bridge, and smart-select planner for the framework. It turns
+      a declarative field description into a flattened, indexed blueprint that other
+      layers can validate, hydrate, cache, and partially fetch.
+    headings:
+    - '`src/foundation/quantum_schema.dart`'
+    - What this file is
+    - What changed in this update
+    - Public model types
+    - '`QLBlockPayload`'
+  tags:
+  - parser
+  - memory
+  - quantum schema
+- uuid: fee7bdb3-2a7a-561f-ac32-aa01160682d1
+  file: lib/src/foundation/quantum_schema.dart
+  docs_file: docs/src/foundation/quantum_schema.dart.md
+  title: 'Quantum Schema: the runtime surface still matches the documented API and
+    headings'
+  slug: docs_parity
+  category: parser
+  severity: medium
+  description: Verify that quantum schema keeps its documented runtime behavior while
+    handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the schema compiler, runtime schema registry, validation engine,
+      parse/serialize bridge, and smart-select planner for the framework. It turns
+      a declarative field description into a flattened, indexed blueprint that other
+      layers can validate, hydrate, cache, and partially fetch.
+    headings:
+    - '`src/foundation/quantum_schema.dart`'
+    - What this file is
+    - What changed in this update
+    - Public model types
+    - '`QLBlockPayload`'
+  tags:
+  - parser
+  - docs_parity
+  - quantum schema
+- uuid: 22aacbb6-f5b5-5e4e-8cb6-d674b4197bdb
+  file: lib/src/foundation/quantum_schema.dart
+  docs_file: docs/src/foundation/quantum_schema.dart.md
+  title: 'Quantum Schema: malformed documents fail with actionable errors instead
+    of silent corruption'
+  slug: malformed
+  category: parser
+  severity: medium
+  description: Verify that quantum schema keeps its documented runtime behavior while
+    handling malformed conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the schema compiler, runtime schema registry, validation engine,
+      parse/serialize bridge, and smart-select planner for the framework. It turns
+      a declarative field description into a flattened, indexed blueprint that other
+      layers can validate, hydrate, cache, and partially fetch.
+    headings:
+    - '`src/foundation/quantum_schema.dart`'
+    - What this file is
+    - What changed in this update
+    - Public model types
+    - '`QLBlockPayload`'
+  tags:
+  - parser
+  - malformed
+  - quantum schema
+- uuid: 4f33ac90-07ff-5950-bf2c-d7bd69435afd
+  file: lib/src/foundation/quantum_schema.dart
+  docs_file: docs/src/foundation/quantum_schema.dart.md
+  title: 'Quantum Schema: deeply nested content, aliases, or recursive structures
+    stay bounded'
+  slug: nested
+  category: parser
+  severity: medium
+  description: Verify that quantum schema keeps its documented runtime behavior while
+    handling nested conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the schema compiler, runtime schema registry, validation engine,
+      parse/serialize bridge, and smart-select planner for the framework. It turns
+      a declarative field description into a flattened, indexed blueprint that other
+      layers can validate, hydrate, cache, and partially fetch.
+    headings:
+    - '`src/foundation/quantum_schema.dart`'
+    - What this file is
+    - What changed in this update
+    - Public model types
+    - '`QLBlockPayload`'
+  tags:
+  - parser
+  - nested
+  - quantum schema
+- uuid: d608be2b-c9f6-544a-8dab-dd2e869adad7
+  file: lib/src/foundation/quantum_schema.dart
+  docs_file: docs/src/foundation/quantum_schema.dart.md
+  title: 'Quantum Schema: unicode, escaping, and BOM handling round-trip correctly'
+  slug: unicode
+  category: parser
+  severity: medium
+  description: Verify that quantum schema keeps its documented runtime behavior while
+    handling unicode conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the schema compiler, runtime schema registry, validation engine,
+      parse/serialize bridge, and smart-select planner for the framework. It turns
+      a declarative field description into a flattened, indexed blueprint that other
+      layers can validate, hydrate, cache, and partially fetch.
+    headings:
+    - '`src/foundation/quantum_schema.dart`'
+    - What this file is
+    - What changed in this update
+    - Public model types
+    - '`QLBlockPayload`'
+  tags:
+  - parser
+  - unicode
+  - quantum schema
+- uuid: 6a361ab8-f716-5658-a0c4-a89fb6a0dbeb
+  file: lib/src/foundation/quantum_schema.dart
+  docs_file: docs/src/foundation/quantum_schema.dart.md
+  title: 'Quantum Schema: duplicate keys or conflicting declarations are surfaced
+    deterministically'
+  slug: duplicate
+  category: parser
+  severity: medium
+  description: Verify that quantum schema keeps its documented runtime behavior while
+    handling duplicate conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the schema compiler, runtime schema registry, validation engine,
+      parse/serialize bridge, and smart-select planner for the framework. It turns
+      a declarative field description into a flattened, indexed blueprint that other
+      layers can validate, hydrate, cache, and partially fetch.
+    headings:
+    - '`src/foundation/quantum_schema.dart`'
+    - What this file is
+    - What changed in this update
+    - Public model types
+    - '`QLBlockPayload`'
+  tags:
+  - parser
+  - duplicate
+  - quantum schema
+- uuid: feb39b47-05ae-51c5-96fd-5fa2b0fd6304
+  file: lib/src/foundation/quantum_schema.dart
+  docs_file: docs/src/foundation/quantum_schema.dart.md
+  title: 'Quantum Schema: schema parsing preserves field definitions and defaults'
+  slug: schema_fidelity
+  category: parser
+  severity: medium
+  description: Verify that quantum schema keeps its documented runtime behavior while
+    handling schema fidelity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_schema.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/foundation/quantum_schema.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate
+      keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: This is the schema compiler, runtime schema registry, validation engine,
+      parse/serialize bridge, and smart-select planner for the framework. It turns
+      a declarative field description into a flattened, indexed blueprint that other
+      layers can validate, hydrate, cache, and partially fetch.
+    headings:
+    - '`src/foundation/quantum_schema.dart`'
+    - What this file is
+    - What changed in this update
+    - Public model types
+    - '`QLBlockPayload`'
+  tags:
+  - parser
+  - schema_fidelity
+  - quantum schema

@@ -1,0 +1,86 @@
+{
+  "__meta": {
+    "id": "state_and_pipeline-080-state-slots-080",
+    "title": "State roots preserve compiled slots #080",
+    "description": "A stateful node with slots should preserve those slots under the wrapper.",
+    "tags": [
+      "state",
+      "pipeline",
+      "slots"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "name": "shell_080",
+    "state": {
+      "phase": "ready",
+      "count": 80
+    },
+    "type": "box:col",
+    "slots": {
+      "header": {
+        "type": "text",
+        "props": {
+          "text": "Header 080"
+        }
+      },
+      "footer": {
+        "type": "text",
+        "props": {
+          "text": "Footer 080"
+        }
+      }
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Body 080"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "phase": "ready",
+        "count": 80
+      }
+    },
+    "debugPath": "shell_080.store_provider",
+    "children": [
+      {
+        "type": "box:col",
+        "props": {},
+        "debugPath": "shell_080",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Body 080"
+            },
+            "debugPath": "shell_080[0]"
+          }
+        ],
+        "slots": {
+          "header": {
+            "type": "text",
+            "props": {
+              "text": "Header 080"
+            },
+            "debugPath": "shell_080.slots[header]"
+          },
+          "footer": {
+            "type": "text",
+            "props": {
+              "text": "Footer 080"
+            },
+            "debugPath": "shell_080.slots[footer]"
+          }
+        }
+      }
+    ]
+  }
+}

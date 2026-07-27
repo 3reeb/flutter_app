@@ -1,0 +1,558 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/plugins/adapters/quantum_mock_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_mock_adapters.dart.md
+  source_entry:
+    line_count: 722
+    byte_count: 22850
+    class_count: 5
+    enum_count: 0
+    function_count: 14
+    category: plugin
+    test_count: 10
+  scenario_count: 10
+source:
+  path: src/plugins/adapters/quantum_mock_adapters.dart
+  docs_path: docs/src/plugins/adapters/quantum_mock_adapters.dart.md
+  label: src/plugins/adapters/quantum_mock_adapters.dart
+scenarios:
+- uuid: 2f010b13-cfc8-57b2-8e13-676c6c50d94c
+  file: lib/src/plugins/adapters/quantum_mock_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_mock_adapters.dart.md
+  title: 'Quantum Mock Adapters: public contract remains stable under valid input'
+  slug: contract
+  category: plugin
+  severity: critical
+  description: Verify that quantum mock adapters keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_mock_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_mock_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: SECTION 1: MOCK NETWORK CONFIGURATION'
+    headings:
+    - '`src/plugins/adapters/quantum_mock_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - contract
+  - quantum mock adapters
+- uuid: 1a1ba5c5-84c4-524a-b050-0f33ef14afa1
+  file: lib/src/plugins/adapters/quantum_mock_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_mock_adapters.dart.md
+  title: 'Quantum Mock Adapters: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: plugin
+  severity: critical
+  description: Verify that quantum mock adapters keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_mock_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_mock_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: SECTION 1: MOCK NETWORK CONFIGURATION'
+    headings:
+    - '`src/plugins/adapters/quantum_mock_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - invalid_input
+  - quantum mock adapters
+- uuid: eb4f5182-a590-5c7b-8752-dea12b99c5eb
+  file: lib/src/plugins/adapters/quantum_mock_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_mock_adapters.dart.md
+  title: 'Quantum Mock Adapters: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: plugin
+  severity: high
+  description: Verify that quantum mock adapters keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_mock_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_mock_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: SECTION 1: MOCK NETWORK CONFIGURATION'
+    headings:
+    - '`src/plugins/adapters/quantum_mock_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - reentrant
+  - quantum mock adapters
+- uuid: 6f339b61-5dc7-595a-b22d-2330fde4ac84
+  file: lib/src/plugins/adapters/quantum_mock_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_mock_adapters.dart.md
+  title: 'Quantum Mock Adapters: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: plugin
+  severity: high
+  description: Verify that quantum mock adapters keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_mock_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_mock_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: SECTION 1: MOCK NETWORK CONFIGURATION'
+    headings:
+    - '`src/plugins/adapters/quantum_mock_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - cleanup
+  - quantum mock adapters
+- uuid: c8b66c9a-d9f7-5d18-916b-e43c473a5602
+  file: lib/src/plugins/adapters/quantum_mock_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_mock_adapters.dart.md
+  title: 'Quantum Mock Adapters: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: plugin
+  severity: high
+  description: Verify that quantum mock adapters keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_mock_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_mock_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: SECTION 1: MOCK NETWORK CONFIGURATION'
+    headings:
+    - '`src/plugins/adapters/quantum_mock_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - performance
+  - quantum mock adapters
+- uuid: 99903b6d-8ebc-51a4-a968-5d107334b98d
+  file: lib/src/plugins/adapters/quantum_mock_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_mock_adapters.dart.md
+  title: 'Quantum Mock Adapters: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: plugin
+  severity: medium
+  description: Verify that quantum mock adapters keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_mock_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_mock_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: SECTION 1: MOCK NETWORK CONFIGURATION'
+    headings:
+    - '`src/plugins/adapters/quantum_mock_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - memory
+  - quantum mock adapters
+- uuid: 0ef73921-2d2c-584f-ad06-a22c38e03e10
+  file: lib/src/plugins/adapters/quantum_mock_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_mock_adapters.dart.md
+  title: 'Quantum Mock Adapters: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: plugin
+  severity: medium
+  description: Verify that quantum mock adapters keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_mock_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_mock_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: SECTION 1: MOCK NETWORK CONFIGURATION'
+    headings:
+    - '`src/plugins/adapters/quantum_mock_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - docs_parity
+  - quantum mock adapters
+- uuid: ab459d93-00c3-5788-a5b3-e8f2f5b3132f
+  file: lib/src/plugins/adapters/quantum_mock_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_mock_adapters.dart.md
+  title: 'Quantum Mock Adapters: permission-denied and unavailable-plugin cases fall back safely'
+  slug: permission
+  category: plugin
+  severity: medium
+  description: Verify that quantum mock adapters keeps its documented runtime behavior while handling permission conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_mock_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_mock_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: SECTION 1: MOCK NETWORK CONFIGURATION'
+    headings:
+    - '`src/plugins/adapters/quantum_mock_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - permission
+  - quantum mock adapters
+- uuid: bef2e20c-7e82-579a-acba-923e377aea5f
+  file: lib/src/plugins/adapters/quantum_mock_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_mock_adapters.dart.md
+  title: 'Quantum Mock Adapters: bridge handoff and adapter selection are stable across platforms'
+  slug: bridge
+  category: plugin
+  severity: medium
+  description: Verify that quantum mock adapters keeps its documented runtime behavior while handling bridge conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_mock_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_mock_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: SECTION 1: MOCK NETWORK CONFIGURATION'
+    headings:
+    - '`src/plugins/adapters/quantum_mock_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - bridge
+  - quantum mock adapters
+- uuid: 10fff74d-2c0a-5c5e-af71-556940945ee0
+  file: lib/src/plugins/adapters/quantum_mock_adapters.dart
+  docs_file: docs/src/plugins/adapters/quantum_mock_adapters.dart.md
+  title: 'Quantum Mock Adapters: fallback adapters take over without data loss or duplicate events'
+  slug: fallback
+  category: plugin
+  severity: medium
+  description: Verify that quantum mock adapters keeps its documented runtime behavior while handling fallback conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/adapters/quantum_mock_adapters.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/adapters/quantum_mock_adapters.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An adapter set that maps the shared API surface onto a particular backend or environment such as local, mock, universal, or Firebase behavior. Author-intent note: SECTION 1: MOCK NETWORK CONFIGURATION'
+    headings:
+    - '`src/plugins/adapters/quantum_mock_adapters.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - fallback
+  - quantum mock adapters

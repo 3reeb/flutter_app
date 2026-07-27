@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:http/http.dart' as http;
 import 'package:http/browser_client.dart'; // Import this separately for BrowserClient
 
 import 'quantum_http_transport.dart';
-
 QuantumHttpTransport createQuantumHttpTransport() => _WebQuantumHttpTransport();
 
 class _WebQuantumHttpTransport implements QuantumHttpTransport {

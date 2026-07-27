@@ -1,0 +1,163 @@
+file: "quantum_data_pipeline.dart"
+rows:
+  -
+    id: "manifest_and_source_present"
+    passed: false
+    expected: "source exists"
+    actual: "Expected: 'lib/src/runtime/quantum_data_pipeline.dart'
+  Actual: 'src/runtime/quantum_data_pipeline.dart'
+   Which: is different.
+          Expected: lib/src/ru ...
+            Actual: src/runtim ...
+                    ^
+           Differ at offset 0
+"
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_data_pipeline.yaml"
+    sourcePath: "lib/src/runtime/quantum_data_pipeline.dart"
+    fileLabel: "lib/src/runtime/quantum_data_pipeline.dart"
+    stackTrace: "#0      fail (package:matcher/src/expect/expect.dart:187:31)
+#1      _expect (package:matcher/src/expect/expect.dart:182:3)
+#2      expect (package:matcher/src/expect/expect.dart:65:3)
+#3      expect (package:flutter_test/src/widget_tester.dart:490:18)
+#4      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:51:9)
+#5      defineSeparatedFileSuite.capture (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:38:11)
+#6      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:48:7)
+#7      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:25)
+<asynchronous suspension>
+#8      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#9      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+"
+  -
+    id: "fingerprint_matches"
+    passed: false
+    expected: "e9e7dd60052bd7cec637cd48eac4cada66f6e52ff264a6dfbf9c083ae10815fd"
+    actual: "Expected: '8ab30404e7cddd3d0275516558c0f8b93bf107dde721c41c059996b7b779c432'
+  Actual: 'e9e7dd60052bd7cec637cd48eac4cada66f6e52ff264a6dfbf9c083ae10815fd'
+   Which: is different.
+          Expected: 8ab30404e7 ...
+            Actual: e9e7dd6005 ...
+                    ^
+           Differ at offset 0
+"
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_data_pipeline.yaml"
+    sourcePath: "lib/src/runtime/quantum_data_pipeline.dart"
+    fileLabel: "lib/src/runtime/quantum_data_pipeline.dart"
+    stackTrace: "#0      fail (package:matcher/src/expect/expect.dart:187:31)
+#1      _expect (package:matcher/src/expect/expect.dart:182:3)
+#2      expect (package:matcher/src/expect/expect.dart:65:3)
+#3      expect (package:flutter_test/src/widget_tester.dart:490:18)
+#4      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:58:9)
+#5      defineSeparatedFileSuite.capture (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:38:11)
+#6      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:57:7)
+#7      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:25)
+<asynchronous suspension>
+#8      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#9      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+"
+  -
+    id: "quantum_data_pipeline.perf_budget.004"
+    passed: false
+    expected: "Repeated fingerprint passes remain inside the budget."
+    actual: "Expected: '8ab30404e7cddd3d0275516558c0f8b93bf107dde721c41c059996b7b779c432'
+  Actual: 'e9e7dd60052bd7cec637cd48eac4cada66f6e52ff264a6dfbf9c083ae10815fd'
+   Which: is different.
+          Expected: 8ab30404e7 ...
+            Actual: e9e7dd6005 ...
+                    ^
+           Differ at offset 0
+"
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_data_pipeline.yaml"
+    sourcePath: "lib/src/runtime/quantum_data_pipeline.dart"
+    fileLabel: "lib/src/runtime/quantum_data_pipeline.dart"
+    stackTrace: "#0      fail (package:matcher/src/expect/expect.dart:187:31)
+#1      _expect (package:matcher/src/expect/expect.dart:182:3)
+#2      expect (package:matcher/src/expect/expect.dart:65:3)
+#3      expect (package:flutter_test/src/widget_tester.dart:490:18)
+#4      _exerciseOperation (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:185:7)
+#5      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:84:13)
+#6      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:25)
+<asynchronous suspension>
+#7      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#8      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+"
+  -
+    id: "quantum_data_pipeline.memory_proxy.005"
+    passed: false
+    expected: "Repeated reads remain bounded and do not drift in size."
+    actual: "Expected: true
+  Actual: <false>
+"
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_data_pipeline.yaml"
+    sourcePath: "lib/src/runtime/quantum_data_pipeline.dart"
+    fileLabel: "lib/src/runtime/quantum_data_pipeline.dart"
+    stackTrace: "#0      fail (package:matcher/src/expect/expect.dart:187:31)
+#1      _expect (package:matcher/src/expect/expect.dart:182:3)
+#2      expect (package:matcher/src/expect/expect.dart:65:3)
+#3      expect (package:flutter_test/src/widget_tester.dart:490:18)
+#4      _exerciseOperation (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:190:7)
+#5      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:84:13)
+#6      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:25)
+<asynchronous suspension>
+#7      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#8      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+"
+  -
+    id: "quantum_data_pipeline.fingerprint_stable.009"
+    passed: false
+    expected: "The fingerprint stays identical across repeated reads."
+    actual: "Expected: '8ab30404e7cddd3d0275516558c0f8b93bf107dde721c41c059996b7b779c432'
+  Actual: 'e9e7dd60052bd7cec637cd48eac4cada66f6e52ff264a6dfbf9c083ae10815fd'
+   Which: is different.
+          Expected: 8ab30404e7 ...
+            Actual: e9e7dd6005 ...
+                    ^
+           Differ at offset 0
+"
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_data_pipeline.yaml"
+    sourcePath: "lib/src/runtime/quantum_data_pipeline.dart"
+    fileLabel: "lib/src/runtime/quantum_data_pipeline.dart"
+    stackTrace: "#0      fail (package:matcher/src/expect/expect.dart:187:31)
+#1      _expect (package:matcher/src/expect/expect.dart:182:3)
+#2      expect (package:matcher/src/expect/expect.dart:65:3)
+#3      expect (package:flutter_test/src/widget_tester.dart:490:18)
+#4      _exerciseOperation (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:134:7)
+#5      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:84:13)
+#6      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:25)
+<asynchronous suspension>
+#7      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#8      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+"
+  -
+    id: "quantum_data_pipeline.line_count_minimum.011"
+    passed: false
+    expected: "The line count stays at or above the recorded floor."
+    actual: "Expected: a value greater than or equal to <1131>
+  Actual: <1129>
+   Which: is not a value greater than or equal to <1131>
+"
+    manifestPath: "tests_runtime/yaml/by-file/src/runtime/quantum_data_pipeline.yaml"
+    sourcePath: "lib/src/runtime/quantum_data_pipeline.dart"
+    fileLabel: "lib/src/runtime/quantum_data_pipeline.dart"
+    stackTrace: "#0      fail (package:matcher/src/expect/expect.dart:187:31)
+#1      _expect (package:matcher/src/expect/expect.dart:182:3)
+#2      expect (package:matcher/src/expect/expect.dart:65:3)
+#3      expect (package:flutter_test/src/widget_tester.dart:490:18)
+#4      _exerciseOperation (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:144:7)
+#5      defineSeparatedFileSuite.<anonymous closure>.<anonymous closure> (file:///C:/flutter/resposive%20layout/lib/test/support/separated_quantum_generated_suite.dart:84:13)
+#6      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:25)
+<asynchronous suspension>
+#7      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#8      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+"

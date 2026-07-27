@@ -1,0 +1,35 @@
+{
+  "__meta": {
+    "id": "compile_time-051-spread-051",
+    "title": "Spread injects structural props #051",
+    "description": "The $spread operator should copy the structural map into runtime props.",
+    "tags": [
+      "compile-time",
+      "spread",
+      "env"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "box:col",
+    "$spread": "{{profile}}",
+    "props": {
+      "role": "panel"
+    }
+  },
+  "env": {
+    "profile": {
+      "tone": "warm",
+      "density": "cozy"
+    }
+  },
+  "expected": {
+    "type": "box:col",
+    "props": {
+      "role": "panel",
+      "tone": "warm",
+      "density": "cozy"
+    },
+    "debugPath": "root"
+  }
+}

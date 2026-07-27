@@ -1,0 +1,28 @@
+{
+  "__meta": {
+    "id": "action-001-button-intent",
+    "title": "action:button with intent prop compiles correctly",
+    "description": "A button must carry __subType:button and its intent prop. The colon form action:button must normalize correctly. Missing intent causes the renderer to use the 'default' fallback style.",
+    "tags": ["action", "button", "intent"],
+    "allowBlank": false,
+    "priority": "critical"
+  },
+  "input": {
+    "type": "action:button",
+    "props": {
+      "text": "Save",
+      "intent": "primary",
+      "onTap": { "type": "action", "name": "form.submit" }
+    }
+  },
+  "expected": {
+    "type": "action",
+    "props": {
+      "__subType": "button",
+      "text": "Save",
+      "intent": "primary",
+      "onTap": { "type": "action", "name": "form.submit" }
+    },
+    "debugPath": "root"
+  }
+}

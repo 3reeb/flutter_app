@@ -18,16 +18,13 @@
 import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/foundation.dart';
-
 import '../../quantum.dart';
 import 'quantum_primitives.dart';
 import '../ui/quantum_layout_engine.dart';
-
 // ──────────────────────────────────────────────────────────────────────────────
 // Public configuration
 // ──────────────────────────────────────────────────────────────────────────────
@@ -194,8 +191,10 @@ class QMatrixSlotRuntimeOverride {
     final pixelOffset = json['pixelOffset'];
     final pixelSize = json['pixelSize'];
     return QMatrixSlotRuntimeOverride(
-      rowStart: json['rowStart'] is num ? (json['rowStart'] as num).toInt() : null,
-      colStart: json['colStart'] is num ? (json['colStart'] as num).toInt() : null,
+      rowStart:
+          json['rowStart'] is num ? (json['rowStart'] as num).toInt() : null,
+      colStart:
+          json['colStart'] is num ? (json['colStart'] as num).toInt() : null,
       rowSpan: json['rowSpan'] is num ? (json['rowSpan'] as num).toInt() : null,
       colSpan: json['colSpan'] is num ? (json['colSpan'] as num).toInt() : null,
       pixelOffset: pixelOffset is Offset
@@ -460,7 +459,8 @@ abstract final class QMatrixLayoutRegistry {
   static Map<String, dynamic> defaultProps(String layoutId) =>
       _defaultProps[layoutId] ?? const <String, dynamic>{};
 
-  static LinkedHashMap<String, _CompiledMatrixData> runtimeCache(String layoutId) =>
+  static LinkedHashMap<String, _CompiledMatrixData> runtimeCache(
+          String layoutId) =>
       _runtimeCaches.putIfAbsent(
           layoutId, () => LinkedHashMap<String, _CompiledMatrixData>());
 
@@ -491,15 +491,19 @@ abstract final class QMatrixLayoutRegistry {
   }
 
   static Map<String, dynamic> _schemaForValue(dynamic value) {
-    if (value == null) return const <String, dynamic>{'type': 'dynamic', 'nullable': true};
+    if (value == null)
+      return const <String, dynamic>{'type': 'dynamic', 'nullable': true};
     if (value is bool) return const <String, dynamic>{'type': 'bool'};
     if (value is int) return const <String, dynamic>{'type': 'int'};
     if (value is double) return const <String, dynamic>{'type': 'double'};
-    if (value is String) return <String, dynamic>{'type': 'String', 'example': value};
+    if (value is String)
+      return <String, dynamic>{'type': 'String', 'example': value};
     if (value is List) {
       return <String, dynamic>{
         'type': 'List<dynamic>',
-        'items': value.isEmpty ? const <String, dynamic>{'type': 'dynamic'} : _schemaForValue(value.first),
+        'items': value.isEmpty
+            ? const <String, dynamic>{'type': 'dynamic'}
+            : _schemaForValue(value.first),
       };
     }
     if (value is Map) {
@@ -514,10 +518,12 @@ abstract final class QMatrixLayoutRegistry {
     return <String, dynamic>{'type': value.runtimeType.toString()};
   }
 
-  static Map<String, dynamic> _schemaForMap(Map<String, dynamic> map) => <String, dynamic>{
+  static Map<String, dynamic> _schemaForMap(Map<String, dynamic> map) =>
+      <String, dynamic>{
         'type': 'object',
         'properties': {
-          for (final entry in map.entries) entry.key: _schemaForValue(entry.value),
+          for (final entry in map.entries)
+            entry.key: _schemaForValue(entry.value),
         },
         'required': map.keys.toList(growable: false),
       };
@@ -546,7 +552,9 @@ abstract final class QMatrixLayoutRegistry {
       'metadata': Map<String, dynamic>.from(metadata),
       'tags': List<String>.from(tags),
       'engine': engine,
-      'paramSchema': _schemaForMap(params.isNotEmpty ? Map<String, dynamic>.from(params) : Map<String, dynamic>.from(defaultProps)),
+      'paramSchema': _schemaForMap(params.isNotEmpty
+          ? Map<String, dynamic>.from(params)
+          : Map<String, dynamic>.from(defaultProps)),
       'infoSchema': <String, dynamic>{
         'name': layoutId,
         'kind': 'layout',
@@ -581,15 +589,16 @@ abstract final class QMatrixLayoutRegistry {
         'paramSchema': meta['paramSchema'] ?? _schemaForMap(defaultProps),
       },
       'metadata': meta,
-      'infoSchema': meta['infoSchema'] ?? {
-        'name': layoutId,
-        'kind': 'layout',
-        'description': meta['description'] ?? '',
-        'engine': meta['engine'] ?? 'QMatrixLayoutRegistry',
-        'tags': meta['tags'] ?? const [],
-        'slotCount': def.slotConfigs.length,
-        'variantNames': def.variants.keys.toList(growable: false),
-      },
+      'infoSchema': meta['infoSchema'] ??
+          {
+            'name': layoutId,
+            'kind': 'layout',
+            'description': meta['description'] ?? '',
+            'engine': meta['engine'] ?? 'QMatrixLayoutRegistry',
+            'tags': meta['tags'] ?? const [],
+            'slotCount': def.slotConfigs.length,
+            'variantNames': def.variants.keys.toList(growable: false),
+          },
       'slotConfigs': def.slotConfigs.map((k, v) => MapEntry(k, v.toJson())),
     };
   }
@@ -933,7 +942,8 @@ class RenderQuantumMatrix extends RenderBox
   })  : _matrixData = matrixData,
         _scrollSignal = scrollSignal,
         _interactionController = interactionController,
-        _runtimeOverrides = Map<String, QMatrixSlotRuntimeOverride>.from(runtimeOverrides),
+        _runtimeOverrides =
+            Map<String, QMatrixSlotRuntimeOverride>.from(runtimeOverrides),
         _runtimeVisualOrder = runtimeVisualOrder == null
             ? null
             : List<String>.from(runtimeVisualOrder, growable: false),
@@ -977,7 +987,8 @@ class RenderQuantumMatrix extends RenderBox
 
   set runtimeVisualOrder(List<String>? val) {
     if (listEquals(_runtimeVisualOrder, val)) return;
-    _runtimeVisualOrder = val == null ? null : List<String>.from(val, growable: false);
+    _runtimeVisualOrder =
+        val == null ? null : List<String>.from(val, growable: false);
     markNeedsLayout();
   }
 
@@ -1671,9 +1682,8 @@ Map<String, QMatrixSlotRuntimeOverride> _parseMatrixSlotOverrides(dynamic raw) {
         out[entry.trim()] = const QMatrixSlotRuntimeOverride(hidden: true);
       } else if (entry is Map) {
         final map = _asStringKeyedMap(entry);
-        final name = (map['slot'] ?? map['name'] ?? map['id'] ?? '')
-            .toString()
-            .trim();
+        final name =
+            (map['slot'] ?? map['name'] ?? map['id'] ?? '').toString().trim();
         if (name.isNotEmpty) {
           out[name] = QMatrixSlotRuntimeOverride.fromJson(map);
         }
@@ -1689,7 +1699,8 @@ Map<String, QMatrixSlotRuntimeOverride> _parseMatrixSlotOverrides(dynamic raw) {
       if (value is QMatrixSlotRuntimeOverride) {
         out[name] = value;
       } else if (value is Map) {
-        out[name] = QMatrixSlotRuntimeOverride.fromJson(_asStringKeyedMap(value));
+        out[name] =
+            QMatrixSlotRuntimeOverride.fromJson(_asStringKeyedMap(value));
       } else if (value is bool) {
         out[name] = QMatrixSlotRuntimeOverride(hidden: value);
       } else if (value == null) {
@@ -1730,9 +1741,8 @@ QMatrixInteractionController _resolveMatrixController(
   String key = '',
   QMatrixInteractionController? fallback,
 }) {
-  final String signalKey = key.isEmpty
-      ? 'system.matrixController'
-      : 'system.matrixController.$key';
+  final String signalKey =
+      key.isEmpty ? 'system.matrixController' : 'system.matrixController.$key';
   final signal = store.signal(signalKey);
   final current = signal.value;
   if (current is QMatrixInteractionController) return current;
@@ -1771,7 +1781,8 @@ Widget buildQuantumMatrixWidget({
     required String cols,
     required String rows,
   }) {
-    final String key = '${base.id}|${cols.hashCode}|${rows.hashCode}|${base.gap}';
+    final String key =
+        '${base.id}|${cols.hashCode}|${rows.hashCode}|${base.gap}';
     final cached = QMatrixLayoutRegistry.cacheGet(runtimeCache, key);
     if (cached != null) return cached;
     return QMatrixLayoutRegistry.cachePut(runtimeCache, key, () {
@@ -1839,10 +1850,10 @@ Widget buildQuantumMatrixWidget({
               node.props['__subType'] ??
               '')
           .toString();
-      final String variant =
-          QLDataBinder.resolveAOT(node.props['variant'], layoutContext, rawEnv, store)
-                  ?.toString() ??
-              '';
+      final String variant = QLDataBinder.resolveAOT(
+                  node.props['variant'], layoutContext, rawEnv, store)
+              ?.toString() ??
+          '';
 
       final Map<String, dynamic> nodeProps = _asStringKeyedMap(node.props);
       final Map<String, dynamic> resolvedOverrides = _asStringKeyedMap(
@@ -1855,11 +1866,10 @@ Widget buildQuantumMatrixWidget({
       );
 
       final Map<String, dynamic> sharedData = <String, dynamic>{}
-        ..addAll(_asStringKeyedMap(
-            resolvedOverrides['sharedData'] ??
-                resolvedOverrides['layoutData'] ??
-                nodeProps['sharedData'] ??
-                nodeProps['layoutData']))
+        ..addAll(_asStringKeyedMap(resolvedOverrides['sharedData'] ??
+            resolvedOverrides['layoutData'] ??
+            nodeProps['sharedData'] ??
+            nodeProps['layoutData']))
         ..addAll(_asStringKeyedMap(nodeProps['shared']))
         ..addAll(_asStringKeyedMap(nodeProps['scopeData']));
 
@@ -1925,19 +1935,19 @@ Widget buildQuantumMatrixWidget({
 
       final QLContext qlCtx = QLContext(layoutContext, node, layoutEnv, store);
 
-      final double width = constraints.hasBoundedWidth && constraints.maxWidth.isFinite
-          ? constraints.maxWidth
-          : MediaQuery.sizeOf(layoutContext).width;
+      final double width =
+          constraints.hasBoundedWidth && constraints.maxWidth.isFinite
+              ? constraints.maxWidth
+              : MediaQuery.sizeOf(layoutContext).width;
       final String bp = breakpointForWidth(width);
       final _CompiledMatrixData compiled = layoutDef.resolve(variant, bp);
 
-      final Map<String, QMatrixSlotRuntimeOverride> runtimeOverrides =
-          <String, QMatrixSlotRuntimeOverride>{}
-            ..addAll(_parseMatrixSlotOverrides(
-                resolvedOverrides['slotOverrides'] ??
-                    resolvedOverrides['slots']))
-            ..addAll(_parseMatrixSlotOverrides(
-                nodeProps['slotOverrides'] ?? nodeProps['slotStates']));
+      final Map<String, QMatrixSlotRuntimeOverride> runtimeOverrides = <String,
+          QMatrixSlotRuntimeOverride>{}
+        ..addAll(_parseMatrixSlotOverrides(
+            resolvedOverrides['slotOverrides'] ?? resolvedOverrides['slots']))
+        ..addAll(_parseMatrixSlotOverrides(
+            nodeProps['slotOverrides'] ?? nodeProps['slotStates']));
 
       final List<String>? runtimeVisualOrder = _parseMatrixVisualOrder(
         resolvedOverrides['slotOrder'] ??
@@ -1950,20 +1960,24 @@ Widget buildQuantumMatrixWidget({
         resolvedOverrides['layoutOverrides'] ?? nodeProps['layoutOverrides'],
       );
 
-      final bool enableSemantics =
-          (layoutOverrides['enableSemantics'] ?? node.props['enableSemantics']) != false;
+      final bool enableSemantics = (layoutOverrides['enableSemantics'] ??
+              node.props['enableSemantics']) !=
+          false;
       final bool enableInteractivity =
-          (layoutOverrides['enableInteractivity'] ?? node.props['enableInteractivity']) != false;
+          (layoutOverrides['enableInteractivity'] ??
+                  node.props['enableInteractivity']) !=
+              false;
       final bool enableRTL =
           (layoutOverrides['enableRTL'] ?? node.props['enableRTL']) != false;
 
       final dynamic semanticsModeProp =
           layoutOverrides['semanticsOrder'] ?? node.props['semanticsOrder'];
-      final QMatrixSemanticsOrder semanticsOrder = semanticsModeProp == 'logical'
-          ? QMatrixSemanticsOrder.logical
-          : semanticsModeProp == 'none'
-              ? QMatrixSemanticsOrder.none
-              : QMatrixSemanticsOrder.visual;
+      final QMatrixSemanticsOrder semanticsOrder =
+          semanticsModeProp == 'logical'
+              ? QMatrixSemanticsOrder.logical
+              : semanticsModeProp == 'none'
+                  ? QMatrixSemanticsOrder.none
+                  : QMatrixSemanticsOrder.visual;
 
       final List<Widget> children = <Widget>[];
       final List<MapEntry<String, QMatrixSlotDef>> orderedSlots =

@@ -1,0 +1,30 @@
+{
+  "__meta": {
+    "id": "compile_time-071-if-071",
+    "title": "If pruning removes a branch #071",
+    "description": "The $if operator should prune false branches and leave a root blueprint when the branch is removed.",
+    "tags": [
+      "compile-time",
+      "if",
+      "prune"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "box:col",
+    "$if": false,
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Kept 071"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:col",
+    "props": {},
+    "debugPath": "root"
+  }
+}

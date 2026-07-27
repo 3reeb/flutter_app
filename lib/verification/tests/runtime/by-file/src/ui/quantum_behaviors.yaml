@@ -1,0 +1,550 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/ui/quantum_behaviors.dart
+  docs_file: docs/src/ui/quantum_behaviors.dart.md
+  source_entry:
+    line_count: 758
+    byte_count: 27252
+    class_count: 10
+    enum_count: 0
+    function_count: 20
+    category: ui
+    test_count: 10
+  scenario_count: 10
+source:
+  path: src/ui/quantum_behaviors.dart
+  docs_path: docs/src/ui/quantum_behaviors.dart.md
+  label: src/ui/quantum_behaviors.dart
+scenarios:
+- uuid: deddba1c-b6d4-5a90-9223-9bea49c5d33b
+  file: lib/src/ui/quantum_behaviors.dart
+  docs_file: docs/src/ui/quantum_behaviors.dart.md
+  title: 'Quantum Behaviors: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum behaviors keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_behaviors.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_behaviors.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: QUANTUM BEHAVIORS ENGINE v8.0 - OMEGA DOD SINGULARITY'
+    headings:
+    - '`src/ui/quantum_behaviors.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum behaviors
+- uuid: 393363b0-6d7e-5807-8340-435ce0879300
+  file: lib/src/ui/quantum_behaviors.dart
+  docs_file: docs/src/ui/quantum_behaviors.dart.md
+  title: 'Quantum Behaviors: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum behaviors keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_behaviors.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_behaviors.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: QUANTUM BEHAVIORS ENGINE v8.0 - OMEGA DOD SINGULARITY'
+    headings:
+    - '`src/ui/quantum_behaviors.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum behaviors
+- uuid: f6f080d1-358a-56ee-88cb-9cb0fb74f0a9
+  file: lib/src/ui/quantum_behaviors.dart
+  docs_file: docs/src/ui/quantum_behaviors.dart.md
+  title: 'Quantum Behaviors: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum behaviors keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_behaviors.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_behaviors.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: QUANTUM BEHAVIORS ENGINE v8.0 - OMEGA DOD SINGULARITY'
+    headings:
+    - '`src/ui/quantum_behaviors.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum behaviors
+- uuid: d07fe3c2-5c99-5a30-a07a-a8acd8fa4448
+  file: lib/src/ui/quantum_behaviors.dart
+  docs_file: docs/src/ui/quantum_behaviors.dart.md
+  title: 'Quantum Behaviors: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum behaviors keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_behaviors.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_behaviors.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: QUANTUM BEHAVIORS ENGINE v8.0 - OMEGA DOD SINGULARITY'
+    headings:
+    - '`src/ui/quantum_behaviors.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum behaviors
+- uuid: b535d251-1fb9-5396-8211-a56cb89679b1
+  file: lib/src/ui/quantum_behaviors.dart
+  docs_file: docs/src/ui/quantum_behaviors.dart.md
+  title: 'Quantum Behaviors: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum behaviors keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_behaviors.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_behaviors.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: QUANTUM BEHAVIORS ENGINE v8.0 - OMEGA DOD SINGULARITY'
+    headings:
+    - '`src/ui/quantum_behaviors.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum behaviors
+- uuid: 8987f3c6-fe07-53fe-b484-642bc43040d6
+  file: lib/src/ui/quantum_behaviors.dart
+  docs_file: docs/src/ui/quantum_behaviors.dart.md
+  title: 'Quantum Behaviors: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum behaviors keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_behaviors.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_behaviors.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: QUANTUM BEHAVIORS ENGINE v8.0 - OMEGA DOD SINGULARITY'
+    headings:
+    - '`src/ui/quantum_behaviors.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum behaviors
+- uuid: 7ee56a2e-c12a-5abf-8f82-47fa2d0c0219
+  file: lib/src/ui/quantum_behaviors.dart
+  docs_file: docs/src/ui/quantum_behaviors.dart.md
+  title: 'Quantum Behaviors: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum behaviors keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_behaviors.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_behaviors.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: QUANTUM BEHAVIORS ENGINE v8.0 - OMEGA DOD SINGULARITY'
+    headings:
+    - '`src/ui/quantum_behaviors.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum behaviors
+- uuid: ccf4e5f5-8696-58dc-9ff8-c4f29d2c8e76
+  file: lib/src/ui/quantum_behaviors.dart
+  docs_file: docs/src/ui/quantum_behaviors.dart.md
+  title: 'Quantum Behaviors: layout remains correct under narrow, wide, and constrained bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum behaviors keeps its documented runtime behavior while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_behaviors.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_behaviors.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: QUANTUM BEHAVIORS ENGINE v8.0 - OMEGA DOD SINGULARITY'
+    headings:
+    - '`src/ui/quantum_behaviors.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum behaviors
+- uuid: 0b806b5d-f277-5587-8429-06070e3b62c1
+  file: lib/src/ui/quantum_behaviors.dart
+  docs_file: docs/src/ui/quantum_behaviors.dart.md
+  title: 'Quantum Behaviors: semantics and accessibility output remain stable across rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that quantum behaviors keeps its documented runtime behavior while handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_behaviors.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_behaviors.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: QUANTUM BEHAVIORS ENGINE v8.0 - OMEGA DOD SINGULARITY'
+    headings:
+    - '`src/ui/quantum_behaviors.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - semantics
+  - quantum behaviors
+- uuid: 442365c9-cda8-5d9b-b803-a06f075508b8
+  file: lib/src/ui/quantum_behaviors.dart
+  docs_file: docs/src/ui/quantum_behaviors.dart.md
+  title: 'Quantum Behaviors: gesture handling and hit testing stay correct during interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that quantum behaviors keeps its documented runtime behavior while handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_behaviors.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_behaviors.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout, interactions, theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent note: QUANTUM BEHAVIORS ENGINE v8.0 - OMEGA DOD SINGULARITY'
+    headings:
+    - '`src/ui/quantum_behaviors.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - gesture
+  - quantum behaviors

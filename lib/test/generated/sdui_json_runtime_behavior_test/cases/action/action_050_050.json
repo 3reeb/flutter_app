@@ -1,0 +1,28 @@
+{
+  "__meta": {
+    "id": "action-050-chip-selected",
+    "title": "action:chip with selected binding and onToggle compiles correctly",
+    "description": "A chip must carry selected as a binding expression and onToggle with tag arg. The renderer evaluates selected at runtime to toggle the active style.",
+    "tags": ["action", "chip", "selected", "binding"],
+    "allowBlank": false,
+    "priority": "medium"
+  },
+  "input": {
+    "type": "action:chip",
+    "props": {
+      "label": "Flutter",
+      "selected": "${state.selectedTags.contains('flutter')}",
+      "onToggle": { "type": "action", "name": "tags.toggle", "args": { "tag": "flutter" } }
+    }
+  },
+  "expected": {
+    "type": "action",
+    "props": {
+      "__subType": "chip",
+      "label": "Flutter",
+      "selected": "${state.selectedTags.contains('flutter')}",
+      "onToggle": { "type": "action", "name": "tags.toggle", "args": { "tag": "flutter" } }
+    },
+    "debugPath": "root"
+  }
+}

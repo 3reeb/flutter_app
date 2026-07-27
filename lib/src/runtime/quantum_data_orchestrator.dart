@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:typed_data';
-
 import 'package:flutter/foundation.dart';
 import '../foundation/quantum_isolate_bridge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'quantum_data_pipeline.dart';
 import 'quantum_data_state.dart';
-import '../../quantum.dart'
+import 'package:quantum_layout/quantum.dart'
     hide
         QLStoreRegistry,
         QLMutationFn,
@@ -180,6 +178,15 @@ abstract final class QuantumDataOrchestrator {
             List<dynamic>.from(cfg['fetchPartial'] as List? ?? const []),
         context: resolvedCtx,
         schema: schema,
+        select: cfg['select'] is Iterable
+            ? List<String>.from(
+                (cfg['select'] as Iterable).map((e) => e.toString()),
+              )
+            : (cfg['fields'] is Iterable
+                ? List<String>.from(
+                    (cfg['fields'] as Iterable).map((e) => e.toString()),
+                  )
+                : const <String>[]),
       );
 
       final pipeline = QLDataPipeline(
@@ -377,12 +384,14 @@ class QLOrchestratorPipelineDelegate implements QLPipelineDelegate {
   final List<dynamic>? partialFetchActions;
   final BuildContext? context;
   final QLSchemaBlueprint schema;
+  final List<String> select;
 
   QLOrchestratorPipelineDelegate({
     required this.fetchActions,
     this.partialFetchActions,
     this.context,
     required this.schema,
+    this.select = const <String>[],
   });
 
   @override
@@ -391,6 +400,8 @@ class QLOrchestratorPipelineDelegate implements QLPipelineDelegate {
 
     final env = <String, dynamic>{
       r'$pipelineState': state,
+      if (select.isNotEmpty) 'select': select,
+      if (select.isNotEmpty) 'fields': select,
     };
 
     final augmentedActions = fetchActions.map((a) {
@@ -420,10 +431,16 @@ class QLOrchestratorPipelineDelegate implements QLPipelineDelegate {
         requestedFields.add(spec.path.toString());
       }
     }
+    if (select.isNotEmpty) {
+      for (final field in select) {
+        if (!requestedFields.contains(field)) requestedFields.add(field);
+      }
+    }
 
     final env = <String, dynamic>{
       r'$requestedIds': ids,
       r'$requestedFields': requestedFields,
+      if (select.isNotEmpty) 'select': select,
     };
 
     final augmentedActions = partialFetchActions!.map((a) {
@@ -432,6 +449,7 @@ class QLOrchestratorPipelineDelegate implements QLPipelineDelegate {
           ...a,
           r'$requestedIds': ids,
           r'$requestedFields': requestedFields,
+          if (select.isNotEmpty) 'select': select,
         };
       }
       return a;

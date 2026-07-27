@@ -1,0 +1,488 @@
+file: lib/src/foundation/quantum_isolate_bridge.dart
+docs_file: docs/src/foundation/quantum_isolate_bridge.dart.md
+line_count: 22
+category: plugin
+tests:
+- uuid: 669cc343-bfa6-5e51-b26c-a5cab2a8b402
+  file: lib/src/foundation/quantum_isolate_bridge.dart
+  docs_file: docs/src/foundation/quantum_isolate_bridge.dart.md
+  title: 'Quantum Isolate Bridge: public contract remains stable under valid input'
+  slug: contract
+  category: plugin
+  severity: critical
+  description: Verify that quantum isolate bridge keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_isolate_bridge.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_isolate_bridge.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A bridge layer between framework-level abstractions and a lower-level
+      runtime or platform API. It keeps the higher-level code isolated from platform-specific
+      details. Author-intent note: / Shared isolate helper used by API, auth, media,
+      and socket layers.'
+    headings:
+    - '`src/foundation/quantum_isolate_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - contract
+  - quantum isolate bridge
+- uuid: 21002fef-7699-5363-ae1f-e0289467f69e
+  file: lib/src/foundation/quantum_isolate_bridge.dart
+  docs_file: docs/src/foundation/quantum_isolate_bridge.dart.md
+  title: 'Quantum Isolate Bridge: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: plugin
+  severity: critical
+  description: Verify that quantum isolate bridge keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_isolate_bridge.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_isolate_bridge.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A bridge layer between framework-level abstractions and a lower-level
+      runtime or platform API. It keeps the higher-level code isolated from platform-specific
+      details. Author-intent note: / Shared isolate helper used by API, auth, media,
+      and socket layers.'
+    headings:
+    - '`src/foundation/quantum_isolate_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - invalid_input
+  - quantum isolate bridge
+- uuid: ca38da84-75c5-509d-bd50-2ba955d533f2
+  file: lib/src/foundation/quantum_isolate_bridge.dart
+  docs_file: docs/src/foundation/quantum_isolate_bridge.dart.md
+  title: 'Quantum Isolate Bridge: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: plugin
+  severity: high
+  description: Verify that quantum isolate bridge keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_isolate_bridge.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_isolate_bridge.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A bridge layer between framework-level abstractions and a lower-level
+      runtime or platform API. It keeps the higher-level code isolated from platform-specific
+      details. Author-intent note: / Shared isolate helper used by API, auth, media,
+      and socket layers.'
+    headings:
+    - '`src/foundation/quantum_isolate_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - reentrant
+  - quantum isolate bridge
+- uuid: c3d9b252-e556-5c5a-94e9-6bbfe3de4b3c
+  file: lib/src/foundation/quantum_isolate_bridge.dart
+  docs_file: docs/src/foundation/quantum_isolate_bridge.dart.md
+  title: 'Quantum Isolate Bridge: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: plugin
+  severity: high
+  description: Verify that quantum isolate bridge keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_isolate_bridge.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_isolate_bridge.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A bridge layer between framework-level abstractions and a lower-level
+      runtime or platform API. It keeps the higher-level code isolated from platform-specific
+      details. Author-intent note: / Shared isolate helper used by API, auth, media,
+      and socket layers.'
+    headings:
+    - '`src/foundation/quantum_isolate_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - cleanup
+  - quantum isolate bridge
+- uuid: c2ec5562-ab5e-5c4d-9c2b-848bb7474e1c
+  file: lib/src/foundation/quantum_isolate_bridge.dart
+  docs_file: docs/src/foundation/quantum_isolate_bridge.dart.md
+  title: 'Quantum Isolate Bridge: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: plugin
+  severity: high
+  description: Verify that quantum isolate bridge keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_isolate_bridge.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_isolate_bridge.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A bridge layer between framework-level abstractions and a lower-level
+      runtime or platform API. It keeps the higher-level code isolated from platform-specific
+      details. Author-intent note: / Shared isolate helper used by API, auth, media,
+      and socket layers.'
+    headings:
+    - '`src/foundation/quantum_isolate_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - performance
+  - quantum isolate bridge
+- uuid: d1d00841-a8d5-542f-9abc-ddeb4e09f000
+  file: lib/src/foundation/quantum_isolate_bridge.dart
+  docs_file: docs/src/foundation/quantum_isolate_bridge.dart.md
+  title: 'Quantum Isolate Bridge: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: plugin
+  severity: medium
+  description: Verify that quantum isolate bridge keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_isolate_bridge.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_isolate_bridge.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A bridge layer between framework-level abstractions and a lower-level
+      runtime or platform API. It keeps the higher-level code isolated from platform-specific
+      details. Author-intent note: / Shared isolate helper used by API, auth, media,
+      and socket layers.'
+    headings:
+    - '`src/foundation/quantum_isolate_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - memory
+  - quantum isolate bridge
+- uuid: f1d61d7d-dc96-5cf2-b6b1-bac1092c4b84
+  file: lib/src/foundation/quantum_isolate_bridge.dart
+  docs_file: docs/src/foundation/quantum_isolate_bridge.dart.md
+  title: 'Quantum Isolate Bridge: the runtime surface still matches the documented
+    API and headings'
+  slug: docs_parity
+  category: plugin
+  severity: medium
+  description: Verify that quantum isolate bridge keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_isolate_bridge.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_isolate_bridge.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A bridge layer between framework-level abstractions and a lower-level
+      runtime or platform API. It keeps the higher-level code isolated from platform-specific
+      details. Author-intent note: / Shared isolate helper used by API, auth, media,
+      and socket layers.'
+    headings:
+    - '`src/foundation/quantum_isolate_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - docs_parity
+  - quantum isolate bridge
+- uuid: a6e4031b-aba4-550a-9c61-d8307f428c1d
+  file: lib/src/foundation/quantum_isolate_bridge.dart
+  docs_file: docs/src/foundation/quantum_isolate_bridge.dart.md
+  title: 'Quantum Isolate Bridge: permission-denied and unavailable-plugin cases fall
+    back safely'
+  slug: permission
+  category: plugin
+  severity: medium
+  description: Verify that quantum isolate bridge keeps its documented runtime behavior
+    while handling permission conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/foundation/quantum_isolate_bridge.dart with its documented dependencies
+      available.
+    - Use the runtime surface described in docs/src/foundation/quantum_isolate_bridge.dart.md.
+    stimulus:
+    - Resolve the adapter or bridge path on supported and unsupported platforms.
+    - Force permission-denied, missing-service, and fallback-implementation branches.
+    data:
+      platforms:
+      - web
+      - io
+      - native
+      - stub
+      failure_modes:
+      - missing capability
+      - bridge error
+      - channel closed
+  expected_output:
+    fallback: A deterministic fallback path is selected when the primary bridge is
+      unavailable.
+    cleanup: Streams, subscriptions, and platform handles close cleanly.
+    observability: Failures are surfaced with actionable diagnostics.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A bridge layer between framework-level abstractions and a lower-level
+      runtime or platform API. It keeps the higher-level code isolated from platform-specific
+      details. Author-intent note: / Shared isolate helper used by API, auth, media,
+      and socket layers.'
+    headings:
+    - '`src/foundation/quantum_isolate_bridge.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - plugin
+  - permission
+  - quantum isolate bridge

@@ -1,0 +1,572 @@
+file: lib/src/app/quantum_app_entry.dart
+docs_file: docs/src/app/quantum_app_entry.dart.md
+line_count: 951
+category: ui
+tests:
+- uuid: a1596ef6-b891-5e74-ae88-b52ac974ea93
+  file: lib/src/app/quantum_app_entry.dart
+  docs_file: docs/src/app/quantum_app_entry.dart.md
+  title: 'Quantum App Entry: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum app entry keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_entry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_entry.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER'
+    headings:
+    - '`src/app/quantum_app_entry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum app entry
+- uuid: 72ef578f-3467-537d-a400-b86a13ad0f07
+  file: lib/src/app/quantum_app_entry.dart
+  docs_file: docs/src/app/quantum_app_entry.dart.md
+  title: 'Quantum App Entry: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum app entry keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_entry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_entry.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER'
+    headings:
+    - '`src/app/quantum_app_entry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum app entry
+- uuid: 57268cf5-e2b7-54a1-9080-d545e86b3e1a
+  file: lib/src/app/quantum_app_entry.dart
+  docs_file: docs/src/app/quantum_app_entry.dart.md
+  title: 'Quantum App Entry: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum app entry keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_entry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_entry.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER'
+    headings:
+    - '`src/app/quantum_app_entry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum app entry
+- uuid: 6022b28f-a840-593f-9dae-81d1d1e7435c
+  file: lib/src/app/quantum_app_entry.dart
+  docs_file: docs/src/app/quantum_app_entry.dart.md
+  title: 'Quantum App Entry: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum app entry keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_entry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_entry.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER'
+    headings:
+    - '`src/app/quantum_app_entry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum app entry
+- uuid: c272bc6e-24f6-53ce-b7c9-ce8bd469f311
+  file: lib/src/app/quantum_app_entry.dart
+  docs_file: docs/src/app/quantum_app_entry.dart.md
+  title: 'Quantum App Entry: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum app entry keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_entry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_entry.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER'
+    headings:
+    - '`src/app/quantum_app_entry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum app entry
+- uuid: 1ce39288-194c-590a-81e0-f1ec8084e504
+  file: lib/src/app/quantum_app_entry.dart
+  docs_file: docs/src/app/quantum_app_entry.dart.md
+  title: 'Quantum App Entry: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum app entry keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_entry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_entry.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER'
+    headings:
+    - '`src/app/quantum_app_entry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum app entry
+- uuid: 38f2565b-e116-589d-9b59-c2497e00e1e2
+  file: lib/src/app/quantum_app_entry.dart
+  docs_file: docs/src/app/quantum_app_entry.dart.md
+  title: 'Quantum App Entry: the runtime surface still matches the documented API
+    and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum app entry keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_entry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_entry.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER'
+    headings:
+    - '`src/app/quantum_app_entry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum app entry
+- uuid: 165f288f-0c7d-5a98-b4ef-f2573a419318
+  file: lib/src/app/quantum_app_entry.dart
+  docs_file: docs/src/app/quantum_app_entry.dart.md
+  title: 'Quantum App Entry: layout remains correct under narrow, wide, and constrained
+    bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum app entry keeps its documented runtime behavior
+    while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_entry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_entry.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER'
+    headings:
+    - '`src/app/quantum_app_entry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum app entry
+- uuid: 8a3817f1-6cc2-521c-8780-e6ccfc3ad532
+  file: lib/src/app/quantum_app_entry.dart
+  docs_file: docs/src/app/quantum_app_entry.dart.md
+  title: 'Quantum App Entry: semantics and accessibility output remain stable across
+    rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that quantum app entry keeps its documented runtime behavior
+    while handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_entry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_entry.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER'
+    headings:
+    - '`src/app/quantum_app_entry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - semantics
+  - quantum app entry
+- uuid: 4407c5cb-cd34-5abf-9342-b22ab9ab142b
+  file: lib/src/app/quantum_app_entry.dart
+  docs_file: docs/src/app/quantum_app_entry.dart.md
+  title: 'Quantum App Entry: gesture handling and hit testing stay correct during
+    interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that quantum app entry keeps its documented runtime behavior
+    while handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum_app_entry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum_app_entry.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'An app-level support module. These files usually connect boot-time config,
+      shell behavior, HTTP transport, or file routing into the overall Flutter application.
+      Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER'
+    headings:
+    - '`src/app/quantum_app_entry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - gesture
+  - quantum app entry

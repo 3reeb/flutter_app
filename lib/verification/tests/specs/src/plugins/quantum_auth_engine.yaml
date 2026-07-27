@@ -1,0 +1,705 @@
+file: lib/src/plugins/quantum_auth_engine.dart
+docs_file: docs/src/plugins/quantum_auth_engine.dart.md
+line_count: 1748
+category: security
+tests:
+- uuid: 57a95f52-8e8c-5b00-a716-08b4130389a7
+  file: lib/src/plugins/quantum_auth_engine.dart
+  docs_file: docs/src/plugins/quantum_auth_engine.dart.md
+  title: 'Quantum Auth Engine: public contract remains stable under valid input'
+  slug: contract
+  category: security
+  severity: critical
+  description: Verify that quantum auth engine keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_auth_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_auth_engine.dart.md.
+    stimulus:
+    - Evaluate access under allow, deny, revoke, and mixed-scope conditions.
+    - Mutate the policy snapshot repeatedly to expose stale authorization state.
+    data:
+      principal:
+      - guest
+      - user
+      - admin
+      - service
+      policy:
+      - allow
+      - deny
+      - inherit
+      - override
+  expected_output:
+    decision: Access decisions are deterministic and least-privilege.
+    audit: Audit traces remain complete and do not expose secrets.
+    snapshot: Policy snapshots reflect the latest committed state.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework.
+    headings:
+    - '`src/plugins/quantum_auth_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - security
+  - contract
+  - quantum auth engine
+- uuid: c1faf58e-9007-5060-b079-846077a44a58
+  file: lib/src/plugins/quantum_auth_engine.dart
+  docs_file: docs/src/plugins/quantum_auth_engine.dart.md
+  title: 'Quantum Auth Engine: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: security
+  severity: critical
+  description: Verify that quantum auth engine keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_auth_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_auth_engine.dart.md.
+    stimulus:
+    - Evaluate access under allow, deny, revoke, and mixed-scope conditions.
+    - Mutate the policy snapshot repeatedly to expose stale authorization state.
+    data:
+      principal:
+      - guest
+      - user
+      - admin
+      - service
+      policy:
+      - allow
+      - deny
+      - inherit
+      - override
+  expected_output:
+    decision: Access decisions are deterministic and least-privilege.
+    audit: Audit traces remain complete and do not expose secrets.
+    snapshot: Policy snapshots reflect the latest committed state.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework.
+    headings:
+    - '`src/plugins/quantum_auth_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - security
+  - invalid_input
+  - quantum auth engine
+- uuid: fb3bd75c-87eb-56f4-8426-910b8e3d79aa
+  file: lib/src/plugins/quantum_auth_engine.dart
+  docs_file: docs/src/plugins/quantum_auth_engine.dart.md
+  title: 'Quantum Auth Engine: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: security
+  severity: high
+  description: Verify that quantum auth engine keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_auth_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_auth_engine.dart.md.
+    stimulus:
+    - Evaluate access under allow, deny, revoke, and mixed-scope conditions.
+    - Mutate the policy snapshot repeatedly to expose stale authorization state.
+    data:
+      principal:
+      - guest
+      - user
+      - admin
+      - service
+      policy:
+      - allow
+      - deny
+      - inherit
+      - override
+  expected_output:
+    decision: Access decisions are deterministic and least-privilege.
+    audit: Audit traces remain complete and do not expose secrets.
+    snapshot: Policy snapshots reflect the latest committed state.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework.
+    headings:
+    - '`src/plugins/quantum_auth_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - security
+  - reentrant
+  - quantum auth engine
+- uuid: ca1e53d2-0c65-5e13-a255-6357b216b546
+  file: lib/src/plugins/quantum_auth_engine.dart
+  docs_file: docs/src/plugins/quantum_auth_engine.dart.md
+  title: 'Quantum Auth Engine: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: security
+  severity: high
+  description: Verify that quantum auth engine keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_auth_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_auth_engine.dart.md.
+    stimulus:
+    - Evaluate access under allow, deny, revoke, and mixed-scope conditions.
+    - Mutate the policy snapshot repeatedly to expose stale authorization state.
+    data:
+      principal:
+      - guest
+      - user
+      - admin
+      - service
+      policy:
+      - allow
+      - deny
+      - inherit
+      - override
+  expected_output:
+    decision: Access decisions are deterministic and least-privilege.
+    audit: Audit traces remain complete and do not expose secrets.
+    snapshot: Policy snapshots reflect the latest committed state.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework.
+    headings:
+    - '`src/plugins/quantum_auth_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - security
+  - cleanup
+  - quantum auth engine
+- uuid: eb0b9133-6762-5456-b1f0-b0d35eb1d7cc
+  file: lib/src/plugins/quantum_auth_engine.dart
+  docs_file: docs/src/plugins/quantum_auth_engine.dart.md
+  title: 'Quantum Auth Engine: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: security
+  severity: high
+  description: Verify that quantum auth engine keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_auth_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_auth_engine.dart.md.
+    stimulus:
+    - Evaluate access under allow, deny, revoke, and mixed-scope conditions.
+    - Mutate the policy snapshot repeatedly to expose stale authorization state.
+    data:
+      principal:
+      - guest
+      - user
+      - admin
+      - service
+      policy:
+      - allow
+      - deny
+      - inherit
+      - override
+  expected_output:
+    decision: Access decisions are deterministic and least-privilege.
+    audit: Audit traces remain complete and do not expose secrets.
+    snapshot: Policy snapshots reflect the latest committed state.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework.
+    headings:
+    - '`src/plugins/quantum_auth_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - security
+  - performance
+  - quantum auth engine
+- uuid: c5e4946f-b986-512d-b956-df25a9cbf20f
+  file: lib/src/plugins/quantum_auth_engine.dart
+  docs_file: docs/src/plugins/quantum_auth_engine.dart.md
+  title: 'Quantum Auth Engine: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: security
+  severity: medium
+  description: Verify that quantum auth engine keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_auth_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_auth_engine.dart.md.
+    stimulus:
+    - Evaluate access under allow, deny, revoke, and mixed-scope conditions.
+    - Mutate the policy snapshot repeatedly to expose stale authorization state.
+    data:
+      principal:
+      - guest
+      - user
+      - admin
+      - service
+      policy:
+      - allow
+      - deny
+      - inherit
+      - override
+  expected_output:
+    decision: Access decisions are deterministic and least-privilege.
+    audit: Audit traces remain complete and do not expose secrets.
+    snapshot: Policy snapshots reflect the latest committed state.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework.
+    headings:
+    - '`src/plugins/quantum_auth_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - security
+  - memory
+  - quantum auth engine
+- uuid: 0c972365-1665-5c4d-adaf-f783e62b9e0c
+  file: lib/src/plugins/quantum_auth_engine.dart
+  docs_file: docs/src/plugins/quantum_auth_engine.dart.md
+  title: 'Quantum Auth Engine: the runtime surface still matches the documented API
+    and headings'
+  slug: docs_parity
+  category: security
+  severity: medium
+  description: Verify that quantum auth engine keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_auth_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_auth_engine.dart.md.
+    stimulus:
+    - Evaluate access under allow, deny, revoke, and mixed-scope conditions.
+    - Mutate the policy snapshot repeatedly to expose stale authorization state.
+    data:
+      principal:
+      - guest
+      - user
+      - admin
+      - service
+      policy:
+      - allow
+      - deny
+      - inherit
+      - override
+  expected_output:
+    decision: Access decisions are deterministic and least-privilege.
+    audit: Audit traces remain complete and do not expose secrets.
+    snapshot: Policy snapshots reflect the latest committed state.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework.
+    headings:
+    - '`src/plugins/quantum_auth_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - security
+  - docs_parity
+  - quantum auth engine
+- uuid: bb799cdc-4398-5ced-9dad-1bf008b17625
+  file: lib/src/plugins/quantum_auth_engine.dart
+  docs_file: docs/src/plugins/quantum_auth_engine.dart.md
+  title: 'Quantum Auth Engine: policy enforcement stays least-privilege and deterministic'
+  slug: policy
+  category: security
+  severity: medium
+  description: Verify that quantum auth engine keeps its documented runtime behavior
+    while handling policy conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_auth_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_auth_engine.dart.md.
+    stimulus:
+    - Evaluate access under allow, deny, revoke, and mixed-scope conditions.
+    - Mutate the policy snapshot repeatedly to expose stale authorization state.
+    data:
+      principal:
+      - guest
+      - user
+      - admin
+      - service
+      policy:
+      - allow
+      - deny
+      - inherit
+      - override
+  expected_output:
+    decision: Access decisions are deterministic and least-privilege.
+    audit: Audit traces remain complete and do not expose secrets.
+    snapshot: Policy snapshots reflect the latest committed state.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework.
+    headings:
+    - '`src/plugins/quantum_auth_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - security
+  - policy
+  - quantum auth engine
+- uuid: fe09dec7-48fd-59d3-927e-639a39d396ac
+  file: lib/src/plugins/quantum_auth_engine.dart
+  docs_file: docs/src/plugins/quantum_auth_engine.dart.md
+  title: 'Quantum Auth Engine: grant/revoke cycles update the permission snapshot
+    correctly'
+  slug: grant
+  category: security
+  severity: medium
+  description: Verify that quantum auth engine keeps its documented runtime behavior
+    while handling grant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_auth_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_auth_engine.dart.md.
+    stimulus:
+    - Evaluate access under allow, deny, revoke, and mixed-scope conditions.
+    - Mutate the policy snapshot repeatedly to expose stale authorization state.
+    data:
+      principal:
+      - guest
+      - user
+      - admin
+      - service
+      policy:
+      - allow
+      - deny
+      - inherit
+      - override
+  expected_output:
+    decision: Access decisions are deterministic and least-privilege.
+    audit: Audit traces remain complete and do not expose secrets.
+    snapshot: Policy snapshots reflect the latest committed state.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework.
+    headings:
+    - '`src/plugins/quantum_auth_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - security
+  - grant
+  - quantum auth engine
+- uuid: 3a2b4784-9315-527b-9283-694d10b228de
+  file: lib/src/plugins/quantum_auth_engine.dart
+  docs_file: docs/src/plugins/quantum_auth_engine.dart.md
+  title: 'Quantum Auth Engine: security audit traces remain complete and do not expose
+    secrets'
+  slug: audit
+  category: security
+  severity: medium
+  description: Verify that quantum auth engine keeps its documented runtime behavior
+    while handling audit conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_auth_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_auth_engine.dart.md.
+    stimulus:
+    - Evaluate access under allow, deny, revoke, and mixed-scope conditions.
+    - Mutate the policy snapshot repeatedly to expose stale authorization state.
+    data:
+      principal:
+      - guest
+      - user
+      - admin
+      - service
+      policy:
+      - allow
+      - deny
+      - inherit
+      - override
+  expected_output:
+    decision: Access decisions are deterministic and least-privilege.
+    audit: Audit traces remain complete and do not expose secrets.
+    snapshot: Policy snapshots reflect the latest committed state.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework.
+    headings:
+    - '`src/plugins/quantum_auth_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - security
+  - audit
+  - quantum auth engine
+- uuid: a4e08587-223d-51fd-acfa-b2d1d1f17537
+  file: lib/src/plugins/quantum_auth_engine.dart
+  docs_file: docs/src/plugins/quantum_auth_engine.dart.md
+  title: 'Quantum Auth Engine: edge-case security inputs fail safely and audibly'
+  slug: edge
+  category: security
+  severity: medium
+  description: Verify that quantum auth engine keeps its documented runtime behavior
+    while handling edge conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_auth_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_auth_engine.dart.md.
+    stimulus:
+    - Evaluate access under allow, deny, revoke, and mixed-scope conditions.
+    - Mutate the policy snapshot repeatedly to expose stale authorization state.
+    data:
+      principal:
+      - guest
+      - user
+      - admin
+      - service
+      policy:
+      - allow
+      - deny
+      - inherit
+      - override
+  expected_output:
+    decision: Access decisions are deterministic and least-privilege.
+    audit: Audit traces remain complete and do not expose secrets.
+    snapshot: Policy snapshots reflect the latest committed state.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework.
+    headings:
+    - '`src/plugins/quantum_auth_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - security
+  - edge
+  - quantum auth engine
+- uuid: 177f8ea8-8688-5c8c-8842-2007e6a2d584
+  file: lib/src/plugins/quantum_auth_engine.dart
+  docs_file: docs/src/plugins/quantum_auth_engine.dart.md
+  title: 'Quantum Auth Engine: public contract remains stable under valid input'
+  slug: contract
+  category: security
+  severity: medium
+  description: Verify that quantum auth engine keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/plugins/quantum_auth_engine.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/plugins/quantum_auth_engine.dart.md.
+    stimulus:
+    - Evaluate access under allow, deny, revoke, and mixed-scope conditions.
+    - Mutate the policy snapshot repeatedly to expose stale authorization state.
+    data:
+      principal:
+      - guest
+      - user
+      - admin
+      - service
+      policy:
+      - allow
+      - deny
+      - inherit
+      - override
+  expected_output:
+    decision: Access decisions are deterministic and least-privilege.
+    audit: Audit traces remain complete and do not expose secrets.
+    snapshot: Policy snapshots reflect the latest committed state.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: A subsystem engine. Files with this role typically own state, lifecycle,
+      rendering, decoding, or orchestration for one feature area and expose a higher-level
+      API to the rest of the framework.
+    headings:
+    - '`src/plugins/quantum_auth_engine.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - security
+  - contract
+  - quantum auth engine

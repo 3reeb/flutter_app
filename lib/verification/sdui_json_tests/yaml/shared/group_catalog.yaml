@@ -1,0 +1,21 @@
+kind: sdui-json-group-catalog
+title: Coverage groups
+groups:
+- id: schema
+  title: Schema contract
+  purpose: Manifest grammar and assertion vocabulary.
+- id: runtime
+  title: Runtime contract
+  purpose: Normalization, snapshot export, and core metadata.
+- id: operators
+  title: Operators and bindings
+  purpose: Compile-time DSL operators and runtime bindings.
+- id: omni-cores
+  title: Omni-core catalog
+  purpose: Every core file and every subtype branch.
+- id: nested
+  title: Nested composition
+  purpose: Deep mixed trees that combine many features.
+- id: negative
+  title: Negative coverage
+  purpose: Empty, missing, or forbidden branches.

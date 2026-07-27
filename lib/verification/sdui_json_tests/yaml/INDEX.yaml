@@ -1,0 +1,36 @@
+schema_version: 1
+generated_for: verification/sdui_json_tests
+source_docs: docs/overview/SDUI_RUNTIME_SPEC.md
+files:
+- verification/sdui_json_tests/README.md
+- verification/sdui_json_tests/INDEX.md
+- verification/sdui_json_tests/cross-cutting/test_matrix.md
+- verification/sdui_json_tests/cross-cutting/missing_coverage.md
+- verification/sdui_json_tests/yaml/README.md
+- verification/sdui_json_tests/yaml/INDEX.yaml
+- verification/sdui_json_tests/yaml/shared/case_template.yaml
+- verification/sdui_json_tests/yaml/shared/group_catalog.yaml
+- verification/sdui_json_tests/yaml/shared/operator_catalog.yaml
+- verification/sdui_json_tests/yaml/by-file/schema_contract.yaml
+- verification/sdui_json_tests/yaml/by-file/runtime_contract.yaml
+- verification/sdui_json_tests/yaml/by-file/sdui_runtime_nested_contract.yaml
+- verification/sdui_json_tests/yaml/by-file/operators_and_bindings.yaml
+- verification/sdui_json_tests/yaml/by-file/omni_cores_catalog.yaml
+- verification/sdui_json_tests/yaml/by-file/nested_composition.yaml
+- verification/sdui_json_tests/yaml/by-file/state_and_pipeline.yaml
+- verification/sdui_json_tests/yaml/by-file/runtime_behavior_data_driven.yaml
+families:
+- id: schema
+  file: verification/sdui_json_tests/yaml/by-file/schema_contract.yaml
+- id: runtime
+  file: verification/sdui_json_tests/yaml/by-file/runtime_contract.yaml
+- id: operators
+  file: verification/sdui_json_tests/yaml/by-file/operators_and_bindings.yaml
+- id: omni-cores
+  file: verification/sdui_json_tests/yaml/by-file/omni_cores_catalog.yaml
+- id: nested
+  file: verification/sdui_json_tests/yaml/by-file/nested_composition.yaml
+- id: state-and-pipeline
+  file: verification/sdui_json_tests/yaml/by-file/state_and_pipeline.yaml
+- id: runtime-behavior
+  file: verification/sdui_json_tests/yaml/by-file/runtime_behavior_data_driven.yaml

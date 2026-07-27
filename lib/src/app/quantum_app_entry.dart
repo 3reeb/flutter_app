@@ -20,13 +20,10 @@
 
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import '../../quantum.dart';
 import 'quantum_boot_schema.dart';
-
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  QL YAML APP ENV — passed to the extend() callback
 // ────────────────────────────────────────────────────────────────────────────
@@ -50,7 +47,6 @@ class QLYamlAppEnv {
     required this.config,
   });
 }
-
 
 // ─────────────────────────────────────────────────────────────────────── §1b ─
 //  QL APP MANIFEST — schema-first, payload-style launch contract
@@ -176,12 +172,14 @@ class QuantumAppManifest {
       services: services,
       onBoot: onBoot,
       onReady: onReady,
-      boot: boot ?? (config.raw['boot'] is Map
-          ? QuantumBootSchema.fromMap(
-              Map<String, dynamic>.from(config.raw['boot'] as Map),
-              appName: config.appName,
-            )
-          : QuantumBootSchema(appName: config.appName, pagesDir: config.pagesDir)),
+      boot: boot ??
+          (config.raw['boot'] is Map
+              ? QuantumBootSchema.fromMap(
+                  Map<String, dynamic>.from(config.raw['boot'] as Map),
+                  appName: config.appName,
+                )
+              : QuantumBootSchema(
+                  appName: config.appName, pagesDir: config.pagesDir)),
       raw: config.raw,
     );
   }

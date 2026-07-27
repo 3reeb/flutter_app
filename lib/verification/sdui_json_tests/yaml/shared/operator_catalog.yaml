@@ -1,0 +1,48 @@
+kind: sdui-json-operator-catalog
+title: SDUI operator catalog
+description: Every compile-time operator that the VM can inject or preserve.
+operators:
+- name: $define
+  purpose: compile-time macro registration and reuse
+- name: $let
+  purpose: compile-time local variable binding
+- name: $if
+  purpose: conditional structural pruning
+- name: $repeat
+  purpose: list rendering over bound data
+- name: $call
+  purpose: macro invocation
+- name: $switch
+  purpose: multi-branch compile-time selection
+- name: $async
+  purpose: async loader with loading/data/error slots
+- name: $stream
+  purpose: reactive stream subscription binding
+- name: $machine
+  purpose: finite-state machine node
+- name: $portal
+  purpose: named overlay portal transport
+- name: $watch
+  purpose: reactive dependency tracking
+- name: $try
+  purpose: error-boundary shorthand
+- name: $layout
+  purpose: named-area layout rows
+- name: $compose
+  purpose: behavior mixin attachment
+- name: $apply
+  purpose: prop and style overrides for direct children
+- name: $scope
+  purpose: bind-path namespacing
+- name: $spread
+  purpose: runtime object spread into props
+- name: $throttle
+  purpose: event throttling in milliseconds
+- name: $debounce
+  purpose: event debouncing in milliseconds
+- name: $parallel
+  purpose: bounded fan-out of child nodes
+- name: $reactive_map
+  purpose: animated diff list rendering
+- name: $classes
+  purpose: class-name shorthand aliases

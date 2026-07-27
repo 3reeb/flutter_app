@@ -1,0 +1,23 @@
+{
+  "__meta": {
+    "id": "ds-091-data-diff-missing-key-by",
+    "title": "data:diff without keyBy must throw",
+    "description": "Diff rendering requires a stable key to track item identity. Without keyBy, the diff algorithm cannot identify moved or updated items, causing full re-renders.",
+    "tags": ["data_state", "data", "diff", "guard"],
+    "allowBlank": false,
+    "priority": "critical"
+  },
+  "input": {
+    "type": "data:diff",
+    "props": {
+      "bind": "${state.feed}"
+    },
+    "children": [
+      { "type": "text", "props": { "text": "${item.text}" } }
+    ]
+  },
+  "expectError": {
+    "type": "FormatException",
+    "messageContains": "keyBy"
+  }
+}

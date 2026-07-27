@@ -1,0 +1,698 @@
+file: lib/src/ui/quantum_components.dart
+docs_file: docs/src/ui/quantum_components.dart.md
+line_count: 1517
+category: ui
+tests:
+- uuid: 0adee761-5b0a-58eb-99d2-18dfe30ccff7
+  file: lib/src/ui/quantum_components.dart
+  docs_file: docs/src/ui/quantum_components.dart.md
+  title: 'Quantum Components: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum components keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_components.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_components.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM COMPONENTS ENGINE v8.0 - PRODUCTION OMEGA+
+      BUILD'
+    headings:
+    - '`src/ui/quantum_components.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum components
+- uuid: a6e3abbf-466c-599f-ba4b-c7a5638bee37
+  file: lib/src/ui/quantum_components.dart
+  docs_file: docs/src/ui/quantum_components.dart.md
+  title: 'Quantum Components: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum components keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_components.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_components.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM COMPONENTS ENGINE v8.0 - PRODUCTION OMEGA+
+      BUILD'
+    headings:
+    - '`src/ui/quantum_components.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum components
+- uuid: 13db782e-4448-5cf3-ba1d-dac0ed73b0ed
+  file: lib/src/ui/quantum_components.dart
+  docs_file: docs/src/ui/quantum_components.dart.md
+  title: 'Quantum Components: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum components keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_components.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_components.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM COMPONENTS ENGINE v8.0 - PRODUCTION OMEGA+
+      BUILD'
+    headings:
+    - '`src/ui/quantum_components.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum components
+- uuid: c44a81f8-38e7-5334-9e25-3f5ab92c5466
+  file: lib/src/ui/quantum_components.dart
+  docs_file: docs/src/ui/quantum_components.dart.md
+  title: 'Quantum Components: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum components keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_components.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_components.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM COMPONENTS ENGINE v8.0 - PRODUCTION OMEGA+
+      BUILD'
+    headings:
+    - '`src/ui/quantum_components.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum components
+- uuid: 606dfe35-ad8f-5d4d-8e6f-7050dab4e3ff
+  file: lib/src/ui/quantum_components.dart
+  docs_file: docs/src/ui/quantum_components.dart.md
+  title: 'Quantum Components: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum components keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_components.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_components.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM COMPONENTS ENGINE v8.0 - PRODUCTION OMEGA+
+      BUILD'
+    headings:
+    - '`src/ui/quantum_components.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum components
+- uuid: 59ffb492-162d-50c5-a38f-a183c62dac16
+  file: lib/src/ui/quantum_components.dart
+  docs_file: docs/src/ui/quantum_components.dart.md
+  title: 'Quantum Components: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum components keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_components.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_components.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM COMPONENTS ENGINE v8.0 - PRODUCTION OMEGA+
+      BUILD'
+    headings:
+    - '`src/ui/quantum_components.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum components
+- uuid: 453f66ec-35e9-5d24-81ac-cfa25769361c
+  file: lib/src/ui/quantum_components.dart
+  docs_file: docs/src/ui/quantum_components.dart.md
+  title: 'Quantum Components: the runtime surface still matches the documented API
+    and headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum components keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_components.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_components.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM COMPONENTS ENGINE v8.0 - PRODUCTION OMEGA+
+      BUILD'
+    headings:
+    - '`src/ui/quantum_components.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum components
+- uuid: e61233c5-0df8-5144-bfe2-118e61640ceb
+  file: lib/src/ui/quantum_components.dart
+  docs_file: docs/src/ui/quantum_components.dart.md
+  title: 'Quantum Components: layout remains correct under narrow, wide, and constrained
+    bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum components keeps its documented runtime behavior
+    while handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_components.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_components.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM COMPONENTS ENGINE v8.0 - PRODUCTION OMEGA+
+      BUILD'
+    headings:
+    - '`src/ui/quantum_components.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum components
+- uuid: 8bb50214-23e5-5af8-a379-4940fa76baf6
+  file: lib/src/ui/quantum_components.dart
+  docs_file: docs/src/ui/quantum_components.dart.md
+  title: 'Quantum Components: semantics and accessibility output remain stable across
+    rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that quantum components keeps its documented runtime behavior
+    while handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_components.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_components.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM COMPONENTS ENGINE v8.0 - PRODUCTION OMEGA+
+      BUILD'
+    headings:
+    - '`src/ui/quantum_components.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - semantics
+  - quantum components
+- uuid: efadc737-efe8-5424-a439-165ca10d2c94
+  file: lib/src/ui/quantum_components.dart
+  docs_file: docs/src/ui/quantum_components.dart.md
+  title: 'Quantum Components: gesture handling and hit testing stay correct during
+    interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that quantum components keeps its documented runtime behavior
+    while handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_components.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_components.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM COMPONENTS ENGINE v8.0 - PRODUCTION OMEGA+
+      BUILD'
+    headings:
+    - '`src/ui/quantum_components.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - gesture
+  - quantum components
+- uuid: 7a3324eb-a704-52dc-ba79-03e2e2458a51
+  file: lib/src/ui/quantum_components.dart
+  docs_file: docs/src/ui/quantum_components.dart.md
+  title: 'Quantum Components: resize or drag interactions preserve geometry and state'
+  slug: resize
+  category: ui
+  severity: medium
+  description: Verify that quantum components keeps its documented runtime behavior
+    while handling resize conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_components.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_components.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM COMPONENTS ENGINE v8.0 - PRODUCTION OMEGA+
+      BUILD'
+    headings:
+    - '`src/ui/quantum_components.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - resize
+  - quantum components
+- uuid: eec6fb9e-ef49-536b-9e9b-d7c6c04e3e23
+  file: lib/src/ui/quantum_components.dart
+  docs_file: docs/src/ui/quantum_components.dart.md
+  title: 'Quantum Components: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: medium
+  description: Verify that quantum components keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_components.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_components.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM COMPONENTS ENGINE v8.0 - PRODUCTION OMEGA+
+      BUILD'
+    headings:
+    - '`src/ui/quantum_components.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum components

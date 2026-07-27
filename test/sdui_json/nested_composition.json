@@ -1,0 +1,294 @@
+{
+  "__meta": {
+    "id": "sdui-json-nested-composition",
+    "title": "SDUI nested composition",
+    "description": "From small nodes to a deeply nested mixed SDUI screen.",
+    "tags": [
+      "sdui",
+      "json",
+      "nested",
+      "composition"
+    ],
+    "allowBlank": true
+  },
+  "groups": [
+    {
+      "id": "basic-node-progression",
+      "title": "Basic node progression",
+      "cases": [
+        {
+          "id": "bare-node",
+          "title": "Bare node",
+          "sourcePath": "docs/overview/SDUI_RUNTIME_SPEC.md",
+          "assertions": [
+            {
+              "kind": "source_contains_all",
+              "values": [
+                "Minimal exported node",
+                "\"type\": \"text\"",
+                "\"props\"",
+                "\"children\""
+              ]
+            },
+            {
+              "kind": "source_contains_all",
+              "values": [
+                "Canonical box subtype example",
+                "\"type\": \"box:row\"",
+                "\"style\": \"items-center justify-between gap-16 p-20\""
+              ]
+            }
+          ]
+        },
+        {
+          "id": "typed-node-with-style",
+          "title": "Typed node with style and props",
+          "sourcePath": "src/runtime/quantum_vm.dart",
+          "assertions": [
+            {
+              "kind": "source_contains_all",
+              "values": [
+                "type.split(':')",
+                "props['__subType']",
+                "box:split",
+                "min-w-0 min-h-0"
+              ]
+            },
+            {
+              "kind": "source_contains_all",
+              "values": [
+                "name",
+                "slot",
+                "debugPath",
+                "slots",
+                "children"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "colon-normalization-and-preservation",
+          "title": "Colon normalization and slot preservation both stay visible",
+          "sourcePath": "src/runtime/quantum_vm.dart",
+          "assertions": [
+            {
+              "kind": "source_contains_all",
+              "values": [
+                "Preserve structural box subtypes",
+                "props['__subType']",
+                "box:row",
+                "box:col"
+              ]
+            },
+            {
+              "kind": "source_contains_all",
+              "values": [
+                "debugPath: path",
+                "slots",
+                "name",
+                "slot"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "operator-ladder",
+      "title": "Operator ladder",
+      "groups": [
+        {
+          "id": "control-flow-ladder",
+          "title": "Control flow ladder",
+          "cases": [
+            {
+              "id": "define-let-if-repeat-switch-call",
+              "title": "Definitions, locals, branches, repetition, and calls compose in order",
+              "sourcePath": "src/runtime/quantum_vm.dart",
+              "assertions": [
+                {
+                  "kind": "source_contains_all",
+                  "values": [
+                    "$define",
+                    "$let",
+                    "$if",
+                    "$repeat",
+                    "$call",
+                    "$switch"
+                  ]
+                },
+                {
+                  "kind": "source_contains_all",
+                  "values": [
+                    "_expandMacro",
+                    "_macroDefaultProps",
+                    "_macroCallerProps",
+                    "_collectMacroSlots"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "apply-layout-classes-scope-spread",
+              "title": "Apply, layout, classes, scope, and spread compose in order",
+              "sourcePath": "src/runtime/quantum_vm.dart",
+              "assertions": [
+                {
+                  "kind": "source_contains_all",
+                  "values": [
+                    "$apply",
+                    "$layout",
+                    "$classes",
+                    "$scope",
+                    "$spread"
+                  ]
+                },
+                {
+                  "kind": "source_contains_all",
+                  "values": [
+                    "gridRows",
+                    "gridCols",
+                    "safeProps['bind']",
+                    "currentEnv['__classes']",
+                    "currentEnv['__scope']"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "runtime-wrapper-ladder",
+          "title": "Runtime wrappers ladder",
+          "cases": [
+            {
+              "id": "async-stream-machine-portal-try",
+              "title": "Async, stream, machine, portal, and try wrappers all preserve nested content",
+              "sourcePath": "src/runtime/quantum_vm.dart",
+              "assertions": [
+                {
+                  "kind": "source_contains_all",
+                  "values": [
+                    "$async",
+                    "$stream",
+                    "$machine",
+                    "$portal",
+                    "$try"
+                  ]
+                },
+                {
+                  "kind": "source_contains_all",
+                  "values": [
+                    "system:async",
+                    "data:stream",
+                    "control:machine",
+                    "portal:overlay_entry",
+                    "hook:error_boundary"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "throttle-debounce-parallel-reactive-map",
+              "title": "Throttle, debounce, parallel, and reactive map stay explicit",
+              "sourcePath": "src/runtime/quantum_vm.dart",
+              "assertions": [
+                {
+                  "kind": "source_contains_all",
+                  "values": [
+                    "$throttle",
+                    "$debounce",
+                    "$parallel",
+                    "$reactive_map",
+                    "$watch"
+                  ]
+                },
+                {
+                  "kind": "source_contains_all",
+                  "values": [
+                    "system:throttle",
+                    "system:debounce",
+                    "data:diff",
+                    "box:col",
+                    "fan-out concurrent children"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "large-nested-screen",
+      "title": "Large nested screen",
+      "cases": [
+        {
+          "id": "deep-screen-composition",
+          "title": "Deep screen composition combines layout, data, actions, portals, and templates",
+          "sourcePath": "src/runtime/quantum_vm.dart",
+          "assertions": [
+            {
+              "kind": "all",
+              "assertions": [
+                {
+                  "kind": "source_contains_all",
+                  "values": [
+                    "$define",
+                    "$let",
+                    "$if",
+                    "$repeat",
+                    "$switch"
+                  ]
+                },
+                {
+                  "kind": "source_contains_all",
+                  "values": [
+                    "$async",
+                    "$stream",
+                    "$machine",
+                    "$portal",
+                    "$try",
+                    "$layout"
+                  ]
+                },
+                {
+                  "kind": "source_contains_all",
+                  "values": [
+                    "$compose",
+                    "$apply",
+                    "$scope",
+                    "$spread",
+                    "$parallel"
+                  ]
+                },
+                {
+                  "kind": "source_contains_all",
+                  "values": [
+                    "$throttle",
+                    "$debounce",
+                    "$reactive_map",
+                    "$classes"
+                  ]
+                }
+              ]
+            },
+            {
+              "kind": "source_contains_all",
+              "values": [
+                "box:grid",
+                "box:row",
+                "box:col",
+                "box:split",
+                "system",
+                "data",
+                "portal",
+                "hook"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

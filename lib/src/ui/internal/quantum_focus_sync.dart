@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 /// Shared focus synchronization helpers for the headless field primitives.
 void qlMirrorFocusNodeToController(
   FocusNode focusNode,

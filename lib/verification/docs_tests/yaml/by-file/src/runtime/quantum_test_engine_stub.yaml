@@ -1,0 +1,137 @@
+schema_version: 2
+doc_kind: file-test-manifest
+file: lib/src/runtime/quantum_test_engine_stub.dart
+layer: runtime
+profile: runtime-core
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/runtime/quantum_test_engine_stub.dart
+  sha256: 11ff157acef3e50a70311caf068dc89941927c736556bdf4e704b82bcb5aca91
+  line_count: 28
+  imports:
+    - quantum_test_engine_shared.dart
+  exports: []
+  parts: []
+  part_of: []
+  category: runtime
+  profile: runtime-core
+  large_profile: false
+  keywords:
+    - test
+    - yaml
+    - manifest
+    - report
+    - validation
+surface_summary:
+  classes_enums_typedefs_mixins_extensions_functions: &id001
+    - QuantumTestEngine
+  count: 1
+focus:
+  Unsupported-platform stub that keeps the package analyzable on environments
+  without dart:io.
+coverage_targets:
+  - compatibility
+  - unsupported platform behavior
+  - compile safety
+  - guardrails
+test_dimensions:
+  input_shapes:
+    - "null"
+    - empty
+    - single-item
+    - multi-item
+    - legacy-shape
+    - malformed
+    - large-batch
+  execution_modes:
+    - cold
+    - warm
+    - cached
+    - lazy
+    - eager
+  outcomes:
+    - accept
+    - reject
+    - normalize
+    - reuse
+    - evict
+    - round-trip
+  measurement_axes:
+    - latency
+    - allocations
+    - error-path
+    - summary-size
+reusable_presets:
+  smoke_base:
+    purpose:
+      Prove the canonical public path works and stays stable across repeated
+      runs.
+    assertions:
+      - observable result is stable
+      - no hidden mutation
+      - no duplicate side effects
+  edge_base:
+    purpose: Prove malformed input fails explicitly or normalizes intentionally.
+    assertions:
+      - failure is explicit
+      - no silent coercion
+      - no stale state
+  perf_base:
+    purpose: Measure the hot path and bound allocations or repeated work.
+    assertions:
+      - warm path is not worse than cold path
+      - allocation growth stays bounded
+  integration_base:
+    purpose: Validate behavior across local imports and neighboring runtime layers.
+    assertions:
+      - boundary contract holds
+      - cross-file side effects remain stable
+groups:
+  - name: stub
+    description: Stub-only guard rails.
+    rows:
+      - id: stub.platform.001
+        purpose: Throw a clear unsupported error when discovery is requested off IO platforms.
+        target_symbols: *id001
+        setup: Import the stub implementation.
+        input: discoverManifests call.
+        body: Call the unsupported API.
+        expected: The call fails explicitly.
+        assertions:
+          - unsupported error thrown
+          - no silent fallback
+        metrics:
+          - startup behavior
+        risks:
+          - hidden platform mismatch
+        cleanup: None.
+      - id: stub.platform.002
+        purpose: Keep the stub API shape aligned with the IO implementation.
+        target_symbols: *id001
+        setup: Resolve the public singleton.
+        input: Stub instance access.
+        body: Check the public methods exist and compile.
+        expected: The stub exports the same signature surface.
+        assertions:
+          - API shape matches
+          - analysis friendly
+        metrics:
+          - compile safety
+        risks:
+          - stub drift
+        cleanup: None.
+regeneration_triggers:
+  - public API shape changes
+  - source metadata changes
+  - row or group edits
+  - new imports or exports
+  - updated validation rules
+supplements: []
+notes:
+  - This manifest is intentionally rich enough to drive future generated Dart tests.
+  - The row descriptions are reusable templates, not happy-path-only examples.
+  - The shared test engine applies strict validation and compact reporting.
+profiles:
+  - runtime-core
+  - test-engine-core

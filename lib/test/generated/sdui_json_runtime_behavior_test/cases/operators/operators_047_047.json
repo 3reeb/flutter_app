@@ -1,0 +1,41 @@
+{
+  "__meta": {
+    "id": "operators-047-debounce-047",
+    "title": "Debounce wrapper emits system:debounce #047",
+    "description": "The $debounce operator should wrap its child in a system:debounce blueprint.",
+    "tags": [
+      "operators",
+      "debounce",
+      "wrapper"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "$debounce": 250,
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Debounce 047"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "debounce",
+      "ms": 250
+    },
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Debounce 047"
+        },
+        "debugPath": "root[0]"
+      }
+    ]
+  }
+}

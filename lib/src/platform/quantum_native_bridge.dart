@@ -19,14 +19,11 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'dart:async';
-
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-
 import '../foundation/quantum_async.dart';
 import '../foundation/quantum_primitives.dart';
-
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  TYPED CODEC (The Dynamic-to-Typed Firewall)
 // ────────────────────────────────────────────────────────────────────────────

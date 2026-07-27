@@ -1,0 +1,504 @@
+file: lib/src/app/quantum.config.dart.example
+docs_file: docs/src/app/quantum.config.dart.example.md
+line_count: 147
+category: app
+tests:
+- uuid: 15909a7e-1c90-5c02-8aec-e8211f30f91f
+  file: lib/src/app/quantum.config.dart.example
+  docs_file: docs/src/app/quantum.config.dart.example.md
+  title: 'Quantum Config Dart example: public contract remains stable under valid
+    input'
+  slug: contract
+  category: app
+  severity: critical
+  description: Verify that quantum config dart example keeps its documented runtime
+    behavior while handling contract conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/app/quantum.config.dart.example with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum.config.dart.example.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays
+      intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A developer-facing example configuration file. It shows the intended
+      shape of the real configuration object and provides stronger default values
+      for app, API, security, merge, cache, and source sections. Author-intent note:
+      Copy this file to `quantum.config.dart` and edit the single source of truth.'
+    headings:
+    - '`src/app/quantum.config.dart.example`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - contract
+  - quantum config dart example
+- uuid: 46ac0bdd-0c31-5e6c-9510-1f43b686702a
+  file: lib/src/app/quantum.config.dart.example
+  docs_file: docs/src/app/quantum.config.dart.example.md
+  title: 'Quantum Config Dart example: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: app
+  severity: critical
+  description: Verify that quantum config dart example keeps its documented runtime
+    behavior while handling invalid input conditions without corruption, leakage,
+    or silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum.config.dart.example with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum.config.dart.example.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays
+      intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A developer-facing example configuration file. It shows the intended
+      shape of the real configuration object and provides stronger default values
+      for app, API, security, merge, cache, and source sections. Author-intent note:
+      Copy this file to `quantum.config.dart` and edit the single source of truth.'
+    headings:
+    - '`src/app/quantum.config.dart.example`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - invalid_input
+  - quantum config dart example
+- uuid: 5f799ced-97a7-5a15-8e55-4392fa980e15
+  file: lib/src/app/quantum.config.dart.example
+  docs_file: docs/src/app/quantum.config.dart.example.md
+  title: 'Quantum Config Dart example: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: app
+  severity: high
+  description: Verify that quantum config dart example keeps its documented runtime
+    behavior while handling reentrant conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/app/quantum.config.dart.example with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum.config.dart.example.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays
+      intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A developer-facing example configuration file. It shows the intended
+      shape of the real configuration object and provides stronger default values
+      for app, API, security, merge, cache, and source sections. Author-intent note:
+      Copy this file to `quantum.config.dart` and edit the single source of truth.'
+    headings:
+    - '`src/app/quantum.config.dart.example`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - reentrant
+  - quantum config dart example
+- uuid: 567199fa-0d41-56d0-9ec2-67ff3e388d1c
+  file: lib/src/app/quantum.config.dart.example
+  docs_file: docs/src/app/quantum.config.dart.example.md
+  title: 'Quantum Config Dart example: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: app
+  severity: high
+  description: Verify that quantum config dart example keeps its documented runtime
+    behavior while handling cleanup conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/app/quantum.config.dart.example with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum.config.dart.example.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays
+      intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A developer-facing example configuration file. It shows the intended
+      shape of the real configuration object and provides stronger default values
+      for app, API, security, merge, cache, and source sections. Author-intent note:
+      Copy this file to `quantum.config.dart` and edit the single source of truth.'
+    headings:
+    - '`src/app/quantum.config.dart.example`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - cleanup
+  - quantum config dart example
+- uuid: 04153793-8e1c-5277-a367-6a2335c59816
+  file: lib/src/app/quantum.config.dart.example
+  docs_file: docs/src/app/quantum.config.dart.example.md
+  title: 'Quantum Config Dart example: hot-path behavior stays within the runtime
+    budget'
+  slug: performance
+  category: app
+  severity: high
+  description: Verify that quantum config dart example keeps its documented runtime
+    behavior while handling performance conditions without corruption, leakage, or
+    silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum.config.dart.example with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum.config.dart.example.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays
+      intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A developer-facing example configuration file. It shows the intended
+      shape of the real configuration object and provides stronger default values
+      for app, API, security, merge, cache, and source sections. Author-intent note:
+      Copy this file to `quantum.config.dart` and edit the single source of truth.'
+    headings:
+    - '`src/app/quantum.config.dart.example`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - performance
+  - quantum config dart example
+- uuid: f6eb77d7-71c9-5365-908b-55229a8ce383
+  file: lib/src/app/quantum.config.dart.example
+  docs_file: docs/src/app/quantum.config.dart.example.md
+  title: 'Quantum Config Dart example: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: app
+  severity: medium
+  description: Verify that quantum config dart example keeps its documented runtime
+    behavior while handling memory conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/app/quantum.config.dart.example with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum.config.dart.example.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays
+      intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A developer-facing example configuration file. It shows the intended
+      shape of the real configuration object and provides stronger default values
+      for app, API, security, merge, cache, and source sections. Author-intent note:
+      Copy this file to `quantum.config.dart` and edit the single source of truth.'
+    headings:
+    - '`src/app/quantum.config.dart.example`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - memory
+  - quantum config dart example
+- uuid: 54d7acc8-d7a3-5d55-aa19-b400cdfa47f4
+  file: lib/src/app/quantum.config.dart.example
+  docs_file: docs/src/app/quantum.config.dart.example.md
+  title: 'Quantum Config Dart example: the runtime surface still matches the documented
+    API and headings'
+  slug: docs_parity
+  category: app
+  severity: medium
+  description: Verify that quantum config dart example keeps its documented runtime
+    behavior while handling docs parity conditions without corruption, leakage, or
+    silent failure.
+  input:
+    preconditions:
+    - Load src/app/quantum.config.dart.example with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum.config.dart.example.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays
+      intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A developer-facing example configuration file. It shows the intended
+      shape of the real configuration object and provides stronger default values
+      for app, API, security, merge, cache, and source sections. Author-intent note:
+      Copy this file to `quantum.config.dart` and edit the single source of truth.'
+    headings:
+    - '`src/app/quantum.config.dart.example`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - docs_parity
+  - quantum config dart example
+- uuid: aec2da4b-6f3f-54bd-8afd-61027849ce50
+  file: lib/src/app/quantum.config.dart.example
+  docs_file: docs/src/app/quantum.config.dart.example.md
+  title: 'Quantum Config Dart example: route assembly and navigation state stay consistent'
+  slug: route
+  category: app
+  severity: medium
+  description: Verify that quantum config dart example keeps its documented runtime
+    behavior while handling route conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/app/quantum.config.dart.example with its documented dependencies available.
+    - Use the runtime surface described in docs/src/app/quantum.config.dart.example.md.
+    stimulus:
+    - Start the app shell, navigate across routes, and exercise modal/export flows.
+    - Rebuild the shell after state changes and verify the navigation graph stays
+      intact.
+    data:
+      routes:
+      - home
+      - detail
+      - overlay
+      - export
+      - settings
+      lifecycle:
+      - startup
+      - hot reload
+      - background/foreground
+      - teardown
+  expected_output:
+    navigation: Route state and page shell behavior remain correct.
+    lifecycle: No lost state or duplicated initialization occurs.
+    cleanup: Exports and overlays release resources when dismissed.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A developer-facing example configuration file. It shows the intended
+      shape of the real configuration object and provides stronger default values
+      for app, API, security, merge, cache, and source sections. Author-intent note:
+      Copy this file to `quantum.config.dart` and edit the single source of truth.'
+    headings:
+    - '`src/app/quantum.config.dart.example`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - app
+  - route
+  - quantum config dart example

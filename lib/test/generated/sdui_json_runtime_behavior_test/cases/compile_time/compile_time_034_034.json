@@ -1,0 +1,44 @@
+{
+  "__meta": {
+    "id": "compile_time-034-classes-034",
+    "title": "Class tokens rewrite styles #034",
+    "description": "The $classes operator should replace @tokens inside compiled styles.",
+    "tags": [
+      "compile-time",
+      "classes",
+      "style"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "box:col",
+    "$classes": {
+      "surface": "shadow-7",
+      "accent": "ring-3"
+    },
+    "style": "p-5 @surface @accent",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Card 034"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:col",
+    "props": {},
+    "debugPath": "root",
+    "style": "p-5 shadow-7 ring-3",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Card 034"
+        },
+        "debugPath": "root[0]"
+      }
+    ]
+  }
+}

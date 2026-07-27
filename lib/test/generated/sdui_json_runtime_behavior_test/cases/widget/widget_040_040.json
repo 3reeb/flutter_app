@@ -1,0 +1,56 @@
+{
+  "__meta": {
+    "id": "widget-040-slider-min-max-step",
+    "title": "field:slider min/max/step/defaultValue compile verbatim",
+    "description": "The slider widget uses min/max/step to constrain the drag range. All four props must survive compilation intact. The bind prop must also pass through for state updates.",
+    "tags": ["widget", "field", "slider", "sizing"],
+    "allowBlank": false,
+    "priority": "critical"
+  },
+  "input": {
+    "type": "field",
+    "props": {
+      "__subType": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "defaultValue": 50,
+      "bind": "${state.volume}"
+    }
+  },
+  "expected": {
+    "type": "field",
+    "props": {
+      "__subType": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "defaultValue": 50,
+      "bind": "${state.volume}"
+    },
+    "debugPath": "root"
+  },
+  "runtimeAssertions": [
+    { "path": "type",                 "equals": "field" },
+    { "path": "props.__subType",      "equals": "slider" },
+    { "path": "props.min",            "equals": 0 },
+    { "path": "props.max",            "equals": 100 },
+    { "path": "props.step",           "equals": 5 },
+    { "path": "props.defaultValue",   "equals": 50 },
+    { "path": "props.min",            "lessThan": 100 },
+    { "path": "props.max",            "greaterThan": 0 },
+    { "path": "props.defaultValue",   "greaterThan": -1 },
+    { "path": "props.defaultValue",   "lessThan": 101 },
+    { "path": "props.bind",           "contains": "state.volume" }
+  ],
+  "runtimeBehavior": {
+    "gesture":         "drag",
+    "description":     "Slider drag moves a thumb from left (min:0) to right (max:100) in steps of 5. Dragging to 37% of track width gives value=35 (nearest step). defaultValue:50 positions thumb at 50% initially. bind:${state.volume} writes the value back to state on every step change.",
+    "trackPercent":    37,
+    "rawValue":        37,
+    "steppedValue":    35,
+    "stepSize":        5,
+    "bindTarget":      "state.volume",
+    "initialPosition": "50% (defaultValue:50)"
+  }
+}

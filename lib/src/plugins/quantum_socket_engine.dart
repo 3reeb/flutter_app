@@ -7,11 +7,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 import 'dart:typed_data';
-
 import '../foundation/quantum_isolate_bridge.dart';
 import 'internal/quantum_socket_stream_hub.dart';
 import 'quantum_auth_engine.dart';
-
 // =============================================================================
 // CORE PRIMITIVES & THREADING
 // =============================================================================

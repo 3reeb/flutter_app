@@ -1,0 +1,34 @@
+{
+  "__meta": {
+    "id": "ds-040-hook-atom-default-value",
+    "title": "hook:atom with key, defaultValue, and persist compiles correctly",
+    "description": "An atom hook declares a named reactive signal. key, defaultValue, and persist must survive compilation for the runtime to register and optionally persist the signal.",
+    "tags": ["data_state", "hook", "atom", "signal"],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "hook:atom",
+    "props": {
+      "key": "isDarkMode",
+      "defaultValue": false,
+      "persist": true
+    },
+    "children": [
+      { "type": "text", "props": { "text": "${isDarkMode}" } }
+    ]
+  },
+  "expected": {
+    "type": "hook",
+    "props": {
+      "__subType": "atom",
+      "key": "isDarkMode",
+      "defaultValue": false,
+      "persist": true
+    },
+    "debugPath": "root",
+    "children": [
+      { "type": "text", "props": { "text": "${isDarkMode}" }, "debugPath": "root[0]" }
+    ]
+  }
+}

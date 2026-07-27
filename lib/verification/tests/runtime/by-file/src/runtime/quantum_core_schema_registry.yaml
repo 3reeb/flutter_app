@@ -1,0 +1,788 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/runtime/quantum_core_schema_registry.dart
+  docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
+  source_entry:
+    line_count: 2112
+    byte_count: 88064
+    class_count: 3
+    enum_count: 0
+    function_count: 20
+    category: parser
+    test_count: 14
+  scenario_count: 14
+source:
+  path: src/runtime/quantum_core_schema_registry.dart
+  docs_path: docs/src/runtime/quantum_core_schema_registry.dart.md
+  label: src/runtime/quantum_core_schema_registry.dart
+scenarios:
+- uuid: e4142ab1-2319-5493-822f-25267eb341a9
+  file: lib/src/runtime/quantum_core_schema_registry.dart
+  docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
+  title: 'Quantum Core Schema Registry: public contract remains stable under valid input'
+  slug: contract
+  category: parser
+  severity: critical
+  description: Verify that quantum core schema registry keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_schema_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_schema_registry.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY — lazy file-backed schema catalog'
+    headings:
+    - '`src/runtime/quantum_core_schema_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - contract
+  - quantum core schema registry
+- uuid: d7fba3ea-b62e-560b-980f-dbcf78928952
+  file: lib/src/runtime/quantum_core_schema_registry.dart
+  docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
+  title: 'Quantum Core Schema Registry: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: parser
+  severity: critical
+  description: Verify that quantum core schema registry keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_schema_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_schema_registry.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY — lazy file-backed schema catalog'
+    headings:
+    - '`src/runtime/quantum_core_schema_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - invalid_input
+  - quantum core schema registry
+- uuid: 4045c764-962e-5ac3-ab05-7105e99b4aba
+  file: lib/src/runtime/quantum_core_schema_registry.dart
+  docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
+  title: 'Quantum Core Schema Registry: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: parser
+  severity: high
+  description: Verify that quantum core schema registry keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_schema_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_schema_registry.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY — lazy file-backed schema catalog'
+    headings:
+    - '`src/runtime/quantum_core_schema_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - reentrant
+  - quantum core schema registry
+- uuid: 79bcfaef-a820-5ff2-b58f-38436638e6d0
+  file: lib/src/runtime/quantum_core_schema_registry.dart
+  docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
+  title: 'Quantum Core Schema Registry: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: parser
+  severity: high
+  description: Verify that quantum core schema registry keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_schema_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_schema_registry.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY — lazy file-backed schema catalog'
+    headings:
+    - '`src/runtime/quantum_core_schema_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - cleanup
+  - quantum core schema registry
+- uuid: e9a6f3bb-a9b5-54e9-9a37-ee2e0f685f9e
+  file: lib/src/runtime/quantum_core_schema_registry.dart
+  docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
+  title: 'Quantum Core Schema Registry: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: parser
+  severity: high
+  description: Verify that quantum core schema registry keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_schema_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_schema_registry.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY — lazy file-backed schema catalog'
+    headings:
+    - '`src/runtime/quantum_core_schema_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - performance
+  - quantum core schema registry
+- uuid: 1e89ed91-c315-5918-a108-a53b4a7a2874
+  file: lib/src/runtime/quantum_core_schema_registry.dart
+  docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
+  title: 'Quantum Core Schema Registry: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: parser
+  severity: medium
+  description: Verify that quantum core schema registry keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_schema_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_schema_registry.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY — lazy file-backed schema catalog'
+    headings:
+    - '`src/runtime/quantum_core_schema_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - memory
+  - quantum core schema registry
+- uuid: 7c609c85-aba5-5a24-9476-ef63a57c838e
+  file: lib/src/runtime/quantum_core_schema_registry.dart
+  docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
+  title: 'Quantum Core Schema Registry: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: parser
+  severity: medium
+  description: Verify that quantum core schema registry keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_schema_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_schema_registry.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY — lazy file-backed schema catalog'
+    headings:
+    - '`src/runtime/quantum_core_schema_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - docs_parity
+  - quantum core schema registry
+- uuid: adeb24f2-f169-5582-a520-65b5d2c82f32
+  file: lib/src/runtime/quantum_core_schema_registry.dart
+  docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
+  title: 'Quantum Core Schema Registry: malformed documents fail with actionable errors instead of silent corruption'
+  slug: malformed
+  category: parser
+  severity: medium
+  description: Verify that quantum core schema registry keeps its documented runtime behavior while handling malformed conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_schema_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_schema_registry.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY — lazy file-backed schema catalog'
+    headings:
+    - '`src/runtime/quantum_core_schema_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - malformed
+  - quantum core schema registry
+- uuid: dce94ddf-1a20-5c5c-a91a-58835e6c7358
+  file: lib/src/runtime/quantum_core_schema_registry.dart
+  docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
+  title: 'Quantum Core Schema Registry: deeply nested content, aliases, or recursive structures stay bounded'
+  slug: nested
+  category: parser
+  severity: medium
+  description: Verify that quantum core schema registry keeps its documented runtime behavior while handling nested conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_schema_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_schema_registry.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY — lazy file-backed schema catalog'
+    headings:
+    - '`src/runtime/quantum_core_schema_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - nested
+  - quantum core schema registry
+- uuid: c6a8569e-8bb8-5eb1-8d1a-fadc9bb8fe4d
+  file: lib/src/runtime/quantum_core_schema_registry.dart
+  docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
+  title: 'Quantum Core Schema Registry: unicode, escaping, and BOM handling round-trip correctly'
+  slug: unicode
+  category: parser
+  severity: medium
+  description: Verify that quantum core schema registry keeps its documented runtime behavior while handling unicode conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_schema_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_schema_registry.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY — lazy file-backed schema catalog'
+    headings:
+    - '`src/runtime/quantum_core_schema_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - unicode
+  - quantum core schema registry
+- uuid: 94cb7018-32ae-572b-9e53-8fd3e1593794
+  file: lib/src/runtime/quantum_core_schema_registry.dart
+  docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
+  title: 'Quantum Core Schema Registry: duplicate keys or conflicting declarations are surfaced deterministically'
+  slug: duplicate
+  category: parser
+  severity: medium
+  description: Verify that quantum core schema registry keeps its documented runtime behavior while handling duplicate conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_schema_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_schema_registry.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY — lazy file-backed schema catalog'
+    headings:
+    - '`src/runtime/quantum_core_schema_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - duplicate
+  - quantum core schema registry
+- uuid: bc193d22-230e-586c-b434-fa2cfc0958e5
+  file: lib/src/runtime/quantum_core_schema_registry.dart
+  docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
+  title: 'Quantum Core Schema Registry: schema parsing preserves field definitions and defaults'
+  slug: schema_fidelity
+  category: parser
+  severity: medium
+  description: Verify that quantum core schema registry keeps its documented runtime behavior while handling schema fidelity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_schema_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_schema_registry.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY — lazy file-backed schema catalog'
+    headings:
+    - '`src/runtime/quantum_core_schema_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - schema_fidelity
+  - quantum core schema registry
+- uuid: 2cd997f5-c663-5741-b631-1324ffed8ab7
+  file: lib/src/runtime/quantum_core_schema_registry.dart
+  docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
+  title: 'Quantum Core Schema Registry: reference cycles and aliases fail safely or resolve deterministically'
+  slug: reference_cycle
+  category: parser
+  severity: medium
+  description: Verify that quantum core schema registry keeps its documented runtime behavior while handling reference cycle conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_schema_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_schema_registry.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY — lazy file-backed schema catalog'
+    headings:
+    - '`src/runtime/quantum_core_schema_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - reference_cycle
+  - quantum core schema registry
+- uuid: 606c2ea5-99a2-541b-b8ad-b9bf2dab2eb0
+  file: lib/src/runtime/quantum_core_schema_registry.dart
+  docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
+  title: 'Quantum Core Schema Registry: large documents parse without excessive allocations'
+  slug: large_doc
+  category: parser
+  severity: medium
+  description: Verify that quantum core schema registry keeps its documented runtime behavior while handling large doc conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_schema_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_schema_registry.dart.md.
+    stimulus:
+    - Parse valid and invalid documents that exercise nesting, escaping, and duplicate keys.
+    - Repeat parsing under large document and high-churn conditions.
+    data:
+      documents:
+      - empty
+      - scalar
+      - deep tree
+      - unicode heavy
+      - duplicate key
+      size_class:
+      - tiny
+      - large
+      - multi-document
+  expected_output:
+    parse: Returned structure matches the documented schema or a clear error is raised.
+    stability: No hidden mutation or leaked parser state remains after completion.
+    performance: Throughput stays acceptable on large inputs.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 2
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY — lazy file-backed schema catalog'
+    headings:
+    - '`src/runtime/quantum_core_schema_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - parser
+  - large_doc
+  - quantum core schema registry

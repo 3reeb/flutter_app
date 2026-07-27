@@ -1,0 +1,88 @@
+schema_version: 1
+doc_kind: runtime-execution-file-test-manifest
+file: lib/foundation/quantum_render_scheduler
+source_path: foundation/quantum_render_scheduler
+launch_mode: app_startup
+execution_only: true
+area: quantum_render_scheduler
+test_doc_status: draft
+source_metadata:
+  sha256: e17dfc4d41b234ce524dbcb8afd195b144c5cfebe1705049b784df96b87ee398
+  line_count: 568
+  imports:
+  - dart:async
+  - dart:collection
+  - dart:typed_data
+  - package:flutter/foundation.dart
+  - package:flutter/scheduler.dart
+  - package:flutter/widgets.dart
+  - quantum_primitives.dart
+  - ../ui/quantum_scene_layer.dart
+  symbols:
+  - QLRenderWorkItem
+  - QLRenderScheduler
+  - QLBatchedSceneLayer
+  - QLAdaptiveThrottle
+  - QLRenderScope
+  - QLFrameMonitor
+  - _QLFrameMonitorState
+  - QLRenderPriority
+  - QLSceneLayerSchedulerExt
+  - QLSignalThrottleExt
+  - enqueue
+  - enqueueAll
+  - cancel
+  - _scheduleFlush
+  - _flush
+  - push
+  - dispose
+  - updateShouldNotify
+  - createState
+  - initState
+runtime_focus:
+- null frame callback
+- zero frame budget
+- frame overrun
+- re-entrant scheduling
+test_cases:
+- id: case-1
+  title: null input
+  stimulus: null / missing input
+  runtime_failure_target: null_pointer_access
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-2
+  title: malformed input
+  stimulus: invalid / malformed payload
+  runtime_failure_target: parse_or_type_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-3
+  title: boundary input
+  stimulus: empty / oversized / zero-value edge case
+  runtime_failure_target: range_or_state_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-4
+  title: resource pressure
+  stimulus: large batch / repeated execution / allocation stress
+  runtime_failure_target: out_of_memory_or_allocation_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+assertions:
+  must_execute_live_code: true
+  must_capture_runtime_failure: true
+  must_not_use_static_verification: true
+  must_verify_cleanup: true

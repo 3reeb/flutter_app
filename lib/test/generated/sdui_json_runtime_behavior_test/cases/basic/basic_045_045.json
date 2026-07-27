@@ -1,0 +1,80 @@
+{
+  "__meta": {
+    "id": "basic-045-column-045",
+    "title": "Column roots stay subtype-free #045",
+    "description": "The default box:col shape should not leak a subtype marker into the snapshot.",
+    "tags": [
+      "basic",
+      "column",
+      "children"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "type": "box:col",
+    "style": "p-2",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Body 045"
+        }
+      },
+      {
+        "type": "box:row",
+        "style": "gap-2",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "L"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "R"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:col",
+    "props": {},
+    "debugPath": "root",
+    "style": "p-2",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Body 045"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "box:row",
+        "props": {},
+        "debugPath": "root[1]",
+        "style": "gap-2",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "L"
+            },
+            "debugPath": "root[1][0]"
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "R"
+            },
+            "debugPath": "root[1][1]"
+          }
+        ]
+      }
+    ]
+  }
+}

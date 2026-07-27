@@ -1,0 +1,579 @@
+file: lib/src/ui/quantum_scene_layer.dart
+docs_file: docs/src/ui/quantum_scene_layer.dart.md
+line_count: 591
+category: visual
+tests:
+- uuid: 222f5e57-45e7-5314-b62a-0eb5e4baa3ac
+  file: lib/src/ui/quantum_scene_layer.dart
+  docs_file: docs/src/ui/quantum_scene_layer.dart.md
+  title: 'Quantum Scene Layer: public contract remains stable under valid input'
+  slug: contract
+  category: visual
+  severity: critical
+  description: Verify that quantum scene layer keeps its documented runtime behavior
+    while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_scene_layer.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_scene_layer.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM SCENE LAYER v1.0 - RETAINED-MODE 2D/3D
+      DRAW ENGINE'
+    headings:
+    - '`src/ui/quantum_scene_layer.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - contract
+  - quantum scene layer
+- uuid: f92b078d-9f9c-5dd3-b616-e4900efa1ae2
+  file: lib/src/ui/quantum_scene_layer.dart
+  docs_file: docs/src/ui/quantum_scene_layer.dart.md
+  title: 'Quantum Scene Layer: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: visual
+  severity: critical
+  description: Verify that quantum scene layer keeps its documented runtime behavior
+    while handling invalid input conditions without corruption, leakage, or silent
+    failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_scene_layer.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_scene_layer.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM SCENE LAYER v1.0 - RETAINED-MODE 2D/3D
+      DRAW ENGINE'
+    headings:
+    - '`src/ui/quantum_scene_layer.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - invalid_input
+  - quantum scene layer
+- uuid: 6494ff79-c70b-58ff-8051-91e5ac067b28
+  file: lib/src/ui/quantum_scene_layer.dart
+  docs_file: docs/src/ui/quantum_scene_layer.dart.md
+  title: 'Quantum Scene Layer: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: visual
+  severity: high
+  description: Verify that quantum scene layer keeps its documented runtime behavior
+    while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_scene_layer.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_scene_layer.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM SCENE LAYER v1.0 - RETAINED-MODE 2D/3D
+      DRAW ENGINE'
+    headings:
+    - '`src/ui/quantum_scene_layer.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - reentrant
+  - quantum scene layer
+- uuid: 7b19652d-b876-59a7-be01-e9979818dd47
+  file: lib/src/ui/quantum_scene_layer.dart
+  docs_file: docs/src/ui/quantum_scene_layer.dart.md
+  title: 'Quantum Scene Layer: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: visual
+  severity: high
+  description: Verify that quantum scene layer keeps its documented runtime behavior
+    while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_scene_layer.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_scene_layer.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM SCENE LAYER v1.0 - RETAINED-MODE 2D/3D
+      DRAW ENGINE'
+    headings:
+    - '`src/ui/quantum_scene_layer.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - cleanup
+  - quantum scene layer
+- uuid: e161e207-1f53-54dd-9bcd-7a7bf6f728e2
+  file: lib/src/ui/quantum_scene_layer.dart
+  docs_file: docs/src/ui/quantum_scene_layer.dart.md
+  title: 'Quantum Scene Layer: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: visual
+  severity: high
+  description: Verify that quantum scene layer keeps its documented runtime behavior
+    while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_scene_layer.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_scene_layer.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM SCENE LAYER v1.0 - RETAINED-MODE 2D/3D
+      DRAW ENGINE'
+    headings:
+    - '`src/ui/quantum_scene_layer.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - performance
+  - quantum scene layer
+- uuid: f65bb7c7-dc2c-52c6-9d46-127f147602a9
+  file: lib/src/ui/quantum_scene_layer.dart
+  docs_file: docs/src/ui/quantum_scene_layer.dart.md
+  title: 'Quantum Scene Layer: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: visual
+  severity: medium
+  description: Verify that quantum scene layer keeps its documented runtime behavior
+    while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_scene_layer.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_scene_layer.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM SCENE LAYER v1.0 - RETAINED-MODE 2D/3D
+      DRAW ENGINE'
+    headings:
+    - '`src/ui/quantum_scene_layer.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - memory
+  - quantum scene layer
+- uuid: f243c272-9974-58e6-aed2-144062c88476
+  file: lib/src/ui/quantum_scene_layer.dart
+  docs_file: docs/src/ui/quantum_scene_layer.dart.md
+  title: 'Quantum Scene Layer: the runtime surface still matches the documented API
+    and headings'
+  slug: docs_parity
+  category: visual
+  severity: medium
+  description: Verify that quantum scene layer keeps its documented runtime behavior
+    while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_scene_layer.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_scene_layer.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM SCENE LAYER v1.0 - RETAINED-MODE 2D/3D
+      DRAW ENGINE'
+    headings:
+    - '`src/ui/quantum_scene_layer.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - docs_parity
+  - quantum scene layer
+- uuid: c290cf76-ebc7-5f36-a425-7028b4b3896b
+  file: lib/src/ui/quantum_scene_layer.dart
+  docs_file: docs/src/ui/quantum_scene_layer.dart.md
+  title: 'Quantum Scene Layer: rendering remains correct for large, dense, and animated
+    content'
+  slug: render
+  category: visual
+  severity: medium
+  description: Verify that quantum scene layer keeps its documented runtime behavior
+    while handling render conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_scene_layer.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_scene_layer.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM SCENE LAYER v1.0 - RETAINED-MODE 2D/3D
+      DRAW ENGINE'
+    headings:
+    - '`src/ui/quantum_scene_layer.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - render
+  - quantum scene layer
+- uuid: 3dfde4aa-3d57-5a69-9232-728a7cb3d2c7
+  file: lib/src/ui/quantum_scene_layer.dart
+  docs_file: docs/src/ui/quantum_scene_layer.dart.md
+  title: 'Quantum Scene Layer: pointer hover and selection feedback stay synchronized
+    with paint state'
+  slug: hover
+  category: visual
+  severity: medium
+  description: Verify that quantum scene layer keeps its documented runtime behavior
+    while handling hover conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_scene_layer.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_scene_layer.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM SCENE LAYER v1.0 - RETAINED-MODE 2D/3D
+      DRAW ENGINE'
+    headings:
+    - '`src/ui/quantum_scene_layer.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - hover
+  - quantum scene layer
+- uuid: 69b85651-227b-5d32-a51e-84e524fd5608
+  file: lib/src/ui/quantum_scene_layer.dart
+  docs_file: docs/src/ui/quantum_scene_layer.dart.md
+  title: 'Quantum Scene Layer: frame budget remains acceptable when the view is stressed'
+  slug: frame
+  category: visual
+  severity: medium
+  description: Verify that quantum scene layer keeps its documented runtime behavior
+    while handling frame conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/ui/quantum_scene_layer.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/ui/quantum_scene_layer.dart.md.
+    stimulus:
+    - Exercise the runtime feature under nominal, stress, and teardown conditions.
+    - Repeat the operation with large inputs or rapid state changes to expose regressions.
+    data:
+      size:
+      - small
+      - large
+      - stress
+      mutation:
+      - none
+      - single update
+      - burst updates
+  expected_output:
+    correctness: Observed output matches the contract for the selected scenario.
+    performance: Latency and memory stay inside the budget.
+    cleanup: No dangling listener, buffer, or cache remains after teardown.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A UI-layer implementation file. It owns widget composition, layout,
+      interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
+      behavior. Author-intent note: QUANTUM SCENE LAYER v1.0 - RETAINED-MODE 2D/3D
+      DRAW ENGINE'
+    headings:
+    - '`src/ui/quantum_scene_layer.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - visual
+  - frame
+  - quantum scene layer

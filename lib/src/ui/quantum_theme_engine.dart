@@ -9,10 +9,8 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 // Barrel import covers all quantum ecosystem dependencies (including QLE).
-import '../../quantum.dart';
-
+import 'package:quantum_layout/quantum.dart';
 // ────────────────────────────────────────────────────────────────────────────
 // §0 — SHARED SIMD POINTER OFFSETS (Fixed Memory Map)
 // ────────────────────────────────────────────────────────────────────────────
@@ -1321,7 +1319,12 @@ class QEngine {
   }
 
   QToken compileStyle(String style, {int contextMask = 0}) {
-    final normalized = style.trim().replaceAll(RegExp(r'\s+'), ' ');
+    final seen = <String>{};
+    final normalized = style
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((token) => token.isNotEmpty && seen.add(token))
+        .join(' ');
     return compiler.compile(normalized, contextMask: contextMask);
   }
 
@@ -2043,4 +2046,22 @@ extension QCompilerThemeExtension on QCompiler {
     QEngine.instance.loadThemeDictionary(dictionary);
     _theme.load(dictionary);
   }
+}
+
+String mergeStyleTokens(Iterable<Object?> parts) {
+  final seen = <String>{};
+  final tokens = <String>[];
+
+  for (final part in parts) {
+    if (part == null) continue;
+    final text = part.toString().trim();
+    if (text.isEmpty) continue;
+
+    for (final token in text.split(RegExp(r'\s+'))) {
+      if (token.isEmpty) continue;
+      if (seen.add(token)) tokens.add(token);
+    }
+  }
+
+  return tokens.join(' ');
 }

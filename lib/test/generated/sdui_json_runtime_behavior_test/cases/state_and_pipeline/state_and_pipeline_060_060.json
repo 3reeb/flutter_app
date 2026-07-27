@@ -1,0 +1,86 @@
+{
+  "__meta": {
+    "id": "state_and_pipeline-060-state-slots-060",
+    "title": "State roots preserve compiled slots #060",
+    "description": "A stateful node with slots should preserve those slots under the wrapper.",
+    "tags": [
+      "state",
+      "pipeline",
+      "slots"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "name": "shell_060",
+    "state": {
+      "phase": "ready",
+      "count": 60
+    },
+    "type": "box:col",
+    "slots": {
+      "header": {
+        "type": "text",
+        "props": {
+          "text": "Header 060"
+        }
+      },
+      "footer": {
+        "type": "text",
+        "props": {
+          "text": "Footer 060"
+        }
+      }
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Body 060"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "phase": "ready",
+        "count": 60
+      }
+    },
+    "debugPath": "shell_060.store_provider",
+    "children": [
+      {
+        "type": "box:col",
+        "props": {},
+        "debugPath": "shell_060",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Body 060"
+            },
+            "debugPath": "shell_060[0]"
+          }
+        ],
+        "slots": {
+          "header": {
+            "type": "text",
+            "props": {
+              "text": "Header 060"
+            },
+            "debugPath": "shell_060.slots[header]"
+          },
+          "footer": {
+            "type": "text",
+            "props": {
+              "text": "Footer 060"
+            },
+            "debugPath": "shell_060.slots[footer]"
+          }
+        }
+      }
+    ]
+  }
+}

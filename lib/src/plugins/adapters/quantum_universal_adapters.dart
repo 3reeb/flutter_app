@@ -7,14 +7,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 import 'dart:typed_data';
-
 // Assuming these are imported from your previous files:
 import '../quantum_api_engine.dart';
 import '../quantum_auth_engine.dart';
 import '../quantum_socket_engine.dart';
 import '../internal/quantum_socket_stream_hub.dart';
 import '../quantum_media_api.dart';
-
 // =============================================================================
 // SECTION 1: UNIVERSAL ADAPTER CONFIGURATION SCHEMAS
 // =============================================================================

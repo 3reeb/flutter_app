@@ -1,0 +1,163 @@
+schema_version: 2
+doc_kind: file-test-supplement
+supplement_of: lib/src/foundation/quantum_schema.dart
+file: lib/src/foundation/quantum_schema.dart
+layer: foundation
+profile: schema-core
+test_doc_status: draft
+last_reviewed: "2026-07-26"
+source_metadata:
+  path: lib/src/foundation/quantum_schema.dart
+  sha256: 8c331d3f6ba80ced9a9564e22cece44a2405a3426b6e6830d55a2b0bafe056c5
+  line_count: 1433
+  imports:
+    - dart:collection
+    - dart:typed_data
+    - ../../quantum.dart
+  exports: []
+  parts: []
+  part_of: []
+  category: foundation
+  profile: schema-core
+  large_profile: true
+  keywords:
+    - media
+    - hasmany
+    - bigint
+    - smallint
+    - decimal
+    - char
+    - flags
+    - cache
+    - lazy
+    - projection
+    - registry
+    - policy
+    - stream
+    - native
+    - io
+    - json
+groups:
+  - name: integration
+    description: registry and dependent file integration
+    rows:
+      - id: quantum_schema.integration.001
+        purpose: "Prove `src/foundation/quantum_schema.dart` cooperates with its imported neighbors: dart:collection, dart:typed_data, ../../quantum.dart."
+        target_symbols: &id001
+          - QLBlockPayload
+          - QLSchemaFieldSpec
+          - QLSchemaBlueprint
+          - QLSchemaCompiler
+          - QLSchemaRegistry
+          - QLSchemaReadPlan
+          - QLSchemaRegistryInspector
+          - QLSchemaBlueprintSmartSelect
+        setup: Stub or pin the neighboring files or adapters that this file imports.
+        input: A real cross-file call path using the normal import graph.
+        body: Run the public contract end-to-end across the import boundary.
+        expected: The outcome matches the same contract when driven by the neighbor file.
+        assertions:
+          - import boundary stays stable
+          - contract survives neighboring-file execution
+        metrics:
+          - cross-file call count
+          - boundary latency
+        risks:
+          - mismatched contract
+          - boundary state leak
+        cleanup: Reset state and clear caches.
+      - id: quantum_schema.integration.002
+        purpose: Confirm the integration path handles fallback and partial availability without breaking the caller.
+        target_symbols: *id001
+        setup: Disable one dependency path and keep at least one alternate route available.
+        input: A partially available dependency graph.
+        body: Exercise the fallback branch rather than the ideal branch.
+        expected: The fallback path remains deterministic and explicit.
+        assertions:
+          - fallback path is reachable
+          - partial availability is handled
+        metrics:
+          - retry count
+          - fallback selection time
+        risks:
+          - unexpected hard failure
+          - wrong branch selection
+        cleanup: Reset state and clear caches.
+      - id: quantum_schema.integration.003
+        purpose: Validate that repeated integration calls do not leak state or amplify side effects.
+        target_symbols: *id001
+        setup: Invoke the same integration flow multiple times under the same fixture.
+        input: Repeated identical integration calls.
+        body: Run the same cross-file path twice and compare outputs and side effects.
+        expected: The second call is not worse than the first and does not allocate or register extra work unless intended.
+        assertions:
+          - repeatability
+          - no duplicate registration
+          - no stale state
+        metrics:
+          - incremental allocations
+          - duplicate side-effect count
+        risks:
+          - listener leaks
+          - duplicate registrations
+          - stale snapshots
+        cleanup: Reset state and clear caches.
+  - name: regression
+    description: silent data loss, stale field maps, and normalization drift
+    rows:
+      - id: quantum_schema.regression.001
+        purpose: Exercise the `regression` branch under the file-specific contract.
+        target_symbols: &id002
+          - QLBlockPayload
+          - QLSchemaFieldSpec
+          - QLSchemaBlueprint
+          - QLSchemaCompiler
+          - QLSchemaRegistry
+          - QLSchemaReadPlan
+          - QLSchemaRegistryInspector
+          - QLSchemaBlueprintSmartSelect
+        setup: Prepare a realistic fixture that targets this branch.
+        input: A representative valid input for the branch.
+        body: Run the branch using the public API.
+        expected: The output matches the documented contract.
+        assertions:
+          - branch contract holds
+        metrics:
+          - latency
+        risks:
+          - silent mismatch
+        cleanup: Reset state and clear caches.
+      - id: quantum_schema.regression.002
+        purpose: Exercise the `regression` branch with malformed or partial input.
+        target_symbols: *id002
+        setup: Prepare a malformed or partial variant.
+        input: Invalid or incomplete data.
+        body: Run the same public API path.
+        expected: The branch fails explicitly or normalizes intentionally.
+        assertions:
+          - failure is explicit
+        metrics:
+          - error path latency
+        risks:
+          - silent coercion
+        cleanup: Reset state and clear caches.
+      - id: quantum_schema.regression.003
+        purpose: Repeat the `regression` branch to prove stable behavior.
+        target_symbols: *id002
+        setup: Prime and repeat the same fixture.
+        input: Identical repeated input.
+        body: Compare output, side effects, and allocation behavior.
+        expected: Repeated execution stays stable and bounded.
+        assertions:
+          - repeatability
+        metrics:
+          - repeat latency
+        risks:
+          - duplicate side effects
+        cleanup: Reset state and clear caches.
+focus: field typing, projection, read-plan compilation, compatibility, serialization, hasMany handling, and the extended scalar/media type matrix.
+expansion_mode: supplemental
+shared_templates:
+  - docs_tests/yaml/shared/case_template.yaml
+  - docs_tests/yaml/shared/group_catalog.yaml
+  - docs_tests/yaml/shared/axis_catalog.yaml

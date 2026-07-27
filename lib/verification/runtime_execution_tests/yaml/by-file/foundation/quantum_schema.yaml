@@ -1,0 +1,83 @@
+schema_version: 1
+doc_kind: runtime-execution-file-test-manifest
+file: lib/foundation/quantum_schema
+source_path: foundation/quantum_schema
+launch_mode: app_startup
+execution_only: true
+area: quantum_schema
+test_doc_status: draft
+source_metadata:
+  sha256: 1d75804aa52d18e4743aa51ac7f4216369824dbfbf8787ddbfcbe812630c814d
+  line_count: 1452
+  imports:
+  - dart:collection
+  - dart:typed_data
+  - ../../quantum.dart
+  symbols:
+  - QLBlockPayload
+  - QLSchemaFieldSpec
+  - QLSchemaBlueprint
+  - QLSchemaRegistry
+  - QLSchemaReadPlan
+  - QLSchemaRegistryInspector
+  - QLSchemaBlueprintSmartSelect
+  - containsKey
+  - toMap
+  - createProjection
+  - expandSelection
+  - getIndex
+  - field
+  - fieldPaths
+  - _validateFieldValue
+  - _validateItem
+  - _normalizeMediaValue
+  - _parseSingleBlock
+  - _serializeSingleBlock
+  - _isEmpty
+runtime_focus:
+- parse failure
+- malformed structure
+- deep nesting / alias loops
+- memory pressure
+test_cases:
+- id: case-1
+  title: null input
+  stimulus: null / missing input
+  runtime_failure_target: null_pointer_access
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-2
+  title: malformed input
+  stimulus: invalid / malformed payload
+  runtime_failure_target: parse_or_type_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-3
+  title: boundary input
+  stimulus: empty / oversized / zero-value edge case
+  runtime_failure_target: range_or_state_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+- id: case-4
+  title: resource pressure
+  stimulus: large batch / repeated execution / allocation stress
+  runtime_failure_target: out_of_memory_or_allocation_failure
+  expected:
+  - surface a runtime error or rejection
+  - exercise the live code path during app launch or harness execution
+  - avoid static verification of code existence
+  - clean up resources and leave no stale runtime state
+assertions:
+  must_execute_live_code: true
+  must_capture_runtime_failure: true
+  must_not_use_static_verification: true
+  must_verify_cleanup: true

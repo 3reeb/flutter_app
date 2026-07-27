@@ -14,16 +14,13 @@
 import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:typed_data';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-
 // Foundation dependencies (Assumed to exist in your ecosystem)
 import '../foundation/quantum_core.dart';
 import '../foundation/quantum_primitives.dart';
-
 // ────────────────────────────────────────────────────────────────────────────
 // §1 — ENUMS & PRIMITIVES
 // ────────────────────────────────────────────────────────────────────────────

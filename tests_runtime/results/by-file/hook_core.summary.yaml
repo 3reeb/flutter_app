@@ -1,0 +1,6 @@
+file: "hook_core.dart"
+manifestPath: "tests_runtime/yaml/by-file/src/runtime/omni_cores/hook_core.yaml"
+total: 18
+passed: 17
+failed: 1
+sourcePath: "src/runtime/omni_cores/hook_core.dart"

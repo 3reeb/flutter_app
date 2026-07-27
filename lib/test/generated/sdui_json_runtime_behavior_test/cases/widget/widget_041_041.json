@@ -1,0 +1,24 @@
+{
+  "__meta": {
+    "id": "widget-041-slider-out-of-range",
+    "title": "Slider defaultValue outside min/max range must throw or clamp",
+    "description": "defaultValue:200 with max:100 is a contract violation. The VM must either throw or clamp the value, not silently pass it through.",
+    "tags": ["widget", "field", "slider", "guard"],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "field",
+    "props": {
+      "__subType": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "defaultValue": 200
+    }
+  },
+  "expectError": {
+    "type": "FormatException",
+    "messageContains": "defaultValue"
+  }
+}

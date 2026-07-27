@@ -1,0 +1,560 @@
+file: lib/src/runtime/quantum_vm_init.dart
+docs_file: docs/src/runtime/quantum_vm_init.dart.md
+line_count: 501
+category: ui
+tests:
+- uuid: ff58ae49-a912-5ddd-8b1a-f4ae3f1d95b0
+  file: lib/src/runtime/quantum_vm_init.dart
+  docs_file: docs/src/runtime/quantum_vm_init.dart.md
+  title: 'Quantum Vm Init: public contract remains stable under valid input'
+  slug: contract
+  category: ui
+  severity: critical
+  description: Verify that quantum vm init keeps its documented runtime behavior while
+    handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm_init.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm_init.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM VIRTUAL MACHINE INITIALIZER v13.0 - OMEGA BUILD'
+    headings:
+    - '`src/runtime/quantum_vm_init.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - contract
+  - quantum vm init
+- uuid: 929b35f6-ca5a-5702-a51a-44c0d3436947
+  file: lib/src/runtime/quantum_vm_init.dart
+  docs_file: docs/src/runtime/quantum_vm_init.dart.md
+  title: 'Quantum Vm Init: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: ui
+  severity: critical
+  description: Verify that quantum vm init keeps its documented runtime behavior while
+    handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm_init.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm_init.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM VIRTUAL MACHINE INITIALIZER v13.0 - OMEGA BUILD'
+    headings:
+    - '`src/runtime/quantum_vm_init.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - invalid_input
+  - quantum vm init
+- uuid: 14369788-76d6-55c3-a6d8-ac09ab14aa3c
+  file: lib/src/runtime/quantum_vm_init.dart
+  docs_file: docs/src/runtime/quantum_vm_init.dart.md
+  title: 'Quantum Vm Init: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: ui
+  severity: high
+  description: Verify that quantum vm init keeps its documented runtime behavior while
+    handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm_init.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm_init.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM VIRTUAL MACHINE INITIALIZER v13.0 - OMEGA BUILD'
+    headings:
+    - '`src/runtime/quantum_vm_init.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - reentrant
+  - quantum vm init
+- uuid: ce240c59-bd47-5f4d-b311-c00f4114a142
+  file: lib/src/runtime/quantum_vm_init.dart
+  docs_file: docs/src/runtime/quantum_vm_init.dart.md
+  title: 'Quantum Vm Init: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: ui
+  severity: high
+  description: Verify that quantum vm init keeps its documented runtime behavior while
+    handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm_init.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm_init.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM VIRTUAL MACHINE INITIALIZER v13.0 - OMEGA BUILD'
+    headings:
+    - '`src/runtime/quantum_vm_init.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - cleanup
+  - quantum vm init
+- uuid: cf16ebf0-40ee-5d0d-ba3d-4ec70dd96be0
+  file: lib/src/runtime/quantum_vm_init.dart
+  docs_file: docs/src/runtime/quantum_vm_init.dart.md
+  title: 'Quantum Vm Init: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: ui
+  severity: high
+  description: Verify that quantum vm init keeps its documented runtime behavior while
+    handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm_init.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm_init.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM VIRTUAL MACHINE INITIALIZER v13.0 - OMEGA BUILD'
+    headings:
+    - '`src/runtime/quantum_vm_init.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - performance
+  - quantum vm init
+- uuid: a2077f69-1e20-518f-b638-dc8bee8a06c5
+  file: lib/src/runtime/quantum_vm_init.dart
+  docs_file: docs/src/runtime/quantum_vm_init.dart.md
+  title: 'Quantum Vm Init: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: ui
+  severity: medium
+  description: Verify that quantum vm init keeps its documented runtime behavior while
+    handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm_init.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm_init.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM VIRTUAL MACHINE INITIALIZER v13.0 - OMEGA BUILD'
+    headings:
+    - '`src/runtime/quantum_vm_init.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - memory
+  - quantum vm init
+- uuid: ba1fedec-14f7-5061-a56e-2ab1fac4cb56
+  file: lib/src/runtime/quantum_vm_init.dart
+  docs_file: docs/src/runtime/quantum_vm_init.dart.md
+  title: 'Quantum Vm Init: the runtime surface still matches the documented API and
+    headings'
+  slug: docs_parity
+  category: ui
+  severity: medium
+  description: Verify that quantum vm init keeps its documented runtime behavior while
+    handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm_init.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm_init.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM VIRTUAL MACHINE INITIALIZER v13.0 - OMEGA BUILD'
+    headings:
+    - '`src/runtime/quantum_vm_init.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - docs_parity
+  - quantum vm init
+- uuid: de5e7eb8-f632-56f9-a2ad-5ef2db232d88
+  file: lib/src/runtime/quantum_vm_init.dart
+  docs_file: docs/src/runtime/quantum_vm_init.dart.md
+  title: 'Quantum Vm Init: layout remains correct under narrow, wide, and constrained
+    bounds'
+  slug: layout
+  category: ui
+  severity: medium
+  description: Verify that quantum vm init keeps its documented runtime behavior while
+    handling layout conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm_init.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm_init.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM VIRTUAL MACHINE INITIALIZER v13.0 - OMEGA BUILD'
+    headings:
+    - '`src/runtime/quantum_vm_init.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - layout
+  - quantum vm init
+- uuid: f2a4c45c-e80d-5e75-a87c-5b098ede0c8e
+  file: lib/src/runtime/quantum_vm_init.dart
+  docs_file: docs/src/runtime/quantum_vm_init.dart.md
+  title: 'Quantum Vm Init: semantics and accessibility output remain stable across
+    rebuilds'
+  slug: semantics
+  category: ui
+  severity: medium
+  description: Verify that quantum vm init keeps its documented runtime behavior while
+    handling semantics conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm_init.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm_init.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - normal
+      gestures:
+      - tap
+      - scroll
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM VIRTUAL MACHINE INITIALIZER v13.0 - OMEGA BUILD'
+    headings:
+    - '`src/runtime/quantum_vm_init.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - semantics
+  - quantum vm init
+- uuid: 1cb20a8b-e38a-5894-8c24-52726c784b31
+  file: lib/src/runtime/quantum_vm_init.dart
+  docs_file: docs/src/runtime/quantum_vm_init.dart.md
+  title: 'Quantum Vm Init: gesture handling and hit testing stay correct during interaction'
+  slug: gesture
+  category: ui
+  severity: medium
+  description: Verify that quantum vm init keeps its documented runtime behavior while
+    handling gesture conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_vm_init.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_vm_init.dart.md.
+    stimulus:
+    - Mount the widget or render object under multiple constraint sets.
+    - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
+    data:
+      constraints:
+      - tight
+      - loose
+      - unbounded
+      - rotated
+      gestures:
+      - tap
+      - hover
+      - drag
+      - resize
+  expected_output:
+    layout: No overflow, clipping regression, or unexpected relayout churn.
+    interaction: Hit-testing and gesture routing remain deterministic.
+    frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 50
+    stress_ms: 150
+  memory_budget:
+    max_growth_mb: 4
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A framework source file that participates in the Quantum runtime. Author-intent
+      note: QUANTUM VIRTUAL MACHINE INITIALIZER v13.0 - OMEGA BUILD'
+    headings:
+    - '`src/runtime/quantum_vm_init.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - ui
+  - gesture
+  - quantum vm init

@@ -1,0 +1,418 @@
+package:
+  name: runtime_generated_tests
+  file: lib/src/runtime/quantum_core_file_registry.dart
+  docs_file: docs/src/runtime/quantum_core_file_registry.dart.md
+  source_entry:
+    line_count: 331
+    byte_count: 9502
+    class_count: 1
+    enum_count: 0
+    function_count: 12
+    category: state
+    test_count: 8
+  scenario_count: 8
+source:
+  path: src/runtime/quantum_core_file_registry.dart
+  docs_path: docs/src/runtime/quantum_core_file_registry.dart.md
+  label: src/runtime/quantum_core_file_registry.dart
+scenarios:
+- uuid: 383bb58c-73c1-5d56-b023-14b9aa7a9b42
+  file: lib/src/runtime/quantum_core_file_registry.dart
+  docs_file: docs/src/runtime/quantum_core_file_registry.dart.md
+  title: 'Quantum Core File Registry: public contract remains stable under valid input'
+  slug: contract
+  category: state
+  severity: critical
+  description: Verify that quantum core file registry keeps its documented runtime behavior while handling contract conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_file_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_file_registry.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: Folder-based, lazy, override-friendly registry for macros, templates,'
+    headings:
+    - '`src/runtime/quantum_core_file_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - state
+  - contract
+  - quantum core file registry
+- uuid: fc07a7a3-6609-50b7-b5a3-52447be0cb6d
+  file: lib/src/runtime/quantum_core_file_registry.dart
+  docs_file: docs/src/runtime/quantum_core_file_registry.dart.md
+  title: 'Quantum Core File Registry: invalid or malformed input is rejected cleanly'
+  slug: invalid_input
+  category: state
+  severity: critical
+  description: Verify that quantum core file registry keeps its documented runtime behavior while handling invalid input conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_file_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_file_registry.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: Folder-based, lazy, override-friendly registry for macros, templates,'
+    headings:
+    - '`src/runtime/quantum_core_file_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - state
+  - invalid_input
+  - quantum core file registry
+- uuid: 50fcb548-0ebf-5444-a814-f676af3653bc
+  file: lib/src/runtime/quantum_core_file_registry.dart
+  docs_file: docs/src/runtime/quantum_core_file_registry.dart.md
+  title: 'Quantum Core File Registry: re-entrant calls do not corrupt internal state'
+  slug: reentrant
+  category: state
+  severity: high
+  description: Verify that quantum core file registry keeps its documented runtime behavior while handling reentrant conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_file_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_file_registry.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: Folder-based, lazy, override-friendly registry for macros, templates,'
+    headings:
+    - '`src/runtime/quantum_core_file_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - state
+  - reentrant
+  - quantum core file registry
+- uuid: 5d1e80f0-2114-559c-bc04-cb55d64e272c
+  file: lib/src/runtime/quantum_core_file_registry.dart
+  docs_file: docs/src/runtime/quantum_core_file_registry.dart.md
+  title: 'Quantum Core File Registry: dispose/close/teardown releases resources deterministically'
+  slug: cleanup
+  category: state
+  severity: high
+  description: Verify that quantum core file registry keeps its documented runtime behavior while handling cleanup conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_file_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_file_registry.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: Folder-based, lazy, override-friendly registry for macros, templates,'
+    headings:
+    - '`src/runtime/quantum_core_file_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - state
+  - cleanup
+  - quantum core file registry
+- uuid: afa47d4c-bf08-5858-bba5-228649a03f5b
+  file: lib/src/runtime/quantum_core_file_registry.dart
+  docs_file: docs/src/runtime/quantum_core_file_registry.dart.md
+  title: 'Quantum Core File Registry: hot-path behavior stays within the runtime budget'
+  slug: performance
+  category: state
+  severity: high
+  description: Verify that quantum core file registry keeps its documented runtime behavior while handling performance conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_file_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_file_registry.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: Folder-based, lazy, override-friendly registry for macros, templates,'
+    headings:
+    - '`src/runtime/quantum_core_file_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - state
+  - performance
+  - quantum core file registry
+- uuid: 1d582de8-6aea-51b0-9c23-90eeae79562a
+  file: lib/src/runtime/quantum_core_file_registry.dart
+  docs_file: docs/src/runtime/quantum_core_file_registry.dart.md
+  title: 'Quantum Core File Registry: memory usage stays bounded under repeated operations'
+  slug: memory
+  category: state
+  severity: medium
+  description: Verify that quantum core file registry keeps its documented runtime behavior while handling memory conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_file_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_file_registry.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: Folder-based, lazy, override-friendly registry for macros, templates,'
+    headings:
+    - '`src/runtime/quantum_core_file_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - state
+  - memory
+  - quantum core file registry
+- uuid: 286579f6-d96b-56f5-8132-274e7980439b
+  file: lib/src/runtime/quantum_core_file_registry.dart
+  docs_file: docs/src/runtime/quantum_core_file_registry.dart.md
+  title: 'Quantum Core File Registry: the runtime surface still matches the documented API and headings'
+  slug: docs_parity
+  category: state
+  severity: medium
+  description: Verify that quantum core file registry keeps its documented runtime behavior while handling docs parity conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_file_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_file_registry.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: Folder-based, lazy, override-friendly registry for macros, templates,'
+    headings:
+    - '`src/runtime/quantum_core_file_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - state
+  - docs_parity
+  - quantum core file registry
+- uuid: f1522d20-915d-5a64-bcb2-2c856ea7930c
+  file: lib/src/runtime/quantum_core_file_registry.dart
+  docs_file: docs/src/runtime/quantum_core_file_registry.dart.md
+  title: 'Quantum Core File Registry: cache hit, miss, eviction, and invalidation behavior is deterministic'
+  slug: cache
+  category: state
+  severity: medium
+  description: Verify that quantum core file registry keeps its documented runtime behavior while handling cache conditions without corruption, leakage, or silent failure.
+  input:
+    preconditions:
+    - Load src/runtime/quantum_core_file_registry.dart with its documented dependencies available.
+    - Use the runtime surface described in docs/src/runtime/quantum_core_file_registry.dart.md.
+    stimulus:
+    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown cycles.
+    - Repeat updates concurrently to expose stale snapshot or listener leaks.
+    data:
+      workload:
+      - single write
+      - parallel writes
+      - rapid reads
+      - eviction pressure
+  expected_output:
+    state: Snapshots remain internally consistent and deterministic.
+    cleanup: Detached listeners and expired entries are reclaimed.
+    performance: Hot-path operations stay bounded under repeated calls.
+  observability:
+    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+    traces: Trace the call path through the documented public API and teardown hooks.
+  performance_budget:
+    max_ms: 100
+    stress_ms: 250
+  memory_budget:
+    max_growth_mb: 1
+    leak_check: true
+  cleanup:
+  - Dispose controllers, streams, painters, or isolates.
+  - Verify no retained listeners or stale caches remain.
+  docs_parity:
+    summary: 'A registry module. It stores keyed definitions or instances, exposes lookup and registration helpers, and centralizes a class of metadata that multiple runtime subsystems consume. Author-intent note: Folder-based, lazy, override-friendly registry for macros, templates,'
+    headings:
+    - '`src/runtime/quantum_core_file_registry.dart`'
+    - What this file is
+    - Dependencies
+    - Top-level declarations
+    - Important members and helpers
+  tags:
+  - state
+  - cache
+  - quantum core file registry

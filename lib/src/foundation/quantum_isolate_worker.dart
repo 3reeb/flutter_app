@@ -52,11 +52,8 @@ import 'dart:async';
 import 'dart:isolate';
 import 'dart:typed_data';
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
-
 import '../../quantum.dart';
-
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  ZERO-COPY TRANSFERABLE BUFFER
 // ────────────────────────────────────────────────────────────────────────────
@@ -429,7 +426,8 @@ class QLJsonDecodeTask extends QLWorkerTask<String, Map<String, dynamic>> {
   }
 
   @override
-  Map<String, dynamic> decode(dynamic raw) => Map<String, dynamic>.from(raw as Map);
+  Map<String, dynamic> decode(dynamic raw) =>
+      Map<String, dynamic>.from(raw as Map);
 }
 
 /// Convenience extension for QLAsyncSignal to dispatch directly to workers.

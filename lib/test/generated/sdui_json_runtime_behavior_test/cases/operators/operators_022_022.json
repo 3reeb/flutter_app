@@ -1,0 +1,90 @@
+{
+  "__meta": {
+    "id": "operators-022-async-022",
+    "title": "Async wrapper exposes loading/data/error slots #022",
+    "description": "The $async operator should emit a system:async wrapper and surface all three slots.",
+    "tags": [
+      "operators",
+      "async",
+      "slots"
+    ],
+    "allowBlank": false
+  },
+  "input": {
+    "$async": {
+      "action": "loadUser2",
+      "params": {
+        "id": 22
+      }
+    },
+    "$loading": {
+      "type": "text",
+      "props": {
+        "text": "Loading 022"
+      }
+    },
+    "$data": {
+      "type": "text",
+      "props": {
+        "text": "Ready 022"
+      }
+    },
+    "$error": {
+      "type": "text",
+      "props": {
+        "text": "Failed 022"
+      }
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Body 022"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "async",
+      "action": "loadUser2",
+      "params": {
+        "id": 22
+      }
+    },
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Body 022"
+        },
+        "debugPath": "root[0]"
+      }
+    ],
+    "slots": {
+      "loading": {
+        "type": "text",
+        "props": {
+          "text": "Loading 022"
+        },
+        "debugPath": "root.slots[loading]"
+      },
+      "data": {
+        "type": "text",
+        "props": {
+          "text": "Ready 022"
+        },
+        "debugPath": "root.slots[data]"
+      },
+      "error": {
+        "type": "text",
+        "props": {
+          "text": "Failed 022"
+        },
+        "debugPath": "root.slots[error]"
+      }
+    }
+  }
+}

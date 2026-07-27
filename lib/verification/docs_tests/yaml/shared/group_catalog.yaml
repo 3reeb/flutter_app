@@ -1,0 +1,37 @@
+groups:
+  smoke: Entry-path and wiring checks that prove the file can be instantiated or called.
+  edges: Null, empty, malformed, duplicate, and boundary inputs.
+  integration: Interactions with neighboring runtime layers, registries, stores, and adapters.
+  regression: Silent failures, stale state, ordering bugs, and previously observed traps.
+  cache: Memoization, invalidation, reuse, and eviction behavior.
+  lazy-load: Deferred hydration and first-access behavior.
+  performance: Hot-path bulk, churn, and memory behavior.
+  compatibility: Legacy shapes, older call patterns, and backwards-compatible serialization.
+  projection: Field selection, slice expansion, and path narrowing.
+  serialization: Round-trip encoding, compatibility, and shape stability.
+  hydration: UI/data hydration and state reattachment.
+  layout: Measurement, arrangement, and composition behavior.
+  input: User input, focus, validation, and event propagation.
+  platform: IO/web/native divergence and fallback selection.
+  failure: Controlled failures, recovery, and rollback.
+  permissions: Permission gates, denial handling, and scoped access.
+  fetch: Fetch/retrieve semantics and paging behavior.
+  snapshot: Snapshot creation, replay, and immutability boundaries.
+  indexing: Index updates, search consistency, and lookup performance.
+  bootstrap: Startup ordering and initialization gates.
+  routing: Dispatch and route selection.
+  fallback: Default path and recovery behavior.
+  store: Persistence, commit boundaries, and transaction-like behavior.
+  slices: Slice boundaries, partial reads/writes, and signal propagation.
+  fields: Field definitions, metadata, validation, and rendering.
+  media: Media metadata, lazy loading, and transport semantics.
+  rendering: Render stability under repeated builds or paints.
+  execution: Call execution, exceptions, and repeatability.
+  registry: Registration, lookup, and deregistration behavior.
+  security: Access policy, denial handling, and scope isolation.
+  watchers: Subscription, unsubscription, and notification order.
+  macro-expansion: Macro slots, token injection, and compile-time expansion behavior.
+  dispatch: Route selection and action fan-out.
+  coherence: Consistency across related state or signals.
+  metadata: Preservation of source metadata and auxiliary hints.
+  timing: Scheduling, ordering, and deferred execution.

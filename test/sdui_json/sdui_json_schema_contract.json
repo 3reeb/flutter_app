@@ -1,0 +1,413 @@
+{
+  "__meta": {
+    "id": "sdui-json-schema-contract",
+    "title": "SDUI JSON schema contract",
+    "description": "Validates the shape of the JSON test manifests that drive the dynamic SDUI suite.",
+    "tags": [
+      "sdui",
+      "json",
+      "schema",
+      "contract"
+    ],
+    "allowBlank": true
+  },
+  "cases": [
+    {
+      "id": "omni-cores-catalog-shape",
+      "title": "omni_cores catalog JSON shape",
+      "sourcePath": "test/sdui_json/omni_cores_catalog.json",
+      "assertions": [
+        {
+          "kind": "json_root_keys_contains",
+          "expected": [
+            "__meta",
+            "cases"
+          ]
+        },
+        {
+          "kind": "json_meta_keys_contains",
+          "expected": [
+            "id",
+            "title",
+            "description",
+            "tags",
+            "allowBlank"
+          ]
+        },
+        {
+          "kind": "json_case_count_at_least",
+          "value": 20
+        },
+        {
+          "kind": "json_case_keys_contains",
+          "expected": [
+            "id",
+            "title",
+            "sourcePath",
+            "assertions"
+          ]
+        },
+        {
+          "kind": "json_case_assertions_nonempty"
+        },
+        {
+          "kind": "json_case_ids_unique"
+        },
+        {
+          "kind": "json_assertion_kinds_allowed",
+          "values": [
+            "source_contains_all",
+            "source_contains_any",
+            "source_not_contains",
+            "subtypes_exact",
+            "subtypes_contains",
+            "builder_contains",
+            "line_count_at_least",
+            "source_sha256_matches",
+            "snapshot_path_not_empty",
+            "json_round_trip",
+            "json_round_trip_strict",
+            "json_root_keys_contains",
+            "json_root_keys_exact",
+            "json_meta_keys_contains",
+            "json_meta_keys_exact",
+            "json_case_count_at_least",
+            "json_case_count_exact",
+            "json_case_keys_contains",
+            "json_case_keys_exact",
+            "json_case_ids_unique",
+            "json_case_assertions_nonempty",
+            "json_assertion_kinds_allowed",
+            "json_path_exists",
+            "json_path_not_empty",
+            "json_path_equals",
+            "json_path_contains_all",
+            "json_path_contains_any",
+            "json_path_keys_contains",
+            "json_path_keys_exact",
+            "json_path_length_at_least",
+            "json_path_length_exact",
+            "json_path_type_is",
+            "all",
+            "any",
+            "not"
+          ]
+        },
+        {
+          "kind": "json_round_trip_strict"
+        }
+      ]
+    },
+    {
+      "id": "sdui-runtime-contract-shape",
+      "title": "runtime contract JSON shape",
+      "sourcePath": "test/sdui_json/sdui_runtime_contract.json",
+      "assertions": [
+        {
+          "kind": "json_root_keys_contains",
+          "expected": [
+            "__meta",
+            "cases"
+          ]
+        },
+        {
+          "kind": "json_meta_keys_contains",
+          "expected": [
+            "id",
+            "title",
+            "description",
+            "tags",
+            "allowBlank"
+          ]
+        },
+        {
+          "kind": "json_case_count_at_least",
+          "value": 5
+        },
+        {
+          "kind": "json_case_keys_contains",
+          "expected": [
+            "id",
+            "title",
+            "sourcePath",
+            "assertions"
+          ]
+        },
+        {
+          "kind": "json_case_assertions_nonempty"
+        },
+        {
+          "kind": "json_case_ids_unique"
+        },
+        {
+          "kind": "json_assertion_kinds_allowed",
+          "values": [
+            "source_contains_all",
+            "source_contains_any",
+            "source_not_contains",
+            "subtypes_exact",
+            "subtypes_contains",
+            "builder_contains",
+            "line_count_at_least",
+            "source_sha256_matches",
+            "snapshot_path_not_empty",
+            "json_round_trip",
+            "json_round_trip_strict",
+            "json_root_keys_contains",
+            "json_root_keys_exact",
+            "json_meta_keys_contains",
+            "json_meta_keys_exact",
+            "json_case_count_at_least",
+            "json_case_count_exact",
+            "json_case_keys_contains",
+            "json_case_keys_exact",
+            "json_case_ids_unique",
+            "json_case_assertions_nonempty",
+            "json_assertion_kinds_allowed"
+          ]
+        },
+        {
+          "kind": "json_round_trip_strict"
+        }
+      ]
+    },
+    {
+      "id": "omni-cores-nested-catalog-shape",
+      "title": "omni_cores nested catalog JSON shape",
+      "sourcePath": "test/sdui_json/omni_cores_nested_catalog.json",
+      "assertions": [
+        {
+          "kind": "json_root_keys_contains",
+          "expected": [
+            "__meta",
+            "cases",
+            "groups"
+          ]
+        },
+        {
+          "kind": "json_meta_keys_contains",
+          "expected": [
+            "id",
+            "title",
+            "description",
+            "tags",
+            "allowBlank"
+          ]
+        },
+        {
+          "kind": "json_case_count_at_least",
+          "value": 2
+        },
+        {
+          "kind": "json_case_ids_unique"
+        },
+        {
+          "kind": "json_path_type_is",
+          "path": "groups",
+          "expected": [
+            "list"
+          ]
+        },
+        {
+          "kind": "json_path_length_at_least",
+          "path": "groups",
+          "value": 3
+        },
+        {
+          "kind": "json_path_keys_contains",
+          "path": "groups[0]",
+          "expected": [
+            "id",
+            "title",
+            "description",
+            "groups"
+          ]
+        },
+        {
+          "kind": "json_path_length_at_least",
+          "path": "groups[0].groups",
+          "value": 1
+        },
+        {
+          "kind": "json_round_trip_strict"
+        }
+      ]
+    },
+    {
+      "id": "sdui-runtime-nested-contract-shape",
+      "title": "runtime nested contract JSON shape",
+      "sourcePath": "test/sdui_json/sdui_runtime_nested_contract.json",
+      "assertions": [
+        {
+          "kind": "json_root_keys_contains",
+          "expected": [
+            "__meta",
+            "cases",
+            "groups"
+          ]
+        },
+        {
+          "kind": "json_meta_keys_contains",
+          "expected": [
+            "id",
+            "title",
+            "description",
+            "tags",
+            "allowBlank"
+          ]
+        },
+        {
+          "kind": "json_case_count_at_least",
+          "value": 2
+        },
+        {
+          "kind": "json_case_ids_unique"
+        },
+        {
+          "kind": "json_path_type_is",
+          "path": "groups",
+          "expected": [
+            "list"
+          ]
+        },
+        {
+          "kind": "json_path_length_at_least",
+          "path": "groups",
+          "value": 2
+        },
+        {
+          "kind": "json_path_keys_contains",
+          "path": "groups[0]",
+          "expected": [
+            "id",
+            "title",
+            "description",
+            "groups"
+          ]
+        },
+        {
+          "kind": "json_round_trip_strict"
+        }
+      ]
+    },
+    {
+      "id": "operators-and-bindings-shape",
+      "title": "operators_and_bindings manifest shape",
+      "sourcePath": "test/sdui_json/operators_and_bindings.json",
+      "assertions": [
+        {
+          "kind": "json_root_keys_contains",
+          "expected": [
+            "__meta",
+            "groups"
+          ]
+        },
+        {
+          "kind": "json_meta_keys_contains",
+          "expected": [
+            "id",
+            "title",
+            "description",
+            "tags",
+            "allowBlank"
+          ]
+        },
+        {
+          "kind": "json_path_type_is",
+          "path": "groups",
+          "expected": [
+            "list"
+          ]
+        },
+        {
+          "kind": "json_path_length_at_least",
+          "path": "groups",
+          "value": 2
+        },
+        {
+          "kind": "json_case_count_at_least",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "state-and-pipeline-shape",
+      "title": "state_and_pipeline manifest shape",
+      "sourcePath": "test/sdui_json/state_and_pipeline.json",
+      "assertions": [
+        {
+          "kind": "json_root_keys_contains",
+          "expected": [
+            "__meta",
+            "groups"
+          ]
+        },
+        {
+          "kind": "json_meta_keys_contains",
+          "expected": [
+            "id",
+            "title",
+            "description",
+            "tags",
+            "allowBlank"
+          ]
+        },
+        {
+          "kind": "json_path_type_is",
+          "path": "groups",
+          "expected": [
+            "list"
+          ]
+        },
+        {
+          "kind": "json_path_length_at_least",
+          "path": "groups",
+          "value": 3
+        },
+        {
+          "kind": "json_case_count_at_least",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "nested-composition-shape",
+      "title": "nested_composition manifest shape",
+      "sourcePath": "test/sdui_json/nested_composition.json",
+      "assertions": [
+        {
+          "kind": "json_root_keys_contains",
+          "expected": [
+            "__meta",
+            "groups"
+          ]
+        },
+        {
+          "kind": "json_meta_keys_contains",
+          "expected": [
+            "id",
+            "title",
+            "description",
+            "tags",
+            "allowBlank"
+          ]
+        },
+        {
+          "kind": "json_path_type_is",
+          "path": "groups",
+          "expected": [
+            "list"
+          ]
+        },
+        {
+          "kind": "json_path_length_at_least",
+          "path": "groups",
+          "value": 3
+        },
+        {
+          "kind": "json_case_ids_unique"
+        }
+      ]
+    }
+  ]
+}
