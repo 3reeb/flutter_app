@@ -1,8 +1,0 @@
-{
-  "ui": {
-    "type": "text",
-    "props": {
-      "text": "hello"
-    }
-  }
-}

@@ -1,6 +1,0 @@
-app:
-  name: Quantum Flutter
-  tags:
-    - sdui
-    - vm
-    - layouts

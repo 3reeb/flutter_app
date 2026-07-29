@@ -48,3 +48,6 @@ app.*.map.json
 *.zip
 *.txt
 .gemini/
+lib/docs/
+lib/test/
+test/

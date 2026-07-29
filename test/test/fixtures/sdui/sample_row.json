@@ -1,1 +1,0 @@
-{"ui":{"type":"box:row","props":{"gap":4},"children":[{"type":"text","props":{"text":"left"}},{"type":"text","props":{"text":"right"}}]}}
