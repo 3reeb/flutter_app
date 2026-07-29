@@ -1,0 +1,656 @@
+{
+  "sdui_version": "1.0.0",
+  "examples": [
+    {
+      "name": "supabase_auth_login",
+      "description": "Complete login flow with Supabase authentication",
+      "type": "column",
+      "children": [
+        {
+          "type": "text",
+          "value": "Login",
+          "style": {
+            "fontSize": 28,
+            "fontWeight": "bold",
+            "color": "#000"
+          }
+        },
+        {
+          "type": "input",
+          "key": "email",
+          "placeholder": "Email",
+          "inputType": "email",
+          "validation": {
+            "required": true,
+            "pattern": "^[^@]+@[^@]+\\.[^@]+$"
+          }
+        },
+        {
+          "type": "input",
+          "key": "password",
+          "placeholder": "Password",
+          "inputType": "password",
+          "validation": {
+            "required": true,
+            "minLength": 6
+          }
+        },
+        {
+          "type": "button",
+          "title": "Sign In",
+          "action": {
+            "type": "network",
+            "method": "POST",
+            "endpoint": "/api/auth/login",
+            "body": {
+              "email": "${email}",
+              "password": "${password}"
+            },
+            "driver": "supabase_auth",
+            "onSuccess": {
+              "type": "navigate",
+              "screen": "home"
+            },
+            "onError": {
+              "type": "toast",
+              "message": "Login failed: ${error}"
+            }
+          }
+        },
+        {
+          "type": "button",
+          "title": "Sign Up",
+          "style": {
+            "variant": "secondary"
+          },
+          "action": {
+            "type": "navigate",
+            "screen": "signup"
+          }
+        }
+      ]
+    },
+    {
+      "name": "supabase_post_list",
+      "description": "List of posts fetched from Supabase with realtime updates",
+      "type": "column",
+      "children": [
+        {
+          "type": "text",
+          "value": "Posts",
+          "style": {
+            "fontSize": 24,
+            "fontWeight": "bold"
+          }
+        },
+        {
+          "type": "list",
+          "key": "posts",
+          "dataSource": {
+            "type": "vault",
+            "table": "posts",
+            "query": {
+              "select": ["id", "title", "content", "created_at", "user_id"],
+              "limit": 20,
+              "orderBy": [{"column": "created_at", "direction": "desc"}]
+            },
+            "driver": "supabase_vault",
+            "cache": {
+              "policy": "staleWhileRevalidate",
+              "ttl": 300000
+            },
+            "realtime": {
+              "enabled": true,
+              "events": ["INSERT", "UPDATE", "DELETE"],
+              "driver": "supabase_realtime"
+            }
+          },
+          "itemBuilder": {
+            "type": "card",
+            "margin": {"bottom": 12},
+            "children": [
+              {
+                "type": "text",
+                "value": "${title}",
+                "style": {
+                  "fontSize": 18,
+                  "fontWeight": "bold"
+                }
+              },
+              {
+                "type": "text",
+                "value": "${content}",
+                "style": {
+                  "fontSize": 14,
+                  "color": "#666"
+                },
+                "maxLines": 2
+              },
+              {
+                "type": "row",
+                "children": [
+                  {
+                    "type": "text",
+                    "value": "${created_at}",
+                    "style": {
+                      "fontSize": 12,
+                      "color": "#999"
+                    }
+                  },
+                  {
+                    "type": "spacer"
+                  },
+                  {
+                    "type": "button",
+                    "title": "View",
+                    "size": "small",
+                    "action": {
+                      "type": "navigate",
+                      "screen": "post_detail",
+                      "params": {
+                        "postId": "${id}"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "button",
+          "title": "Create Post",
+          "action": {
+            "type": "navigate",
+            "screen": "create_post"
+          }
+        }
+      ]
+    },
+    {
+      "name": "supabase_create_post",
+      "description": "Form to create a new post in Supabase",
+      "type": "column",
+      "children": [
+        {
+          "type": "text",
+          "value": "Create New Post",
+          "style": {
+            "fontSize": 24,
+            "fontWeight": "bold"
+          }
+        },
+        {
+          "type": "input",
+          "key": "title",
+          "placeholder": "Post Title",
+          "validation": {
+            "required": true,
+            "minLength": 5,
+            "maxLength": 200
+          }
+        },
+        {
+          "type": "input",
+          "key": "content",
+          "placeholder": "What's on your mind?",
+          "inputType": "textarea",
+          "validation": {
+            "required": true,
+            "minLength": 10
+          }
+        },
+        {
+          "type": "input",
+          "key": "tags",
+          "placeholder": "Tags (comma-separated)",
+          "inputType": "text"
+        },
+        {
+          "type": "button",
+          "title": "Publish",
+          "action": {
+            "type": "network",
+            "method": "POST",
+            "endpoint": "/api/posts",
+            "driver": "supabase_vault",
+            "body": {
+              "title": "${title}",
+              "content": "${content}",
+              "tags": "${tags.split(',').map(t => t.trim())}",
+              "status": "published"
+            },
+            "table": "posts",
+            "onSuccess": {
+              "type": "action_chain",
+              "actions": [
+                {
+                  "type": "toast",
+                  "message": "Post published successfully!"
+                },
+                {
+                  "type": "navigate",
+                  "screen": "posts",
+                  "replace": true
+                }
+              ]
+            },
+            "onError": {
+              "type": "toast",
+              "message": "Failed to publish: ${error}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "supabase_user_profile",
+      "description": "User profile with data from Supabase and image upload",
+      "type": "column",
+      "children": [
+        {
+          "type": "text",
+          "value": "Profile",
+          "style": {
+            "fontSize": 24,
+            "fontWeight": "bold"
+          }
+        },
+        {
+          "type": "image",
+          "key": "profile_image",
+          "dataSource": {
+            "type": "vault",
+            "table": "profiles",
+            "query": {
+              "select": ["avatar_url"],
+              "where": {"id": "${currentUserId}"}
+            },
+            "driver": "supabase_vault",
+            "field": "avatar_url"
+          },
+          "style": {
+            "width": 120,
+            "height": 120,
+            "borderRadius": 60
+          }
+        },
+        {
+          "type": "button",
+          "title": "Upload Photo",
+          "action": {
+            "type": "media",
+            "mediaType": "image",
+            "driver": "supabase_storage",
+            "bucket": "avatars",
+            "path": "${currentUserId}/profile",
+            "onSuccess": {
+              "type": "network",
+              "method": "PATCH",
+              "endpoint": "/api/profiles/${currentUserId}",
+              "driver": "supabase_vault",
+              "body": {
+                "avatar_url": "${uploadedUrl}"
+              }
+            }
+          }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "container",
+          "dataSource": {
+            "type": "vault",
+            "table": "profiles",
+            "query": {
+              "select": ["name", "email", "bio", "website"],
+              "where": {"id": "${currentUserId}"}
+            },
+            "driver": "supabase_vault"
+          },
+          "children": [
+            {
+              "type": "row",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Name"
+                },
+                {
+                  "type": "input",
+                  "key": "name",
+                  "value": "${name}",
+                  "placeholder": "Your name"
+                }
+              ]
+            },
+            {
+              "type": "row",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Bio"
+                },
+                {
+                  "type": "input",
+                  "key": "bio",
+                  "value": "${bio}",
+                  "inputType": "textarea",
+                  "placeholder": "Tell about yourself"
+                }
+              ]
+            },
+            {
+              "type": "row",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Website"
+                },
+                {
+                  "type": "input",
+                  "key": "website",
+                  "value": "${website}",
+                  "inputType": "url",
+                  "placeholder": "https://..."
+                }
+              ]
+            },
+            {
+              "type": "button",
+              "title": "Save Changes",
+              "action": {
+                "type": "network",
+                "method": "PATCH",
+                "endpoint": "/api/profiles/${currentUserId}",
+                "driver": "supabase_vault",
+                "body": {
+                  "name": "${name}",
+                  "bio": "${bio}",
+                  "website": "${website}"
+                },
+                "onSuccess": {
+                  "type": "toast",
+                  "message": "Profile updated!"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "supabase_realtime_chat",
+      "description": "Real-time chat with Supabase websockets",
+      "type": "column",
+      "children": [
+        {
+          "type": "list",
+          "key": "messages",
+          "dataSource": {
+            "type": "vault",
+            "table": "messages",
+            "query": {
+              "select": ["id", "content", "user_id", "created_at"],
+              "where": {"chat_id": "${chatId}"},
+              "orderBy": [{"column": "created_at", "direction": "asc"}],
+              "limit": 100
+            },
+            "driver": "supabase_vault",
+            "realtime": {
+              "enabled": true,
+              "events": ["INSERT"],
+              "driver": "supabase_realtime",
+              "filter": {"chat_id": "${chatId}"}
+            }
+          },
+          "itemBuilder": {
+            "type": "row",
+            "children": [
+              {
+                "type": "text",
+                "value": "${content}",
+                "style": {
+                  "padding": 12,
+                  "backgroundColor": "${user_id == currentUserId ? '#E3F2FD' : '#F5F5F5'}",
+                  "borderRadius": 8
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "row",
+          "children": [
+            {
+              "type": "input",
+              "key": "messageInput",
+              "placeholder": "Type a message...",
+              "flex": 1
+            },
+            {
+              "type": "button",
+              "title": "Send",
+              "action": {
+                "type": "network",
+                "method": "POST",
+                "endpoint": "/api/messages",
+                "driver": "supabase_vault",
+                "body": {
+                  "chat_id": "${chatId}",
+                  "content": "${messageInput}",
+                  "user_id": "${currentUserId}"
+                },
+                "table": "messages",
+                "onSuccess": {
+                  "type": "action_chain",
+                  "actions": [
+                    {
+                      "type": "clear_input",
+                      "key": "messageInput"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "supabase_search_users",
+      "description": "Search and filter users with Supabase full-text search",
+      "type": "column",
+      "children": [
+        {
+          "type": "input",
+          "key": "searchQuery",
+          "placeholder": "Search users...",
+          "action": {
+            "type": "debounce",
+            "delay": 500,
+            "action": {
+              "type": "refresh_data",
+              "dataKey": "searchResults"
+            }
+          }
+        },
+        {
+          "type": "list",
+          "key": "searchResults",
+          "dataSource": {
+            "type": "vault",
+            "table": "profiles",
+            "query": {
+              "select": ["id", "name", "avatar_url", "bio"],
+              "where": {
+                "search": "${searchQuery}"
+              },
+              "limit": 50
+            },
+            "driver": "supabase_vault",
+            "cache": {
+              "policy": "networkFirst",
+              "ttl": 60000
+            }
+          },
+          "itemBuilder": {
+            "type": "card",
+            "children": [
+              {
+                "type": "row",
+                "children": [
+                  {
+                    "type": "image",
+                    "url": "${avatar_url}",
+                    "style": {
+                      "width": 60,
+                      "height": 60,
+                      "borderRadius": 30
+                    }
+                  },
+                  {
+                    "type": "column",
+                    "flex": 1,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "${name}",
+                        "style": {
+                          "fontWeight": "bold"
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "value": "${bio}",
+                        "style": {
+                          "fontSize": 12,
+                          "color": "#666"
+                        },
+                        "maxLines": 1
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "title": "Follow",
+                    "action": {
+                      "type": "network",
+                      "method": "POST",
+                      "endpoint": "/api/follows",
+                      "driver": "supabase_vault",
+                      "body": {
+                        "following_id": "${id}"
+                      },
+                      "table": "follows"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "supabase_sync_offline",
+      "description": "Offline-capable list with sync to Supabase",
+      "type": "column",
+      "children": [
+        {
+          "type": "text",
+          "value": "Tasks (Synced)",
+          "style": {
+            "fontSize": 24,
+            "fontWeight": "bold"
+          }
+        },
+        {
+          "type": "list",
+          "key": "tasks",
+          "dataSource": {
+            "type": "vault",
+            "table": "tasks",
+            "query": {
+              "select": ["id", "title", "completed", "user_id"],
+              "where": {"user_id": "${currentUserId}"}
+            },
+            "driver": "supabase_vault",
+            "cache": {
+              "policy": "cacheFirst",
+              "ttl": 600000
+            },
+            "offlineMode": {
+              "enabled": true,
+              "syncStrategy": "writeQueue"
+            }
+          },
+          "itemBuilder": {
+            "type": "row",
+            "children": [
+              {
+                "type": "checkbox",
+                "key": "completed",
+                "value": "${completed}",
+                "action": {
+                  "type": "network",
+                  "method": "PATCH",
+                  "endpoint": "/api/tasks/${id}",
+                  "driver": "supabase_vault",
+                  "body": {
+                    "completed": "${!completed}"
+                  },
+                  "offlineQueue": true
+                }
+              },
+              {
+                "type": "text",
+                "value": "${title}",
+                "flex": 1
+              },
+              {
+                "type": "button",
+                "title": "Delete",
+                "action": {
+                  "type": "network",
+                  "method": "DELETE",
+                  "endpoint": "/api/tasks/${id}",
+                  "driver": "supabase_vault",
+                  "offlineQueue": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "row",
+          "children": [
+            {
+              "type": "input",
+              "key": "newTask",
+              "placeholder": "Add a new task",
+              "flex": 1
+            },
+            {
+              "type": "button",
+              "title": "Add",
+              "action": {
+                "type": "network",
+                "method": "POST",
+                "endpoint": "/api/tasks",
+                "driver": "supabase_vault",
+                "body": {
+                  "title": "${newTask}",
+                  "completed": false
+                },
+                "table": "tasks",
+                "offlineQueue": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
