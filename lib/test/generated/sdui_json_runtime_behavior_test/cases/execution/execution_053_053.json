@@ -1,0 +1,94 @@
+{
+  "__meta": {
+    "id": "execution-053-button-toggle",
+    "title": "Button toggle action flips a boolean store flag #053",
+    "description": "Tap a real button and verify a toggle action mutates the live scoped store.",
+    "tags": [
+      "execution",
+      "button",
+      "toggle",
+      "state"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "state": {
+      "counter.53": false
+    },
+    "type": "action:button",
+    "props": {
+      "text": "Apply 053",
+      "onTap": [
+        {
+          "action": "toggle",
+          "path": "counter.53"
+        }
+      ]
+    }
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "counter.53": false
+      }
+    },
+    "debugPath": "root.store_provider",
+    "children": [
+      {
+        "type": "action",
+        "props": {
+          "__subType": "button",
+          "text": "Apply 053",
+          "onTap": [
+            {
+              "action": "toggle",
+              "path": "counter.53"
+            }
+          ]
+        },
+        "debugPath": "root"
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "type",
+      "equals": "system"
+    },
+    {
+      "path": "props.__subType",
+      "equals": "store_provider"
+    },
+    {
+      "path": "children.length",
+      "equals": 1
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "tap",
+    "description": "Pressing Apply 053 updates the live scoped store."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Apply 053"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectState",
+      "path": "counter.53",
+      "equals": true
+    }
+  ]
+}

@@ -277,6 +277,84 @@ void initQuantumBuiltIns(QuantumVM vm) {
       engine: 'QuantumVM',
       tags: const ['pipeline', 'patch']);
 
+  vm.registerAction('state.increment',
+      LambdaActionPlugin((payload, store, ctx) async {
+    final key = payload['key']?.toString() ?? payload['path']?.toString();
+    if (key == null || key.isEmpty) return null;
+    final num amount = (payload['amount'] as num?) ??
+        (payload['delta'] as num?) ??
+        1;
+    final current = store.get(key);
+    num base = 0;
+    if (current is num) {
+      base = current;
+    } else if (current is String) {
+      base = num.tryParse(current) ?? 0;
+    }
+    final num next = (current is int && amount is int)
+        ? (base.toInt() + amount.toInt())
+        : (base.toDouble() + amount.toDouble());
+    store.set(key, next is int ? next.toInt() : next);
+    return next is int ? next.toInt() : next;
+  }),
+      description: 'Increment a numeric value in the shared store',
+      params: const {'key': 'String', 'amount': 'dynamic'},
+      engine: 'QuantumVM',
+      tags: const ['state', 'core']);
+
+  vm.registerAction('increment',
+      LambdaActionPlugin((payload, store, ctx) async {
+    final key = payload['path']?.toString() ?? payload['key']?.toString();
+    if (key == null || key.isEmpty) return null;
+    final num amount = (payload['amount'] as num?) ??
+        (payload['delta'] as num?) ??
+        1;
+    final current = store.get(key);
+    num base = 0;
+    if (current is num) {
+      base = current;
+    } else if (current is String) {
+      base = num.tryParse(current) ?? 0;
+    }
+    final num next = (current is int && amount is int)
+        ? (base.toInt() + amount.toInt())
+        : (base.toDouble() + amount.toDouble());
+    store.set(key, next is int ? next.toInt() : next);
+    return next is int ? next.toInt() : next;
+  }),
+      description: 'Increment a numeric store value',
+      params: const {'path': 'String', 'amount': 'dynamic'},
+      engine: 'QuantumVM',
+      tags: const ['state', 'core']);
+
+  vm.registerAction('state.toggle',
+      LambdaActionPlugin((payload, store, ctx) async {
+    final key = payload['key']?.toString() ?? payload['path']?.toString();
+    if (key == null || key.isEmpty) return null;
+    final current = store.get(key);
+    final bool next = !(current as bool? ?? false);
+    store.set(key, next);
+    return next;
+  }),
+      description: 'Toggle a boolean value in the shared store',
+      params: const {'key': 'String'},
+      engine: 'QuantumVM',
+      tags: const ['state', 'core']);
+
+  vm.registerAction('toggle',
+      LambdaActionPlugin((payload, store, ctx) async {
+    final key = payload['path']?.toString() ?? payload['key']?.toString();
+    if (key == null || key.isEmpty) return null;
+    final current = store.get(key);
+    final bool next = !(current as bool? ?? false);
+    store.set(key, next);
+    return next;
+  }),
+      description: 'Toggle a boolean store value',
+      params: const {'path': 'String'},
+      engine: 'QuantumVM',
+      tags: const ['state', 'core']);
+
   vm.registerAction('state.set',
       LambdaActionPlugin((payload, store, ctx) async {
     final key = payload['key']?.toString();

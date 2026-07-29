@@ -1,0 +1,139 @@
+{
+  "__meta": {
+    "id": "row-end-111",
+    "title": "Row End #111",
+    "description": "Regression coverage for row end #111",
+    "tags": [
+      "execution",
+      "layout",
+      "geometry",
+      "regression"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "box:row",
+    "style": "w-full justify-end items-center gap-8",
+    "props": {
+      "width": 410,
+      "height": 76
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Start 111"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Finish 111"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:row",
+    "style": "w-full justify-end items-center gap-8",
+    "props": {
+      "width": 410,
+      "height": 76
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Start 111"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Finish 111"
+        },
+        "debugPath": "root[1]"
+      }
+    ],
+    "debugPath": "root"
+  },
+  "runtimeAssertions": [
+    {
+      "path": "type",
+      "equals": "box:row"
+    },
+    {
+      "path": "children.length",
+      "equals": 2
+    },
+    {
+      "path": "props.width",
+      "equals": 410
+    },
+    {
+      "path": "props.height",
+      "equals": 76
+    },
+    {
+      "path": "style",
+      "contains": "items-center"
+    },
+    {
+      "path": "style",
+      "contains": "justify-"
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "render",
+    "description": "Row End #111"
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "text",
+        "match": "Start 111"
+      },
+      "equals": 1
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "text",
+        "match": "Finish 111"
+      },
+      "equals": 1
+    },
+    {
+      "action": "expectOrder",
+      "first": {
+        "type": "text",
+        "match": "Start 111"
+      },
+      "second": {
+        "type": "text",
+        "match": "Finish 111"
+      },
+      "axis": "horizontal",
+      "order": "before",
+      "minGap": 4,
+      "tolerance": 300
+    },
+    {
+      "action": "expectGeometry",
+      "finder": {
+        "type": "text",
+        "match": "Start 111"
+      },
+      "rect": {
+        "right": 410
+      },
+      "tolerance": 300
+    }
+  ]
+}

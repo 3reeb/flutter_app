@@ -2078,7 +2078,7 @@ abstract final class QLPathResolver {
           .get(strides.sublist(1));
     } else if (root == 'state' || root == r'$state') {
       final scope = ctx != null ? QLDataScope.readNode(ctx) : null;
-      current = (scope?.moduleStore ?? globalStore).get(strides.sublist(1));
+      current = (scope?.localStore ?? scope?.moduleStore ?? globalStore).get(strides.sublist(1));
     } else if (root == r'$env') {
       current = strides.length > 1 ? env[strides[1].toString()] : null;
     } else if (root == r'$local') {
@@ -6146,9 +6146,12 @@ class _QuantumVMRootState extends State<QuantumVMRoot>
   @override
   Widget build(BuildContext context) {
     // 🚀 FOREVER FIX: One AnimatedBuilder for the entire app!
-    return AnimatedBuilder(
-      animation: QEngine.instance.tick,
-      builder: (context, child) => widget.child,
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: AnimatedBuilder(
+        animation: QEngine.instance.tick,
+        builder: (context, child) => widget.child,
+      ),
     );
   }
 }
@@ -6271,17 +6274,41 @@ class QLContext {
       List<dynamic>.from(prop<List>(key, fallback: fallback));
 
   VoidCallback? action(String eventKey, {Map<String, dynamic>? localPayload}) {
-    List<dynamic>? actions = node.props[eventKey] as List<dynamic>?;
+    dynamic rawActions = node.props[eventKey];
+
+    // Allow both the legacy list form and the newer single-action map form.
+    List<dynamic>? actions;
+    if (rawActions is List) {
+      actions = rawActions;
+    } else if (rawActions is Map) {
+      actions = <dynamic>[Map<String, dynamic>.from(rawActions)];
+    }
 
     // 🚀 FALLBACK LOGIC: If looking for onClick, also check onTap and action.
     if (actions == null) {
       final eventsMap = node.props['events'];
-      if (eventsMap is Map) actions = eventsMap[eventKey] as List<dynamic>?;
+      if (eventsMap is Map) {
+        final rawEventActions = eventsMap[eventKey];
+        if (rawEventActions is List) {
+          actions = rawEventActions;
+        } else if (rawEventActions is Map) {
+          actions = <dynamic>[Map<String, dynamic>.from(rawEventActions)];
+        }
+      }
     }
 
     if (actions == null && eventKey == 'onClick') {
-      actions = node.props['onTap'] as List<dynamic>? ??
-          node.props['action'] as List<dynamic>?;
+      final onTap = node.props['onTap'];
+      final action = node.props['action'];
+      if (onTap is List) {
+        actions = onTap;
+      } else if (onTap is Map) {
+        actions = <dynamic>[Map<String, dynamic>.from(onTap)];
+      } else if (action is List) {
+        actions = action;
+      } else if (action is Map) {
+        actions = <dynamic>[Map<String, dynamic>.from(action)];
+      }
     }
 
     if (actions == null) return null;
@@ -6508,7 +6535,7 @@ class _QLReactiveNodeBoundaryState extends State<_QLReactiveNodeBoundary> {
   }
 
   void _buildSignals() {
-    if (deps.isEmpty || _moduleStore == null) {
+    if (deps.isEmpty) {
       _mergedListenable = _NoopListenable.instance;
       return;
     }
@@ -6517,18 +6544,28 @@ class _QLReactiveNodeBoundaryState extends State<_QLReactiveNodeBoundary> {
     for (final d in deps) {
       if (d.startsWith('item.') || d.startsWith(r'$env.')) continue;
 
-      if (d.startsWith(r'$local') && _localStore != null) {
-        signals.add(_localStore!.signal(d.replaceFirst(r'$local.', '')));
-      } else if (d.startsWith('@')) {
+      if (d.startsWith(r'$local')) {
+        if (_localStore != null) {
+          signals.add(_localStore!.signal(d.replaceFirst(r'$local.', '')));
+        }
+        continue;
+      }
+
+      if (d.startsWith('@')) {
         final ns = d.substring(1).split('.').first;
         signals.add(QLStoreRegistry.instance
             .get(ns)
             .signal(d.substring(ns.length + 2)));
-      } else {
+        continue;
+      }
+
+      if (_moduleStore != null) {
         signals.add(_moduleStore!.signal(d));
       }
     }
-    _mergedListenable = Listenable.merge(signals);
+
+    _mergedListenable =
+        signals.isEmpty ? _NoopListenable.instance : Listenable.merge(signals);
   }
 
   void _extractDeps(dynamic value, Set<String> deps) {
@@ -6545,7 +6582,7 @@ class _QLReactiveNodeBoundaryState extends State<_QLReactiveNodeBoundary> {
   Widget build(BuildContext context) {
     final Map<String, dynamic> env =
         QLDataScope.ofNode(context)?.localData ?? const {};
-    final QLDataStore store = _moduleStore ?? QuantumVM.instance.store;
+    final QLDataStore store = _localStore ?? _moduleStore ?? QuantumVM.instance.store;
 
     Widget content;
     if (deps.isEmpty) {

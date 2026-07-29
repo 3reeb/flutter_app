@@ -5,6 +5,7 @@ part of '../quantum_omni_registry.dart';
 Widget _buildSystem(QLContext rawCtx) {
   final ctx = _AliasContext(rawCtx);
   final String subType = ctx.resolvedSubType(fallback: 'scope');
+  print('[DBG] _buildSystem called: type=${rawCtx.node.type} subType=$subType');
 
   // 🚀 PRIMITIVE: system:timer (Vsync-Aligned Ticker)
   if (subType == 'timer') {
@@ -162,9 +163,10 @@ Widget _buildSystem(QLContext rawCtx) {
 
   if (subType == 'store_provider') {
     final Map<String, dynamic> initialState = ctx.map('initialState');
-    for (final entry in initialState.entries)
-      ctx.store.set(entry.key, entry.value);
-    return Q('col w-full', children: ctx.children);
+    return _QLStoreProviderNode(
+      initialState: initialState,
+      ctx: ctx,
+    );
   }
 
   // ── system:async — Async task runner with status/data/error slots ──────────
@@ -597,4 +599,49 @@ void _registerSystemAliases(QuantumVM vm) {
       description: 'Ticker alias.', tags: const ['system', 'alias']);
   vm.defineAlias('omega_macro', 'system:omega_macro',
       description: 'Omega macro alias.', tags: const ['system', 'alias']);
+}
+
+class _QLStoreProviderNode extends StatefulWidget {
+  final Map<String, dynamic> initialState;
+  final QLContext ctx;
+
+  const _QLStoreProviderNode({
+    super.key,
+    required this.initialState,
+    required this.ctx,
+  });
+
+  @override
+  State<_QLStoreProviderNode> createState() => _QLStoreProviderNodeState();
+}
+
+class _QLStoreProviderNodeState extends State<_QLStoreProviderNode> {
+  late final QLDataStore _store;
+
+  @override
+  void initState() {
+    super.initState();
+    _store = QLDataStore(namespace: 'scoped_store_${hashCode}');
+    for (final entry in widget.initialState.entries) {
+      _store.set(entry.key, entry.value);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return QLDataScope(
+      localStore: _store,
+      moduleStore: _store,
+      localData: widget.ctx.env,
+      child: Builder(
+        builder: (innerContext) {
+          final children = widget.ctx.node.children
+              .where((c) => c.props['slot'] == null)
+              .map((c) => QuantumVM.instance.renderWidget(innerContext, c))
+              .toList();
+          return Q('col w-full', children: children);
+        },
+      ),
+    );
+  }
 }

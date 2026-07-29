@@ -562,6 +562,16 @@ Widget _buildBox(QLContext rawCtx) {
     node = _buildSmartScrollViewport(axis: scrollAxis, child: node);
   }
 
+  final double explicitW = ctx.number('width', fallback: double.nan);
+  final double explicitH = ctx.number('height', fallback: double.nan);
+  if (explicitW.isFinite || explicitH.isFinite) {
+    node = SizedBox(
+      width: explicitW.isFinite ? explicitW : null,
+      height: explicitH.isFinite ? explicitH : null,
+      child: node,
+    );
+  }
+
   return _applyImplicitBehaviors(ctx, node);
 }
 

@@ -727,3 +727,25 @@ dragPosition: 37% → rawValue: 37 → steppedValue: 35 (step:5, nearest = 35)
 5. **Add `runtimeBehavior`** — document the gesture math so the expected runtime result is recorded next to the compiled output.
 6. **Add a boundary test** — test the invalid or out-of-range value in a sibling `expectError` case.
 7. **Tag appropriately** — `["widget", "sizing"|"drag"|"resize"|"rotate"|"split"]`.
+
+
+## Geometry and position checks
+
+The runner now supports `expectGeometry` for a single widget and `expectOrder` for comparing two widgets. Use these to verify:
+
+- exact or approximate size
+- top-left / bottom-right placement
+- width and height under `w-full` / `justify-between` / `items-center`
+- spacing between siblings in rows, columns, wrap layouts, and nested shells
+
+A typical row layout check now looks like this:
+
+```json
+{
+  "action": "expectGeometry",
+  "finder": { "type": "text", "match": "Left" },
+  "rect": { "left": 0, "top": 0, "tolerance": 8 }
+}
+```
+
+Use `expectOrder` when the exact bounds are not important and the relative placement is.

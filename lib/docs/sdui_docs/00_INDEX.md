@@ -12,7 +12,7 @@ Every file is dense and real. No padding, no happy-path-only coverage.
 | [03_PERFORMANCE_TESTS.md](03_PERFORMANCE_TESTS.md) | Runtime performance contracts — compile time, render throughput, large trees |
 | [04_ISSUE_TESTS.md](04_ISSUE_TESTS.md) | Regression and known-issue test contracts — overflow, binding errors, malformed nodes |
 | [05_MEMORY_TESTS.md](05_MEMORY_TESTS.md) | Memory usage contracts — leak detection, scope cleanup, large data binding |
-| [06_WIDGET_TESTS.md](06_WIDGET_TESTS.md) | Widget-level JSON contracts — sizing, drag, resize, layout constraints, gestures |
+| [06_WIDGET_TESTS.md](06_WIDGET_TESTS.md) | Widget-level JSON contracts — sizing, geometry, drag, resize, layout constraints, gestures |
 | [07_ACTION_TESTS.md](07_ACTION_TESTS.md) | Action contract — button, gesture, pointer, focus, hover, double-tap, long-press |
 | [08_DATA_STATE_TESTS.md](08_DATA_STATE_TESTS.md) | Data and state contract — store, pipeline, repeat, bindings, slice, signals |
 | [09_FOLDER_STRUCTURE.md](09_FOLDER_STRUCTURE.md) | Canonical test folder layout and naming conventions |

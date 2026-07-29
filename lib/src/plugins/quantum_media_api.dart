@@ -41,6 +41,146 @@ enum Quality { auto, p144, p240, p360, p480, p720, p1080, p4k, original }
 
 enum HttpMethod { get, post, put, patch }
 
+typedef MediaHttpClientFactory = MediaHttpClient Function();
+
+MediaHttpClientFactory mediaHttpClientFactory = () => RealMediaHttpClient();
+
+abstract class MediaHttpHeaders {
+  void set(String name, Object value);
+  void add(String name, Object value);
+  String? value(String name);
+  void forEach(void Function(String name, List<String> values) action);
+}
+
+abstract class MediaHttpRequest {
+  MediaHttpHeaders get headers;
+  set contentLength(int value);
+  void add(List<int> data);
+  Future<MediaHttpResponse> close();
+}
+
+abstract class MediaHttpResponse {
+  int get statusCode;
+  MediaHttpHeaders get headers;
+  Stream<List<int>> get stream;
+}
+
+abstract class MediaHttpClient {
+  Future<MediaHttpRequest> getUrl(Uri uri);
+  Future<MediaHttpRequest> postUrl(Uri uri);
+  Future<MediaHttpRequest> putUrl(Uri uri);
+  Future<MediaHttpRequest> patchUrl(Uri uri);
+  void close({bool force = false});
+}
+
+class _MapMediaHeaders implements MediaHttpHeaders {
+  final Map<String, List<String>> _values =
+      LinkedHashMap<String, List<String>>();
+
+  String _normalize(String name) => name.toLowerCase();
+
+  @override
+  void set(String name, Object value) {
+    _values[_normalize(name)] = [value.toString()];
+  }
+
+  @override
+  void add(String name, Object value) {
+    _values
+        .putIfAbsent(_normalize(name), () => <String>[])
+        .add(value.toString());
+  }
+
+  @override
+  String? value(String name) {
+    final values = _values[_normalize(name)];
+    if (values == null || values.isEmpty) return null;
+    return values.first;
+  }
+
+  @override
+  void forEach(void Function(String name, List<String> values) action) {
+    for (final entry in _values.entries) {
+      action(entry.key, List<String>.from(entry.value));
+    }
+  }
+}
+
+class RealMediaHttpClient implements MediaHttpClient {
+  final HttpClient _client = HttpClient();
+
+  @override
+  Future<MediaHttpRequest> getUrl(Uri uri) async =>
+      _RealMediaHttpRequest(await _client.getUrl(uri));
+
+  @override
+  Future<MediaHttpRequest> postUrl(Uri uri) async =>
+      _RealMediaHttpRequest(await _client.postUrl(uri));
+
+  @override
+  Future<MediaHttpRequest> putUrl(Uri uri) async =>
+      _RealMediaHttpRequest(await _client.putUrl(uri));
+
+  @override
+  Future<MediaHttpRequest> patchUrl(Uri uri) async =>
+      _RealMediaHttpRequest(await _client.patchUrl(uri));
+
+  @override
+  void close({bool force = false}) => _client.close(force: force);
+}
+
+class _RealMediaHttpRequest implements MediaHttpRequest {
+  final HttpClientRequest _request;
+  final _MapMediaHeaders _headers = _MapMediaHeaders();
+
+  _RealMediaHttpRequest(this._request);
+
+  @override
+  MediaHttpHeaders get headers => _headers;
+
+  @override
+  set contentLength(int value) {
+    _request.contentLength = value;
+  }
+
+  @override
+  void add(List<int> data) {
+    _request.add(data);
+  }
+
+  @override
+  Future<MediaHttpResponse> close() async {
+    _headers.forEach((name, values) {
+      for (final value in values) {
+        _request.headers.add(name, value);
+      }
+    });
+    final response = await _request.close();
+    return _RealMediaHttpResponse(response);
+  }
+}
+
+class _RealMediaHttpResponse implements MediaHttpResponse {
+  final HttpClientResponse _response;
+  final _MapMediaHeaders _headers = _MapMediaHeaders();
+
+  _RealMediaHttpResponse(this._response) {
+    _response.headers.forEach((name, values) {
+      for (final value in values) {
+        _headers.add(name, value);
+      }
+    });
+  }
+
+  @override
+  int get statusCode => _response.statusCode;
+
+  @override
+  MediaHttpHeaders get headers => _headers;
+
+  @override
+  Stream<List<int>> get stream => _response;
+}
 // =============================================================================
 // TIERED CACHING ENGINE & BYTE RANGE TRACKER
 // =============================================================================
@@ -237,7 +377,8 @@ class MediaCacheManager {
     final data = await raf.read(end - start + 1);
     await raf.close();
 
-    _applyCipher(url, data, start); // Decrypt immediately after reading from disk
+    _applyCipher(
+        url, data, start); // Decrypt immediately after reading from disk
     return data;
   }
 }
@@ -251,8 +392,8 @@ class BandwidthEstimator {
   final int maxSamples = 10;
 
   void addSample(int bytes, Duration time) {
-    if (time.inMilliseconds == 0) return;
-    double bps = (bytes * 8) / (time.inMilliseconds / 1000.0);
+    final int elapsedMs = math.max(1, time.inMilliseconds);
+    double bps = (bytes * 8) / (elapsedMs / 1000.0);
     _samplesBps.add(bps);
     if (_samplesBps.length > maxSamples) _samplesBps.removeAt(0);
   }
@@ -285,18 +426,18 @@ class BandwidthEstimator {
 
 class MediaPrefetcher {
   final MediaCacheManager cache;
-  final HttpClient _client;
+  final MediaHttpClient _client;
   final Queue<String> _queue = Queue();
   bool _isRunning = false;
 
-  MediaPrefetcher({required this.cache}) : _client = HttpClient() {
-    _client.connectionTimeout = const Duration(seconds: 10);
-  }
+  MediaPrefetcher({required this.cache, MediaHttpClient? client})
+      : _client = client ?? mediaHttpClientFactory();
 
   void prefetch(List<String> urls, {int bytesToFetch = 512 * 1024}) {
     if (kIsWeb) return;
     for (var url in urls) {
-      if (!_queue.contains(url)) _queue.add('$url|$bytesToFetch');
+      final alreadyQueued = _queue.any((task) => task.startsWith('$url|'));
+      if (!alreadyQueued) _queue.add('$url|$bytesToFetch');
     }
     if (!_isRunning) _processQueue();
   }
@@ -318,7 +459,7 @@ class MediaPrefetcher {
 
         if (response.statusCode == 200 || response.statusCode == 206) {
           final builder = BytesBuilder();
-          await for (var chunk in response) {
+          await for (var chunk in response.stream) {
             builder.add(chunk);
           }
           await cache.saveChunkToDisk(url, 0, builder.toBytes());
@@ -337,6 +478,7 @@ class ResumableUploader {
   final HttpMethod method;
   final Map<String, String> headers;
   final int chunkSize;
+  final MediaHttpClient _client;
 
   bool _isPaused = false;
   bool _isAborted = false;
@@ -349,7 +491,8 @@ class ResumableUploader {
     this.method = HttpMethod.patch,
     this.headers = const {},
     this.chunkSize = 1024 * 1024, // 1MB chunks
-  });
+    MediaHttpClient? client,
+  }) : _client = client ?? mediaHttpClientFactory();
 
   Stream<TransferProgress> get progress => _progress.stream;
 
@@ -361,7 +504,6 @@ class ResumableUploader {
     _isAborted = false;
     final totalBytes = await file.length();
     int offset = startOffset;
-    final client = HttpClient();
     final stopWatch = Stopwatch();
 
     final raf = await file.open(mode: FileMode.read);
@@ -378,7 +520,7 @@ class ResumableUploader {
       int retries = 0;
       while (!success && retries < 3 && !_isAborted) {
         try {
-          final request = await _createRequest(client, uploadUrl, method);
+          final request = await _createRequest(_client, uploadUrl, method);
           headers.forEach((k, v) => request.headers.set(k, v));
 
           request.headers.set('Upload-Offset', offset.toString());
@@ -425,12 +567,12 @@ class ResumableUploader {
     }
 
     await raf.close();
-    client.close(force: true);
+    _client.close(force: true);
     if (offset >= totalBytes) _progress.close();
   }
 
-  Future<HttpClientRequest> _createRequest(
-      HttpClient client, String url, HttpMethod method) async {
+  Future<MediaHttpRequest> _createRequest(
+      MediaHttpClient client, String url, HttpMethod method) async {
     final uri = Uri.parse(url);
     switch (method) {
       case HttpMethod.post:
@@ -453,13 +595,15 @@ class LocalMediaProxyServer {
   final MediaCacheManager cache;
   HttpServer? _server;
   final String _sessionToken;
+  final MediaHttpClient _client;
 
-  LocalMediaProxyServer({required this.cache})
+  LocalMediaProxyServer({required this.cache, MediaHttpClient? client})
       // Generates a cryptographically random token unique to this app session
       : _sessionToken = md5
             .convert(
                 utf8.encode(DateTime.now().microsecondsSinceEpoch.toString()))
-            .toString();
+            .toString(),
+        _client = client ?? mediaHttpClientFactory();
 
   int get port => _server?.port ?? 0;
 
@@ -472,6 +616,7 @@ class LocalMediaProxyServer {
   Future<void> stop() async {
     await _server?.close(force: true);
     _server = null;
+    _client.close(force: true);
   }
 
   String getProxyUrl(String targetUrl) {
@@ -536,28 +681,31 @@ class LocalMediaProxyServer {
     }
 
     // 2. Not in cache -> proxy to internet, save to cache simultaneously
-    final client = HttpClient();
-    final extReq = await client.getUrl(Uri.parse(targetUrl));
-    extReq.headers.set(HttpHeaders.rangeHeader, 'bytes=$start-${end ?? ''}');
-    final extRes = await extReq.close();
+    try {
+      final requestToUpstream = await _client.getUrl(Uri.parse(targetUrl));
+      requestToUpstream.headers
+          .set(HttpHeaders.rangeHeader, 'bytes=$start-${end ?? ''}');
+      final extRes = await requestToUpstream.close();
 
-    request.response.statusCode = extRes.statusCode;
-    extRes.headers.forEach((name, values) {
-      for (var v in values) {
-        request.response.headers.add(name, v);
+      request.response.statusCode = extRes.statusCode;
+      extRes.headers.forEach((name, values) {
+        for (var v in values) {
+          request.response.headers.add(name, v);
+        }
+      });
+
+      int offset = start;
+      await for (var chunk in extRes.stream) {
+        request.response.add(chunk); // Stream directly to video player
+        await cache.saveChunkToDisk(targetUrl, offset,
+            Uint8List.fromList(chunk)); // Save ENCRYPTED to SSD
+        offset += chunk.length;
       }
-    });
 
-    int offset = start;
-    await for (var chunk in extRes) {
-      request.response.add(chunk); // Stream directly to video player
-      await cache.saveChunkToDisk(targetUrl, offset,
-          Uint8List.fromList(chunk)); // Save ENCRYPTED to SSD
-      offset += chunk.length;
+      await request.response.close();
+    } finally {
+      // no-op; the underlying client is shared and closed on stop()
     }
-
-    await request.response.close();
-    client.close(force: true);
   }
 }
 
@@ -594,15 +742,19 @@ class AdaptiveMediaStreamer {
   Quality _currentQuality;
   int _currentSequence = 0;
   bool _isPlaying = false;
+  bool _streamClosed = false;
   final StreamController<Uint8List> _stream = StreamController();
+  final MediaHttpClient _client;
 
   AdaptiveMediaStreamer({
     required this.manifest,
     required this.estimator,
     required this.cache,
     Quality initialQuality = Quality.auto,
-  }) : _currentQuality =
-            initialQuality == Quality.auto ? Quality.p720 : initialQuality;
+    MediaHttpClient? client,
+  })  : _currentQuality =
+            initialQuality == Quality.auto ? Quality.p720 : initialQuality,
+        _client = client ?? mediaHttpClientFactory();
 
   Stream<Uint8List> get stream => _stream.stream;
   Quality get currentQuality => _currentQuality;
@@ -613,13 +765,19 @@ class AdaptiveMediaStreamer {
     _runPipeline();
   }
 
-  void stop() {
+  Future<void> stop() async {
     _isPlaying = false;
-    _stream.close();
+    await _closeStream();
+    _client.close(force: true);
+  }
+
+  Future<void> _closeStream() async {
+    if (_streamClosed) return;
+    _streamClosed = true;
+    await _stream.close();
   }
 
   Future<void> _runPipeline() async {
-    final client = HttpClient();
     final stopwatch = Stopwatch();
 
     while (_isPlaying) {
@@ -650,10 +808,10 @@ class AdaptiveMediaStreamer {
         stopwatch.start();
 
         try {
-          final request = await client.getUrl(Uri.parse(url));
+          final request = await _client.getUrl(Uri.parse(url));
           final response = await request.close();
           final builder = BytesBuilder();
-          await for (var chunk in response) builder.add(chunk);
+          await for (var chunk in response.stream) builder.add(chunk);
           data = builder.toBytes();
 
           stopwatch.stop();
@@ -681,7 +839,9 @@ class AdaptiveMediaStreamer {
       _stream.add(data!);
       _currentSequence++;
     }
-    client.close();
+    _isPlaying = false;
+    await _closeStream();
+    _client.close(force: true);
   }
 }
 
@@ -906,12 +1066,12 @@ class QuantumMediaEngine {
       }
 
       // 3. Network
-      final client = HttpClient();
+      final client = mediaHttpClientFactory();
       try {
         final req = await client.getUrl(Uri.parse(url));
         final res = await req.close();
         final builder = BytesBuilder();
-        await for (var chunk in res) builder.add(chunk);
+        await for (var chunk in res.stream) builder.add(chunk);
         final data = builder.toBytes();
 
         await cacheManager.saveToRam(url, data);

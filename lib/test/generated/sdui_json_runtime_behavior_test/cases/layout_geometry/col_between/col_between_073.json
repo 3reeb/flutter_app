@@ -1,0 +1,147 @@
+{
+  "__meta": {
+    "id": "col-between-073",
+    "title": "Column between layout keeps stacking visible #073",
+    "description": "Column between layout keeps stacking visible #073",
+    "tags": [
+      "execution",
+      "layout",
+      "geometry",
+      "column"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "box:col",
+    "style": "col w-full justify-between items-center gap-8",
+    "props": {
+      "width": 220,
+      "height": 260
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Top 073"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Bottom 073"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:col",
+    "style": "col w-full justify-between items-center gap-8",
+    "props": {
+      "width": 220,
+      "height": 260
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Top 073"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Bottom 073"
+        },
+        "debugPath": "root[1]"
+      }
+    ],
+    "debugPath": "root"
+  },
+  "runtimeAssertions": [
+    {
+      "path": "type",
+      "equals": "box:col"
+    },
+    {
+      "path": "children.length",
+      "equals": 2
+    },
+    {
+      "path": "props.height",
+      "equals": 260
+    },
+    {
+      "path": "style",
+      "contains": "items-center"
+    },
+    {
+      "path": "style",
+      "contains": "justify-between"
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "render",
+    "description": "Column between layout keeps stacking visible #073"
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "text",
+        "match": "Top 073"
+      },
+      "equals": 1
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "text",
+        "match": "Bottom 073"
+      },
+      "equals": 1
+    },
+    {
+      "action": "expectOrder",
+      "first": {
+        "type": "text",
+        "match": "Top 073"
+      },
+      "second": {
+        "type": "text",
+        "match": "Bottom 073"
+      },
+      "axis": "vertical",
+      "order": "before",
+      "minGap": 120,
+      "tolerance": 300
+    },
+    {
+      "action": "expectGeometry",
+      "finder": {
+        "type": "text",
+        "match": "Top 073"
+      },
+      "rect": {
+        "top": 0
+      },
+      "tolerance": 300
+    },
+    {
+      "action": "expectGeometry",
+      "finder": {
+        "type": "text",
+        "match": "Bottom 073"
+      },
+      "rect": {
+        "bottom": 260
+      },
+      "tolerance": 300
+    }
+  ]
+}
+

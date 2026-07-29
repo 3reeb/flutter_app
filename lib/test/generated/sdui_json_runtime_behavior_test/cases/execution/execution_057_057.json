@@ -1,0 +1,96 @@
+{
+  "__meta": {
+    "id": "execution-057-button-set",
+    "title": "Button set action updates scoped store #057",
+    "description": "Tap a real button and verify a state.set action mutates the live scoped store.",
+    "tags": [
+      "execution",
+      "button",
+      "state",
+      "tap"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "state": {
+      "counter.57": 0
+    },
+    "type": "action:button",
+    "props": {
+      "text": "Apply 057",
+      "onTap": [
+        {
+          "action": "state.set",
+          "key": "counter.57",
+          "value": 2
+        }
+      ]
+    }
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "counter.57": 0
+      }
+    },
+    "debugPath": "root.store_provider",
+    "children": [
+      {
+        "type": "action",
+        "props": {
+          "__subType": "button",
+          "text": "Apply 057",
+          "onTap": [
+            {
+              "action": "state.set",
+              "key": "counter.57",
+              "value": 2
+            }
+          ]
+        },
+        "debugPath": "root"
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "type",
+      "equals": "system"
+    },
+    {
+      "path": "props.__subType",
+      "equals": "store_provider"
+    },
+    {
+      "path": "children.length",
+      "equals": 1
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "tap",
+    "description": "Pressing Apply 057 updates the live scoped store."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Apply 057"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectState",
+      "path": "counter.57",
+      "equals": 2
+    }
+  ]
+}

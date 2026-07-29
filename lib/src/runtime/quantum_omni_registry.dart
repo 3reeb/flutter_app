@@ -103,34 +103,54 @@ T _resolveFieldController<T extends QLFieldController>(
       ?.localData['__formController'] as QLFormController?;
   final effectivePath = bindPath.isNotEmpty ? bindPath : id;
 
+  void syncControllerFromStore(QLFieldController controller) {
+    if (bindPath.isEmpty) return;
+    final initVal = ctx.store.get(bindPath);
+    if (initVal != null && controller.data.value != initVal) {
+      // Bypass validation on initial sync so runtime execution starts from the
+      // store's real value instead of a default placeholder.
+      controller.mutateFast(initVal as dynamic, applyMiddleware: false);
+    }
+
+    final syncFlagKey = '_ql_bind_sync::$bindPath';
+    if (controller.meta.value[syncFlagKey] == true) return;
+    controller.meta.value = {
+      ...controller.meta.value,
+      syncFlagKey: true,
+    };
+
+    controller.data.addListener(() {
+      final current = ctx.store.get(bindPath);
+      if (current != controller.data.value) {
+        ctx.store.set(bindPath, controller.data.value);
+      }
+    });
+  }
+
   // 1. Managed by Form Graph
   if (formCtrl != null) {
     final existing = formCtrl.getNode(effectivePath);
-    if (existing is T) return existing;
-    return creator(formCtrl);
+    if (existing is T) {
+      syncControllerFromStore(existing);
+      return existing;
+    }
+    final created = creator(formCtrl);
+    syncControllerFromStore(created);
+    return created;
   }
 
   // 2. Standalone Mode
   if (_standaloneFieldRegistry.containsKey(id)) {
-    return _standaloneFieldRegistry[id] as T;
+    final existing = _standaloneFieldRegistry[id] as T;
+    syncControllerFromStore(existing);
+    return existing;
   }
 
   final dummyForm = _dummyForms.putIfAbsent(id, () => QLFormController());
   final ctrl = creator(dummyForm);
 
   // Sync with global store manually for standalone fields
-  if (bindPath.isNotEmpty) {
-    final initVal = ctx.store.get(bindPath);
-    if (initVal != null) {
-      // Bypass validation on initial sync
-      ctrl.mutateFast(initVal as dynamic, applyMiddleware: false);
-    }
-    ctrl.data.addListener(() {
-      if (ctx.store.get(bindPath) != ctrl.data.value) {
-        ctx.store.set(bindPath, ctrl.data.value);
-      }
-    });
-  }
+  syncControllerFromStore(ctrl);
 
   _standaloneFieldRegistry[id] = ctrl;
   return ctrl;

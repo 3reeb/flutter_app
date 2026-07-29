@@ -1128,6 +1128,8 @@ class QuantumFlex extends StatelessWidget {
       direction: direction,
       mainAxisAlignment: mainAxisAlignment,
       crossAxisAlignment: crossAxisAlignment,
+      textDirection: TextDirection.ltr,
+      verticalDirection: VerticalDirection.down,
       mainAxisSize: mainAxisSize,
       clipBehavior: clipBehavior,
       children: _withGap(),

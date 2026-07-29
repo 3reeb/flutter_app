@@ -94,6 +94,7 @@ Widget _buildControl(QLContext rawCtx) {
             Listenable.merge([stateSig, routeSig, selectionSig, heroSig]),
         builder: (_, __) => QLDataScope(
           localStore: flowStore,
+          moduleStore: flowStore,
           localData: {
             ...ctx.env,
             '$ctrlId.namespace': namespace,

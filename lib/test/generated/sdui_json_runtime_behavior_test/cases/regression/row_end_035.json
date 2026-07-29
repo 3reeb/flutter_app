@@ -1,0 +1,139 @@
+{
+  "__meta": {
+    "id": "row_end-035",
+    "title": "Row End #035",
+    "description": "Regression coverage for row end #035",
+    "tags": [
+      "execution",
+      "layout",
+      "geometry",
+      "regression"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "box:row",
+    "style": "w-full justify-end items-center gap-8",
+    "props": {
+      "width": 425,
+      "height": 84
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Start 035"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "End 035"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:row",
+    "style": "w-full justify-end items-center gap-8",
+    "props": {
+      "width": 425,
+      "height": 84
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Start 035"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "End 035"
+        },
+        "debugPath": "root[1]"
+      }
+    ],
+    "debugPath": "root"
+  },
+  "runtimeAssertions": [
+    {
+      "path": "type",
+      "equals": "box:row"
+    },
+    {
+      "path": "children.length",
+      "equals": 2
+    },
+    {
+      "path": "props.width",
+      "equals": 425
+    },
+    {
+      "path": "props.height",
+      "equals": 84
+    },
+    {
+      "path": "style",
+      "contains": "items-center"
+    },
+    {
+      "path": "style",
+      "contains": "justify-"
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "render",
+    "description": "Row End #035"
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "text",
+        "match": "Start 035"
+      },
+      "equals": 1
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "text",
+        "match": "End 035"
+      },
+      "equals": 1
+    },
+    {
+      "action": "expectOrder",
+      "first": {
+        "type": "text",
+        "match": "Start 035"
+      },
+      "second": {
+        "type": "text",
+        "match": "End 035"
+      },
+      "axis": "horizontal",
+      "order": "before",
+      "minGap": 4,
+      "tolerance": 300
+    },
+    {
+      "action": "expectGeometry",
+      "finder": {
+        "type": "text",
+        "match": "End 035"
+      },
+      "rect": {
+        "right": 425
+      },
+      "tolerance": 300
+    }
+  ]
+}

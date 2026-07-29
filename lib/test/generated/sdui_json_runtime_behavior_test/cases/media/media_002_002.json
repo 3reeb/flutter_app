@@ -1,0 +1,58 @@
+{
+  "__meta": {
+    "id": "media-002-audio-visualizer",
+    "title": "media audio visualizer keeps mode and density settings",
+    "description": "Audio visualizer props should survive normalization without silent defaults being injected.",
+    "tags": [
+      "media",
+      "audio",
+      "visualizer",
+      "props"
+    ],
+    "allowBlank": false,
+    "priority": "normal"
+  },
+  "input": {
+    "type": "media",
+    "props": {
+      "__subType": "audio_visualizer",
+      "src": "https://cdn.example.com/live-audio.mp3",
+      "bind": "live-audio",
+      "mode": "waveform",
+      "count": 96
+    }
+  },
+  "expected": {
+    "type": "media",
+    "props": {
+      "__subType": "audio_visualizer",
+      "src": "https://cdn.example.com/live-audio.mp3",
+      "bind": "live-audio",
+      "mode": "waveform",
+      "count": 96
+    },
+    "debugPath": "root"
+  },
+  "runtimeAssertions": [
+    {
+      "path": "props.__subType",
+      "equals": "audio_visualizer"
+    },
+    {
+      "path": "props.src",
+      "equals": "https://cdn.example.com/live-audio.mp3"
+    },
+    {
+      "path": "props.bind",
+      "equals": "live-audio"
+    },
+    {
+      "path": "props.mode",
+      "equals": "waveform"
+    },
+    {
+      "path": "props.count",
+      "equals": 96
+    }
+  ]
+}

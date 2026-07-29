@@ -1,0 +1,139 @@
+{
+  "__meta": {
+    "id": "col-between-119",
+    "title": "Col Between #119",
+    "description": "Regression coverage for col between #119",
+    "tags": [
+      "execution",
+      "layout",
+      "geometry",
+      "regression"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "box:col",
+    "style": "col w-full justify-between items-center gap-8",
+    "props": {
+      "width": 220,
+      "height": 248
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Top 119"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Bottom 119"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:col",
+    "style": "col w-full justify-between items-center gap-8",
+    "props": {
+      "width": 220,
+      "height": 248
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Top 119"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Bottom 119"
+        },
+        "debugPath": "root[1]"
+      }
+    ],
+    "debugPath": "root"
+  },
+  "runtimeAssertions": [
+    {
+      "path": "type",
+      "equals": "box:col"
+    },
+    {
+      "path": "children.length",
+      "equals": 2
+    },
+    {
+      "path": "props.width",
+      "equals": 220
+    },
+    {
+      "path": "props.height",
+      "equals": 248
+    },
+    {
+      "path": "style",
+      "contains": "items-center"
+    },
+    {
+      "path": "style",
+      "contains": "justify-"
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "render",
+    "description": "Col Between #119"
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "text",
+        "match": "Top 119"
+      },
+      "equals": 1
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "text",
+        "match": "Bottom 119"
+      },
+      "equals": 1
+    },
+    {
+      "action": "expectOrder",
+      "first": {
+        "type": "text",
+        "match": "Top 119"
+      },
+      "second": {
+        "type": "text",
+        "match": "Bottom 119"
+      },
+      "axis": "vertical",
+      "order": "before",
+      "minGap": 120,
+      "tolerance": 300
+    },
+    {
+      "action": "expectGeometry",
+      "finder": {
+        "type": "text",
+        "match": "Top 119"
+      },
+      "rect": {
+        "top": 0
+      },
+      "tolerance": 300
+    }
+  ]
+}

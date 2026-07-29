@@ -1,0 +1,139 @@
+{
+  "__meta": {
+    "id": "col_between-068",
+    "title": "Col Between #068",
+    "description": "Regression coverage for col between #068",
+    "tags": [
+      "execution",
+      "layout",
+      "geometry",
+      "regression"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "box:col",
+    "style": "col w-full justify-between items-center gap-8",
+    "props": {
+      "width": 260,
+      "height": 264
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Top 068"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Bottom 068"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:col",
+    "style": "col w-full justify-between items-center gap-8",
+    "props": {
+      "width": 260,
+      "height": 264
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Top 068"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Bottom 068"
+        },
+        "debugPath": "root[1]"
+      }
+    ],
+    "debugPath": "root"
+  },
+  "runtimeAssertions": [
+    {
+      "path": "type",
+      "equals": "box:col"
+    },
+    {
+      "path": "children.length",
+      "equals": 2
+    },
+    {
+      "path": "props.width",
+      "equals": 260
+    },
+    {
+      "path": "props.height",
+      "equals": 264
+    },
+    {
+      "path": "style",
+      "contains": "items-center"
+    },
+    {
+      "path": "style",
+      "contains": "justify-"
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "render",
+    "description": "Col Between #068"
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "text",
+        "match": "Top 068"
+      },
+      "equals": 1
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "text",
+        "match": "Bottom 068"
+      },
+      "equals": 1
+    },
+    {
+      "action": "expectOrder",
+      "first": {
+        "type": "text",
+        "match": "Top 068"
+      },
+      "second": {
+        "type": "text",
+        "match": "Bottom 068"
+      },
+      "axis": "vertical",
+      "order": "before",
+      "minGap": 90,
+      "tolerance": 300
+    },
+    {
+      "action": "expectGeometry",
+      "finder": {
+        "type": "text",
+        "match": "Top 068"
+      },
+      "rect": {
+        "top": 0
+      },
+      "tolerance": 300
+    }
+  ]
+}

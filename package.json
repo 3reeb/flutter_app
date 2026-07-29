@@ -1,0 +1,11 @@
+{
+  "name": "quantum-sdui-studio-web",
+  "version": "1.0.0",
+  "description": "Flutter Web application preview wrapper",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "bash ./build.sh"
+  },
+  "private": true
+}

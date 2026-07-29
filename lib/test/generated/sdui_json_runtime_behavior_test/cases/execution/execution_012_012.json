@@ -1,0 +1,51 @@
+{
+  "__meta": {
+    "id": "execution-012-text-render",
+    "title": "Plain text renders and stays discoverable #012",
+    "description": "Mount a bare text node, pump the live tree, and verify the rendered label is discoverable by WidgetTester.",
+    "tags": [
+      "execution",
+      "text",
+      "render",
+      "widgetTester"
+    ],
+    "allowBlank": false,
+    "priority": "medium"
+  },
+  "input": {
+    "type": "text",
+    "props": {
+      "text": "Runtime text 012"
+    }
+  },
+  "expected": {
+    "type": "text",
+    "props": {
+      "text": "Runtime text 012"
+    },
+    "debugPath": "root"
+  },
+  "runtimeAssertions": [
+    {
+      "path": "type",
+      "equals": "text"
+    },
+    {
+      "path": "props.text",
+      "equals": "Runtime text 012"
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "render",
+    "description": "A bare text node renders into the live widget tree."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectText",
+      "text": "Runtime text 012"
+    }
+  ]
+}

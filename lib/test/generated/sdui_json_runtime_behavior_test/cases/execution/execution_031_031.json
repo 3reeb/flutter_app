@@ -1,0 +1,99 @@
+{
+  "__meta": {
+    "id": "execution-031-column-layout",
+    "title": "Column layout keeps stacked content visible #031",
+    "description": "Render a vertical column of labels and verify the live tree contains every item.",
+    "tags": [
+      "execution",
+      "col",
+      "layout",
+      "children"
+    ],
+    "allowBlank": false,
+    "priority": "medium"
+  },
+  "input": {
+    "type": "box:col",
+    "style": "gap-4",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Alpha 031"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Beta 031"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Gamma 031"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:col",
+    "props": {},
+    "debugPath": "root",
+    "style": "gap-4",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Alpha 031"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Beta 031"
+        },
+        "debugPath": "root[1]"
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Gamma 031"
+        },
+        "debugPath": "root[2]"
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "children.length",
+      "equals": 3
+    },
+    {
+      "path": "children[2].props.text",
+      "equals": "Gamma 031"
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "render",
+    "description": "A stacked column keeps all three labels alive in the compiled blueprint."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectText",
+      "text": "Alpha 031"
+    },
+    {
+      "action": "expectText",
+      "text": "Beta 031"
+    },
+    {
+      "action": "expectText",
+      "text": "Gamma 031"
+    }
+  ]
+}

@@ -688,7 +688,38 @@ class QLDataStore {
 
   QLRuntimeCacheStats get cacheStats => _readCache.stats;
 
-  bool has(String path) => get(path) != null;
+  bool has(String path) {
+    final List<dynamic> strides = QLPathUtils.resolve(
+      QLRuntimeSupport.canonicalPath(path),
+    );
+    if (strides.isEmpty) return false;
+
+    dynamic current = snapshot;
+    for (var i = 0; i < strides.length; i++) {
+      final segment = strides[i];
+      if (i == 0) {
+        if (current is! Map) return false;
+        final key = segment.toString();
+        if (!current.containsKey(key)) return false;
+        current = current[key];
+      } else if (current is Map) {
+        final key = segment.toString();
+        if (!current.containsKey(key)) return false;
+        current = current[key];
+      } else if (current is List && segment is int) {
+        if (segment < 0 || segment >= current.length) return false;
+        current = current[segment];
+      } else {
+        return false;
+      }
+
+      if (current == null && i < strides.length - 1) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   void sweep(String pathPrefix) {
     _invalidateReadCache(pathPrefix);
@@ -882,6 +913,29 @@ class QLDataScope extends InheritedWidget {
 
   static QLDataStore resolveStore(BuildContext? context) {
     if (context == null) return QLStoreRegistry.instance.defaultStore;
+
+    QLDataStore? resolved;
+    try {
+      context.visitAncestorElements((element) {
+        final widget = element.widget;
+        if (widget is QLDataScope) {
+          if (widget.localStore != null) {
+            resolved = widget.localStore;
+            return false;
+          }
+          if (widget.moduleStore != null) {
+            resolved = widget.moduleStore;
+            return false;
+          }
+        }
+        return true;
+      });
+    } catch (_) {
+      // Fall through to the nearest readable scope / default store.
+    }
+
+    if (resolved != null) return resolved!;
+
     final scope = readNode(context);
     return scope?.localStore ??
         scope?.moduleStore ??
@@ -1388,8 +1442,8 @@ class QLSliceStrategyRegistry {
     final path = payload['path']?.toString() ?? payload['key']?.toString();
     if (path == null || path.isEmpty) return null;
     final current = store.get(path);
-    final by = (payload['by'] as num?)?.toDouble() ?? 1.0;
-    final next = (current is num ? current.toDouble() : 0.0) + by;
+    final by = (payload['by'] ?? payload['amount'] ?? payload['step']) as num?;
+    final next = (current is num ? current.toDouble() : 0.0) + (by?.toDouble() ?? 1.0);
     store.set(path, next);
     return next;
   }
@@ -1399,8 +1453,8 @@ class QLSliceStrategyRegistry {
     final path = payload['path']?.toString() ?? payload['key']?.toString();
     if (path == null || path.isEmpty) return null;
     final current = store.get(path);
-    final by = (payload['by'] as num?)?.toDouble() ?? 1.0;
-    final next = (current is num ? current.toDouble() : 0.0) - by;
+    final by = (payload['by'] ?? payload['amount'] ?? payload['step']) as num?;
+    final next = (current is num ? current.toDouble() : 0.0) - (by?.toDouble() ?? 1.0);
     store.set(path, next);
     return next;
   }

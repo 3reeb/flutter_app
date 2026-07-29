@@ -95,39 +95,55 @@ class QLSubtitleTrack {
 abstract final class QLSubtitleParser {
   static Future<QLSubtitleTrack?> parseNetwork(String url, int offsetMs) async {
     try {
-      final ByteData data = await NetworkAssetBundle(Uri.parse(url)).load('');
-      final String raw = utf8.decode(data.buffer.asUint8List());
-      final List<double> timingsList = [];
-      final List<String> textsList = [];
-      final RegExp timeRegExp = RegExp(
-          r'(\d{2}):(\d{2}):(\d{2})[,.](\d{3})\s*-->\s*(\d{2}):(\d{2}):(\d{2})[,.](\d{3})');
+      final client = mediaHttpClientFactory();
+      try {
+        final request = await client.getUrl(Uri.parse(url));
+        final response = await request.close();
+        final builder = BytesBuilder();
+        await for (final chunk in response.stream) {
+          builder.add(chunk);
+        }
+        final String raw = utf8.decode(builder.takeBytes());
+        final List<double> timingsList = [];
+        final List<String> textsList = [];
+        final RegExp timeRegExp = RegExp(
+            r'(\d{2}):(\d{2}):(\d{2})[,.](\d{3})\s*-->\s*(\d{2}):(\d{2}):(\d{2})[,.](\d{3})');
 
-      final lines = raw.split('\n');
-      String currentText = '';
-      double currentStart = -1, currentEnd = -1;
+        final lines = raw.split('\n');
+        String currentText = '';
+        double currentStart = -1, currentEnd = -1;
 
-      for (int i = 0; i < lines.length; i++) {
-        final line = lines[i].trim();
-        if (line.isEmpty) {
-          if (currentStart != -1 && currentText.isNotEmpty) {
-            timingsList.addAll([currentStart, currentEnd]);
-            textsList.add(currentText.trim());
+        for (final rawLine in lines) {
+          final line = rawLine.trim();
+          if (line.isEmpty) {
+            if (currentStart != -1 && currentText.isNotEmpty) {
+              timingsList.addAll([currentStart, currentEnd]);
+              textsList.add(currentText.trim());
+            }
+            currentStart = -1;
+            currentEnd = -1;
+            currentText = '';
+            continue;
           }
-          currentStart = -1;
-          currentText = '';
-          continue;
+          final match = timeRegExp.firstMatch(line);
+          if (match != null) {
+            currentStart = _parseMs(match, 1) + offsetMs;
+            currentEnd = _parseMs(match, 5) + offsetMs;
+          } else if (currentStart != -1 && int.tryParse(line) == null) {
+            currentText += (currentText.isEmpty ? '' : '\n') + line;
+          }
         }
-        final match = timeRegExp.firstMatch(line);
-        if (match != null) {
-          currentStart = _parseMs(match, 1) + offsetMs;
-          currentEnd = _parseMs(match, 5) + offsetMs;
-        } else if (currentStart != -1 &&
-            !int.tryParse(line).toString().isNotEmpty) {
-          currentText += (currentText.isEmpty ? '' : '\n') + line;
+
+        if (currentStart != -1 && currentText.isNotEmpty) {
+          timingsList.addAll([currentStart, currentEnd]);
+          textsList.add(currentText.trim());
         }
+
+        if (timingsList.isEmpty) return null;
+        return QLSubtitleTrack(Float64List.fromList(timingsList), textsList);
+      } finally {
+        client.close(force: true);
       }
-      if (timingsList.isEmpty) return null;
-      return QLSubtitleTrack(Float64List.fromList(timingsList), textsList);
     } catch (e) {
       return null;
     }
@@ -359,7 +375,8 @@ class QuantumMediaOrchestrator {
   QuantumMediaOrchestrator({required this.playlist, QLMediaPolicy? policy})
       : policy = policy ?? QLMediaPolicy.feed();
 
-  QLMediaPlaybackController? getController(int index) => _activeControllers[index];
+  QLMediaPlaybackController? getController(int index) =>
+      _activeControllers[index];
 
   void onIndexChanged(int newIndex) {
     _currentIndex = newIndex;

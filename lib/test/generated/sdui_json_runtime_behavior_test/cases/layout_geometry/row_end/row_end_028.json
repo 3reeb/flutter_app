@@ -1,0 +1,147 @@
+{
+  "__meta": {
+    "id": "row-end-028",
+    "title": "Row end layout keeps spacing visible #028",
+    "description": "Row end layout keeps spacing visible #028",
+    "tags": [
+      "execution",
+      "layout",
+      "geometry",
+      "row"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "box:row",
+    "style": "w-full justify-end items-center gap-8",
+    "props": {
+      "width": 420,
+      "height": 80
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Left 028"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Right 028"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:row",
+    "style": "w-full justify-end items-center gap-8",
+    "props": {
+      "width": 420,
+      "height": 80
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Left 028"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Right 028"
+        },
+        "debugPath": "root[1]"
+      }
+    ],
+    "debugPath": "root"
+  },
+  "runtimeAssertions": [
+    {
+      "path": "type",
+      "equals": "box:row"
+    },
+    {
+      "path": "children.length",
+      "equals": 2
+    },
+    {
+      "path": "props.width",
+      "equals": 420
+    },
+    {
+      "path": "style",
+      "contains": "items-center"
+    },
+    {
+      "path": "style",
+      "contains": "justify-end"
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "render",
+    "description": "Row end layout keeps spacing visible #028"
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "text",
+        "match": "Left 028"
+      },
+      "equals": 1
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "text",
+        "match": "Right 028"
+      },
+      "equals": 1
+    },
+    {
+      "action": "expectOrder",
+      "first": {
+        "type": "text",
+        "match": "Left 028"
+      },
+      "second": {
+        "type": "text",
+        "match": "Right 028"
+      },
+      "axis": "horizontal",
+      "order": "before",
+      "minGap": 4,
+      "tolerance": 300
+    },
+    {
+      "action": "expectGeometry",
+      "finder": {
+        "type": "text",
+        "match": "Left 028"
+      },
+      "rect": {
+        "left": 220
+      },
+      "tolerance": 300
+    },
+    {
+      "action": "expectGeometry",
+      "finder": {
+        "type": "text",
+        "match": "Right 028"
+      },
+      "rect": {
+        "right": 420
+      },
+      "tolerance": 300
+    }
+  ]
+}
+

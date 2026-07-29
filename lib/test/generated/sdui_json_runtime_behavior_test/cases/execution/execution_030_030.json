@@ -1,0 +1,82 @@
+{
+  "__meta": {
+    "id": "execution-030-row-layout",
+    "title": "Row layout keeps both children visible #030",
+    "description": "Render a horizontal row with two labels and verify both nodes survive the runtime mount.",
+    "tags": [
+      "execution",
+      "row",
+      "layout",
+      "children"
+    ],
+    "allowBlank": false,
+    "priority": "medium"
+  },
+  "input": {
+    "type": "box:row",
+    "style": "gap-4 items-center",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Left 030"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Right 030"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:row",
+    "props": {},
+    "debugPath": "root",
+    "style": "gap-4 items-center",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Left 030"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Right 030"
+        },
+        "debugPath": "root[1]"
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "type",
+      "equals": "box:row"
+    },
+    {
+      "path": "children.length",
+      "equals": 2
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "render",
+    "description": "A horizontal layout remains intact after compilation and render."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectText",
+      "text": "Left 030"
+    },
+    {
+      "action": "expectText",
+      "text": "Right 030"
+    }
+  ]
+}

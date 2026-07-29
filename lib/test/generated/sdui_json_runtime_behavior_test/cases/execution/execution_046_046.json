@@ -1,0 +1,92 @@
+{
+  "__meta": {
+    "id": "execution-046-button-increment",
+    "title": "Button increment action mutates the live store #046",
+    "description": "Tap a real button and verify an increment action mutates the live scoped store.",
+    "tags": [
+      "execution",
+      "button",
+      "increment",
+      "state"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "state": {
+      "counter.46": 0
+    },
+    "type": "action:button",
+    "props": {
+      "text": "Apply 046",
+      "onTap": {
+        "action": "increment",
+        "path": "counter.46",
+        "amount": 2
+      }
+    }
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "counter.46": 0
+      }
+    },
+    "debugPath": "root.store_provider",
+    "children": [
+      {
+        "type": "action",
+        "props": {
+          "__subType": "button",
+          "text": "Apply 046",
+          "onTap": {
+            "action": "increment",
+            "path": "counter.46",
+            "amount": 2
+          }
+        },
+        "debugPath": "root"
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "type",
+      "equals": "system"
+    },
+    {
+      "path": "props.__subType",
+      "equals": "store_provider"
+    },
+    {
+      "path": "children.length",
+      "equals": 1
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "tap",
+    "description": "Pressing Apply 046 updates the live scoped store."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Apply 046"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectState",
+      "path": "counter.46",
+      "equals": 2
+    }
+  ]
+}

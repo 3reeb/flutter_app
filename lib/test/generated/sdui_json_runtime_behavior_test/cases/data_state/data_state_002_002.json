@@ -3,7 +3,11 @@
     "id": "ds-002-nested-state-structure",
     "title": "Deeply nested initialState preserves exact structure",
     "description": "The initialState must be passed verbatim to store_provider without flattening or re-keying. Nested objects must retain their nesting depth.",
-    "tags": ["data_state", "state", "nested"],
+    "tags": [
+      "data_state",
+      "state",
+      "nested"
+    ],
     "allowBlank": false,
     "priority": "high"
   },
@@ -12,12 +16,20 @@
     "state": {
       "ui": {
         "theme": "dark",
-        "sidebar": { "open": true, "width": 280 }
+        "sidebar": {
+          "open": true,
+          "width": 280
+        }
       },
-      "prefs": { "lang": "en", "notifications": true }
+      "prefs": {
+        "lang": "en",
+        "notifications": true
+      }
     },
     "type": "text",
-    "props": { "text": "Settings panel" }
+    "props": {
+      "text": "Settings panel"
+    }
   },
   "expected": {
     "type": "system",
@@ -26,14 +38,26 @@
       "initialState": {
         "ui": {
           "theme": "dark",
-          "sidebar": { "open": true, "width": 280 }
+          "sidebar": {
+            "open": true,
+            "width": 280
+          }
         },
-        "prefs": { "lang": "en", "notifications": true }
+        "prefs": {
+          "lang": "en",
+          "notifications": true
+        }
       }
     },
     "debugPath": "settings.store_provider",
     "children": [
-      { "type": "text", "props": { "text": "Settings panel" }, "debugPath": "settings" }
+      {
+        "type": "text",
+        "props": {
+          "text": "Settings panel"
+        },
+        "debugPath": "settings"
+      }
     ]
   }
 }

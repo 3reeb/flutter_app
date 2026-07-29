@@ -1,0 +1,52 @@
+{
+  "__meta": {
+    "id": "media-003-live-stream",
+    "title": "media stream surfaces keep the target URL and bind path",
+    "description": "A stream node should carry its live URL and bind path because the runtime uses them to connect the live surface.",
+    "tags": [
+      "media",
+      "stream",
+      "live",
+      "props"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "media",
+    "props": {
+      "__subType": "stream",
+      "url": "https://cdn.example.com/live.m3u8",
+      "bind": "/sessions/alpha",
+      "fit": "cover"
+    }
+  },
+  "expected": {
+    "type": "media",
+    "props": {
+      "__subType": "stream",
+      "url": "https://cdn.example.com/live.m3u8",
+      "bind": "/sessions/alpha",
+      "fit": "cover"
+    },
+    "debugPath": "root"
+  },
+  "runtimeAssertions": [
+    {
+      "path": "props.__subType",
+      "equals": "stream"
+    },
+    {
+      "path": "props.url",
+      "equals": "https://cdn.example.com/live.m3u8"
+    },
+    {
+      "path": "props.bind",
+      "equals": "/sessions/alpha"
+    },
+    {
+      "path": "props.fit",
+      "equals": "cover"
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "__meta": {
+    "id": "execution-003-field-text-entry",
+    "title": "Text field commits edits through the live store",
+    "description": "Use a real text field, enter text, submit it, and confirm the bound store value changes.",
+    "tags": [
+      "execution",
+      "field",
+      "text",
+      "enterText"
+    ],
+    "allowBlank": false,
+    "priority": "critical"
+  },
+  "input": {
+    "state": {
+      "user": {
+        "name": "Ada"
+      }
+    },
+    "type": "field:text",
+    "props": {
+      "bind": "user.name",
+      "label": "Name",
+      "initialValue": "Ada"
+    }
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "user": {
+          "name": "Ada"
+        }
+      }
+    },
+    "debugPath": "root.store_provider",
+    "children": [
+      {
+        "type": "field",
+        "props": {
+          "__subType": "text",
+          "bind": "user.name",
+          "label": "Name",
+          "initialValue": "Ada"
+        },
+        "debugPath": "root"
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "props.__subType",
+      "equals": "store_provider"
+    },
+    {
+      "path": "children.length",
+      "equals": 1
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "text entry",
+    "description": "A bound text field receives typed input and flushes it into the live store."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "type",
+        "match": "EditableText",
+        "contains": true
+      },
+      "atLeast": 1
+    },
+    {
+      "action": "enterText",
+      "finder": {
+        "type": "type",
+        "match": "EditableText",
+        "contains": true,
+        "index": 0
+      },
+      "text": "Grace"
+    },
+    {
+      "action": "submitText"
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectState",
+      "path": "user.name",
+      "equals": "Grace"
+    }
+  ]
+}

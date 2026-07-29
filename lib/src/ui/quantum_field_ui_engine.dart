@@ -221,28 +221,39 @@ class _QLRawTextInputState extends State<QLRawTextInput> {
 
   @override
   Widget build(BuildContext context) {
-    final Widget rawInput = EditableText(
-      controller: _bridge,
-      focusNode: _focusNode,
-      style: widget.textStyle,
-      cursorColor: widget.cursorColor,
-      backgroundCursorColor: widget.backgroundCursorColor,
-      selectionColor: widget.selectionColor,
-      keyboardType: widget.keyboardType,
-      textInputAction: widget.textInputAction,
-      obscureText: widget.obscureText,
-      maxLines: widget.maxLines,
-      minLines: widget.minLines,
-      scrollController: _scrollController,
-      autofillHints: widget.autofillHints,
-      inputFormatters: widget.inputFormatters,
-      readOnly: widget.controller.isReadonly,
-      enableInteractiveSelection: true,
-      selectionControls: materialTextSelectionControls,
-      mouseCursor: SystemMouseCursors.text,
-      onChanged: (_) {},
-      onSubmitted: (_) => widget.controller.blur(),
+    // ⬇️ REPLACED: Wrapped TextField in TextSelectionTheme and removed selectionColor from TextField properties
+    final Widget rawInput = TextSelectionTheme(
+      data: TextSelectionThemeData(
+        selectionColor: widget.selectionColor,
+      ),
+      child: TextField(
+        controller: _bridge,
+        focusNode: _focusNode,
+        style: widget.textStyle,
+        cursorColor: widget.cursorColor,
+        // selectionColor: widget.selectionColor, <--- REMOVED from here
+        keyboardType: widget.keyboardType,
+        textInputAction: widget.textInputAction,
+        obscureText: widget.obscureText,
+        maxLines: widget.maxLines,
+        minLines: widget.minLines,
+        scrollController: _scrollController,
+        autofillHints: widget.autofillHints,
+        inputFormatters: widget.inputFormatters,
+        readOnly: widget.controller.isReadonly,
+        enableInteractiveSelection: true,
+        mouseCursor: SystemMouseCursors.text,
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+          isCollapsed: true,
+          isDense: true,
+          contentPadding: EdgeInsets.zero,
+        ),
+        onChanged: (_) {},
+        onSubmitted: (_) => widget.controller.blur(),
+      ),
     );
+    // ⬆️ END OF REPLACEMENT
 
     return MouseRegion(
       onEnter: (_) => _isHovered.value = true,

@@ -1,0 +1,105 @@
+{
+  "__meta": {
+    "id": "execution-073-field-text-entry",
+    "title": "Text field commits edits through the live store #073",
+    "description": "Use a real text field, enter text, submit it, and confirm the bound store value changes.",
+    "tags": [
+      "execution",
+      "field",
+      "text",
+      "enterText"
+    ],
+    "allowBlank": false,
+    "priority": "critical"
+  },
+  "input": {
+    "state": {
+      "user": {
+        "name": "Ada 073"
+      }
+    },
+    "type": "field:text",
+    "props": {
+      "bind": "user.name",
+      "label": "Name 073",
+      "initialValue": "Ada 073"
+    }
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "user": {
+          "name": "Ada 073"
+        }
+      }
+    },
+    "debugPath": "root.store_provider",
+    "children": [
+      {
+        "type": "field",
+        "props": {
+          "__subType": "text",
+          "bind": "user.name",
+          "label": "Name 073",
+          "initialValue": "Ada 073"
+        },
+        "debugPath": "root"
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "props.__subType",
+      "equals": "store_provider"
+    },
+    {
+      "path": "children.length",
+      "equals": 1
+    },
+    {
+      "path": "children[0].props.__subType",
+      "equals": "text"
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "text entry",
+    "description": "Typing into the live field updates the scoped store binding."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "type",
+        "match": "TextField",
+        "contains": true
+      },
+      "atLeast": 1
+    },
+    {
+      "action": "enterText",
+      "finder": {
+        "type": "type",
+        "match": "TextField",
+        "contains": true,
+        "index": 0
+      },
+      "text": "Grace 073"
+    },
+    {
+      "action": "submitText"
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectState",
+      "path": "user.name",
+      "equals": "Grace 073"
+    }
+  ]
+}

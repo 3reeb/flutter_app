@@ -11,3 +11,10 @@ Keep these cases small enough to read, but strong enough to prove real runtime o
 5. layout expansion and macro expansion
 6. large mixed nested compositions
 7. explicit failure guards
+8. geometry and spatial assertions
+
+
+The `execution/` folder holds WidgetTester-backed runtime execution cases. These cases may include `runtimeAssertions`, `runtimeBehavior`, and `executionSteps` so the suite can verify live rendering and interaction flows. The runner also supports geometry checks such as `expectGeometry` and `expectOrder` so layout spacing, alignment, and bounds can be tested directly.
+
+
+The `layout_geometry/` folder adds spatial checks for rows, columns, alignment, and sibling ordering. Those cases use the new `expectGeometry` and `expectOrder` execution steps to catch spacing regressions like `justify-between` not distributing free space.

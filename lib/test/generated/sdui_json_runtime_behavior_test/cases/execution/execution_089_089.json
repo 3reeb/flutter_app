@@ -1,0 +1,400 @@
+{
+  "__meta": {
+    "id": "execution-089-scroll-state",
+    "title": "Scrolling reveals an offscreen button #089",
+    "description": "Mount a tall scroll container, scroll the target button into view, tap it, and verify the live store changes.",
+    "tags": [
+      "execution",
+      "scroll",
+      "button",
+      "drag",
+      "tap"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "state": {
+      "feed.count.89": 0
+    },
+    "type": "box:scroll",
+    "children": [
+      {
+        "type": "box:col",
+        "style": "gap-2",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 01"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 02"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 03"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 04"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 05"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 06"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 07"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 08"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 09"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 10"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 11"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 12"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 13"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 14"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 15"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 16"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 17"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 18"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 19"
+            }
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Item 089 20"
+            }
+          },
+          {
+            "type": "action:button",
+            "props": {
+              "text": "Activate 089",
+              "onTap": [
+                {
+                  "action": "increment",
+                  "path": "feed.count.89",
+                  "amount": 1
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "feed.count.89": 0
+      }
+    },
+    "debugPath": "root.store_provider",
+    "children": [
+      {
+        "type": "box:scroll",
+        "props": {},
+        "debugPath": "root",
+        "children": [
+          {
+            "type": "box:col",
+            "props": {},
+            "debugPath": "root[0]",
+            "style": "gap-2",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 01"
+                },
+                "debugPath": "root[0][0]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 02"
+                },
+                "debugPath": "root[0][1]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 03"
+                },
+                "debugPath": "root[0][2]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 04"
+                },
+                "debugPath": "root[0][3]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 05"
+                },
+                "debugPath": "root[0][4]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 06"
+                },
+                "debugPath": "root[0][5]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 07"
+                },
+                "debugPath": "root[0][6]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 08"
+                },
+                "debugPath": "root[0][7]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 09"
+                },
+                "debugPath": "root[0][8]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 10"
+                },
+                "debugPath": "root[0][9]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 11"
+                },
+                "debugPath": "root[0][10]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 12"
+                },
+                "debugPath": "root[0][11]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 13"
+                },
+                "debugPath": "root[0][12]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 14"
+                },
+                "debugPath": "root[0][13]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 15"
+                },
+                "debugPath": "root[0][14]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 16"
+                },
+                "debugPath": "root[0][15]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 17"
+                },
+                "debugPath": "root[0][16]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 18"
+                },
+                "debugPath": "root[0][17]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 19"
+                },
+                "debugPath": "root[0][18]"
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "Item 089 20"
+                },
+                "debugPath": "root[0][19]"
+              },
+              {
+                "type": "action",
+                "props": {
+                  "__subType": "button",
+                  "text": "Activate 089",
+                  "onTap": [
+                    {
+                      "action": "increment",
+                      "path": "feed.count.89",
+                      "amount": 1
+                    }
+                  ]
+                },
+                "debugPath": "root[0][20]"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "children.length",
+      "equals": 1
+    },
+    {
+      "path": "children[0].type",
+      "equals": "box:scroll"
+    },
+    {
+      "path": "children[0].children.length",
+      "equals": 1
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "scroll+tap",
+    "description": "Scroll the offscreen button into view and press it in the live tree."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "scrollUntilVisible",
+      "finder": {
+        "type": "text",
+        "match": "Activate 089"
+      },
+      "scrollable": {
+        "type": "type",
+        "match": "Scrollable",
+        "contains": true
+      },
+      "delta": 300,
+      "maxScrolls": 40
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Activate 089"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectState",
+      "path": "feed.count.89",
+      "equals": 1
+    }
+  ]
+}

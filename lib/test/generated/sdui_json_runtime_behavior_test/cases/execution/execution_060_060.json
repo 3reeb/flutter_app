@@ -1,0 +1,92 @@
+{
+  "__meta": {
+    "id": "execution-060-button-set",
+    "title": "Button set action updates scoped store #060",
+    "description": "Tap a real button and verify a state.set action mutates the live scoped store.",
+    "tags": [
+      "execution",
+      "button",
+      "state",
+      "tap"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "state": {
+      "counter.60": 0
+    },
+    "type": "action:button",
+    "props": {
+      "text": "Apply 060",
+      "onTap": {
+        "action": "state.set",
+        "key": "counter.60",
+        "value": 5
+      }
+    }
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "counter.60": 0
+      }
+    },
+    "debugPath": "root.store_provider",
+    "children": [
+      {
+        "type": "action",
+        "props": {
+          "__subType": "button",
+          "text": "Apply 060",
+          "onTap": {
+            "action": "state.set",
+            "key": "counter.60",
+            "value": 5
+          }
+        },
+        "debugPath": "root"
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "type",
+      "equals": "system"
+    },
+    {
+      "path": "props.__subType",
+      "equals": "store_provider"
+    },
+    {
+      "path": "children.length",
+      "equals": 1
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "tap",
+    "description": "Pressing Apply 060 updates the live scoped store."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Apply 060"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectState",
+      "path": "counter.60",
+      "equals": 5
+    }
+  ]
+}

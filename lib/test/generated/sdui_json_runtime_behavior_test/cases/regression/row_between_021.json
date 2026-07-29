@@ -1,0 +1,139 @@
+{
+  "__meta": {
+    "id": "row_between-021",
+    "title": "Row Between #021",
+    "description": "Regression coverage for row between #021",
+    "tags": [
+      "execution",
+      "layout",
+      "geometry",
+      "regression"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "type": "box:row",
+    "style": "w-full justify-between items-center gap-8",
+    "props": {
+      "width": 380,
+      "height": 72
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Left 021"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Right 021"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:row",
+    "style": "w-full justify-between items-center gap-8",
+    "props": {
+      "width": 380,
+      "height": 72
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Left 021"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Right 021"
+        },
+        "debugPath": "root[1]"
+      }
+    ],
+    "debugPath": "root"
+  },
+  "runtimeAssertions": [
+    {
+      "path": "type",
+      "equals": "box:row"
+    },
+    {
+      "path": "children.length",
+      "equals": 2
+    },
+    {
+      "path": "props.width",
+      "equals": 380
+    },
+    {
+      "path": "props.height",
+      "equals": 72
+    },
+    {
+      "path": "style",
+      "contains": "items-center"
+    },
+    {
+      "path": "style",
+      "contains": "justify-"
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "render",
+    "description": "Row Between #021"
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "text",
+        "match": "Left 021"
+      },
+      "equals": 1
+    },
+    {
+      "action": "expectWidgetCount",
+      "finder": {
+        "type": "text",
+        "match": "Right 021"
+      },
+      "equals": 1
+    },
+    {
+      "action": "expectOrder",
+      "first": {
+        "type": "text",
+        "match": "Left 021"
+      },
+      "second": {
+        "type": "text",
+        "match": "Right 021"
+      },
+      "axis": "horizontal",
+      "order": "before",
+      "minGap": 100,
+      "tolerance": 300
+    },
+    {
+      "action": "expectGeometry",
+      "finder": {
+        "type": "text",
+        "match": "Left 021"
+      },
+      "rect": {
+        "left": 0
+      },
+      "tolerance": 300
+    }
+  ]
+}

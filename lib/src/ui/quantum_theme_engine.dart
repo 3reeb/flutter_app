@@ -1764,16 +1764,27 @@ class _QState extends State<Q> {
         );
       } else if ((lFlags & QLayoutFlags.isFlex) != 0) {
         // NATIVE QLE FLEX DELEGATION (Gap handling offloaded to QLE)
+        final bool shouldExpandMainAxis =
+            (lFlags & (QLayoutFlags.justifyCenter |
+                    QLayoutFlags.justifyBetween |
+                    QLayoutFlags.justifyEnd |
+                    QLayoutFlags.justifyAround |
+                    QLayoutFlags.justifyEvenly |
+                    QLayoutFlags.fill |
+                    QLayoutFlags.expand)) !=
+                0;
         tree = QuantumLayoutScope(
-            layoutType: isCol ? 'col' : 'row',
-            child: QuantumFlex(
-              direction: isCol ? Axis.vertical : Axis.horizontal,
-              gap: gap,
-              mainAxisAlignment: mainAlign,
-              crossAxisAlignment: crossAlign,
-              mainAxisSize: MainAxisSize.min,
-              children: kids,
-            ));
+          layoutType: isCol ? 'col' : 'row',
+          child: QuantumFlex(
+            direction: isCol ? Axis.vertical : Axis.horizontal,
+            gap: gap,
+            mainAxisAlignment: mainAlign,
+            crossAxisAlignment: crossAlign,
+            mainAxisSize:
+                shouldExpandMainAxis ? MainAxisSize.max : MainAxisSize.min,
+            children: kids,
+          ),
+        );
       }
 
       if ((lFlags & QLayoutFlags.expand) != 0) tree = Expanded(child: tree);
