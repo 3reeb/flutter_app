@@ -17,6 +17,7 @@ import '../runtime/quantum_permissions.dart';
 import 'quantum_auth_engine.dart';
 import 'quantum_media_api.dart';
 import 'quantum_socket_engine.dart';
+
 // -----------------------------------------------------------------------------
 // SECTION 1 — CORE PRIMITIVES & POLICIES (100% UNTOUCHED)
 // -----------------------------------------------------------------------------
@@ -1335,8 +1336,6 @@ class VaultStreamClient {
   late final QuantumAuthEngine authEngine;
   QuantumMediaEngine? _mediaEngine;
   QuantumSocketEngine? _socketEngine;
-  SecureSduiVault? _sduiVault;
-  SecureDisplayEngine? _secureDisplayEngine;
 
   final VaultRouter _router = VaultRouter();
 
@@ -1477,14 +1476,6 @@ class VaultStreamClient {
 
     _initialized = true;
     _telemetry.increment('init');
-    if (_config.securityPolicy.clientSecret != null) {
-      _sduiVault = SecureSduiVault(
-          store: _store,
-          secret: _config.securityPolicy.clientSecret!,
-          authEngine: this.authEngine);
-      _secureDisplayEngine =
-          SecureDisplayEngine(secret: _config.securityPolicy.clientSecret!);
-    }
   }
 
   Future<void> reconfigure(VaultStreamClientConfig next) async {
@@ -1613,9 +1604,6 @@ class VaultStreamClient {
   VaultStream stream() => VaultStream._(this);
   VaultTelemetry telemetry() => VaultTelemetry._(this);
   VaultHealth health() => VaultHealth._(this);
-  SecureSduiVault get sduiVault => _sduiVault!;
-  VaultSecureDisplay secureDisplay() =>
-      VaultSecureDisplay._(_secureDisplayEngine!);
   VaultCrypto crypto() => VaultCrypto._(
       _config.securityPolicy.clientSecret ?? 'quantum_default_key');
 
@@ -2830,260 +2818,6 @@ class VaultHealth {
       'telemetry': _client._telemetry.snapshot(),
     };
   }
-}
-
-// -----------------------------------------------------------------------------
-// SECTION 6B — SECURE SDUI VAULT (Long-Term Encrypted Local JSON Storage)
-// -----------------------------------------------------------------------------
-
-class _SduiMeta {
-  final String key;
-  final String versionHash;
-  final DateTime storedAt;
-  final int sizeBytes;
-  final bool requireAuth;
-  const _SduiMeta(
-      {required this.key,
-      required this.versionHash,
-      required this.storedAt,
-      required this.sizeBytes,
-      this.requireAuth = false});
-  Map<String, dynamic> toJson() => {
-        'key': key,
-        'versionHash': versionHash,
-        'storedAt': storedAt.toIso8601String(),
-        'sizeBytes': sizeBytes,
-        'requireAuth': requireAuth
-      };
-  factory _SduiMeta.fromJson(Map<String, dynamic> j) => _SduiMeta(
-        key: j['key'] as String,
-        versionHash: j['versionHash'] as String,
-        storedAt: DateTime.parse(j['storedAt'] as String),
-        sizeBytes: j['sizeBytes'] as int,
-        requireAuth: j['requireAuth'] as bool? ?? false,
-      );
-}
-
-class SecureSduiVault {
-  final LocalStore _store;
-  final String _secret;
-  final QuantumAuthEngine _authEngine;
-  static const _prefix = 'sdui_vault:';
-  static const _metaKey = 'sdui_vault_meta';
-
-  SecureSduiVault(
-      {required LocalStore store,
-      required String secret,
-      required QuantumAuthEngine authEngine})
-      : _store = store,
-        _secret = secret,
-        _authEngine = authEngine;
-
-  String _vaultKey(String key) => '$_prefix$key';
-
-  /// Encrypt and persist SDUI JSON for long-term storage.
-  Future<void> store(String key, Map<String, dynamic> json,
-      {String? version, bool requireAuth = false}) async {
-    final serialized = jsonEncode(json);
-    final versionHash = version ?? QuantumCipher.hash(serialized);
-    final envelope = await QLIsolateBridge.safeRun(
-        () => QuantumCipher.encrypt(serialized, _secret));
-    final integrityTag =
-        QuantumCipher.sign('$key:$versionHash:$envelope', _secret);
-    final record = jsonEncode({
-      'envelope': envelope,
-      'version': versionHash,
-      'integrity': integrityTag,
-      'storedAt': DateTime.now().toIso8601String()
-    });
-    await _store.write(_vaultKey(key), record);
-    await _updateMeta(key, versionHash, serialized.length, requireAuth);
-  }
-
-  /// Load and decrypt SDUI JSON. Returns null if not found or tampered (auto-purges on tamper).
-  /// Strictly blocks decryption if authentication is required but missing.
-  /// Returned Map is unmodifiable to prevent memory tampering.
-  Future<Map<String, dynamic>?> load(String key) async {
-    _SduiMeta? meta;
-    for (final m in await _loadMetaEntries()) {
-      if (m.key == key) {
-        meta = m;
-        break;
-      }
-    }
-    if (meta != null && meta.requireAuth && !_authEngine.isAuthenticated) {
-      // Rejects without ever running the AES cipher. JSON remains securely encrypted on disk.
-      return null;
-    }
-
-    final raw = await _store.read(_vaultKey(key));
-    if (raw == null) return null;
-    try {
-      final record = jsonDecode(raw) as Map<String, dynamic>;
-      final envelope = record['envelope'] as String;
-      final version = record['version'] as String;
-      final integrity = record['integrity'] as String;
-      if (!QuantumCipher.verify(
-          '$key:$version:$envelope', integrity, _secret)) {
-        await invalidate(key);
-        return null;
-      }
-      final decrypted = await QLIsolateBridge.safeRun(
-          () => QuantumCipher.decrypt(envelope, _secret));
-      return Map.unmodifiable(jsonDecode(decrypted) as Map<String, dynamic>);
-    } catch (_) {
-      await invalidate(key);
-      return null;
-    }
-  }
-
-  /// Check if stored version differs from [serverVersion].
-  Future<bool> needsUpdate(String key, String serverVersion) async {
-    final raw = await _store.read(_vaultKey(key));
-    if (raw == null) return true;
-    try {
-      final record = jsonDecode(raw) as Map<String, dynamic>;
-      return record['version'] != serverVersion;
-    } catch (_) {
-      return true;
-    }
-  }
-
-  /// Atomic update: re-encrypt with new JSON and version.
-  Future<void> applyUpdate(
-          String key, Map<String, dynamic> newJson, String newVersion) =>
-      store(key, newJson, version: newVersion);
-
-  /// Remove a stored SDUI entry.
-  Future<void> invalidate(String key) async {
-    await _store.delete(_vaultKey(key));
-    await _removeMeta(key);
-  }
-
-  /// Remove all stored SDUI entries.
-  Future<void> invalidateAll() async {
-    final keys = await _store.keys(prefix: _prefix);
-    for (final k in keys) await _store.delete(k);
-    await _store.delete(_metaKey);
-  }
-
-  /// List metadata of all stored entries.
-  Future<List<Map<String, dynamic>>> listStored() async {
-    final raw = await _store.read(_metaKey);
-    if (raw == null) return [];
-    final list = jsonDecode(raw) as List;
-    return list.cast<Map<String, dynamic>>();
-  }
-
-  Future<void> _updateMeta(
-      String key, String versionHash, int sizeBytes, bool requireAuth) async {
-    final entries = await _loadMetaEntries();
-    entries.removeWhere((m) => m.key == key);
-    entries.add(_SduiMeta(
-        key: key,
-        versionHash: versionHash,
-        storedAt: DateTime.now(),
-        sizeBytes: sizeBytes,
-        requireAuth: requireAuth));
-    await _store.write(
-        _metaKey, jsonEncode(entries.map((m) => m.toJson()).toList()));
-  }
-
-  Future<void> _removeMeta(String key) async {
-    final entries = await _loadMetaEntries();
-    entries.removeWhere((m) => m.key == key);
-    await _store.write(
-        _metaKey, jsonEncode(entries.map((m) => m.toJson()).toList()));
-  }
-
-  Future<List<_SduiMeta>> _loadMetaEntries() async {
-    final raw = await _store.read(_metaKey);
-    if (raw == null) return [];
-    final list = jsonDecode(raw) as List;
-    return list
-        .map((e) => _SduiMeta.fromJson(e as Map<String, dynamic>))
-        .toList();
-  }
-}
-
-// -----------------------------------------------------------------------------
-// SECTION 6C — SECURE DISPLAY PAYLOAD (Tamper-Proof Server→Client Display)
-// -----------------------------------------------------------------------------
-
-class SecureDisplayResult {
-  final Map<String, dynamic>? data;
-  final String? rejectionReason;
-  bool get isVerified => data != null && rejectionReason == null;
-  const SecureDisplayResult.verified(this.data) : rejectionReason = null;
-  const SecureDisplayResult.rejected(this.rejectionReason) : data = null;
-}
-
-class SecureDisplayEngine {
-  final String _secret;
-  final Duration _maxAge;
-  final Set<String> _consumedNonces = {};
-  static const int _maxNonceBufferSize = 10000;
-
-  SecureDisplayEngine({required String secret, Duration? maxAge})
-      : _secret = secret,
-        _maxAge = maxAge ?? const Duration(minutes: 5);
-
-  /// Verify a server-signed secure display payload.
-  SecureDisplayResult verify(Map<String, dynamic> payload) {
-    final data = payload['data'];
-    final signature = payload['signature'] as String?;
-    final timestamp = payload['timestamp'] as int?;
-    final nonce = payload['nonce'] as String?;
-    if (signature == null ||
-        timestamp == null ||
-        nonce == null ||
-        data == null) {
-      return const SecureDisplayResult.rejected('Missing required fields');
-    }
-    // Anti-replay: check nonce
-    if (_consumedNonces.contains(nonce)) {
-      return const SecureDisplayResult.rejected(
-          'Replay detected: nonce already consumed');
-    }
-    // Timestamp validation
-    final payloadTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
-    if (DateTime.now().difference(payloadTime).abs() > _maxAge) {
-      return const SecureDisplayResult.rejected(
-          'Payload expired or clock skew too large');
-    }
-    // Signature verification
-    final signatureInput = '$nonce:$timestamp:${jsonEncode(data)}';
-    if (!QuantumCipher.verify(signatureInput, signature, _secret)) {
-      return const SecureDisplayResult.rejected(
-          'Invalid signature — data tampered');
-    }
-    // Consume nonce
-    if (_consumedNonces.length >= _maxNonceBufferSize) {
-      _consumedNonces.clear();
-    }
-    _consumedNonces.add(nonce);
-    return SecureDisplayResult.verified(
-        data is Map<String, dynamic> ? data : {'value': data});
-  }
-
-  /// Verify and consume a one-time display token.
-  SecureDisplayResult verifyAndConsume(Map<String, dynamic> payload) {
-    final result = verify(payload);
-    if (result.isVerified) {
-      final token = payload['displayToken'] as String?;
-      if (token != null) _consumedNonces.add('token:$token');
-    }
-    return result;
-  }
-}
-
-class VaultSecureDisplay {
-  final SecureDisplayEngine _engine;
-  const VaultSecureDisplay._(this._engine);
-  SecureDisplayResult verify(Map<String, dynamic> payload) =>
-      _engine.verify(payload);
-  SecureDisplayResult verifyAndConsume(Map<String, dynamic> payload) =>
-      _engine.verifyAndConsume(payload);
 }
 
 // -----------------------------------------------------------------------------

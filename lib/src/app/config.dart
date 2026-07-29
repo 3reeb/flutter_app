@@ -25,6 +25,7 @@ import 'package:flutter/foundation.dart';
 import '../foundation/quantum_yaml_engine.dart';
 import '../ui/quantum_navigation_engine.dart';
 import '../plugins/quantum_api_engine.dart';
+import '../plugins/quantum_sdui_engine.dart';
 import '../plugins/quantum_api_shell.dart';
 import 'quantum_app_entry.dart';
 import 'quantum_app_shell.dart';

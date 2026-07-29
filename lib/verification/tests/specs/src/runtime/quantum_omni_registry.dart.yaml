@@ -3,454 +3,472 @@ docs_file: docs/src/runtime/quantum_omni_registry.dart.md
 line_count: 457
 category: state
 tests:
-- uuid: 864e47d5-90ec-5b55-911d-e5b9ec3de8f3
-  file: lib/src/runtime/quantum_omni_registry.dart
-  docs_file: docs/src/runtime/quantum_omni_registry.dart.md
-  title: 'Quantum Omni Registry: public contract remains stable under valid input'
-  slug: contract
-  category: state
-  severity: critical
-  description: Verify that quantum omni registry keeps its documented runtime behavior
-    while handling contract conditions without corruption, leakage, or silent failure.
-  input:
-    preconditions:
-    - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
-      available.
-    - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
-    stimulus:
-    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
-      cycles.
-    - Repeat updates concurrently to expose stale snapshot or listener leaks.
-    data:
-      workload:
-      - single write
-      - parallel writes
-      - rapid reads
-      - eviction pressure
-  expected_output:
-    state: Snapshots remain internally consistent and deterministic.
-    cleanup: Detached listeners and expired entries are reclaimed.
-    performance: Hot-path operations stay bounded under repeated calls.
-  observability:
-    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-    traces: Trace the call path through the documented public API and teardown hooks.
-  performance_budget:
-    max_ms: 100
-    stress_ms: 250
-  memory_budget:
-    max_growth_mb: 1
-    leak_check: true
-  cleanup:
-  - Dispose controllers, streams, painters, or isolates.
-  - Verify no retained listeners or stale caches remain.
-  docs_parity:
-    summary: 'A registry module. It stores keyed definitions or instances, exposes
-      lookup and registration helpers, and centralizes a class of metadata that multiple
-      runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-      — 16-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)'
-    headings:
-    - '`src/runtime/quantum_omni_registry.dart`'
-    - What this file is
-    - Dependencies
-    - Top-level declarations
-    - Important members and helpers
-  tags:
-  - state
-  - contract
-  - quantum omni registry
-- uuid: 8012770f-07bc-5d72-82cc-c07b2b7e43f6
-  file: lib/src/runtime/quantum_omni_registry.dart
-  docs_file: docs/src/runtime/quantum_omni_registry.dart.md
-  title: 'Quantum Omni Registry: invalid or malformed input is rejected cleanly'
-  slug: invalid_input
-  category: state
-  severity: critical
-  description: Verify that quantum omni registry keeps its documented runtime behavior
-    while handling invalid input conditions without corruption, leakage, or silent
-    failure.
-  input:
-    preconditions:
-    - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
-      available.
-    - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
-    stimulus:
-    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
-      cycles.
-    - Repeat updates concurrently to expose stale snapshot or listener leaks.
-    data:
-      workload:
-      - single write
-      - parallel writes
-      - rapid reads
-      - eviction pressure
-  expected_output:
-    state: Snapshots remain internally consistent and deterministic.
-    cleanup: Detached listeners and expired entries are reclaimed.
-    performance: Hot-path operations stay bounded under repeated calls.
-  observability:
-    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-    traces: Trace the call path through the documented public API and teardown hooks.
-  performance_budget:
-    max_ms: 100
-    stress_ms: 250
-  memory_budget:
-    max_growth_mb: 1
-    leak_check: true
-  cleanup:
-  - Dispose controllers, streams, painters, or isolates.
-  - Verify no retained listeners or stale caches remain.
-  docs_parity:
-    summary: 'A registry module. It stores keyed definitions or instances, exposes
-      lookup and registration helpers, and centralizes a class of metadata that multiple
-      runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-      — 16-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)'
-    headings:
-    - '`src/runtime/quantum_omni_registry.dart`'
-    - What this file is
-    - Dependencies
-    - Top-level declarations
-    - Important members and helpers
-  tags:
-  - state
-  - invalid_input
-  - quantum omni registry
-- uuid: b97fb51f-bc27-5e5f-9ab6-da2eec38591a
-  file: lib/src/runtime/quantum_omni_registry.dart
-  docs_file: docs/src/runtime/quantum_omni_registry.dart.md
-  title: 'Quantum Omni Registry: re-entrant calls do not corrupt internal state'
-  slug: reentrant
-  category: state
-  severity: high
-  description: Verify that quantum omni registry keeps its documented runtime behavior
-    while handling reentrant conditions without corruption, leakage, or silent failure.
-  input:
-    preconditions:
-    - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
-      available.
-    - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
-    stimulus:
-    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
-      cycles.
-    - Repeat updates concurrently to expose stale snapshot or listener leaks.
-    data:
-      workload:
-      - single write
-      - parallel writes
-      - rapid reads
-      - eviction pressure
-  expected_output:
-    state: Snapshots remain internally consistent and deterministic.
-    cleanup: Detached listeners and expired entries are reclaimed.
-    performance: Hot-path operations stay bounded under repeated calls.
-  observability:
-    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-    traces: Trace the call path through the documented public API and teardown hooks.
-  performance_budget:
-    max_ms: 100
-    stress_ms: 250
-  memory_budget:
-    max_growth_mb: 1
-    leak_check: true
-  cleanup:
-  - Dispose controllers, streams, painters, or isolates.
-  - Verify no retained listeners or stale caches remain.
-  docs_parity:
-    summary: 'A registry module. It stores keyed definitions or instances, exposes
-      lookup and registration helpers, and centralizes a class of metadata that multiple
-      runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-      — 16-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)'
-    headings:
-    - '`src/runtime/quantum_omni_registry.dart`'
-    - What this file is
-    - Dependencies
-    - Top-level declarations
-    - Important members and helpers
-  tags:
-  - state
-  - reentrant
-  - quantum omni registry
-- uuid: c904775a-24ee-5275-b5e1-fbec5d1fe7d8
-  file: lib/src/runtime/quantum_omni_registry.dart
-  docs_file: docs/src/runtime/quantum_omni_registry.dart.md
-  title: 'Quantum Omni Registry: dispose/close/teardown releases resources deterministically'
-  slug: cleanup
-  category: state
-  severity: high
-  description: Verify that quantum omni registry keeps its documented runtime behavior
-    while handling cleanup conditions without corruption, leakage, or silent failure.
-  input:
-    preconditions:
-    - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
-      available.
-    - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
-    stimulus:
-    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
-      cycles.
-    - Repeat updates concurrently to expose stale snapshot or listener leaks.
-    data:
-      workload:
-      - single write
-      - parallel writes
-      - rapid reads
-      - eviction pressure
-  expected_output:
-    state: Snapshots remain internally consistent and deterministic.
-    cleanup: Detached listeners and expired entries are reclaimed.
-    performance: Hot-path operations stay bounded under repeated calls.
-  observability:
-    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-    traces: Trace the call path through the documented public API and teardown hooks.
-  performance_budget:
-    max_ms: 100
-    stress_ms: 250
-  memory_budget:
-    max_growth_mb: 1
-    leak_check: true
-  cleanup:
-  - Dispose controllers, streams, painters, or isolates.
-  - Verify no retained listeners or stale caches remain.
-  docs_parity:
-    summary: 'A registry module. It stores keyed definitions or instances, exposes
-      lookup and registration helpers, and centralizes a class of metadata that multiple
-      runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-      — 16-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)'
-    headings:
-    - '`src/runtime/quantum_omni_registry.dart`'
-    - What this file is
-    - Dependencies
-    - Top-level declarations
-    - Important members and helpers
-  tags:
-  - state
-  - cleanup
-  - quantum omni registry
-- uuid: 21d92715-ffd6-5699-a740-f5b5b5e9a721
-  file: lib/src/runtime/quantum_omni_registry.dart
-  docs_file: docs/src/runtime/quantum_omni_registry.dart.md
-  title: 'Quantum Omni Registry: hot-path behavior stays within the runtime budget'
-  slug: performance
-  category: state
-  severity: high
-  description: Verify that quantum omni registry keeps its documented runtime behavior
-    while handling performance conditions without corruption, leakage, or silent failure.
-  input:
-    preconditions:
-    - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
-      available.
-    - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
-    stimulus:
-    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
-      cycles.
-    - Repeat updates concurrently to expose stale snapshot or listener leaks.
-    data:
-      workload:
-      - single write
-      - parallel writes
-      - rapid reads
-      - eviction pressure
-  expected_output:
-    state: Snapshots remain internally consistent and deterministic.
-    cleanup: Detached listeners and expired entries are reclaimed.
-    performance: Hot-path operations stay bounded under repeated calls.
-  observability:
-    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-    traces: Trace the call path through the documented public API and teardown hooks.
-  performance_budget:
-    max_ms: 100
-    stress_ms: 250
-  memory_budget:
-    max_growth_mb: 1
-    leak_check: true
-  cleanup:
-  - Dispose controllers, streams, painters, or isolates.
-  - Verify no retained listeners or stale caches remain.
-  docs_parity:
-    summary: 'A registry module. It stores keyed definitions or instances, exposes
-      lookup and registration helpers, and centralizes a class of metadata that multiple
-      runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-      — 16-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)'
-    headings:
-    - '`src/runtime/quantum_omni_registry.dart`'
-    - What this file is
-    - Dependencies
-    - Top-level declarations
-    - Important members and helpers
-  tags:
-  - state
-  - performance
-  - quantum omni registry
-- uuid: 85acad82-632c-520f-af23-9e023af13bc9
-  file: lib/src/runtime/quantum_omni_registry.dart
-  docs_file: docs/src/runtime/quantum_omni_registry.dart.md
-  title: 'Quantum Omni Registry: memory usage stays bounded under repeated operations'
-  slug: memory
-  category: state
-  severity: medium
-  description: Verify that quantum omni registry keeps its documented runtime behavior
-    while handling memory conditions without corruption, leakage, or silent failure.
-  input:
-    preconditions:
-    - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
-      available.
-    - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
-    stimulus:
-    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
-      cycles.
-    - Repeat updates concurrently to expose stale snapshot or listener leaks.
-    data:
-      workload:
-      - single write
-      - parallel writes
-      - rapid reads
-      - eviction pressure
-  expected_output:
-    state: Snapshots remain internally consistent and deterministic.
-    cleanup: Detached listeners and expired entries are reclaimed.
-    performance: Hot-path operations stay bounded under repeated calls.
-  observability:
-    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-    traces: Trace the call path through the documented public API and teardown hooks.
-  performance_budget:
-    max_ms: 100
-    stress_ms: 250
-  memory_budget:
-    max_growth_mb: 1
-    leak_check: true
-  cleanup:
-  - Dispose controllers, streams, painters, or isolates.
-  - Verify no retained listeners or stale caches remain.
-  docs_parity:
-    summary: 'A registry module. It stores keyed definitions or instances, exposes
-      lookup and registration helpers, and centralizes a class of metadata that multiple
-      runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-      — 16-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)'
-    headings:
-    - '`src/runtime/quantum_omni_registry.dart`'
-    - What this file is
-    - Dependencies
-    - Top-level declarations
-    - Important members and helpers
-  tags:
-  - state
-  - memory
-  - quantum omni registry
-- uuid: b0ec1c20-a350-52ec-8d10-29cdf16fe3d5
-  file: lib/src/runtime/quantum_omni_registry.dart
-  docs_file: docs/src/runtime/quantum_omni_registry.dart.md
-  title: 'Quantum Omni Registry: the runtime surface still matches the documented
-    API and headings'
-  slug: docs_parity
-  category: state
-  severity: medium
-  description: Verify that quantum omni registry keeps its documented runtime behavior
-    while handling docs parity conditions without corruption, leakage, or silent failure.
-  input:
-    preconditions:
-    - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
-      available.
-    - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
-    stimulus:
-    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
-      cycles.
-    - Repeat updates concurrently to expose stale snapshot or listener leaks.
-    data:
-      workload:
-      - single write
-      - parallel writes
-      - rapid reads
-      - eviction pressure
-  expected_output:
-    state: Snapshots remain internally consistent and deterministic.
-    cleanup: Detached listeners and expired entries are reclaimed.
-    performance: Hot-path operations stay bounded under repeated calls.
-  observability:
-    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-    traces: Trace the call path through the documented public API and teardown hooks.
-  performance_budget:
-    max_ms: 100
-    stress_ms: 250
-  memory_budget:
-    max_growth_mb: 1
-    leak_check: true
-  cleanup:
-  - Dispose controllers, streams, painters, or isolates.
-  - Verify no retained listeners or stale caches remain.
-  docs_parity:
-    summary: 'A registry module. It stores keyed definitions or instances, exposes
-      lookup and registration helpers, and centralizes a class of metadata that multiple
-      runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-      — 16-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)'
-    headings:
-    - '`src/runtime/quantum_omni_registry.dart`'
-    - What this file is
-    - Dependencies
-    - Top-level declarations
-    - Important members and helpers
-  tags:
-  - state
-  - docs_parity
-  - quantum omni registry
-- uuid: a82d78cb-f420-59af-b12d-27143d9af00c
-  file: lib/src/runtime/quantum_omni_registry.dart
-  docs_file: docs/src/runtime/quantum_omni_registry.dart.md
-  title: 'Quantum Omni Registry: cache hit, miss, eviction, and invalidation behavior
-    is deterministic'
-  slug: cache
-  category: state
-  severity: medium
-  description: Verify that quantum omni registry keeps its documented runtime behavior
-    while handling cache conditions without corruption, leakage, or silent failure.
-  input:
-    preconditions:
-    - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
-      available.
-    - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
-    stimulus:
-    - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
-      cycles.
-    - Repeat updates concurrently to expose stale snapshot or listener leaks.
-    data:
-      workload:
-      - single write
-      - parallel writes
-      - rapid reads
-      - eviction pressure
-  expected_output:
-    state: Snapshots remain internally consistent and deterministic.
-    cleanup: Detached listeners and expired entries are reclaimed.
-    performance: Hot-path operations stay bounded under repeated calls.
-  observability:
-    logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-    metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-    traces: Trace the call path through the documented public API and teardown hooks.
-  performance_budget:
-    max_ms: 100
-    stress_ms: 250
-  memory_budget:
-    max_growth_mb: 1
-    leak_check: true
-  cleanup:
-  - Dispose controllers, streams, painters, or isolates.
-  - Verify no retained listeners or stale caches remain.
-  docs_parity:
-    summary: 'A registry module. It stores keyed definitions or instances, exposes
-      lookup and registration helpers, and centralizes a class of metadata that multiple
-      runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-      — 16-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)'
-    headings:
-    - '`src/runtime/quantum_omni_registry.dart`'
-    - What this file is
-    - Dependencies
-    - Top-level declarations
-    - Important members and helpers
-  tags:
-  - state
-  - cache
-  - quantum omni registry
+  - uuid: 864e47d5-90ec-5b55-911d-e5b9ec3de8f3
+    file: lib/src/runtime/quantum_omni_registry.dart
+    docs_file: docs/src/runtime/quantum_omni_registry.dart.md
+    title: "Quantum Omni Registry: public contract remains stable under valid input"
+    slug: contract
+    category: state
+    severity: critical
+    description:
+      Verify that quantum omni registry keeps its documented runtime behavior
+      while handling contract conditions without corruption, leakage, or silent failure.
+    input:
+      preconditions:
+        - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
+          available.
+        - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
+      stimulus:
+        - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+          cycles.
+        - Repeat updates concurrently to expose stale snapshot or listener leaks.
+      data:
+        workload:
+          - single write
+          - parallel writes
+          - rapid reads
+          - eviction pressure
+    expected_output:
+      state: Snapshots remain internally consistent and deterministic.
+      cleanup: Detached listeners and expired entries are reclaimed.
+      performance: Hot-path operations stay bounded under repeated calls.
+    observability:
+      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+      traces: Trace the call path through the documented public API and teardown hooks.
+    performance_budget:
+      max_ms: 100
+      stress_ms: 250
+    memory_budget:
+      max_growth_mb: 1
+      leak_check: true
+    cleanup:
+      - Dispose controllers, streams, painters, or isolates.
+      - Verify no retained listeners or stale caches remain.
+    docs_parity:
+      summary:
+        "A registry module. It stores keyed definitions or instances, exposes
+        lookup and registration helpers, and centralizes a class of metadata that multiple
+        runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
+        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+      headings:
+        - "`src/runtime/quantum_omni_registry.dart`"
+        - What this file is
+        - Dependencies
+        - Top-level declarations
+        - Important members and helpers
+    tags:
+      - state
+      - contract
+      - quantum omni registry
+  - uuid: 8012770f-07bc-5d72-82cc-c07b2b7e43f6
+    file: lib/src/runtime/quantum_omni_registry.dart
+    docs_file: docs/src/runtime/quantum_omni_registry.dart.md
+    title: "Quantum Omni Registry: invalid or malformed input is rejected cleanly"
+    slug: invalid_input
+    category: state
+    severity: critical
+    description:
+      Verify that quantum omni registry keeps its documented runtime behavior
+      while handling invalid input conditions without corruption, leakage, or silent
+      failure.
+    input:
+      preconditions:
+        - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
+          available.
+        - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
+      stimulus:
+        - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+          cycles.
+        - Repeat updates concurrently to expose stale snapshot or listener leaks.
+      data:
+        workload:
+          - single write
+          - parallel writes
+          - rapid reads
+          - eviction pressure
+    expected_output:
+      state: Snapshots remain internally consistent and deterministic.
+      cleanup: Detached listeners and expired entries are reclaimed.
+      performance: Hot-path operations stay bounded under repeated calls.
+    observability:
+      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+      traces: Trace the call path through the documented public API and teardown hooks.
+    performance_budget:
+      max_ms: 100
+      stress_ms: 250
+    memory_budget:
+      max_growth_mb: 1
+      leak_check: true
+    cleanup:
+      - Dispose controllers, streams, painters, or isolates.
+      - Verify no retained listeners or stale caches remain.
+    docs_parity:
+      summary:
+        "A registry module. It stores keyed definitions or instances, exposes
+        lookup and registration helpers, and centralizes a class of metadata that multiple
+        runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
+        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+      headings:
+        - "`src/runtime/quantum_omni_registry.dart`"
+        - What this file is
+        - Dependencies
+        - Top-level declarations
+        - Important members and helpers
+    tags:
+      - state
+      - invalid_input
+      - quantum omni registry
+  - uuid: b97fb51f-bc27-5e5f-9ab6-da2eec38591a
+    file: lib/src/runtime/quantum_omni_registry.dart
+    docs_file: docs/src/runtime/quantum_omni_registry.dart.md
+    title: "Quantum Omni Registry: re-entrant calls do not corrupt internal state"
+    slug: reentrant
+    category: state
+    severity: high
+    description:
+      Verify that quantum omni registry keeps its documented runtime behavior
+      while handling reentrant conditions without corruption, leakage, or silent failure.
+    input:
+      preconditions:
+        - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
+          available.
+        - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
+      stimulus:
+        - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+          cycles.
+        - Repeat updates concurrently to expose stale snapshot or listener leaks.
+      data:
+        workload:
+          - single write
+          - parallel writes
+          - rapid reads
+          - eviction pressure
+    expected_output:
+      state: Snapshots remain internally consistent and deterministic.
+      cleanup: Detached listeners and expired entries are reclaimed.
+      performance: Hot-path operations stay bounded under repeated calls.
+    observability:
+      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+      traces: Trace the call path through the documented public API and teardown hooks.
+    performance_budget:
+      max_ms: 100
+      stress_ms: 250
+    memory_budget:
+      max_growth_mb: 1
+      leak_check: true
+    cleanup:
+      - Dispose controllers, streams, painters, or isolates.
+      - Verify no retained listeners or stale caches remain.
+    docs_parity:
+      summary:
+        "A registry module. It stores keyed definitions or instances, exposes
+        lookup and registration helpers, and centralizes a class of metadata that multiple
+        runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
+        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+      headings:
+        - "`src/runtime/quantum_omni_registry.dart`"
+        - What this file is
+        - Dependencies
+        - Top-level declarations
+        - Important members and helpers
+    tags:
+      - state
+      - reentrant
+      - quantum omni registry
+  - uuid: c904775a-24ee-5275-b5e1-fbec5d1fe7d8
+    file: lib/src/runtime/quantum_omni_registry.dart
+    docs_file: docs/src/runtime/quantum_omni_registry.dart.md
+    title: "Quantum Omni Registry: dispose/close/teardown releases resources deterministically"
+    slug: cleanup
+    category: state
+    severity: high
+    description:
+      Verify that quantum omni registry keeps its documented runtime behavior
+      while handling cleanup conditions without corruption, leakage, or silent failure.
+    input:
+      preconditions:
+        - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
+          available.
+        - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
+      stimulus:
+        - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+          cycles.
+        - Repeat updates concurrently to expose stale snapshot or listener leaks.
+      data:
+        workload:
+          - single write
+          - parallel writes
+          - rapid reads
+          - eviction pressure
+    expected_output:
+      state: Snapshots remain internally consistent and deterministic.
+      cleanup: Detached listeners and expired entries are reclaimed.
+      performance: Hot-path operations stay bounded under repeated calls.
+    observability:
+      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+      traces: Trace the call path through the documented public API and teardown hooks.
+    performance_budget:
+      max_ms: 100
+      stress_ms: 250
+    memory_budget:
+      max_growth_mb: 1
+      leak_check: true
+    cleanup:
+      - Dispose controllers, streams, painters, or isolates.
+      - Verify no retained listeners or stale caches remain.
+    docs_parity:
+      summary:
+        "A registry module. It stores keyed definitions or instances, exposes
+        lookup and registration helpers, and centralizes a class of metadata that multiple
+        runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
+        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+      headings:
+        - "`src/runtime/quantum_omni_registry.dart`"
+        - What this file is
+        - Dependencies
+        - Top-level declarations
+        - Important members and helpers
+    tags:
+      - state
+      - cleanup
+      - quantum omni registry
+  - uuid: 21d92715-ffd6-5699-a740-f5b5b5e9a721
+    file: lib/src/runtime/quantum_omni_registry.dart
+    docs_file: docs/src/runtime/quantum_omni_registry.dart.md
+    title: "Quantum Omni Registry: hot-path behavior stays within the runtime budget"
+    slug: performance
+    category: state
+    severity: high
+    description:
+      Verify that quantum omni registry keeps its documented runtime behavior
+      while handling performance conditions without corruption, leakage, or silent failure.
+    input:
+      preconditions:
+        - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
+          available.
+        - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
+      stimulus:
+        - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+          cycles.
+        - Repeat updates concurrently to expose stale snapshot or listener leaks.
+      data:
+        workload:
+          - single write
+          - parallel writes
+          - rapid reads
+          - eviction pressure
+    expected_output:
+      state: Snapshots remain internally consistent and deterministic.
+      cleanup: Detached listeners and expired entries are reclaimed.
+      performance: Hot-path operations stay bounded under repeated calls.
+    observability:
+      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+      traces: Trace the call path through the documented public API and teardown hooks.
+    performance_budget:
+      max_ms: 100
+      stress_ms: 250
+    memory_budget:
+      max_growth_mb: 1
+      leak_check: true
+    cleanup:
+      - Dispose controllers, streams, painters, or isolates.
+      - Verify no retained listeners or stale caches remain.
+    docs_parity:
+      summary:
+        "A registry module. It stores keyed definitions or instances, exposes
+        lookup and registration helpers, and centralizes a class of metadata that multiple
+        runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
+        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+      headings:
+        - "`src/runtime/quantum_omni_registry.dart`"
+        - What this file is
+        - Dependencies
+        - Top-level declarations
+        - Important members and helpers
+    tags:
+      - state
+      - performance
+      - quantum omni registry
+  - uuid: 85acad82-632c-520f-af23-9e023af13bc9
+    file: lib/src/runtime/quantum_omni_registry.dart
+    docs_file: docs/src/runtime/quantum_omni_registry.dart.md
+    title: "Quantum Omni Registry: memory usage stays bounded under repeated operations"
+    slug: memory
+    category: state
+    severity: medium
+    description:
+      Verify that quantum omni registry keeps its documented runtime behavior
+      while handling memory conditions without corruption, leakage, or silent failure.
+    input:
+      preconditions:
+        - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
+          available.
+        - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
+      stimulus:
+        - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+          cycles.
+        - Repeat updates concurrently to expose stale snapshot or listener leaks.
+      data:
+        workload:
+          - single write
+          - parallel writes
+          - rapid reads
+          - eviction pressure
+    expected_output:
+      state: Snapshots remain internally consistent and deterministic.
+      cleanup: Detached listeners and expired entries are reclaimed.
+      performance: Hot-path operations stay bounded under repeated calls.
+    observability:
+      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+      traces: Trace the call path through the documented public API and teardown hooks.
+    performance_budget:
+      max_ms: 100
+      stress_ms: 250
+    memory_budget:
+      max_growth_mb: 1
+      leak_check: true
+    cleanup:
+      - Dispose controllers, streams, painters, or isolates.
+      - Verify no retained listeners or stale caches remain.
+    docs_parity:
+      summary:
+        "A registry module. It stores keyed definitions or instances, exposes
+        lookup and registration helpers, and centralizes a class of metadata that multiple
+        runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
+        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+      headings:
+        - "`src/runtime/quantum_omni_registry.dart`"
+        - What this file is
+        - Dependencies
+        - Top-level declarations
+        - Important members and helpers
+    tags:
+      - state
+      - memory
+      - quantum omni registry
+  - uuid: b0ec1c20-a350-52ec-8d10-29cdf16fe3d5
+    file: lib/src/runtime/quantum_omni_registry.dart
+    docs_file: docs/src/runtime/quantum_omni_registry.dart.md
+    title:
+      "Quantum Omni Registry: the runtime surface still matches the documented
+      API and headings"
+    slug: docs_parity
+    category: state
+    severity: medium
+    description:
+      Verify that quantum omni registry keeps its documented runtime behavior
+      while handling docs parity conditions without corruption, leakage, or silent failure.
+    input:
+      preconditions:
+        - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
+          available.
+        - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
+      stimulus:
+        - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+          cycles.
+        - Repeat updates concurrently to expose stale snapshot or listener leaks.
+      data:
+        workload:
+          - single write
+          - parallel writes
+          - rapid reads
+          - eviction pressure
+    expected_output:
+      state: Snapshots remain internally consistent and deterministic.
+      cleanup: Detached listeners and expired entries are reclaimed.
+      performance: Hot-path operations stay bounded under repeated calls.
+    observability:
+      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+      traces: Trace the call path through the documented public API and teardown hooks.
+    performance_budget:
+      max_ms: 100
+      stress_ms: 250
+    memory_budget:
+      max_growth_mb: 1
+      leak_check: true
+    cleanup:
+      - Dispose controllers, streams, painters, or isolates.
+      - Verify no retained listeners or stale caches remain.
+    docs_parity:
+      summary:
+        "A registry module. It stores keyed definitions or instances, exposes
+        lookup and registration helpers, and centralizes a class of metadata that multiple
+        runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
+        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+      headings:
+        - "`src/runtime/quantum_omni_registry.dart`"
+        - What this file is
+        - Dependencies
+        - Top-level declarations
+        - Important members and helpers
+    tags:
+      - state
+      - docs_parity
+      - quantum omni registry
+  - uuid: a82d78cb-f420-59af-b12d-27143d9af00c
+    file: lib/src/runtime/quantum_omni_registry.dart
+    docs_file: docs/src/runtime/quantum_omni_registry.dart.md
+    title:
+      "Quantum Omni Registry: cache hit, miss, eviction, and invalidation behavior
+      is deterministic"
+    slug: cache
+    category: state
+    severity: medium
+    description:
+      Verify that quantum omni registry keeps its documented runtime behavior
+      while handling cache conditions without corruption, leakage, or silent failure.
+    input:
+      preconditions:
+        - Load src/runtime/quantum_omni_registry.dart with its documented dependencies
+          available.
+        - Use the runtime surface described in docs/src/runtime/quantum_omni_registry.dart.md.
+      stimulus:
+        - Drive the registry/cache/state layer through hit, miss, mutation, and teardown
+          cycles.
+        - Repeat updates concurrently to expose stale snapshot or listener leaks.
+      data:
+        workload:
+          - single write
+          - parallel writes
+          - rapid reads
+          - eviction pressure
+    expected_output:
+      state: Snapshots remain internally consistent and deterministic.
+      cleanup: Detached listeners and expired entries are reclaimed.
+      performance: Hot-path operations stay bounded under repeated calls.
+    observability:
+      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
+      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
+      traces: Trace the call path through the documented public API and teardown hooks.
+    performance_budget:
+      max_ms: 100
+      stress_ms: 250
+    memory_budget:
+      max_growth_mb: 1
+      leak_check: true
+    cleanup:
+      - Dispose controllers, streams, painters, or isolates.
+      - Verify no retained listeners or stale caches remain.
+    docs_parity:
+      summary:
+        "A registry module. It stores keyed definitions or instances, exposes
+        lookup and registration helpers, and centralizes a class of metadata that multiple
+        runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
+        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+      headings:
+        - "`src/runtime/quantum_omni_registry.dart`"
+        - What this file is
+        - Dependencies
+        - Top-level declarations
+        - Important members and helpers
+    tags:
+      - state
+      - cache
+      - quantum omni registry
