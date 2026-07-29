@@ -102,6 +102,10 @@ abstract final class QLayoutFlags {
   // Grid Integrations
   static const int isGrid = 1 << 17;
   static const int isMasonry = 1 << 18;
+
+  // 🚀 NEW FLAGS FOR OVERFLOW FIX
+  static const int scroll = 1 << 19;
+  static const int scrollX = 1 << 20;
 }
 
 abstract final class QRenderFlags {
@@ -856,6 +860,17 @@ class QCompiler {
     final int cPtr = id * QSimdArena.colorStride;
     final int iPtr = id * QSimdArena.intStride;
 
+// 🚀 NEW: Parse Scroll / Overflow tokens
+    if (token == 'scroll' ||
+        token == 'scroll-y' ||
+        token == 'overflow-y-auto') {
+      _arena.layoutFlags[id] |= QLayoutFlags.scroll;
+      return;
+    }
+    if (token == 'scroll-x' || token == 'overflow-x-auto') {
+      _arena.layoutFlags[id] |= (QLayoutFlags.scroll | QLayoutFlags.scrollX);
+      return;
+    }
     // ── LAYOUT FLAGS ──
     if (token == 'row' || token == 'flex-row') {
       _arena.layoutFlags[id] |= QLayoutFlags.isFlex;
@@ -1534,7 +1549,7 @@ class _QState extends State<Q> {
 
     // Builder function that applies the core DOM structure
     Widget constructDom() {
-      Widget node = _buildChildren(mem, compiled, lFlags, tFlags);
+      Widget node = _buildChildren(mem, compiled, lFlags, tFlags, context);
 
       // Apply Decoration / Backgrounds
       if (rFlags != 0 || sFlags != 0) {
@@ -1676,7 +1691,12 @@ class _QState extends State<Q> {
   }
 
   Widget _buildChildren(
-      QSimdArena mem, QToken compiled, int lFlags, int tFlags) {
+    QSimdArena mem,
+    QToken compiled,
+    int lFlags,
+    int tFlags,
+    BuildContext context, // 🚀 ADDED CONTEXT
+  ) {
     final List<Widget> kids = [];
     if (widget.text != null)
       kids.add(_buildText(mem, compiled, tFlags, widget.text!));
@@ -1716,6 +1736,7 @@ class _QState extends State<Q> {
       final double gap = mem.f32[compiled.fPtr + QF32.gap];
 
       if ((lFlags & QLayoutFlags.wrap) != 0) {
+        // ... (Keep existing wrap logic) ...
         WrapAlignment wrapAlign = WrapAlignment.start;
         if ((lFlags & QLayoutFlags.justifyCenter) != 0)
           wrapAlign = WrapAlignment.center;
@@ -1736,7 +1757,7 @@ class _QState extends State<Q> {
         );
       } else if ((lFlags & (QLayoutFlags.isGrid | QLayoutFlags.isMasonry)) !=
           0) {
-        // NATIVE QLE GRID DELEGATION
+        // ... (Keep existing grid logic) ...
         final bool isMasonry = (lFlags & QLayoutFlags.isMasonry) != 0;
         final int colObjId = mem.i32[compiled.iPtr + QI32.gridColsStrId];
         final int rowObjId = mem.i32[compiled.iPtr + QI32.gridRowsStrId];
@@ -1763,20 +1784,37 @@ class _QState extends State<Q> {
           ),
         );
       } else if ((lFlags & QLayoutFlags.isFlex) != 0) {
-        // NATIVE QLE FLEX DELEGATION (Gap handling offloaded to QLE)
-        final bool shouldExpandMainAxis =
-            (lFlags & (QLayoutFlags.justifyCenter |
+        // NATIVE QLE FLEX DELEGATION
+        bool shouldExpandMainAxis = (lFlags &
+                (QLayoutFlags.justifyCenter |
                     QLayoutFlags.justifyBetween |
                     QLayoutFlags.justifyEnd |
                     QLayoutFlags.justifyAround |
                     QLayoutFlags.justifyEvenly |
                     QLayoutFlags.fill |
                     QLayoutFlags.expand)) !=
-                0;
+            0;
+
+        // 1. Resolve Scroll Tokens
+        final bool isScrollable = (lFlags & QLayoutFlags.scroll) != 0;
+        final bool isScrollX = (lFlags & QLayoutFlags.scrollX) != 0;
+
+        final Axis flexAxis = isCol ? Axis.vertical : Axis.horizontal;
+        final Axis scrollAxis = isScrollX ? Axis.horizontal : Axis.vertical;
+
+        // 2. Prevent Infinite Constraint Crashes
+        final QuantumScrollScope? scrollScope = QuantumScrollScope.of(context);
+        final bool inSameAxisScroll = scrollScope?.axis == flexAxis;
+
+        // Disable expand if nested in a scroll view, OR if we are turning THIS flex into a scroll view
+        if (inSameAxisScroll || (isScrollable && flexAxis == scrollAxis)) {
+          shouldExpandMainAxis = false;
+        }
+
         tree = QuantumLayoutScope(
           layoutType: isCol ? 'col' : 'row',
           child: QuantumFlex(
-            direction: isCol ? Axis.vertical : Axis.horizontal,
+            direction: flexAxis,
             gap: gap,
             mainAxisAlignment: mainAlign,
             crossAxisAlignment: crossAlign,
@@ -1785,16 +1823,34 @@ class _QState extends State<Q> {
             children: kids,
           ),
         );
+
+        // 3. 🚀 WRAP WITH SCROLL VIEW IF TOKEN IS PRESENT
+        if (isScrollable) {
+          tree = SingleChildScrollView(
+            scrollDirection: scrollAxis,
+            clipBehavior: Clip.hardEdge,
+            // Automatically protect all children inside it!
+            child: QuantumScrollScope(
+              axis: scrollAxis,
+              child: tree,
+            ),
+          );
+        }
       }
 
-      if ((lFlags & QLayoutFlags.expand) != 0) tree = Expanded(child: tree);
+      // 🚀 THE FOREVER FIX 2: Swap `Expanded()` out for your custom `QuantumFlexible()`
+      // Native Expanded breaks inside scroll views. QuantumFlexible safely downgrades itself.
+      if ((lFlags & QLayoutFlags.expand) != 0) {
+        tree = QuantumFlexible(fit: FlexFit.tight, child: tree);
+      }
+
       if ((lFlags & QLayoutFlags.absolute) != 0)
         tree = Positioned(child: tree); // Expand bounds manually later
       if ((lFlags & QLayoutFlags.fill) != 0)
         tree = Positioned.fill(child: tree);
     }
 
-    // 🚀 NATIVE CSS INHERITANCE: If Text styles are set on a parent, push them to the context!
+    // NATIVE CSS INHERITANCE
     if (tFlags != 0 &&
         (tFlags & QTextFlags.isText) == 0 &&
         widget.text == null) {

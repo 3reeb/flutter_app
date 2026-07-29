@@ -1,0 +1,211 @@
+{
+  "__meta": {
+    "id": "drawer-042-drawer-042",
+    "title": "Drawer edge and interaction #042",
+    "description": "Open a drawer from the right edge and verify barrier dismissal and interaction flags for case 042.",
+    "tags": [
+      "overlay",
+      "drawer",
+      "edge",
+      "execution"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "state": {
+      "overlay.visible.042": false,
+      "overlay.count.042": 0
+    },
+    "type": "box:col",
+    "props": {
+      "width": 800,
+      "height": 600,
+      "gap": 10,
+      "padding": 0
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Drawer background 042"
+        }
+      },
+      {
+        "type": "portal:drawer",
+        "props": {
+          "edge": "right",
+          "allowDrag": false,
+          "allowUnderlyingInteraction": true,
+          "barrierDismissible": true,
+          "triggerBind": "overlay.visible.042",
+          "bgEffect": "darken"
+        },
+        "slots": {
+          "trigger": {
+            "type": "action:button",
+            "props": {
+              "text": "Open drawer 042",
+              "onTap": [
+                {
+                  "action": "toggle",
+                  "path": "overlay.visible.042"
+                }
+              ]
+            }
+          },
+          "content": {
+            "type": "box:col",
+            "props": {
+              "gap": 8
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Drawer body 042"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "overlay.visible.042": false,
+        "overlay.count.042": 0
+      }
+    },
+    "debugPath": "root.store_provider",
+    "children": [
+      {
+        "type": "box:col",
+        "props": {
+          "width": 800,
+          "height": 600,
+          "gap": 10,
+          "padding": 0
+        },
+        "debugPath": "root",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Drawer background 042"
+            },
+            "debugPath": "root[0]"
+          },
+          {
+            "type": "portal",
+            "props": {
+              "__subType": "drawer",
+              "edge": "right",
+              "allowDrag": false,
+              "allowUnderlyingInteraction": true,
+              "barrierDismissible": true,
+              "triggerBind": "overlay.visible.042",
+              "bgEffect": "darken"
+            },
+            "debugPath": "root[1]",
+            "slots": {
+              "trigger": {
+                "type": "action",
+                "props": {
+                  "__subType": "button",
+                  "text": "Open drawer 042",
+                  "onTap": [
+                    {
+                      "action": "toggle",
+                      "path": "overlay.visible.042"
+                    }
+                  ]
+                },
+                "debugPath": "root[1].slots[trigger]"
+              },
+              "content": {
+                "type": "box:col",
+                "props": {
+                  "gap": 8
+                },
+                "debugPath": "root[1].slots[content]",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Drawer body 042"
+                    },
+                    "debugPath": "root[1].slots[content][0]"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "props.__subType",
+      "equals": "drawer"
+    },
+    {
+      "path": "props.edge",
+      "equals": "right"
+    },
+    {
+      "path": "props.allowDrag",
+      "equals": false
+    },
+    {
+      "path": "props.allowUnderlyingInteraction",
+      "equals": true
+    },
+    {
+      "path": "props.barrierDismissible",
+      "equals": true
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "tap",
+    "description": "Open a drawer from the right edge and dismiss it with an outside tap."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Open drawer 042"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectText",
+      "text": "Drawer body 042"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Drawer background 042"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectNothing",
+      "text": "Drawer body 042"
+    }
+  ]
+}

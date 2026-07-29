@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quantum_layout/quantum.dart';
+
 typedef QLJsonMap = Map<String, dynamic>;
 typedef QLJsonList = List<dynamic>;
 
@@ -439,6 +440,34 @@ class QLDataStore {
     }
   }
 
+// 🚀 ADD THIS TO QLDataStore (quantum_data_state.dart)
+  void setSilent(String path, dynamic value) {
+    if (!path.contains('.') && !path.contains('[')) {
+      final sig = signal(path);
+      sig.setSilent(value);
+      // We manually update the read cache so subsequent gets see the silent write
+      _invalidateReadCache(path);
+      return;
+    }
+
+    final strides = QLPathUtils.resolve(path);
+    if (strides.isEmpty) return;
+
+    final rootKey = strides.first.toString();
+    final rootSignal = signal(rootKey);
+    final nextRoot = _immutableMutate(rootSignal.value, strides, 1, value);
+    if (rootSignal.value == nextRoot) return;
+
+    _invalidateReadCache(path);
+    _invalidateReadCache(rootKey);
+    rootSignal.setSilent(nextRoot);
+
+    final direct = _signals[path];
+    if (direct != null && direct != rootSignal) {
+      direct.setSilent(value);
+    }
+  }
+
   QLSignal<dynamic> signal(String key) => _signals.putIfAbsent(key, () {
         _indexSignalKey(key);
         return QLSignal<dynamic>(null);
@@ -722,27 +751,79 @@ class QLDataStore {
   }
 
   void sweep(String pathPrefix) {
-    _invalidateReadCache(pathPrefix);
+    final canonicalPrefix = QLRuntimeSupport.canonicalPath(pathPrefix);
+    _invalidateReadCache(canonicalPrefix);
 
-    final keys = _signals.keys
-        .where((key) => key.startsWith(pathPrefix))
-        .toList(growable: false);
+    final prefixSegments = QLPathUtils.resolve(canonicalPrefix);
+    final keys = _signals.keys.toList(growable: false);
+    bool changed = false;
 
-    for (final key in keys) {
-      final node = _computedRegistry.remove(key);
-      if (node != null) {
-        for (final dep in node.dependencies) {
-          final bucket = _dependencyGraph[dep];
-          bucket?.remove(node);
-          if (bucket != null && bucket.isEmpty) {
-            _dependencyGraph.remove(dep);
+    if (prefixSegments.isEmpty) {
+      for (final key in keys) {
+        final node = _computedRegistry.remove(key);
+        if (node != null) {
+          for (final dep in node.dependencies) {
+            final bucket = _dependencyGraph[dep];
+            bucket?.remove(node);
+            if (bucket != null && bucket.isEmpty) {
+              _dependencyGraph.remove(dep);
+            }
           }
         }
+        _dependencyGraph.remove(key);
+        final notifier = _signals.remove(key);
+        notifier?.dispose();
+        _unindexSignalKey(key);
+        changed = true;
       }
-      _dependencyGraph.remove(key);
-      final notifier = _signals.remove(key);
-      notifier?.dispose();
-      _unindexSignalKey(key);
+      if (changed) _scheduleCommit();
+      return;
+    }
+
+    for (final key in keys) {
+      final keySegments = QLPathUtils.resolve(key);
+      final isExactOrDescendant =
+          _qlPathStartsWith(keySegments, prefixSegments);
+      final isAncestor = _qlPathStartsWith(prefixSegments, keySegments) &&
+          keySegments.length < prefixSegments.length;
+
+      if (isExactOrDescendant) {
+        final node = _computedRegistry.remove(key);
+        if (node != null) {
+          for (final dep in node.dependencies) {
+            final bucket = _dependencyGraph[dep];
+            bucket?.remove(node);
+            if (bucket != null && bucket.isEmpty) {
+              _dependencyGraph.remove(dep);
+            }
+          }
+        }
+        _dependencyGraph.remove(key);
+        final notifier = _signals.remove(key);
+        notifier?.dispose();
+        _unindexSignalKey(key);
+        changed = true;
+        continue;
+      }
+
+      if (!isAncestor) continue;
+      final rootSignal = _signals[key];
+      if (rootSignal == null) continue;
+      final relative = prefixSegments.sublist(keySegments.length);
+      final updated = _qlImmutableDelete(rootSignal.value, relative, 0);
+      if (identical(updated, _qlDeleteNoop) || updated == rootSignal.value) {
+        continue;
+      }
+      rootSignal.setSilent(updated);
+      _dirtySignals.add(rootSignal);
+      _txDirtyKeys.add(key);
+      _invalidateReadCache(key);
+      _notifyCascades(key);
+      changed = true;
+    }
+
+    if (changed) {
+      _scheduleCommit();
     }
   }
 
@@ -1073,6 +1154,70 @@ dynamic _qlDeepMergeValue(dynamic current, dynamic incoming,
   }
 }
 
+const Object _qlDeleteNoop = Object();
+
+bool _qlPathStartsWith(List<dynamic> path, List<dynamic> prefix) {
+  if (prefix.length > path.length) return false;
+  for (var i = 0; i < prefix.length; i++) {
+    final a = path[i];
+    final b = prefix[i];
+    if (a is int || b is int) {
+      if (a is! int || b is! int || a != b) return false;
+    } else if (a.toString() != b.toString()) {
+      return false;
+    }
+  }
+  return true;
+}
+
+dynamic _qlImmutableDelete(
+  dynamic current,
+  List<dynamic> strides,
+  int index,
+) {
+  if (index >= strides.length) return _qlDeleteNoop;
+  if (current == null) return _qlDeleteNoop;
+
+  final key = strides[index];
+  final bool isLast = index == strides.length - 1;
+
+  if (current is Map) {
+    final mapKey = key.toString();
+    if (!current.containsKey(mapKey)) return _qlDeleteNoop;
+    if (isLast) {
+      final copy = Map<String, dynamic>.from(current.cast<String, dynamic>());
+      copy.remove(mapKey);
+      return copy;
+    }
+
+    final child = current[mapKey];
+    final next = _qlImmutableDelete(child, strides, index + 1);
+    if (identical(next, _qlDeleteNoop)) return _qlDeleteNoop;
+    final copy = Map<String, dynamic>.from(current.cast<String, dynamic>());
+    copy[mapKey] = next;
+    return copy;
+  }
+
+  if (current is List) {
+    final idx = key is int ? key : int.tryParse(key.toString());
+    if (idx == null || idx < 0 || idx >= current.length) return _qlDeleteNoop;
+    if (isLast) {
+      final copy = List<dynamic>.from(current);
+      copy.removeAt(idx);
+      return copy;
+    }
+
+    final child = current[idx];
+    final next = _qlImmutableDelete(child, strides, index + 1);
+    if (identical(next, _qlDeleteNoop)) return _qlDeleteNoop;
+    final copy = List<dynamic>.from(current);
+    copy[idx] = next;
+    return copy;
+  }
+
+  return _qlDeleteNoop;
+}
+
 dynamic _qlReadPathValue(dynamic root, Object path) {
   final strides = path is List ? path : QLPathUtils.resolve(path.toString());
   if (strides.isEmpty) return root;
@@ -1089,6 +1234,369 @@ dynamic _qlReadPathValue(dynamic root, Object path) {
     }
   }
   return current;
+}
+
+@immutable
+class QLSliceFieldPolicy {
+  final String path;
+  final String storageMode;
+  final bool reactive;
+  final bool immutable;
+  final bool readOnly;
+  final bool lazy;
+  final bool streaming;
+  final bool cacheResults;
+  final bool pinInMemory;
+  final bool sensitive;
+  final String? resourceId;
+  final String? resolver;
+  final Map<String, dynamic> metadata;
+
+  const QLSliceFieldPolicy({
+    required this.path,
+    this.storageMode = 'hot',
+    this.reactive = true,
+    this.immutable = false,
+    this.readOnly = false,
+    this.lazy = false,
+    this.streaming = false,
+    this.cacheResults = true,
+    this.pinInMemory = false,
+    this.sensitive = false,
+    this.resourceId,
+    this.resolver,
+    this.metadata = const {},
+  });
+
+  factory QLSliceFieldPolicy.from(dynamic raw, {String path = ''}) {
+    if (raw is! Map) {
+      return QLSliceFieldPolicy(path: path);
+    }
+    final map = Map<String, dynamic>.from(raw.cast<String, dynamic>());
+    return QLSliceFieldPolicy(
+      path: path.isNotEmpty ? path : map['path']?.toString() ?? '',
+      storageMode: map['storageMode']?.toString() ??
+          map['storage']?.toString() ??
+          map['mode']?.toString() ??
+          'hot',
+      reactive: map['reactive'] != false,
+      immutable: map['immutable'] == true || map['frozen'] == true,
+      readOnly: map['readOnly'] == true || map['readonly'] == true,
+      lazy: map['lazy'] == true || map['defer'] == true,
+      streaming: map['streaming'] == true || map['stream'] == true,
+      cacheResults: map['cache'] != false && map['cacheResults'] != false,
+      pinInMemory: map['pin'] == true || map['pinInMemory'] == true,
+      sensitive: map['sensitive'] == true || map['secret'] == true,
+      resourceId: map['resourceId']?.toString() ??
+          map['id']?.toString() ??
+          map['ref']?.toString(),
+      resolver: map['resolver']?.toString(),
+      metadata: map['metadata'] is Map
+          ? Map<String, dynamic>.from(map['metadata'] as Map)
+          : <String, dynamic>{},
+    );
+  }
+
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'path': path,
+        'storageMode': storageMode,
+        'reactive': reactive,
+        'immutable': immutable,
+        'readOnly': readOnly,
+        'lazy': lazy,
+        'streaming': streaming,
+        'cacheResults': cacheResults,
+        'pinInMemory': pinInMemory,
+        'sensitive': sensitive,
+        if (resourceId != null) 'resourceId': resourceId,
+        if (resolver != null) 'resolver': resolver,
+        if (metadata.isNotEmpty) 'metadata': metadata,
+      };
+}
+
+@immutable
+class QLSliceResourceRef {
+  final String id;
+  final String scheme;
+  final String uri;
+  final bool cacheable;
+  final bool streaming;
+  final bool lazy;
+  final String? mimeType;
+  final Map<String, dynamic> metadata;
+
+  const QLSliceResourceRef({
+    required this.id,
+    required this.scheme,
+    required this.uri,
+    this.cacheable = true,
+    this.streaming = false,
+    this.lazy = true,
+    this.mimeType,
+    this.metadata = const {},
+  });
+
+  factory QLSliceResourceRef.from(dynamic raw, {String fallbackId = ''}) {
+    if (raw is QLSliceResourceRef) return raw;
+    if (raw is! Map) {
+      final uri = raw?.toString() ?? '';
+      final scheme = uri.contains(':') ? uri.split(':').first : 'ref';
+      final id = fallbackId.isNotEmpty ? fallbackId : uri;
+      return QLSliceResourceRef(id: id, scheme: scheme, uri: uri);
+    }
+    final map = Map<String, dynamic>.from(raw.cast<String, dynamic>());
+    final uri = map['uri']?.toString() ??
+        map['source']?.toString() ??
+        map['path']?.toString() ??
+        map['value']?.toString() ??
+        '';
+    final scheme = map['scheme']?.toString() ??
+        (uri.contains(':') ? uri.split(':').first : 'ref');
+    final id = map['id']?.toString() ??
+        map['resourceId']?.toString() ??
+        map['name']?.toString() ??
+        fallbackId;
+    return QLSliceResourceRef(
+      id: id.isEmpty ? uri : id,
+      scheme: scheme,
+      uri: uri,
+      cacheable: map['cacheable'] != false && map['cache'] != false,
+      streaming: map['streaming'] == true || map['stream'] == true,
+      lazy: map['lazy'] != false,
+      mimeType: map['mimeType']?.toString() ?? map['contentType']?.toString(),
+      metadata: map['metadata'] is Map
+          ? Map<String, dynamic>.from(map['metadata'] as Map)
+          : <String, dynamic>{},
+    );
+  }
+
+  String get cacheKey => '$scheme::$id::$uri';
+
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'id': id,
+        'scheme': scheme,
+        'uri': uri,
+        'cacheable': cacheable,
+        'streaming': streaming,
+        'lazy': lazy,
+        if (mimeType != null) 'mimeType': mimeType,
+        if (metadata.isNotEmpty) 'metadata': metadata,
+      };
+}
+
+typedef QLSliceResourceResolver = FutureOr<dynamic> Function(
+  QLSliceResourceRef ref,
+  QLSliceExecutionContext ctx,
+);
+
+@immutable
+class QLSliceProtection {
+  final String level;
+  final String? ownerId;
+  final Set<String> allowUsers;
+  final Set<String> allowRoles;
+  final Set<String> denyUsers;
+  final Set<String> denyRoles;
+  final bool requireAuth;
+  final bool requireFreshSession;
+  final bool redactInSnapshots;
+  final Map<String, dynamic> metadata;
+
+  const QLSliceProtection({
+    this.level = 'public',
+    this.ownerId,
+    this.allowUsers = const {},
+    this.allowRoles = const {},
+    this.denyUsers = const {},
+    this.denyRoles = const {},
+    this.requireAuth = false,
+    this.requireFreshSession = false,
+    this.redactInSnapshots = false,
+    this.metadata = const {},
+  });
+
+  factory QLSliceProtection.from(dynamic raw) {
+    if (raw is! Map) return const QLSliceProtection();
+    final map = Map<String, dynamic>.from(raw.cast<String, dynamic>());
+    Set<String> _stringSet(dynamic value) => value is Iterable
+        ? value.map((e) => e.toString()).where((v) => v.isNotEmpty).toSet()
+        : const <String>{};
+    return QLSliceProtection(
+      level:
+          map['level']?.toString() ?? map['visibility']?.toString() ?? 'public',
+      ownerId: map['ownerId']?.toString() ?? map['owner']?.toString(),
+      allowUsers: _stringSet(map['allowUsers'] ?? map['users']),
+      allowRoles: _stringSet(map['allowRoles'] ?? map['roles']),
+      denyUsers: _stringSet(map['denyUsers']),
+      denyRoles: _stringSet(map['denyRoles']),
+      requireAuth: map['requireAuth'] == true || map['authRequired'] == true,
+      requireFreshSession:
+          map['requireFreshSession'] == true || map['freshSession'] == true,
+      redactInSnapshots:
+          map['redactInSnapshots'] == true || map['redact'] == true,
+      metadata: map['metadata'] is Map
+          ? Map<String, dynamic>.from(map['metadata'] as Map)
+          : <String, dynamic>{},
+    );
+  }
+
+  bool allows(
+    SessionContext? session, {
+    String? namespace,
+    Map<String, dynamic> claims = const {},
+  }) {
+    if (level == 'public') return true;
+    if (session == null || !session.isAuthenticated) {
+      return !requireAuth && level != 'secure';
+    }
+    if (requireFreshSession && session.isExpired) return false;
+    if (ownerId != null && session.userId != ownerId && level == 'owner') {
+      return false;
+    }
+    if (allowUsers.contains(session.userId) || allowUsers.contains('*')) {
+      return true;
+    }
+    final roles = _claimStrings(session.claims['roles'] ?? claims['roles']);
+    if (roles.any(allowRoles.contains) || allowRoles.contains('*')) {
+      return true;
+    }
+    if (denyUsers.contains(session.userId) || denyUsers.contains('*')) {
+      return false;
+    }
+    if (roles.any(denyRoles.contains) || denyRoles.contains('*')) {
+      return false;
+    }
+    return switch (level) {
+      'local' => namespace != null && namespace.isNotEmpty,
+      'owner' => ownerId != null && session.userId == ownerId,
+      'authenticated' => session.isAuthenticated,
+      'secure' => session.isAuthenticated,
+      _ => true,
+    };
+  }
+
+  Map<String, dynamic> toMap({bool redact = false}) => <String, dynamic>{
+        'level': level,
+        if (!redact && ownerId != null) 'ownerId': ownerId,
+        'requireAuth': requireAuth,
+        'requireFreshSession': requireFreshSession,
+        'redactInSnapshots': redactInSnapshots,
+        if (!redact) 'allowUsers': allowUsers.toList(growable: false),
+        if (!redact) 'allowRoles': allowRoles.toList(growable: false),
+        if (!redact) 'denyUsers': denyUsers.toList(growable: false),
+        if (!redact) 'denyRoles': denyRoles.toList(growable: false),
+        if (metadata.isNotEmpty) 'metadata': metadata,
+      };
+}
+
+@immutable
+class QLSliceResourceState {
+  final QLSliceResourceRef ref;
+  final QLSliceFieldPolicy policy;
+  final dynamic value;
+
+  const QLSliceResourceState({
+    required this.ref,
+    required this.policy,
+    this.value,
+  });
+
+  bool get isResolved => value != null;
+}
+
+final class QLSliceResourceRegistry {
+  static final QLSliceResourceRegistry instance = QLSliceResourceRegistry._();
+  QLSliceResourceRegistry._();
+
+  final Map<String, QLSliceResourceResolver> _schemes =
+      <String, QLSliceResourceResolver>{};
+  final Map<String, QLSliceResourceResolver> _ids =
+      <String, QLSliceResourceResolver>{};
+  final QLRuntimeCache<dynamic> _cache = QLRuntimeCache<dynamic>(
+    config: const QLRuntimeCacheConfig(
+      maxEntries: 1024,
+      maxWeight: 16 * 1024 * 1024,
+    ),
+  );
+
+  void registerScheme(String scheme, QLSliceResourceResolver resolver) {
+    _schemes[scheme.trim().toLowerCase()] = resolver;
+  }
+
+  void registerResource(String id, QLSliceResourceResolver resolver) {
+    _ids[id.trim()] = resolver;
+  }
+
+  bool hasResolver(QLSliceResourceRef ref) =>
+      _ids.containsKey(ref.id) ||
+      _schemes.containsKey(ref.scheme.toLowerCase());
+
+  FutureOr<dynamic> resolve(
+    QLSliceResourceRef ref,
+    QLSliceExecutionContext ctx, {
+    bool cache = true,
+  }) {
+    final cacheKey = '${ctx.namespace}::${ref.cacheKey}';
+    if (cache && ref.cacheable) {
+      final cached = _cache.get(cacheKey);
+      if (cached != null) return cached;
+    }
+
+    final resolver =
+        _ids[ref.id] ?? _schemes[ref.scheme.toLowerCase()] ?? _schemes['*'];
+    if (resolver == null) return ref;
+
+    final resolved = resolver(ref, ctx);
+    if (resolved is Future) {
+      if (!cache || !ref.cacheable) return resolved;
+      return resolved.then((value) {
+        if (value != null) {
+          _cache.put(cacheKey, value,
+              weight: QLRuntimeCacheSizer.estimate(value));
+        }
+        return value;
+      });
+    }
+
+    if (cache && ref.cacheable && resolved != null) {
+      _cache.put(cacheKey, resolved,
+          weight: QLRuntimeCacheSizer.estimate(resolved));
+    }
+    return resolved;
+  }
+
+  void clear() => _cache.clear();
+}
+
+SessionContext? _qlSessionFromEnv(Map<String, dynamic> env) {
+  final dynamic raw = env['session'] ?? env['auth'] ?? env['context'];
+  if (raw is SessionContext) return raw;
+  if (raw is Map) {
+    final map = Map<String, dynamic>.from(raw);
+    return SessionContext(
+      userId: map['userId']?.toString(),
+      sessionId: map['sessionId']?.toString(),
+      accessToken: map['accessToken']?.toString(),
+      refreshToken: map['refreshToken']?.toString(),
+      expiresAt: map['expiresAt'] is DateTime
+          ? map['expiresAt'] as DateTime
+          : DateTime.tryParse(map['expiresAt']?.toString() ?? ''),
+      claims: map['claims'] is Map
+          ? Map<String, dynamic>.from(map['claims'] as Map)
+          : <String, dynamic>{},
+      authProviderUsed: map['authProviderUsed']?.toString() ?? 'none',
+      deviceId: map['deviceId']?.toString(),
+    );
+  }
+  return null;
+}
+
+List<String> _claimStrings(dynamic value) {
+  if (value == null) return const <String>[];
+  if (value is Iterable) {
+    return value.map((e) => e.toString()).toList(growable: false);
+  }
+  return <String>[value.toString()];
 }
 
 @immutable
@@ -1443,7 +1951,8 @@ class QLSliceStrategyRegistry {
     if (path == null || path.isEmpty) return null;
     final current = store.get(path);
     final by = (payload['by'] ?? payload['amount'] ?? payload['step']) as num?;
-    final next = (current is num ? current.toDouble() : 0.0) + (by?.toDouble() ?? 1.0);
+    final next =
+        (current is num ? current.toDouble() : 0.0) + (by?.toDouble() ?? 1.0);
     store.set(path, next);
     return next;
   }
@@ -1454,7 +1963,8 @@ class QLSliceStrategyRegistry {
     if (path == null || path.isEmpty) return null;
     final current = store.get(path);
     final by = (payload['by'] ?? payload['amount'] ?? payload['step']) as num?;
-    final next = (current is num ? current.toDouble() : 0.0) - (by?.toDouble() ?? 1.0);
+    final next =
+        (current is num ? current.toDouble() : 0.0) - (by?.toDouble() ?? 1.0);
     store.set(path, next);
     return next;
   }
@@ -2348,12 +2858,13 @@ class QLDataSourceRegistry {
       <String, List<VoidCallback>>{};
 
   QLDataSourceHandle register(String name, Map<String, dynamic> config) {
+    final mutableConfig = Map<String, dynamic>.from(config);
     final existing = _sources[name];
     if (existing != null) {
-      existing.config = config;
+      existing.config = mutableConfig;
       return existing;
     }
-    final handle = QLDataSourceHandle(name: name, config: config);
+    final handle = QLDataSourceHandle(name: name, config: mutableConfig);
     _sources[name] = handle;
     if (config['seed'] != null) {
       handle.signal.data.setSilent(config['seed']);
@@ -2550,6 +3061,10 @@ class QLStoreSlice {
   final Map<String, dynamic> pipelines;
   final Map<String, dynamic> strategies;
   final Map<String, dynamic> metadata;
+  final Map<String, QLSliceFieldPolicy> fieldPolicies;
+  final Map<String, QLSliceResourceRef> resources;
+  final QLSliceProtection protection;
+  final Map<String, dynamic> runtime;
 
   const QLStoreSlice({
     required this.namespace,
@@ -2562,7 +3077,101 @@ class QLStoreSlice {
     this.pipelines = const {},
     this.strategies = const {},
     this.metadata = const {},
+    this.fieldPolicies = const {},
+    this.resources = const {},
+    this.protection = const QLSliceProtection(),
+    this.runtime = const {},
   });
+
+  factory QLStoreSlice.fromMap(
+    String namespace,
+    Map<String, dynamic> raw,
+  ) {
+    Map<String, dynamic> _map(dynamic value) => value is Map
+        ? Map<String, dynamic>.from(value)
+        : const <String, dynamic>{};
+
+    Map<String, QLSliceFieldPolicy> _fieldPolicies(dynamic value) {
+      if (value is! Map) return const <String, QLSliceFieldPolicy>{};
+      return value.map(
+        (key, val) => MapEntry(
+          key.toString(),
+          QLSliceFieldPolicy.from(val, path: key.toString()),
+        ),
+      );
+    }
+
+    Map<String, QLSliceResourceRef> _resources(dynamic value) {
+      if (value is! Map) return const <String, QLSliceResourceRef>{};
+      return value.map(
+        (key, val) => MapEntry(
+          key.toString(),
+          QLSliceResourceRef.from(val, fallbackId: key.toString()),
+        ),
+      );
+    }
+
+    final runtime = <String, dynamic>{
+      ..._map(raw['runtime']),
+      ..._map(raw['slice']),
+      ..._map(raw['behavior']),
+      ..._map(raw['options']),
+    };
+
+    return QLStoreSlice(
+      namespace: namespace,
+      schema: raw['schema']?.toString(),
+      dataSource: raw['dataSource']?.toString(),
+      state: _map(raw['state']),
+      computed: _map(raw['computed']),
+      mutations: _map(raw['mutations']),
+      queries: _map(raw['queries']),
+      pipelines: _map(raw['pipelines']),
+      strategies: _map(raw['strategies']),
+      metadata: _map(raw['metadata']),
+      fieldPolicies: <String, QLSliceFieldPolicy>{
+        ..._fieldPolicies(raw['fieldPolicies']),
+        ..._fieldPolicies(raw['statePolicy']),
+        ..._fieldPolicies(raw['fields']),
+      },
+      resources: <String, QLSliceResourceRef>{
+        ..._resources(raw['resources']),
+        ..._resources(raw['assets']),
+        ..._resources(raw['media']),
+        ..._resources(raw['files']),
+      },
+      protection: QLSliceProtection.from(
+        raw['protection'] ?? raw['access'] ?? raw['security'],
+      ),
+      runtime: runtime,
+    );
+  }
+
+  bool get immutable =>
+      runtime['immutable'] == true || runtime['frozen'] == true;
+  bool get reactive => runtime['reactive'] != false;
+  bool get lazy => runtime['lazy'] == true || runtime['defer'] == true;
+  bool get staticOnly =>
+      runtime['static'] == true || runtime['mode'] == 'static';
+
+  QLSliceFieldPolicy policyFor(String path) {
+    return fieldPolicies[path] ??
+        fieldPolicies[path.replaceAll(RegExp(r'^\$?state\.'), '')] ??
+        QLSliceFieldPolicy(
+            path: path, reactive: reactive, immutable: immutable);
+  }
+
+  QLSliceResourceRef? resource(String id) => resources[id];
+
+  FutureOr<dynamic> resolveResource(
+    String id,
+    QLSliceExecutionContext ctx, {
+    bool cache = true,
+  }) {
+    final ref = resources[id];
+    if (ref == null) return null;
+    return QLSliceResourceRegistry.instance.resolve(ref, ctx, cache: cache);
+  }
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         'namespace': namespace,

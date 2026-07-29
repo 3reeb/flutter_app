@@ -53,8 +53,16 @@
   },
   "runtimeAssertions": [
     {
-      "path": "children.length",
-      "equals": 1
+      "path": "type",
+      "equals": "action"
+    },
+    {
+      "path": "props.__subType",
+      "equals": "button"
+    },
+    {
+      "path": "props.text",
+      "equals": "Replay 100"
     }
   ],
   "runtimeBehavior": {

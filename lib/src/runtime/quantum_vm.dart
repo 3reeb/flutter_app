@@ -995,21 +995,23 @@ abstract final class QLCompiler {
           out['props']['__subType'] = subType;
         }
       }
-      
-      final actualSubType = subType.isNotEmpty ? subType : (out['props']?['__subType']?.toString() ?? '');
+
+      final actualSubType = subType.isNotEmpty
+          ? subType
+          : (out['props']?['__subType']?.toString() ?? '');
 
       if (baseType == 'data' && actualSubType == 'paginated') {
         if (out['props']?['pageSize'] == null) {
           throw const FormatException('data:paginated requires pageSize');
         }
       }
-      
+
       if (baseType == 'data' && actualSubType == 'diff') {
         if (out['props']?['keyBy'] == null && out['props']?['key'] == null) {
           throw const FormatException('data:diff requires keyBy or key');
         }
       }
-      
+
       if (baseType == 'field' && actualSubType == 'slider') {
         final props = out['props'] as Map?;
         if (props != null && props.containsKey('defaultValue')) {
@@ -1017,7 +1019,8 @@ abstract final class QLCompiler {
           final min = num.tryParse(props['min']?.toString() ?? '0') ?? 0;
           final max = num.tryParse(props['max']?.toString() ?? '100') ?? 100;
           if (val != null && (val < min || val > max)) {
-            throw const FormatException('Slider defaultValue outside min/max range');
+            throw const FormatException(
+                'Slider defaultValue outside min/max range');
           }
         }
       }
@@ -2078,7 +2081,8 @@ abstract final class QLPathResolver {
           .get(strides.sublist(1));
     } else if (root == 'state' || root == r'$state') {
       final scope = ctx != null ? QLDataScope.readNode(ctx) : null;
-      current = (scope?.localStore ?? scope?.moduleStore ?? globalStore).get(strides.sublist(1));
+      current = (scope?.localStore ?? scope?.moduleStore ?? globalStore)
+          .get(strides.sublist(1));
     } else if (root == r'$env') {
       current = strides.length > 1 ? env[strides[1].toString()] : null;
     } else if (root == r'$local') {
@@ -4815,7 +4819,7 @@ class QuantumVM {
         s.set(key, next);
         return next;
       }),
-      description: 'Toggle a boolean flag in the global store',
+      description: 'Toggle a boolean flag',
       params: const {'key': 'String'},
       engine: 'QuantumVM',
       tags: const ['state', 'core'],
@@ -4833,6 +4837,206 @@ class QuantumVM {
       params: const {'key': 'String'},
       engine: 'QuantumVM',
       tags: const ['state', 'core'],
+    );
+
+    // 🚀 FORM ACTIONS
+    registerAction(
+      'form.set',
+      LambdaActionPlugin((p, s, c) async {
+        final path = p['path']?.toString();
+        final value = p['value'];
+        if (path == null) return null;
+        final node = QLDataNode.globalNodes[path];
+        if (node != null) node.mutate(value);
+        return value;
+      }),
+      description: 'Safely mutates a form field.',
+      params: const {'path': 'String', 'value': 'dynamic'},
+      engine: 'QuantumVM',
+    );
+
+    registerAction(
+      'form.reset',
+      LambdaActionPlugin((p, s, c) async {
+        final path = p['path']?.toString();
+        if (path == null) return null;
+        final node = QLDataNode.globalNodes[path];
+        if (node != null) node.reset();
+        return null;
+      }),
+      description: 'Resets a field or form.',
+      params: const {'path': 'String'},
+      engine: 'QuantumVM',
+    );
+
+    registerAction(
+      'form.array.add',
+      LambdaActionPlugin((p, s, c) async {
+        final path = p['path']?.toString();
+        if (path == null) return null;
+        final node = QLDataNode.globalNodes[path];
+        if (node is QLBlockArrayController) {
+          node.addBlock(p['blockType']?.toString() ?? 'default');
+        } else if (node is QLScalarArrayController) {
+          node.push(p['value']);
+        }
+        return null;
+      }),
+      description: 'Adds an item to a form array/block list.',
+      params: const {
+        'path': 'String',
+        'blockType': 'String',
+        'value': 'dynamic'
+      },
+      engine: 'QuantumVM',
+    );
+
+    registerAction(
+      'form.array.remove',
+      LambdaActionPlugin((p, s, c) async {
+        final path = p['path']?.toString();
+        final index = int.tryParse(p['index']?.toString() ?? '');
+        if (path == null || index == null) return null;
+        final node = QLDataNode.globalNodes[path];
+        if (node is QLBlockArrayController) node.removeAt(index);
+        if (node is QLScalarArrayController) node.removeAt(index);
+        return null;
+      }),
+      description: 'Removes an item from a form array by index.',
+      params: const {'path': 'String', 'index': 'int'},
+      engine: 'QuantumVM',
+    );
+
+    registerAction(
+      'form.media.clear',
+      LambdaActionPlugin((p, s, c) async {
+        final path = p['path']?.toString();
+        if (path == null) return null;
+        final node = QLDataNode.globalNodes[path];
+        if (node is QLMediaController) node.setMedia(null);
+        return null;
+      }),
+      description: 'Clears a media field.',
+      params: const {'path': 'String'},
+      engine: 'QuantumVM',
+    );
+
+    registerAction(
+      'form.load',
+      LambdaActionPlugin((p, s, c) async {
+        final path = p['path']?.toString();
+        final source = p['source']?.toString() ?? p['dataSource']?.toString();
+        if (path == null) return null;
+
+        final formNode = QLDataNode.globalNodes[path];
+        if (formNode is! QLGroupController) return null;
+
+        Map<String, dynamic>? data;
+        if (source != null && QLDataSourceRegistry.instance.exists(source)) {
+          final res =
+              await QLDataSourceRegistry.instance.execute(source, 'read', p);
+          if (res is Map) data = Map<String, dynamic>.from(res);
+        } else {
+          final storePath = p['storePath']?.toString() ?? path;
+          final res = s.get(storePath);
+          if (res is Map) data = Map<String, dynamic>.from(res);
+        }
+
+        if (data != null) {
+          void hydrate(String prefix, Map<String, dynamic> map) {
+            map.forEach((key, val) {
+              final fullPath = prefix.isEmpty ? key : '$prefix.$key';
+              if (val is Map) {
+                hydrate(fullPath, Map<String, dynamic>.from(val));
+              } else {
+                final field = QLDataNode.globalNodes[fullPath];
+                if (field != null) field.mutate(val, shouldValidate: false);
+              }
+            });
+          }
+
+          hydrate(path, data);
+        }
+        return data;
+      }),
+      description: 'Hydrates a form from an API DataSource or Global Store.',
+      params: const {
+        'path': 'String',
+        'source': 'String',
+        'storePath': 'String'
+      },
+      engine: 'QuantumVM',
+    );
+
+    // 🚀 UPGRADED FORM SUBMIT ACTION (Form -> API SEND)
+    registerAction(
+      'form.submit',
+      LambdaActionPlugin((p, s, c) async {
+        final path = p['path']?.toString();
+        if (path == null) return null;
+
+        // 1. Gather all nodes that match the exact path OR start with the path prefix
+        final nodesToValidate = QLDataNode.globalNodes.values.where((node) {
+          return node.path == path ||
+              node.path.startsWith('$path.') ||
+              node.path.startsWith('$path[');
+        }).toList();
+
+        if (nodesToValidate.isEmpty) return null;
+
+        // 2. Force validation concurrently on all fields
+        await Future.wait(nodesToValidate.map((n) => n.validate()));
+
+        // 3. Check if ANY field has an error
+        final hasErrors = nodesToValidate.any((n) => !n.isValid);
+
+        if (hasErrors) {
+          throw QuantumSecurityException('Form validation failed at $path');
+        }
+
+        // 4. Extract the perfect JSON payload directly from the Form Graph!
+        // This leverages your battle-tested extractSubgraph method.
+        final graph = nodesToValidate.first.graph;
+        Map<String, dynamic> payload;
+
+        if (graph is QLFormController) {
+          payload = graph.extractSubgraph(path);
+          // If the prefix wasn't a group, extractSubgraph might return an empty map.
+          if (payload.isEmpty &&
+              nodesToValidate.length == 1 &&
+              nodesToValidate.first.path == path) {
+            payload = {'value': nodesToValidate.first.data.value};
+          }
+        } else {
+          final raw = s.get(path);
+          payload = raw is Map
+              ? Map<String, dynamic>.from(raw)
+              : (raw != null ? {'value': raw} : {});
+        }
+
+        // 5. Automatic API Dispatch
+        final source = p['source']?.toString() ?? p['dataSource']?.toString();
+        final operation =
+            p['operation']?.toString() ?? p['op']?.toString() ?? 'create';
+
+        if (source != null && QLDataSourceRegistry.instance.exists(source)) {
+          return await QLDataSourceRegistry.instance.execute(
+            source,
+            operation,
+            {'payload': payload, ...p},
+          );
+        }
+
+        return payload;
+      }),
+      description:
+          'Validates a form prefix and optionally submits it to an API.',
+      params: const {
+        'path': 'String',
+        'dataSource': 'String',
+        'operation': 'String'
+      },
+      engine: 'QuantumVM',
     );
   }
 
@@ -6582,7 +6786,8 @@ class _QLReactiveNodeBoundaryState extends State<_QLReactiveNodeBoundary> {
   Widget build(BuildContext context) {
     final Map<String, dynamic> env =
         QLDataScope.ofNode(context)?.localData ?? const {};
-    final QLDataStore store = _localStore ?? _moduleStore ?? QuantumVM.instance.store;
+    final QLDataStore store =
+        _localStore ?? _moduleStore ?? QuantumVM.instance.store;
 
     Widget content;
     if (deps.isEmpty) {

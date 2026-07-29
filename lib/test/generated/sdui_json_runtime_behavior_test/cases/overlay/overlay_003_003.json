@@ -1,0 +1,294 @@
+{
+  "__meta": {
+    "id": "overlay_entry-003-overlay_entry-003",
+    "title": "Overlay entry fixed position #003",
+    "description": "Open and close an overlay entry at (42, 56) and verify live mount, geometry, and triggerBind state for case 003.",
+    "tags": [
+      "overlay",
+      "overlay_entry",
+      "window",
+      "execution"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "state": {
+      "overlay.visible.003": false,
+      "overlay.count.003": 0
+    },
+    "type": "box:col",
+    "props": {
+      "width": 800,
+      "height": 600,
+      "gap": 12,
+      "padding": 0
+    },
+    "children": [
+      {
+        "type": "action:button",
+        "props": {
+          "text": "Open 003",
+          "onTap": [
+            {
+              "action": "toggle",
+              "path": "overlay.visible.003"
+            }
+          ]
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "text": "Background 003"
+        }
+      },
+      {
+        "type": "portal:overlay_entry",
+        "props": {
+          "triggerBind": "overlay.visible.003",
+          "x": 42,
+          "y": 56
+        },
+        "slots": {
+          "content": {
+            "type": "box:col",
+            "props": {
+              "gap": 8
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Overlay entry 003"
+                }
+              },
+              {
+                "type": "action:button",
+                "props": {
+                  "text": "Inc Overlay entry 003",
+                  "onTap": [
+                    {
+                      "action": "increment",
+                      "path": "overlay.count.003",
+                      "amount": 1
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "action:button",
+        "props": {
+          "text": "Close 003",
+          "onTap": [
+            {
+              "action": "toggle",
+              "path": "overlay.visible.003"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "overlay.visible.003": false,
+        "overlay.count.003": 0
+      }
+    },
+    "debugPath": "root.store_provider",
+    "children": [
+      {
+        "type": "box:col",
+        "props": {
+          "width": 800,
+          "height": 600,
+          "gap": 12,
+          "padding": 0
+        },
+        "debugPath": "root",
+        "children": [
+          {
+            "type": "action",
+            "props": {
+              "__subType": "button",
+              "text": "Open 003",
+              "onTap": [
+                {
+                  "action": "toggle",
+                  "path": "overlay.visible.003"
+                }
+              ]
+            },
+            "debugPath": "root[0]"
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "Background 003"
+            },
+            "debugPath": "root[1]"
+          },
+          {
+            "type": "portal",
+            "props": {
+              "__subType": "overlay_entry",
+              "triggerBind": "overlay.visible.003",
+              "x": 42,
+              "y": 56
+            },
+            "debugPath": "root[2]",
+            "slots": {
+              "content": {
+                "type": "box:col",
+                "props": {
+                  "gap": 8
+                },
+                "debugPath": "root[2].slots[content]",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Overlay entry 003"
+                    },
+                    "debugPath": "root[2].slots[content][0]"
+                  },
+                  {
+                    "type": "action",
+                    "props": {
+                      "__subType": "button",
+                      "text": "Inc Overlay entry 003",
+                      "onTap": [
+                        {
+                          "action": "increment",
+                          "path": "overlay.count.003",
+                          "amount": 1
+                        }
+                      ]
+                    },
+                    "debugPath": "root[2].slots[content][1]"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "action",
+            "props": {
+              "__subType": "button",
+              "text": "Close 003",
+              "onTap": [
+                {
+                  "action": "toggle",
+                  "path": "overlay.visible.003"
+                }
+              ]
+            },
+            "debugPath": "root[3]"
+          }
+        ]
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "props.__subType",
+      "equals": "overlay_entry"
+    },
+    {
+      "path": "props.triggerBind",
+      "equals": "overlay.visible.003"
+    },
+    {
+      "path": "props.x",
+      "equals": 42
+    },
+    {
+      "path": "props.y",
+      "equals": 56
+    },
+    {
+      "path": "slots.content.type",
+      "equals": "box:col"
+    },
+    {
+      "path": "slots.content.children.length",
+      "greaterThan": 0
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "tap",
+    "description": "Open overlay entry 003, verify its mount at (42, 56), then close it again."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectNothing",
+      "text": "Overlay entry 003"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Open 003"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectText",
+      "text": "Overlay entry 003"
+    },
+    {
+      "action": "expectGeometry",
+      "finder": {
+        "type": "text",
+        "match": "Overlay entry 003"
+      },
+      "rect": {
+        "left": 42,
+        "top": 56,
+        "tolerance": 4
+      }
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Inc Overlay entry 003"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectState",
+      "path": "overlay.count.003",
+      "equals": 1
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Close 003"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectNothing",
+      "text": "Overlay entry 003"
+    }
+  ]
+}

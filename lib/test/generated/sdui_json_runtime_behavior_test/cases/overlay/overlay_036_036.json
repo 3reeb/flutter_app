@@ -1,0 +1,264 @@
+{
+  "__meta": {
+    "id": "sheet-036-sheet-036",
+    "title": "Sheet edge and padding #036",
+    "description": "Open a sheet pinned to the top edge with alignment topRight and verify its trigger, padding, and dismissal flow for case 036.",
+    "tags": [
+      "overlay",
+      "sheet",
+      "edge",
+      "execution"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "state": {
+      "overlay.visible.036": false,
+      "overlay.count.036": 0
+    },
+    "type": "box:col",
+    "props": {
+      "width": 800,
+      "height": 600,
+      "gap": 10,
+      "padding": 0
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Sheet background 036"
+        }
+      },
+      {
+        "type": "portal:sheet",
+        "props": {
+          "edge": "top",
+          "sheetAlignment": "topRight",
+          "showDragHandle": false,
+          "clipSheet": false,
+          "triggerBind": "overlay.visible.036",
+          "sheetPaddingTop": 6,
+          "sheetPaddingBottom": 8,
+          "sheetPaddingLeft": 7,
+          "sheetPaddingRight": 9,
+          "bgEffect": "zoomBack",
+          "useSafeArea": true
+        },
+        "slots": {
+          "trigger": {
+            "type": "action:button",
+            "props": {
+              "text": "Open sheet 036",
+              "onTap": [
+                {
+                  "action": "toggle",
+                  "path": "overlay.visible.036"
+                }
+              ]
+            }
+          },
+          "content": {
+            "type": "box:col",
+            "props": {
+              "gap": 6
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Sheet body 036"
+                }
+              },
+              {
+                "type": "action:button",
+                "props": {
+                  "text": "Inc Sheet 036",
+                  "onTap": [
+                    {
+                      "action": "increment",
+                      "path": "overlay.count.036",
+                      "amount": 3
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "overlay.visible.036": false,
+        "overlay.count.036": 0
+      }
+    },
+    "debugPath": "root.store_provider",
+    "children": [
+      {
+        "type": "box:col",
+        "props": {
+          "width": 800,
+          "height": 600,
+          "gap": 10,
+          "padding": 0
+        },
+        "debugPath": "root",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Sheet background 036"
+            },
+            "debugPath": "root[0]"
+          },
+          {
+            "type": "portal",
+            "props": {
+              "__subType": "sheet",
+              "edge": "top",
+              "sheetAlignment": "topRight",
+              "showDragHandle": false,
+              "clipSheet": false,
+              "triggerBind": "overlay.visible.036",
+              "sheetPaddingTop": 6,
+              "sheetPaddingBottom": 8,
+              "sheetPaddingLeft": 7,
+              "sheetPaddingRight": 9,
+              "bgEffect": "zoomBack",
+              "useSafeArea": true
+            },
+            "debugPath": "root[1]",
+            "slots": {
+              "trigger": {
+                "type": "action",
+                "props": {
+                  "__subType": "button",
+                  "text": "Open sheet 036",
+                  "onTap": [
+                    {
+                      "action": "toggle",
+                      "path": "overlay.visible.036"
+                    }
+                  ]
+                },
+                "debugPath": "root[1].slots[trigger]"
+              },
+              "content": {
+                "type": "box:col",
+                "props": {
+                  "gap": 6
+                },
+                "debugPath": "root[1].slots[content]",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Sheet body 036"
+                    },
+                    "debugPath": "root[1].slots[content][0]"
+                  },
+                  {
+                    "type": "action",
+                    "props": {
+                      "__subType": "button",
+                      "text": "Inc Sheet 036",
+                      "onTap": [
+                        {
+                          "action": "increment",
+                          "path": "overlay.count.036",
+                          "amount": 3
+                        }
+                      ]
+                    },
+                    "debugPath": "root[1].slots[content][1]"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "props.__subType",
+      "equals": "sheet"
+    },
+    {
+      "path": "props.edge",
+      "equals": "top"
+    },
+    {
+      "path": "props.sheetAlignment",
+      "equals": "topRight"
+    },
+    {
+      "path": "props.showDragHandle",
+      "equals": false
+    },
+    {
+      "path": "props.clipSheet",
+      "equals": false
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "tap",
+    "description": "Open a sheet on the top edge, verify content, and dismiss it with an outside tap."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Open sheet 036"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectText",
+      "text": "Sheet body 036"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Inc Sheet 036"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectState",
+      "path": "overlay.count.036",
+      "equals": 3
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Sheet background 036"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectNothing",
+      "text": "Sheet body 036"
+    }
+  ]
+}

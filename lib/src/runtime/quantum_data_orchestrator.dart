@@ -110,7 +110,6 @@ abstract final class QuantumDataOrchestrator {
     return <dynamic>[steps];
   }
 
-
   static void _initializeSlices(String parentNamespace,
       Map<String, dynamic> slicesDef, BuildContext? ctx) {
     slicesDef.forEach((sliceName, rawDef) {
@@ -118,32 +117,7 @@ abstract final class QuantumDataOrchestrator {
 
       final def = Map<String, dynamic>.from(rawDef);
       final ns = '$parentNamespace.$sliceName';
-      final slice = QLStoreSlice(
-        namespace: ns,
-        schema: def['schema']?.toString(),
-        dataSource: def['dataSource']?.toString(),
-        state: def['state'] is Map
-            ? Map<String, dynamic>.from(def['state'] as Map)
-            : const <String, dynamic>{},
-        computed: def['computed'] is Map
-            ? Map<String, dynamic>.from(def['computed'] as Map)
-            : const <String, dynamic>{},
-        mutations: def['mutations'] is Map
-            ? Map<String, dynamic>.from(def['mutations'] as Map)
-            : const <String, dynamic>{},
-        queries: def['queries'] is Map
-            ? Map<String, dynamic>.from(def['queries'] as Map)
-            : const <String, dynamic>{},
-        pipelines: def['pipelines'] is Map
-            ? Map<String, dynamic>.from(def['pipelines'] as Map)
-            : const <String, dynamic>{},
-        strategies: def['strategies'] is Map
-            ? Map<String, dynamic>.from(def['strategies'] as Map)
-            : const <String, dynamic>{},
-        metadata: def['metadata'] is Map
-            ? Map<String, dynamic>.from(def['metadata'] as Map)
-            : const <String, dynamic>{},
-      );
+      final slice = QLStoreSlice.fromMap(ns, Map<String, dynamic>.from(def));
 
       QLSliceRegistry.instance.mount(slice);
       _registerSlicePipelines(ns, slice, ctx);
@@ -218,7 +192,8 @@ abstract final class QuantumDataOrchestrator {
 
       QLPipelineRegistry.instance.register(pipeline);
 
-      final String? bindPath = cfg['bind']?.toString() ?? cfg['stateKey']?.toString();
+      final String? bindPath =
+          cfg['bind']?.toString() ?? cfg['stateKey']?.toString();
       if (bindPath != null && bindPath.isNotEmpty) {
         void syncBoundState() {
           final rows = List.generate(pipeline.visibleCount, (i) {
@@ -245,7 +220,8 @@ abstract final class QuantumDataOrchestrator {
     sources.forEach((sourceId, config) {
       final mapConfig = QLRuntimeSupport.mapOf(config);
       final String signalKey = 'dataSources.$sourceId';
-      final handle = QLDataSourceRegistry.instance.register(sourceId.toString(), mapConfig);
+      final handle = QLDataSourceRegistry.instance
+          .register(sourceId.toString(), mapConfig);
       store.bindAsync(signalKey, handle.signal);
 
       if (mapConfig['lifecycle'] == 'onMount' && ctx != null && ctx.mounted) {
@@ -328,6 +304,7 @@ abstract final class QuantumDataOrchestrator {
     // We return null immediately, as the asyncSignal handles the reactive state distribution.
     return null;
   }
+
   /// Export a structured snapshot of the current orchestrator state.
   ///
   /// This is safe to embed in SDUI JSON because it only contains metadata

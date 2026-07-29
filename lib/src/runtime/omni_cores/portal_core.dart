@@ -410,12 +410,20 @@ Widget _buildPortal(QLContext rawCtx) {
         subType == 'dropdown' ||
         subType == 'flyout' ||
         subType == 'context_panel') {
+      final RenderBox? box = mountCtx.findRenderObject() as RenderBox?;
+      final Offset origin = box?.localToGlobal(Offset.zero) ?? Offset.zero;
+      final Size sz = box?.size ?? Size.zero;
       return QLSpatialConfig.surface(
-        pattern: QLSurfacePattern.temporaryOverlay,
+        pattern: QLSurfacePattern.anchoredFloating,
         dismissible: true,
         allowUnderlyingInteraction: underlying,
         anchor: Alignment.topLeft,
         sheetAlignment: Alignment.topLeft,
+        targetLeft: origin.dx,
+        targetTop: origin.dy,
+        targetRight: origin.dx + sz.width,
+        targetBottom: origin.dy + sz.height,
+        matchAnchorWidth: ctx.boolean('matchAnchorWidth'),
         constraints: constraints,
         bgZoomDepth: zoomDepth,
         bgBlurSigma: blurSigma,
@@ -492,62 +500,29 @@ Widget _buildPortal(QLContext rawCtx) {
   }
 
   if (subType == 'toast') {
-    return Builder(builder: (triggerCtx) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (triggerCtx.mounted) {
-          triggerCtx.mountOverlay(
-            buildConfig(triggerCtx),
-            (c, close) => buildContent(),
-          );
-        }
-      });
-      return const SizedBox.shrink();
-    });
+    return _QLToastAutoMounter(
+      configBuilder: buildConfig,
+      contentBuilder: buildContent,
+    );
   }
 
-  if (subType == 'menu' ||
+  final String triggerBind = ctx.string('triggerBind');
+  final bool pointerDriven = subType == 'menu' ||
       subType == 'context_menu' ||
       subType == 'popover' ||
       subType == 'dropdown' ||
       subType == 'flyout' ||
       subType == 'context_panel' ||
-      subType == 'anchored_floating') {
-    return Builder(builder: (triggerCtx) {
-      return Listener(
-        behavior: HitTestBehavior.translucent,
-        onPointerUp: (_) {
-          if (triggerCtx.mounted) {
-            triggerCtx.mountOverlay(
-              buildConfig(triggerCtx),
-              (c, close) => buildContent(),
-            );
-          }
-        },
-        child: buildTrigger(),
-      );
-    });
-  }
+      subType == 'anchored_floating';
 
-  Offset? pointerDownPos;
-  return Builder(builder: (triggerCtx) {
-    return Listener(
-      behavior: HitTestBehavior.translucent,
-      onPointerDown: (e) => pointerDownPos = e.position,
-      onPointerUp: (e) {
-        if (pointerDownPos != null &&
-            (e.position - pointerDownPos!).distance < 15) {
-          if (triggerCtx.mounted) {
-            triggerCtx.mountOverlay(
-              buildConfig(triggerCtx),
-              (c, close) => buildContent(),
-            );
-          }
-        }
-        pointerDownPos = null;
-      },
-      child: buildTrigger(),
-    );
-  });
+  return _QLTriggerBindPortal(
+    triggerBind: triggerBind,
+    store: ctx.store,
+    openOnPointerUp: pointerDriven,
+    configBuilder: buildConfig,
+    contentBuilder: buildContent,
+    triggerBuilder: buildTrigger,
+  );
 }
 
 class _QLInlineSurfaceHost extends StatefulWidget {
@@ -690,12 +665,24 @@ class _QLOverlayEntryNode extends StatefulWidget {
 
 class _QLOverlayEntryNodeState extends State<_QLOverlayEntryNode> {
   VoidCallback? _closeOverlay;
+  bool _pendingOpen = false;
 
   @override
   void initState() {
     super.initState();
     widget.triggerSig.addListener(_onTriggerChanged);
-    _onTriggerChanged();
+    if (widget.triggerSig.value == true) {
+      _pendingOpen = true;
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_pendingOpen) {
+      _pendingOpen = false;
+      _openOverlay();
+    }
   }
 
   @override
@@ -708,21 +695,23 @@ class _QLOverlayEntryNodeState extends State<_QLOverlayEntryNode> {
     }
   }
 
+  void _openOverlay() {
+    if (!mounted || _closeOverlay != null) return;
+    context.mountOverlay(
+      QLSpatialConfig.window(
+        initialX: widget.ctx.number('x', fallback: 0),
+        initialY: widget.ctx.number('y', fallback: 0),
+      ),
+      (c, close) {
+        _closeOverlay = close;
+        return Q(widget.ctx.node.style ?? '', children: widget.ctx.children);
+      },
+    );
+  }
+
   void _onTriggerChanged() {
     if (widget.triggerSig.value == true && _closeOverlay == null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        context.mountOverlay(
-          QLSpatialConfig.window(
-            initialX: widget.ctx.number('x', fallback: 0),
-            initialY: widget.ctx.number('y', fallback: 0),
-          ),
-          (c, close) {
-            _closeOverlay = close;
-            return Q(widget.ctx.node.style ?? '', children: widget.ctx.children);
-          },
-        );
-      });
+      _openOverlay();
     } else if (widget.triggerSig.value == false && _closeOverlay != null) {
       _closeOverlay?.call();
       _closeOverlay = null;
@@ -734,6 +723,145 @@ class _QLOverlayEntryNodeState extends State<_QLOverlayEntryNode> {
     widget.triggerSig.removeListener(_onTriggerChanged);
     _closeOverlay?.call();
     super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
+}
+
+// ─── _QLTriggerBindPortal ─────────────────────────────────────────────────────
+
+class _QLTriggerBindPortal extends StatefulWidget {
+  final QLSpatialConfig Function(BuildContext) configBuilder;
+  final Widget Function() contentBuilder;
+  final Widget Function() triggerBuilder;
+  final String triggerBind;
+  final QLDataStore store;
+  final bool openOnPointerUp;
+
+  const _QLTriggerBindPortal({
+    required this.configBuilder,
+    required this.contentBuilder,
+    required this.triggerBuilder,
+    required this.triggerBind,
+    required this.store,
+    required this.openOnPointerUp,
+  });
+
+  @override
+  State<_QLTriggerBindPortal> createState() => _QLTriggerBindPortalState();
+}
+
+class _QLTriggerBindPortalState extends State<_QLTriggerBindPortal> {
+  QLSignal<dynamic>? _signal;
+  VoidCallback? _closeOverlay;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.triggerBind.isNotEmpty) {
+      _signal = widget.store.signal(widget.triggerBind);
+      _signal!.addListener(_onSignalChanged);
+    }
+  }
+
+  @override
+  void dispose() {
+    _signal?.removeListener(_onSignalChanged);
+    _closeOverlay?.call();
+    _closeOverlay = null;
+    super.dispose();
+  }
+
+  void _onSignalChanged() {
+    if (!mounted) return;
+    final value = _signal?.value;
+    if (value == true && _closeOverlay == null) {
+      _openOverlay();
+    } else if (value == false && _closeOverlay != null) {
+      _closeOverlay!.call();
+      _closeOverlay = null;
+    }
+  }
+
+  void _openOverlay() {
+    if (!mounted || _closeOverlay != null) return;
+    context.mountOverlay(
+      widget.configBuilder(context),
+      (c, close) {
+        _closeOverlay = () {
+          close();
+          _closeOverlay = null;
+          _syncStateToFalse();
+        };
+        return widget.contentBuilder();
+      },
+    ).then((_) {
+      if (mounted) {
+        _closeOverlay = null;
+        _syncStateToFalse();
+      }
+    });
+  }
+
+  void _syncStateToFalse() {
+    if (widget.triggerBind.isNotEmpty) {
+      final current = widget.store.get(widget.triggerBind);
+      if (current == true) widget.store.set(widget.triggerBind, false);
+    }
+  }
+
+  void _onPointerUp(PointerUpEvent _) {
+    if (widget.triggerBind.isNotEmpty) {
+      final current = widget.store.get(widget.triggerBind);
+      widget.store.set(widget.triggerBind, current != true);
+    } else {
+      _openOverlay();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final trigger = widget.triggerBuilder();
+    if (widget.openOnPointerUp) {
+      return Listener(
+        behavior: HitTestBehavior.translucent,
+        onPointerUp: _onPointerUp,
+        child: trigger,
+      );
+    }
+    return trigger;
+  }
+}
+
+// ─── _QLToastAutoMounter ──────────────────────────────────────────────────────
+
+class _QLToastAutoMounter extends StatefulWidget {
+  final QLSpatialConfig Function(BuildContext) configBuilder;
+  final Widget Function() contentBuilder;
+
+  const _QLToastAutoMounter({
+    required this.configBuilder,
+    required this.contentBuilder,
+  });
+
+  @override
+  State<_QLToastAutoMounter> createState() => _QLToastAutoMounterState();
+}
+
+class _QLToastAutoMounterState extends State<_QLToastAutoMounter> {
+  bool _launched = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_launched) {
+      _launched = true;
+      context.mountOverlay(
+        widget.configBuilder(context),
+        (c, close) => widget.contentBuilder(),
+      );
+    }
   }
 
   @override

@@ -1,0 +1,256 @@
+{
+  "__meta": {
+    "id": "dialog-028-dialog-028",
+    "title": "Dialog barrier and effect #028",
+    "description": "Open a dialog with barrierDismissible=True, effect=zoomBack, and safe area=True, then dismiss it with an outside tap for case 028.",
+    "tags": [
+      "overlay",
+      "dialog",
+      "barrier",
+      "execution"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "state": {
+      "overlay.visible.028": false,
+      "overlay.count.028": 0
+    },
+    "type": "box:col",
+    "props": {
+      "width": 800,
+      "height": 600,
+      "gap": 10,
+      "padding": 0
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Dialog background 028"
+        }
+      },
+      {
+        "type": "portal:dialog",
+        "props": {
+          "barrierDismissible": true,
+          "extrude3D": false,
+          "effect": "zoomBack",
+          "useSafeArea": true,
+          "triggerBind": "overlay.visible.028"
+        },
+        "slots": {
+          "trigger": {
+            "type": "action:button",
+            "props": {
+              "text": "Open dialog 028",
+              "onTap": [
+                {
+                  "action": "toggle",
+                  "path": "overlay.visible.028"
+                }
+              ]
+            }
+          },
+          "content": {
+            "type": "box:col",
+            "props": {
+              "gap": 6
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Dialog body 028"
+                }
+              },
+              {
+                "type": "action:button",
+                "props": {
+                  "text": "Inc Dialog 028",
+                  "onTap": [
+                    {
+                      "action": "increment",
+                      "path": "overlay.count.028",
+                      "amount": 1
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "overlay.visible.028": false,
+        "overlay.count.028": 0
+      }
+    },
+    "debugPath": "root.store_provider",
+    "children": [
+      {
+        "type": "box:col",
+        "props": {
+          "width": 800,
+          "height": 600,
+          "gap": 10,
+          "padding": 0
+        },
+        "debugPath": "root",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Dialog background 028"
+            },
+            "debugPath": "root[0]"
+          },
+          {
+            "type": "portal",
+            "props": {
+              "__subType": "dialog",
+              "barrierDismissible": true,
+              "extrude3D": false,
+              "effect": "zoomBack",
+              "useSafeArea": true,
+              "triggerBind": "overlay.visible.028"
+            },
+            "debugPath": "root[1]",
+            "slots": {
+              "trigger": {
+                "type": "action",
+                "props": {
+                  "__subType": "button",
+                  "text": "Open dialog 028",
+                  "onTap": [
+                    {
+                      "action": "toggle",
+                      "path": "overlay.visible.028"
+                    }
+                  ]
+                },
+                "debugPath": "root[1].slots[trigger]"
+              },
+              "content": {
+                "type": "box:col",
+                "props": {
+                  "gap": 6
+                },
+                "debugPath": "root[1].slots[content]",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Dialog body 028"
+                    },
+                    "debugPath": "root[1].slots[content][0]"
+                  },
+                  {
+                    "type": "action",
+                    "props": {
+                      "__subType": "button",
+                      "text": "Inc Dialog 028",
+                      "onTap": [
+                        {
+                          "action": "increment",
+                          "path": "overlay.count.028",
+                          "amount": 1
+                        }
+                      ]
+                    },
+                    "debugPath": "root[1].slots[content][1]"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "props.__subType",
+      "equals": "dialog"
+    },
+    {
+      "path": "props.barrierDismissible",
+      "equals": true
+    },
+    {
+      "path": "props.extrude3D",
+      "equals": false
+    },
+    {
+      "path": "props.effect",
+      "equals": "zoomBack"
+    },
+    {
+      "path": "props.useSafeArea",
+      "equals": true
+    },
+    {
+      "path": "slots.trigger.props.text",
+      "equals": "Open dialog 028"
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "tap",
+    "description": "Open a modal dialog, increment an internal counter, then dismiss with an outside tap."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Open dialog 028"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectText",
+      "text": "Dialog body 028"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Inc Dialog 028"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectState",
+      "path": "overlay.count.028",
+      "equals": 1
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Dialog background 028"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectNothing",
+      "text": "Dialog body 028"
+    }
+  ]
+}

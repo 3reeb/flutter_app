@@ -1,0 +1,240 @@
+{
+  "__meta": {
+    "id": "fullscreen-099-fullscreen_surface-099",
+    "title": "Fullscreen barrier case #099",
+    "description": "Open a fullscreen surface and verify its barrier and safe-area flags for case 099.",
+    "tags": [
+      "overlay",
+      "fullscreen",
+      "modal",
+      "execution"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "state": {
+      "overlay.visible.099": false,
+      "overlay.count.099": 0
+    },
+    "type": "box:col",
+    "props": {
+      "width": 800,
+      "height": 600,
+      "gap": 8,
+      "padding": 0
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Fullscreen background 099"
+        }
+      },
+      {
+        "type": "portal:fullscreen_surface",
+        "props": {
+          "barrierDismissible": false,
+          "useSafeArea": true,
+          "extrude3D": false,
+          "triggerBind": "overlay.visible.099"
+        },
+        "slots": {
+          "trigger": {
+            "type": "action:button",
+            "props": {
+              "text": "Open fullscreen 099",
+              "onTap": [
+                {
+                  "action": "toggle",
+                  "path": "overlay.visible.099"
+                }
+              ]
+            }
+          },
+          "content": {
+            "type": "box:col",
+            "props": {
+              "gap": 6
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Fullscreen body 099"
+                }
+              },
+              {
+                "type": "action:button",
+                "props": {
+                  "text": "Fullscreen inc 099",
+                  "onTap": [
+                    {
+                      "action": "increment",
+                      "path": "overlay.count.099",
+                      "amount": 7
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "overlay.visible.099": false,
+        "overlay.count.099": 0
+      }
+    },
+    "debugPath": "root.store_provider",
+    "children": [
+      {
+        "type": "box:col",
+        "props": {
+          "width": 800,
+          "height": 600,
+          "gap": 8,
+          "padding": 0
+        },
+        "debugPath": "root",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Fullscreen background 099"
+            },
+            "debugPath": "root[0]"
+          },
+          {
+            "type": "portal",
+            "props": {
+              "__subType": "fullscreen_surface",
+              "barrierDismissible": false,
+              "useSafeArea": true,
+              "extrude3D": false,
+              "triggerBind": "overlay.visible.099"
+            },
+            "debugPath": "root[1]",
+            "slots": {
+              "trigger": {
+                "type": "action",
+                "props": {
+                  "__subType": "button",
+                  "text": "Open fullscreen 099",
+                  "onTap": [
+                    {
+                      "action": "toggle",
+                      "path": "overlay.visible.099"
+                    }
+                  ]
+                },
+                "debugPath": "root[1].slots[trigger]"
+              },
+              "content": {
+                "type": "box:col",
+                "props": {
+                  "gap": 6
+                },
+                "debugPath": "root[1].slots[content]",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Fullscreen body 099"
+                    },
+                    "debugPath": "root[1].slots[content][0]"
+                  },
+                  {
+                    "type": "action",
+                    "props": {
+                      "__subType": "button",
+                      "text": "Fullscreen inc 099",
+                      "onTap": [
+                        {
+                          "action": "increment",
+                          "path": "overlay.count.099",
+                          "amount": 7
+                        }
+                      ]
+                    },
+                    "debugPath": "root[1].slots[content][1]"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "props.__subType",
+      "equals": "fullscreen_surface"
+    },
+    {
+      "path": "props.barrierDismissible",
+      "equals": false
+    },
+    {
+      "path": "props.useSafeArea",
+      "equals": true
+    },
+    {
+      "path": "props.extrude3D",
+      "equals": false
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "tap",
+    "description": "Open a fullscreen surface and verify it reacts to barrier dismissal as configured."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Open fullscreen 099"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectText",
+      "text": "Fullscreen body 099"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Fullscreen inc 099"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectState",
+      "path": "overlay.count.099",
+      "equals": 7
+    },
+    {
+      "action": "tapAt",
+      "x": 760,
+      "y": 560
+    },
+    {
+      "action": "pumpAndSettle"
+    }
+  ]
+}

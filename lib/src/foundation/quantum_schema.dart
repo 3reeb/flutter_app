@@ -18,6 +18,9 @@ class QLBlockPayload {
       };
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+// REPLACE: QLSchemaFieldSpec
+// ════════════════════════════════════════════════════════════════════════════
 class QLSchemaFieldSpec {
   final String name;
   final String path;
@@ -42,6 +45,14 @@ class QLSchemaFieldSpec {
   final Map<String, dynamic> streamingPolicy;
   final Map<String, dynamic> cachePolicy;
   final dynamic Function(Map<String, dynamic> record)? compute;
+
+  // 🚀 NEW ENHANCEMENTS FOR GENERAL PURPOSE FORMS
+  final String? pattern;
+  final String? matchField;
+  final String? transform;
+  final List<String> dependencies;
+  final Map<String, String> errorMessages;
+
   int index;
 
   QLSchemaFieldSpec({
@@ -68,6 +79,11 @@ class QLSchemaFieldSpec {
     this.streamingPolicy = const {},
     this.cachePolicy = const {},
     this.compute,
+    this.pattern,
+    this.matchField,
+    this.transform,
+    this.dependencies = const [],
+    this.errorMessages = const {},
     this.index = -1,
   });
 
@@ -882,6 +898,9 @@ class QLSchemaBlueprint {
   }
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+// REPLACE: QLSchemaCompiler
+// ════════════════════════════════════════════════════════════════════════════
 abstract final class QLSchemaCompiler {
   static final Map<String, Map<String, dynamic>> _rawDefinitions = {};
   static final Map<String, QLSchemaBlueprint> _compiled = {};
@@ -894,7 +913,6 @@ abstract final class QLSchemaCompiler {
     String schemaName,
     Map<String, dynamic> definition,
   ) {
-    // 🚀 FIX: Automatically unwrap root-level object schemas globally
     if (definition['type'] == 'object' && definition['fields'] is Map) {
       definition = Map<String, dynamic>.from(definition['fields'] as Map);
     }
@@ -994,6 +1012,7 @@ abstract final class QLSchemaCompiler {
       if (mediaPolicy['allowedMimeTypes'] is List)
         ...(mediaPolicy['allowedMimeTypes'] as List).map((e) => e.toString()),
     }.toList(growable: false);
+
     final minSizeBytes = _intFromAny(asMap['minSizeBytes'] ??
         asMap['minBytes'] ??
         mediaPolicy['minBytes'] ??
@@ -1010,6 +1029,7 @@ abstract final class QLSchemaCompiler {
     final streamingPolicy =
         _mergeMaps(asMap['streaming'], mediaPolicy['streaming']);
     final cachePolicy = _mergeMaps(asMap['cache'], mediaPolicy['cache']);
+
     if (blocks != null) {
       if (blocks is List) {
         for (final b in blocks) {
@@ -1053,6 +1073,25 @@ abstract final class QLSchemaCompiler {
         ? asMap['compute'] as dynamic Function(Map<String, dynamic>)
         : null;
 
+    // 🚀 NEW ENHANCEMENT PARSERS
+    final pattern = asMap['pattern']?.toString();
+    final matchField =
+        asMap['matchField']?.toString() ?? asMap['matches']?.toString();
+    final transform = asMap['transform']?.toString();
+
+    final dependencies = <String>[
+      if (matchField != null) matchField,
+      if (asMap['dependencies'] is List)
+        ...(asMap['dependencies'] as List).map((e) => e.toString())
+    ];
+
+    final errorMessages = <String, String>{};
+    if (asMap['errors'] is Map) {
+      for (final entry in (asMap['errors'] as Map).entries) {
+        errorMessages[entry.key.toString()] = entry.value.toString();
+      }
+    }
+
     return QLSchemaFieldSpec(
       name: name,
       path: path,
@@ -1077,6 +1116,11 @@ abstract final class QLSchemaCompiler {
       streamingPolicy: streamingPolicy,
       cachePolicy: cachePolicy,
       compute: compute,
+      pattern: pattern,
+      matchField: matchField,
+      transform: transform,
+      dependencies: dependencies,
+      errorMessages: errorMessages,
     );
   }
 
@@ -1413,14 +1457,16 @@ extension QLSchemaBlueprintSmartSelect on QLSchemaBlueprint {
     if (desired.isEmpty) {
       return _qlDeepMergeSchemaMaps(cached, incoming);
     }
-
-    final merged = Map<String, dynamic>.from(cached);
+    final filteredIncoming = <String, dynamic>{};
     for (final path in desired) {
       final value = _readAt(incoming, QLPathUtils.resolve(path));
-      if (value == null) continue;
-      _writeAt(merged, QLPathUtils.resolve(path), value);
+      if (value != null) {
+        _writeAt(filteredIncoming, QLPathUtils.resolve(path), value);
+      }
     }
-    return _qlDeepMergeSchemaMaps(merged, incoming);
+
+    // Deep merge the newly filtered data into the cached data safely
+    return _qlDeepMergeSchemaMaps(cached, filteredIncoming);
   }
 }
 

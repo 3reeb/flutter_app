@@ -16,6 +16,7 @@ import '../ui/quantum_components.dart';
 import '../ui/quantum_behaviors.dart';
 import '../ui/quantum_navigation_engine.dart';
 import 'quantum_data_orchestrator.dart';
+import 'quantum_data_state.dart';
 import 'quantum_omni_registry.dart';
 import 'quantum_core_schema_registry.dart';
 import 'quantum_sdui_type_engine.dart';
@@ -37,6 +38,65 @@ void initQuantumBuiltIns(QuantumVM vm) {
   registerOmniComponents(vm);
   registerConnectOmniNodes(vm);
   QuantumCoreSchemaRegistry.instance.installDefaults();
+
+  QLSliceResourceRegistry.instance.registerScheme('media', (ref, ctx) {
+    return <String, dynamic>{
+      'kind': 'media',
+      'id': ref.id,
+      'uri': ref.uri,
+      'scheme': ref.scheme,
+      'lazy': ref.lazy,
+      'streaming': ref.streaming,
+      'cacheable': ref.cacheable,
+      if (ref.mimeType != null) 'mimeType': ref.mimeType,
+      if (ref.metadata.isNotEmpty) 'metadata': ref.metadata,
+      'slice': ctx.namespace,
+    };
+  });
+
+  QLSliceResourceRegistry.instance.registerScheme('file', (ref, ctx) {
+    return <String, dynamic>{
+      'kind': 'file',
+      'id': ref.id,
+      'uri': ref.uri,
+      'scheme': ref.scheme,
+      'lazy': ref.lazy,
+      'streaming': ref.streaming,
+      'cacheable': ref.cacheable,
+      if (ref.mimeType != null) 'mimeType': ref.mimeType,
+      if (ref.metadata.isNotEmpty) 'metadata': ref.metadata,
+      'slice': ctx.namespace,
+    };
+  });
+
+  QLSliceResourceRegistry.instance.registerScheme('stream', (ref, ctx) {
+    return <String, dynamic>{
+      'kind': 'stream',
+      'id': ref.id,
+      'uri': ref.uri,
+      'scheme': ref.scheme,
+      'lazy': ref.lazy,
+      'streaming': true,
+      'cacheable': ref.cacheable,
+      if (ref.metadata.isNotEmpty) 'metadata': ref.metadata,
+      'slice': ctx.namespace,
+    };
+  });
+
+  QLSliceResourceRegistry.instance.registerScheme('socket', (ref, ctx) {
+    return <String, dynamic>{
+      'kind': 'socket',
+      'id': ref.id,
+      'uri': ref.uri,
+      'scheme': ref.scheme,
+      'lazy': ref.lazy,
+      'streaming': true,
+      'cacheable': ref.cacheable,
+      if (ref.metadata.isNotEmpty) 'metadata': ref.metadata,
+      'slice': ctx.namespace,
+    };
+  });
+
 
   // Register SDUI JSON DSL definitions (templates & layouts)
   vm.registerJsonDslPlugins();

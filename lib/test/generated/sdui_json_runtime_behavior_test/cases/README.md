@@ -18,3 +18,7 @@ The `execution/` folder holds WidgetTester-backed runtime execution cases. These
 
 
 The `layout_geometry/` folder adds spatial checks for rows, columns, alignment, and sibling ordering. Those cases use the new `expectGeometry` and `expectOrder` execution steps to catch spacing regressions like `justify-between` not distributing free space.
+
+Overlay fixtures live under `cases/overlay/` and cover portal-driven overlays, floating surfaces, inline panels, and fullscreen presentations with live execution checks.
+
+The `overlay/` folder adds portal and overlay runtime cases. These tests exercise trigger bindings, fixed placement, window movement, barrier dismissal, anchored floating surfaces, inline panels, toasts, and fullscreen surfaces with WidgetTester execution steps.

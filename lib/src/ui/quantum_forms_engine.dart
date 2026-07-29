@@ -9,6 +9,7 @@ import 'dart:async';
 import 'dart:collection';
 import '../foundation/quantum_core.dart';
 import 'package:quantum_layout/quantum.dart';
+
 typedef QLDataMiddleware<T> = T Function(T incoming, T current);
 
 class QLChangeEvent<T> {
@@ -45,7 +46,12 @@ class _QLObserver {
   const _QLObserver(this.pattern, this.callback);
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+// HIGH PERFORMANCE SSOT DATA NODE (quantum_forms_engine.dart)
+// ════════════════════════════════════════════════════════════════════════════
 abstract class QLDataNode<T> implements QLDisposable {
+  static final Map<String, QLDataNode> globalNodes = {};
+
   final String path;
   final QLGraphController graph;
   final T initialValue;
@@ -66,6 +72,15 @@ abstract class QLDataNode<T> implements QLDisposable {
   bool _disposed = false;
   StreamSubscription<T>? _streamSub;
 
+  // 🚀 COLLABORATION & SSOT LOCKS
+  bool _isStoreBound = false;
+  bool get isStoreBound => _isStoreBound; // 🚀 FIX: Exposed publicly
+
+  bool _isSyncingWithStore = false;
+  QLDataStore? _boundStore;
+  String? _boundPath;
+  Timer? _remoteValidationDebouncer;
+
   QLDataNode({
     required this.path,
     required this.graph,
@@ -79,6 +94,8 @@ abstract class QLDataNode<T> implements QLDisposable {
     Map<String, dynamic> initialMeta = const {},
     int initialState = QLNodeState.idle,
   }) {
+    globalNodes[path] = this;
+
     data = QLSignal<T>(initialValue);
     stateFlags = QLSignal<int>(initialState);
     errors = QLSignal<List<QLNodeError>>(<QLNodeError>[]);
@@ -92,40 +109,121 @@ abstract class QLDataNode<T> implements QLDisposable {
         !hasState(QLNodeState.sleeping)) {
       scheduleMicrotask(validate);
     } else if (syncValidators.isNotEmpty && !hasState(QLNodeState.sleeping)) {
-      // 🚀 FIX: Must notify the graph of initial validation errors so the form knows it is invalid!
       _runSyncValidation(initialValue, notifyGraph: true);
     }
   }
 
-  bool get isDisposed => _disposed;
-  bool get isDirty => hasState(QLNodeState.dirty);
-  bool get isValid => !hasState(QLNodeState.hasError);
-  bool get isValidating => hasState(QLNodeState.validating);
-  bool get isDisabled =>
-      hasState(QLNodeState.disabled) || hasState(QLNodeState.readOnly);
-  bool get isSleeping => hasState(QLNodeState.sleeping);
-  bool get isReadonly => hasState(QLNodeState.readOnly);
-  bool get isHidden => meta.value['_ql_hidden'] == true;
+  // 🚀 1. ZERO-DUPLICATION BINDING
+  void bindStore(QLDataStore store, String bindPath) {
+    if (_isStoreBound || _disposed) return;
+    _isStoreBound = true;
+    _boundStore = store;
+    _boundPath = bindPath;
 
+    final storeVal = store.get(bindPath);
+    if (storeVal == null) {
+      store.setSilent(bindPath, data.value);
+    } else {
+      data.setSilent(_coerceSafe(storeVal));
+    }
+
+    store.signal(bindPath).addListener(_onRemoteStoreUpdate);
+  }
+
+// 🚀 2. HIGH-PERFORMANCE COERCION (100% Bulletproof Type Checks)
+  T _coerceSafe(dynamic value) {
+    if (value is T) return value;
+
+    if (initialValue is String) {
+      return (value?.toString() ?? '') as T;
+    }
+    if (initialValue is double) {
+      if (value is num) return value.toDouble() as T;
+      return (double.tryParse(value?.toString() ?? '') ?? 0.0) as T;
+    }
+    if (initialValue is int) {
+      if (value is num) return value.toInt() as T;
+      return (int.tryParse(value?.toString() ?? '') ?? 0) as T;
+    }
+    if (initialValue is bool) {
+      return (value == true || value == 'true' || value == 1) as T;
+    }
+    if (initialValue is BigInt) {
+      if (value is num) return BigInt.from(value.toInt()) as T;
+      return (BigInt.tryParse(value?.toString() ?? '') ?? BigInt.zero) as T;
+    }
+
+    // 🚀 NEW: Absolute Array/List Safety
+    if (initialValue is List<String>) {
+      return (value is List
+          ? value.map((e) => e.toString()).toList()
+          : <String>[]) as T;
+    }
+    if (initialValue is List<int>) {
+      return (value is List
+          ? value
+              .map(
+                  (e) => e is num ? e.toInt() : int.tryParse(e.toString()) ?? 0)
+              .toList()
+          : <int>[]) as T;
+    }
+    if (initialValue is List<double>) {
+      return (value is List
+          ? value
+              .map((e) => e is num
+                  ? e.toDouble()
+                  : double.tryParse(e.toString()) ?? 0.0)
+              .toList()
+          : <double>[]) as T;
+    }
+    if (initialValue is List) {
+      return (value is List ? List<dynamic>.from(value) : <dynamic>[]) as T;
+    }
+
+    return value as T; // Fallback for Complex Objects
+  }
+
+  // 🚀 3. COLLABORATIVE DEBOUNCER
+  void _onRemoteStoreUpdate() {
+    if (_disposed || _isSyncingWithStore) return;
+
+    final raw = _boundStore!.get(_boundPath!);
+    final coerced = _coerceSafe(raw);
+
+    if (data.value == coerced) return;
+
+    data.setSilent(coerced);
+    data.forceNotify();
+
+    _remoteValidationDebouncer?.cancel();
+    _remoteValidationDebouncer = Timer(const Duration(milliseconds: 150), () {
+      if (!_disposed && !hasState(QLNodeState.sleeping)) validate();
+    });
+  }
+
+  // 🚀 4. SSOT MUTATION
   @pragma('vm:prefer-inline')
   void mutate(T newValue, {bool shouldValidate = true}) {
-    if (_disposed) return;
-    if (hasState(QLNodeState.hardwareLocked) ||
+    if (_disposed ||
+        hasState(QLNodeState.hardwareLocked) ||
         hasState(QLNodeState.readOnly) ||
-        hasState(QLNodeState.disabled)) {
-      return;
-    }
+        hasState(QLNodeState.disabled)) return;
 
     var processed = newValue;
     if (!hasState(QLNodeState.sleeping) && middlewares.isNotEmpty) {
-      for (final mw in middlewares) {
-        processed = mw(processed, data.value);
-      }
+      for (final mw in middlewares) processed = mw(processed, data.value);
     }
 
     if (data.value == processed) return;
 
     final previous = data.value;
+
+    if (_isStoreBound) {
+      _isSyncingWithStore = true;
+      _boundStore!.set(_boundPath!, processed);
+      _isSyncingWithStore = false;
+    }
+
     data.setSilent(processed);
 
     var newFlags = stateFlags.value | QLNodeState.dirty;
@@ -149,23 +247,26 @@ abstract class QLDataNode<T> implements QLDisposable {
 
   @pragma('vm:prefer-inline')
   void mutateFast(T newValue, {bool applyMiddleware = true}) {
-    if (_disposed) return;
-    if (hasState(QLNodeState.hardwareLocked) ||
+    if (_disposed ||
+        hasState(QLNodeState.hardwareLocked) ||
         hasState(QLNodeState.readOnly) ||
-        hasState(QLNodeState.disabled)) {
-      return;
-    }
+        hasState(QLNodeState.disabled)) return;
 
     var processed = newValue;
     if (applyMiddleware && fastMiddlewares.isNotEmpty) {
-      for (final mw in fastMiddlewares) {
-        processed = mw(processed, data.value);
-      }
+      for (final mw in fastMiddlewares) processed = mw(processed, data.value);
     }
 
     if (data.value == processed) return;
 
     final previous = data.value;
+
+    if (_isStoreBound) {
+      _isSyncingWithStore = true;
+      _boundStore!.set(_boundPath!, processed);
+      _isSyncingWithStore = false;
+    }
+
     data.setSilent(processed);
     stateFlags.setSilent(stateFlags.value | QLNodeState.dirty);
 
@@ -182,15 +283,22 @@ abstract class QLDataNode<T> implements QLDisposable {
     graph.notifyNodeMutated(path);
   }
 
+  bool get isDisposed => _disposed;
+  bool get isDirty => hasState(QLNodeState.dirty);
+  bool get isValid => !hasState(QLNodeState.hasError);
+  bool get isValidating => hasState(QLNodeState.validating);
+  bool get isDisabled =>
+      hasState(QLNodeState.disabled) || hasState(QLNodeState.readOnly);
+  bool get isSleeping => hasState(QLNodeState.sleeping);
+  bool get isReadonly => hasState(QLNodeState.readOnly);
+  bool get isHidden => meta.value['_ql_hidden'] == true;
+
   void setValue(T newValue, {bool shouldValidate = true}) =>
       mutate(newValue, shouldValidate: shouldValidate);
-
   void setSilently(T newValue, {bool keepDirty = true}) {
     if (_disposed) return;
     data.setSilent(newValue);
-    if (keepDirty) {
-      stateFlags.setSilent(stateFlags.value | QLNodeState.dirty);
-    }
+    if (keepDirty) stateFlags.setSilent(stateFlags.value | QLNodeState.dirty);
     data.forceNotify();
     stateFlags.forceNotify();
   }
@@ -199,31 +307,26 @@ abstract class QLDataNode<T> implements QLDisposable {
     if (_disposed) return;
     _streamSub?.cancel();
     addState(QLNodeState.streaming | QLNodeState.hardwareLocked);
-
     T? pending;
     var scheduled = false;
-
     _streamSub = stream.listen((incoming) {
       pending = incoming;
       if (scheduled) return;
       scheduled = true;
-
       scheduleMicrotask(() {
         scheduled = false;
         final value = pending;
         if (value == null || _disposed) return;
-
         removeState(QLNodeState.hardwareLocked);
-        if (validateOnStream) {
+        if (validateOnStream)
           mutate(value as T);
-        } else {
+        else
           mutateFast(value as T);
-        }
         addState(QLNodeState.hardwareLocked);
       });
-    }, onDone: () {
-      removeState(QLNodeState.streaming | QLNodeState.hardwareLocked);
-    });
+    },
+        onDone: () =>
+            removeState(QLNodeState.streaming | QLNodeState.hardwareLocked));
   }
 
   void unbindStream() {
@@ -282,7 +385,6 @@ abstract class QLDataNode<T> implements QLDisposable {
   void hide({bool notify = true}) =>
       updateMeta('_ql_hidden', true, notify: notify);
   void show({bool notify = true}) => removeMeta('_ql_hidden', notify: notify);
-
   void disable({bool notify = true}) {
     addState(QLNodeState.disabled);
     if (notify) stateFlags.forceNotify();
@@ -316,9 +418,8 @@ abstract class QLDataNode<T> implements QLDisposable {
         if (err != null) asyncErrs.add(err);
       }
 
-      if (!_disposed && nonce == _asyncNonce) {
+      if (!_disposed && nonce == _asyncNonce)
         _setErrors(asyncErrs, notifyGraph: true);
-      }
     } finally {
       if (!_disposed) removeState(QLNodeState.validating);
     }
@@ -341,15 +442,13 @@ abstract class QLDataNode<T> implements QLDisposable {
     errors.setSilent(List<QLNodeError>.unmodifiable(newErrors));
     errors.forceNotify();
 
-    if (hasErrorNow) {
+    if (hasErrorNow)
       addState(QLNodeState.hasError);
-    } else {
+    else
       removeState(QLNodeState.hasError);
-    }
 
-    if (notifyGraph && hadError != hasErrorNow) {
+    if (notifyGraph && hadError != hasErrorNow)
       graph.reportNodeValidity(path, !hasErrorNow);
-    }
   }
 
   void clearErrors() => _setErrors(const [], notifyGraph: true);
@@ -366,6 +465,10 @@ abstract class QLDataNode<T> implements QLDisposable {
   void dispose() {
     if (_disposed) return;
     _disposed = true;
+    globalNodes.remove(path);
+    _remoteValidationDebouncer?.cancel();
+    if (_isStoreBound)
+      _boundStore?.signal(_boundPath!)?.removeListener(_onRemoteStoreUpdate);
     _streamSub?.cancel();
     _asyncNonce++;
     data.dispose();
@@ -377,6 +480,7 @@ abstract class QLDataNode<T> implements QLDisposable {
   void reset() {
     if (_disposed) return;
     data.setSilent(initialValue);
+    if (_isStoreBound) _boundStore!.setSilent(_boundPath!, initialValue);
     stateFlags.setSilent(QLNodeState.idle);
     errors.setSilent(const []);
     data.forceNotify();
@@ -385,7 +489,7 @@ abstract class QLDataNode<T> implements QLDisposable {
     if (!hasState(QLNodeState.sleeping)) validate();
   }
 
-  dynamic serialize() => data.value;
+  dynamic serialize() => isHidden ? null : data.value;
 }
 
 class QLGraphController {
@@ -591,12 +695,20 @@ class QLGraphController {
     final prefixSegs = QLPathUtils.resolve(prefix).length;
 
     for (final entry in _nodes.entries) {
-      if (!(entry.key == prefix || entry.key.startsWith('$prefix.'))) continue;
+      // 🚀 FIX: Account for Array brackets `[` as well as Object dots `.`
+      if (!(entry.key == prefix ||
+          entry.key.startsWith('$prefix.') ||
+          entry.key.startsWith('$prefix['))) {
+        continue;
+      }
+
       final value = raw ? entry.value.data.value : entry.value.serialize();
       if (value == null) continue;
+
       final rel = QLPathUtils.resolve(entry.key)
           .skip(prefixSegs)
           .toList(growable: false);
+
       if (rel.isEmpty) continue;
       _bury(nested, rel, value);
     }
@@ -1072,7 +1184,9 @@ class QLMediaController extends QLFieldController<Map<String, dynamic>?> {
     super.fastMiddlewares,
     super.dependencies,
     super.initialMeta,
-  }) : super(initialValue: initialValue == null ? null : _qlMediaOf(initialValue));
+  }) : super(
+            initialValue:
+                initialValue == null ? null : _qlMediaOf(initialValue));
 
   void setMedia(Map<String, dynamic>? value) =>
       mutate(value == null ? null : _qlMediaOf(value));
@@ -1080,7 +1194,9 @@ class QLMediaController extends QLFieldController<Map<String, dynamic>?> {
       mutate(_qlMediaOf(source, mediaType: mediaType));
 
   @override
-  dynamic serialize() => isHidden ? null : (data.value == null ? null : Map<String, dynamic>.from(data.value!));
+  dynamic serialize() => isHidden
+      ? null
+      : (data.value == null ? null : Map<String, dynamic>.from(data.value!));
 }
 
 class QLSmallIntArrayController extends QLScalarArrayController<int> {
@@ -1163,7 +1279,8 @@ class QLFlagsArrayController extends QLScalarArrayController<int> {
   });
 }
 
-class QLMediaArrayController extends QLScalarArrayController<Map<String, dynamic>> {
+class QLMediaArrayController
+    extends QLScalarArrayController<Map<String, dynamic>> {
   QLMediaArrayController({
     required super.path,
     required super.form,
@@ -1215,7 +1332,6 @@ class QLDateController extends QLFieldController<DateTime?> {
   @override
   dynamic serialize() => isHidden ? null : data.value?.toIso8601String();
 }
-
 
 T _normalizeEnumInitial<T>(T initialValue, List<T> allowedValues) {
   if (allowedValues.isEmpty) return initialValue;
@@ -1787,7 +1903,9 @@ class QLNumberArrayController extends QLScalarArrayController<double> {
     super.fastMiddlewares,
     super.dependencies,
     super.initialMeta,
-  }) : super(initialItems: initialItems.map(_qlNumberOf).toList(growable: false));
+  }) : super(
+            initialItems:
+                initialItems.map(_qlNumberOf).toList(growable: false));
 }
 
 class QLDateArrayController extends QLScalarArrayController<DateTime> {
@@ -2097,6 +2215,12 @@ class QLTreeController<T>
   }
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+// THE HIGH-PERFORMANCE SCHEMA FORM FACTORY
+// ════════════════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════════════
+// REPLACE: QLSchemaFormFactory (The High-Performance Form Factory)
+// ════════════════════════════════════════════════════════════════════════════
 class QLSchemaFormFactory {
   static void build(
     QLSchemaBlueprint blueprint,
@@ -2106,6 +2230,96 @@ class QLSchemaFormFactory {
     for (final spec in blueprint.rootFields) {
       _buildSpec(spec, form, basePath);
     }
+  }
+
+  /// 🚀 HELPER: Map string declarations to physical Transform functions
+  static QLValueTransform<String>? _getTransform(String? type) {
+    if (type == null) return null;
+    final t = type.toLowerCase().trim();
+    if (t == 'lowercase') return QLTransforms.lowercase();
+    if (t == 'trim') return QLTransforms.trim();
+    if (t == 'trim_lowercase') return (String v) => v.trim().toLowerCase();
+    if (t == 'uppercase') return (String v) => v.toUpperCase();
+    if (t == 'trim_uppercase') return (String v) => v.trim().toUpperCase();
+    return null;
+  }
+
+  /// 🚀 PERFORMANCE: Strongly typed, zero-allocation validator compiler.
+  static List<QLValidator<T>> _buildValidators<T>(QLSchemaFieldSpec spec) {
+    if (!spec.isRequired &&
+        spec.min == null &&
+        spec.max == null &&
+        spec.pattern == null &&
+        spec.matchField == null) {
+      return const [];
+    }
+
+    final list = <QLValidator<T>>[];
+
+    // 1. REQUIRED VALIDATOR
+    if (spec.isRequired) {
+      final msg = spec.errorMessages['required'] ?? '${spec.name} is required';
+      list.add((T v, Object g) {
+        if (v == null) return QLNodeError(msg);
+        if (v is String && v.trim().isEmpty) return QLNodeError(msg);
+        if (v is List && v.isEmpty) return QLNodeError(msg);
+        if (v is Map && v.isEmpty) return QLNodeError(msg);
+        return null;
+      });
+    }
+
+    // 2. MINIMUM VALIDATOR
+    if (spec.min != null) {
+      final msg = spec.errorMessages['min'] ?? 'Minimum is ${spec.min}';
+      list.add((T v, Object g) {
+        if (v == null) return null;
+        if (v is num && v < spec.min!) return QLNodeError(msg);
+        if (v is String && v.length < spec.min!) return QLNodeError(msg);
+        if (v is List && v.length < spec.min!) return QLNodeError(msg);
+        return null;
+      });
+    }
+
+    // 3. MAXIMUM VALIDATOR
+    if (spec.max != null) {
+      final msg = spec.errorMessages['max'] ?? 'Maximum is ${spec.max}';
+      list.add((T v, Object g) {
+        if (v == null) return null;
+        if (v is num && v > spec.max!) return QLNodeError(msg);
+        if (v is String && v.length > spec.max!) return QLNodeError(msg);
+        if (v is List && v.length > spec.max!) return QLNodeError(msg);
+        return null;
+      });
+    }
+
+    // 4. REGEX PATTERN VALIDATOR (For Emails, Phones, etc)
+    if (spec.pattern != null) {
+      final msg = spec.errorMessages['pattern'] ?? 'Invalid format';
+      final regex = RegExp(spec.pattern!);
+      list.add((T v, Object g) {
+        if (v == null || v.toString().isEmpty) return null;
+        if (!regex.hasMatch(v.toString())) return QLNodeError(msg);
+        return null;
+      });
+    }
+
+    // 5. CROSS-FIELD MATCH VALIDATOR (For "Confirm Password")
+    if (spec.matchField != null) {
+      final msg =
+          spec.errorMessages['match'] ?? 'Does not match ${spec.matchField}';
+      list.add((T v, Object g) {
+        if (v == null || v.toString().isEmpty) return null;
+        if (g is QLFormController) {
+          final targetNode = g.getNode(spec.matchField!);
+          if (targetNode != null && targetNode.data.value != v) {
+            return QLNodeError(msg);
+          }
+        }
+        return null;
+      });
+    }
+
+    return List<QLValidator<T>>.unmodifiable(list);
   }
 
   static void _buildSpec(
@@ -2127,10 +2341,11 @@ class QLSchemaFormFactory {
           QLTextArrayController(
             path: path,
             form: form,
-            initialItems: List<String>.from(
-              (spec.meta['initialValue'] as List?)?.map((e) => e.toString()) ??
-                  const [],
-            ),
+            initialItems: List<String>.from((spec.meta['initialValue'] as List?)
+                    ?.map((e) => e.toString()) ??
+                const []),
+            syncValidators: _buildValidators<List<String>>(spec),
+            dependencies: spec.dependencies,
           );
         } else {
           QLTextController(
@@ -2139,20 +2354,23 @@ class QLSchemaFormFactory {
             initialValue: spec.meta['initialValue']?.toString() ?? '',
             sleepPolicy: spec.meta['sleepPolicy'] as QLSleepPolicy? ??
                 QLSleepPolicy.manual,
-            syncValidators: const [],
-            asyncValidators: const [],
+            transform: _getTransform(spec.transform),
+            syncValidators: _buildValidators<String>(spec),
+            dependencies: spec.dependencies,
           );
         }
         break;
+
       case QLFieldType.textarea:
         if (spec.hasMany) {
           QLTextArrayController(
             path: path,
             form: form,
-            initialItems: List<String>.from(
-              (spec.meta['initialValue'] as List?)?.map((e) => e.toString()) ??
-                  const [],
-            ),
+            initialItems: List<String>.from((spec.meta['initialValue'] as List?)
+                    ?.map((e) => e.toString()) ??
+                const []),
+            syncValidators: _buildValidators<List<String>>(spec),
+            dependencies: spec.dependencies,
           );
         } else {
           QLTextAreaController(
@@ -2160,146 +2378,201 @@ class QLSchemaFormFactory {
             form: form,
             initialValue: spec.meta['initialValue']?.toString() ?? '',
             maxLength: spec.meta['maxLength'] as int?,
+            transform: _getTransform(spec.transform),
+            syncValidators: _buildValidators<String>(spec),
+            dependencies: spec.dependencies,
           );
         }
         break;
+
+      case QLFieldType.secure:
+        QLSecureController(
+          path: path,
+          form: form,
+          initialValue: spec.meta['initialValue']?.toString() ?? '',
+          initiallyObscured: spec.meta['initiallyObscured'] as bool? ?? true,
+          transform: _getTransform(spec.transform),
+          syncValidators: _buildValidators<String>(spec),
+          dependencies: spec.dependencies,
+        );
+        break;
+
       case QLFieldType.number:
         if (spec.hasMany) {
           QLNumberArrayController(
             path: path,
             form: form,
             initialItems: (spec.meta['initialValue'] as List?)
-                    ?.map(_qlNumberOf)
+                    ?.map((e) => (e as num).toDouble())
                     .toList(growable: false) ??
                 const [],
+            syncValidators: _buildValidators<List<double>>(spec),
+            dependencies: spec.dependencies,
           );
         } else {
           QLNumberController(
             path: path,
             form: form,
-            initialValue: (spec.meta['initialValue'] as num?)?.toDouble() ?? 0.0,
+            initialValue:
+                (spec.meta['initialValue'] as num?)?.toDouble() ?? 0.0,
+            syncValidators: _buildValidators<double>(spec),
+            dependencies: spec.dependencies,
           );
         }
         break;
-      case QLFieldType.bigInt:
-        if (spec.hasMany) {
-          QLBigIntArrayController(
-            path: path,
-            form: form,
-            initialItems: (spec.meta['initialValue'] as List?)
-                    ?.map(_qlBigIntOf)
-                    .toList(growable: false) ??
-                const [],
-          );
-        } else {
-          QLBigIntController(
-            path: path,
-            form: form,
-            initialValue: _qlBigIntOf(spec.meta['initialValue']),
-          );
-        }
-        break;
+
       case QLFieldType.smallInt:
         if (spec.hasMany) {
           QLSmallIntArrayController(
             path: path,
             form: form,
             initialItems: (spec.meta['initialValue'] as List?)
-                    ?.map(_qlClampSmallInt)
+                    ?.map((e) => e as int)
                     .toList(growable: false) ??
                 const [],
+            syncValidators: _buildValidators<List<int>>(spec),
+            dependencies: spec.dependencies,
           );
         } else {
           QLSmallIntController(
             path: path,
             form: form,
-            initialValue: _qlClampSmallInt(spec.meta['initialValue']),
+            initialValue: spec.meta['initialValue'] as int? ?? 0,
+            syncValidators: _buildValidators<int>(spec),
+            dependencies: spec.dependencies,
           );
         }
         break;
+
+      case QLFieldType.bigInt:
+        if (spec.hasMany) {
+          QLBigIntArrayController(
+            path: path,
+            form: form,
+            initialItems: (spec.meta['initialValue'] as List?)
+                    ?.map((e) => e is BigInt
+                        ? e
+                        : BigInt.tryParse(e.toString()) ?? BigInt.zero)
+                    .toList(growable: false) ??
+                const [],
+            syncValidators: _buildValidators<List<BigInt>>(spec),
+            dependencies: spec.dependencies,
+          );
+        } else {
+          QLBigIntController(
+            path: path,
+            form: form,
+            initialValue: spec.meta['initialValue'] is BigInt
+                ? spec.meta['initialValue']
+                : BigInt.tryParse(spec.meta['initialValue']?.toString() ?? ''),
+            syncValidators: _buildValidators<BigInt>(spec),
+            dependencies: spec.dependencies,
+          );
+        }
+        break;
+
       case QLFieldType.decimal:
         if (spec.hasMany) {
           QLDecimalArrayController(
             path: path,
             form: form,
             initialItems: (spec.meta['initialValue'] as List?)
-                    ?.map(_qlDecimalOf)
+                    ?.map((e) => e.toString())
                     .toList(growable: false) ??
                 const [],
+            syncValidators: _buildValidators<List<String>>(spec),
+            dependencies: spec.dependencies,
           );
         } else {
           QLDecimalController(
             path: path,
             form: form,
-            initialValue: _qlDecimalOf(spec.meta['initialValue']),
+            initialValue: spec.meta['initialValue']?.toString() ?? '',
+            syncValidators: _buildValidators<String>(spec),
+            dependencies: spec.dependencies,
           );
         }
         break;
+
       case QLFieldType.char:
         if (spec.hasMany) {
           QLCharArrayController(
             path: path,
             form: form,
             initialItems: (spec.meta['initialValue'] as List?)
-                    ?.map(_qlCharOf)
+                    ?.map((e) => e.toString())
                     .toList(growable: false) ??
                 const [],
+            syncValidators: _buildValidators<List<String>>(spec),
+            dependencies: spec.dependencies,
           );
         } else {
           QLCharController(
             path: path,
             form: form,
-            initialValue: _qlCharOf(spec.meta['initialValue']),
+            initialValue: spec.meta['initialValue']?.toString() ?? '',
+            syncValidators: _buildValidators<String>(spec),
+            dependencies: spec.dependencies,
           );
         }
         break;
+
       case QLFieldType.flags:
         if (spec.hasMany) {
           QLFlagsArrayController(
             path: path,
             form: form,
             initialItems: (spec.meta['initialValue'] as List?)
-                    ?.map((e) => _qlClampSmallInt(e))
+                    ?.map((e) => e as int)
                     .toList(growable: false) ??
                 const [],
+            syncValidators: _buildValidators<List<int>>(spec),
+            dependencies: spec.dependencies,
           );
         } else {
           QLFlagsController(
             path: path,
             form: form,
-            initialValue: _qlClampSmallInt(spec.meta['initialValue']),
+            initialValue: spec.meta['initialValue'] as int? ?? 0,
+            syncValidators: _buildValidators<int>(spec),
+            dependencies: spec.dependencies,
           );
         }
         break;
+
       case QLFieldType.media:
         if (spec.hasMany) {
           QLMediaArrayController(
             path: path,
             form: form,
             initialItems: (spec.meta['initialValue'] as List?)
-                    ?.map((e) => _qlMediaOf(e, mediaType: spec.mediaType))
+                    ?.map((e) => e as Map<String, dynamic>)
                     .toList(growable: false) ??
                 const [],
+            syncValidators: _buildValidators<List<Map<String, dynamic>>>(spec),
+            dependencies: spec.dependencies,
           );
         } else {
           QLMediaController(
             path: path,
             form: form,
-            initialValue: spec.meta['initialValue'] is Map
-                ? _qlMediaOf(spec.meta['initialValue'], mediaType: spec.mediaType)
-                : spec.meta['initialValue'] == null
-                    ? null
-                    : _qlMediaOf(spec.meta['initialValue'], mediaType: spec.mediaType),
+            initialValue: spec.meta['initialValue'] as Map<String, dynamic>?,
+            syncValidators: _buildValidators<Map<String, dynamic>?>(spec),
+            dependencies: spec.dependencies,
           );
         }
         break;
+
       case QLFieldType.boolean:
         QLBoolController(
           path: path,
           form: form,
           initialValue: spec.meta['initialValue'] as bool? ?? false,
+          syncValidators: _buildValidators<bool>(spec),
+          dependencies: spec.dependencies,
         );
         break;
+
       case QLFieldType.date:
         QLDateController(
           path: path,
@@ -2307,24 +2580,130 @@ class QLSchemaFormFactory {
           initialValue: spec.meta['initialValue'] is DateTime
               ? spec.meta['initialValue'] as DateTime
               : DateTime.tryParse(spec.meta['initialValue']?.toString() ?? ''),
+          syncValidators: _buildValidators<DateTime?>(spec),
+          dependencies: spec.dependencies,
         );
         break;
+
       case QLFieldType.enumeration:
         QLEnumController<dynamic>(
           path: path,
           form: form,
           initialValue: spec.meta['initialValue'],
           allowedValues: List<dynamic>.from(spec.options),
+          syncValidators: _buildValidators<dynamic>(spec),
+          dependencies: spec.dependencies,
         );
         break;
-      case QLFieldType.secure:
-        QLSecureController(
+
+      case QLFieldType.object:
+        final builders = <QLFieldBuilder>[
+          for (final child in spec.children)
+            (childPath, childForm) => _buildSpec(child, childForm, childPath),
+        ];
+        QLGroupController(
           path: path,
           form: form,
-          initialValue: spec.meta['initialValue']?.toString() ?? '',
-          initiallyObscured: spec.meta['initiallyObscured'] as bool? ?? true,
+          schema: builders,
+          syncValidators: _buildValidators<Map<String, dynamic>>(spec),
+          dependencies: spec.dependencies,
         );
         break;
+
+      case QLFieldType.block:
+        final blockSchemas = <String, List<QLFieldBuilder>>{};
+        final blocksMeta = spec.meta['blocks'] ??
+            spec.meta['allowedBlocks'] ??
+            spec.meta['blockSchemas'];
+
+        if (blocksMeta is Map) {
+          for (final entry in blocksMeta.entries) {
+            final childBuilders = <QLFieldBuilder>[];
+            final childSpec = entry.value;
+            if (childSpec is Map) {
+              final compiled = QLSchemaCompiler.compile(
+                  '__inline_${entry.key}', {'root': childSpec});
+              for (final f in compiled.rootFields.first.children) {
+                childBuilders.add((p, frm) => _buildSpec(f, frm, p));
+              }
+            }
+            blockSchemas[entry.key] = childBuilders;
+          }
+        }
+
+        if (spec.allowedBlocks.isNotEmpty) {
+          for (final blockName in spec.allowedBlocks) {
+            if (!blockSchemas.containsKey(blockName)) {
+              final globalSchema =
+                  QLSchemaRegistry.instance.getSchema(blockName);
+              if (globalSchema != null) {
+                final childBuilders = <QLFieldBuilder>[];
+                for (final f in globalSchema.rootFields) {
+                  childBuilders.add((p, frm) => _buildSpec(f, frm, p));
+                }
+                blockSchemas[blockName] = childBuilders;
+              }
+            }
+          }
+        }
+
+        QLBlockArrayController(
+          path: path,
+          form: form,
+          blockSchemas: blockSchemas,
+          syncValidators: _buildValidators<List<QLBlockInstance>>(spec),
+          dependencies: spec.dependencies,
+        );
+        break;
+
+      case QLFieldType.tree:
+        final nodeSchemas = <String, List<QLFieldBuilder>>{};
+        final metaSchemas = spec.meta['nodes'] ??
+            spec.meta['allowedNodes'] ??
+            spec.meta['nodeSchemas'];
+
+        if (metaSchemas is Map) {
+          for (final entry in metaSchemas.entries) {
+            final childBuilders = <QLFieldBuilder>[];
+            final childSpec = entry.value;
+            if (childSpec is Map) {
+              final compiled = QLSchemaCompiler.compile(
+                  '__tree_${entry.key}', {'root': childSpec});
+              for (final f in compiled.rootFields.first.children) {
+                childBuilders.add((p, frm) => _buildSpec(f, frm, p));
+              }
+            }
+            nodeSchemas[entry.key] = childBuilders;
+          }
+        }
+
+        final allowedNodes = (spec.meta['allowedNodes'] as List?)
+                ?.map((e) => e.toString())
+                .toList() ??
+            [];
+        for (final nodeName in allowedNodes) {
+          if (!nodeSchemas.containsKey(nodeName)) {
+            final globalSchema = QLSchemaRegistry.instance.getSchema(nodeName);
+            if (globalSchema != null) {
+              final childBuilders = <QLFieldBuilder>[];
+              for (final f in globalSchema.rootFields) {
+                childBuilders.add((p, frm) => _buildSpec(f, frm, p));
+              }
+              nodeSchemas[nodeName] = childBuilders;
+            }
+          }
+        }
+
+        QLTreeController<dynamic>(
+          path: path,
+          form: form,
+          nodeSchemas: nodeSchemas,
+          syncValidators:
+              _buildValidators<Map<dynamic, QLTreeNode<dynamic>>>(spec),
+          dependencies: spec.dependencies,
+        );
+        break;
+
       case QLFieldType.lookup:
       case QLFieldType.relation:
       case QLFieldType.relationship:
@@ -2335,197 +2714,39 @@ class QLSchemaFormFactory {
             form: form,
             resolver: resolver,
             initialValue: spec.meta['initialValue']?.toString(),
+            syncValidators: _buildValidators<String?>(spec),
+            dependencies: spec.dependencies,
           );
         } else {
           QLTextController(
             path: path,
             form: form,
             initialValue: spec.meta['initialValue']?.toString() ?? '',
+            syncValidators: _buildValidators<String>(spec),
+            dependencies: spec.dependencies,
           );
         }
-        break;
-      case QLFieldType.object:
-        final builders = <QLFieldBuilder>[
-          for (final child in spec.children)
-            (childPath, childForm) => _buildSpec(
-                  child,
-                  childForm,
-                  '',
-                ),
-        ];
-        QLGroupController(
-          path: path,
-          form: form,
-          schema: builders,
-        );
         break;
       case QLFieldType.array:
-        if (spec.itemSpec != null) {
-          switch (spec.itemSpec!.type) {
-            case QLFieldType.bigInt:
-              QLBigIntArrayController(
-                path: path,
-                form: form,
-                initialItems: (spec.meta['initialValue'] as List?)
-                        ?.map(_qlBigIntOf)
-                        .toList(growable: false) ??
-                    const [],
-              );
-              break;
-            case QLFieldType.smallInt:
-              QLSmallIntArrayController(
-                path: path,
-                form: form,
-                initialItems: (spec.meta['initialValue'] as List?)
-                        ?.map(_qlClampSmallInt)
-                        .toList(growable: false) ??
-                    const [],
-              );
-              break;
-            case QLFieldType.decimal:
-              QLDecimalArrayController(
-                path: path,
-                form: form,
-                initialItems: (spec.meta['initialValue'] as List?)
-                        ?.map(_qlDecimalOf)
-                        .toList(growable: false) ??
-                    const [],
-              );
-              break;
-            case QLFieldType.char:
-              QLCharArrayController(
-                path: path,
-                form: form,
-                initialItems: (spec.meta['initialValue'] as List?)
-                        ?.map(_qlCharOf)
-                        .toList(growable: false) ??
-                    const [],
-              );
-              break;
-            case QLFieldType.flags:
-              QLFlagsArrayController(
-                path: path,
-                form: form,
-                initialItems: (spec.meta['initialValue'] as List?)
-                        ?.map((e) => _qlClampSmallInt(e))
-                        .toList(growable: false) ??
-                    const [],
-              );
-              break;
-            case QLFieldType.media:
-              QLMediaArrayController(
-                path: path,
-                form: form,
-                initialItems: (spec.meta['initialValue'] as List?)
-                        ?.map((e) => _qlMediaOf(e, mediaType: spec.mediaType))
-                        .toList(growable: false) ??
-                    const [],
-              );
-              break;
-            case QLFieldType.number:
-              QLNumberArrayController(
-                path: path,
-                form: form,
-                initialItems: (spec.meta['initialValue'] as List?)
-                        ?.map(_qlNumberOf)
-                        .toList(growable: false) ??
-                    const [],
-              );
-              break;
-            case QLFieldType.date:
-              QLDateArrayController(
-                path: path,
-                form: form,
-                initialItems:
-                    List<DateTime>.from(spec.meta['initialValue'] ?? const []),
-              );
-              break;
-            case QLFieldType.enumeration:
-              QLEnumArrayController<dynamic>(
-                path: path,
-                form: form,
-                allowedValues: List<dynamic>.from(spec.itemSpec!.options),
-                initialItems:
-                    List<dynamic>.from(spec.meta['initialValue'] ?? const []),
-              );
-              break;
-            default:
-              QLTextArrayController(
-                path: path,
-                form: form,
-                initialItems: List<String>.from(
-                  (spec.meta['initialValue'] as List?)
-                          ?.map((e) => e.toString()) ??
-                      const [],
-                ),
-              );
-          }
-        } else {
-          QLTextArrayController(
-            path: path,
-            form: form,
-            initialItems: List<String>.from(
+        // 🚀 FIX: Handles standard arrays like "tags": "array"
+        QLTextArrayController(
+          path: path,
+          form: form,
+          initialItems: List<String>.from(
               (spec.meta['initialValue'] as List?)?.map((e) => e.toString()) ??
-                  const [],
-            ),
-          );
-        }
-        break;
-      case QLFieldType.block:
-        final blockSchemas = <String, List<QLFieldBuilder>>{};
-        final blocksMeta = spec.meta['blockSchemas'];
-        if (blocksMeta is Map) {
-          for (final entry in blocksMeta.entries) {
-            final childBuilders = <QLFieldBuilder>[];
-            final childSpec = entry.value;
-            if (childSpec is Map) {
-              final compiled = QLSchemaCompiler.compile(
-                '__inline_${entry.key}',
-                {'root': childSpec},
-              );
-              for (final f in compiled.rootFields.first.children) {
-                childBuilders.add((p, frm) => _buildSpec(f, frm, ''));
-              }
-            }
-            blockSchemas[entry.key] = childBuilders;
-          }
-        }
-        QLBlockArrayController(
-          path: path,
-          form: form,
-          blockSchemas: blockSchemas,
+                  const []),
+          syncValidators: _buildValidators<List<String>>(spec),
+          dependencies: spec.dependencies,
         );
         break;
-      case QLFieldType.tree:
-        final nodeSchemas = <String, List<QLFieldBuilder>>{};
-        final metaSchemas = spec.meta['nodeSchemas'];
-        if (metaSchemas is Map) {
-          for (final entry in metaSchemas.entries) {
-            final childBuilders = <QLFieldBuilder>[];
-            final childSpec = entry.value;
-            if (childSpec is Map) {
-              final compiled = QLSchemaCompiler.compile(
-                '__tree_${entry.key}',
-                {'root': childSpec},
-              );
-              for (final f in compiled.rootFields.first.children) {
-                childBuilders.add((p, frm) => _buildSpec(f, frm, ''));
-              }
-            }
-            nodeSchemas[entry.key] = childBuilders;
-          }
-        }
-        QLTreeController<dynamic>(
-          path: path,
-          form: form,
-          nodeSchemas: nodeSchemas,
-        );
-        break;
+
       default:
         QLTextController(
           path: path,
           form: form,
           initialValue: spec.meta['initialValue']?.toString() ?? '',
+          syncValidators: _buildValidators<String>(spec),
+          dependencies: spec.dependencies,
         );
     }
   }

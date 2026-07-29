@@ -1,0 +1,284 @@
+{
+  "__meta": {
+    "id": "window-011-window-011",
+    "title": "Window drag and resize config #011",
+    "description": "Open a window surface at (40, 56) with size 320x220, then drag it and verify its live geometry and interactive content for case 011.",
+    "tags": [
+      "overlay",
+      "window",
+      "drag",
+      "execution"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "state": {
+      "overlay.visible.011": false,
+      "overlay.count.011": 0
+    },
+    "type": "box:col",
+    "props": {
+      "width": 800,
+      "height": 600,
+      "gap": 10,
+      "padding": 0
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Window background 011"
+        }
+      },
+      {
+        "type": "portal:window",
+        "props": {
+          "x": 40,
+          "y": 56,
+          "w": 320,
+          "h": 220,
+          "allowResize": true,
+          "resizeEdges": "bottomRight",
+          "triggerBind": "overlay.visible.011"
+        },
+        "slots": {
+          "trigger": {
+            "type": "action:button",
+            "props": {
+              "text": "Open window 011",
+              "onTap": [
+                {
+                  "action": "toggle",
+                  "path": "overlay.visible.011"
+                }
+              ]
+            }
+          },
+          "content": {
+            "type": "box:col",
+            "props": {
+              "gap": 4
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Window body 011"
+                }
+              },
+              {
+                "type": "action:button",
+                "props": {
+                  "text": "Inc Window 011",
+                  "onTap": [
+                    {
+                      "action": "increment",
+                      "path": "overlay.count.011",
+                      "amount": 2
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "overlay.visible.011": false,
+        "overlay.count.011": 0
+      }
+    },
+    "debugPath": "root.store_provider",
+    "children": [
+      {
+        "type": "box:col",
+        "props": {
+          "width": 800,
+          "height": 600,
+          "gap": 10,
+          "padding": 0
+        },
+        "debugPath": "root",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Window background 011"
+            },
+            "debugPath": "root[0]"
+          },
+          {
+            "type": "portal",
+            "props": {
+              "__subType": "window",
+              "x": 40,
+              "y": 56,
+              "w": 320,
+              "h": 220,
+              "allowResize": true,
+              "resizeEdges": "bottomRight",
+              "triggerBind": "overlay.visible.011"
+            },
+            "debugPath": "root[1]",
+            "slots": {
+              "trigger": {
+                "type": "action",
+                "props": {
+                  "__subType": "button",
+                  "text": "Open window 011",
+                  "onTap": [
+                    {
+                      "action": "toggle",
+                      "path": "overlay.visible.011"
+                    }
+                  ]
+                },
+                "debugPath": "root[1].slots[trigger]"
+              },
+              "content": {
+                "type": "box:col",
+                "props": {
+                  "gap": 4
+                },
+                "debugPath": "root[1].slots[content]",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Window body 011"
+                    },
+                    "debugPath": "root[1].slots[content][0]"
+                  },
+                  {
+                    "type": "action",
+                    "props": {
+                      "__subType": "button",
+                      "text": "Inc Window 011",
+                      "onTap": [
+                        {
+                          "action": "increment",
+                          "path": "overlay.count.011",
+                          "amount": 2
+                        }
+                      ]
+                    },
+                    "debugPath": "root[1].slots[content][1]"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "props.__subType",
+      "equals": "window"
+    },
+    {
+      "path": "props.x",
+      "equals": 40
+    },
+    {
+      "path": "props.y",
+      "equals": 56
+    },
+    {
+      "path": "props.w",
+      "equals": 320
+    },
+    {
+      "path": "props.h",
+      "equals": 220
+    },
+    {
+      "path": "props.allowResize",
+      "equals": true
+    },
+    {
+      "path": "props.resizeEdges",
+      "equals": "bottomRight"
+    },
+    {
+      "path": "slots.trigger.props.text",
+      "equals": "Open window 011"
+    },
+    {
+      "path": "slots.content.children.length",
+      "equals": 2
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "drag",
+    "description": "Open a window, drag its live content by (36,24), and verify the window moved."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Open window 011"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectText",
+      "text": "Window body 011"
+    },
+    {
+      "action": "drag",
+      "finder": {
+        "type": "text",
+        "match": "Window body 011"
+      },
+      "offset": {
+        "dx": 36,
+        "dy": 24
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectGeometry",
+      "finder": {
+        "type": "text",
+        "match": "Window body 011"
+      },
+      "rect": {
+        "left": 76,
+        "top": 80,
+        "tolerance": 8
+      }
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Inc Window 011"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectState",
+      "path": "overlay.count.011",
+      "equals": 2
+    }
+  ]
+}

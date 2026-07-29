@@ -1,0 +1,137 @@
+{
+  "__meta": {
+    "id": "toast-098-toast-098",
+    "title": "Toast auto-dismiss duration #098",
+    "description": "Auto-mount a toast and wait for its timeout so the overlay disappears after 160ms for case 098.",
+    "tags": [
+      "overlay",
+      "toast",
+      "timeout",
+      "execution"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "state": {},
+    "type": "box:col",
+    "props": {
+      "width": 800,
+      "height": 600,
+      "gap": 8,
+      "padding": 0
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Toast background 098"
+        }
+      },
+      {
+        "type": "portal:toast",
+        "props": {
+          "durationMs": 160,
+          "surfaceKind": "temporary_overlay"
+        },
+        "slots": {
+          "content": {
+            "type": "box:col",
+            "props": {
+              "gap": 8
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Toast body 098"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "box:col",
+    "props": {
+      "width": 800,
+      "height": 600,
+      "gap": 8,
+      "padding": 0
+    },
+    "debugPath": "root",
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Toast background 098"
+        },
+        "debugPath": "root[0]"
+      },
+      {
+        "type": "portal",
+        "props": {
+          "__subType": "toast",
+          "durationMs": 160,
+          "surfaceKind": "temporary_overlay"
+        },
+        "debugPath": "root[1]",
+        "slots": {
+          "content": {
+            "type": "box:col",
+            "props": {
+              "gap": 8
+            },
+            "debugPath": "root[1].slots[content]",
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Toast body 098"
+                },
+                "debugPath": "root[1].slots[content][0]"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "props.__subType",
+      "equals": "toast"
+    },
+    {
+      "path": "props.durationMs",
+      "equals": 160
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "wait",
+    "description": "Toast appears automatically and disappears after the configured timeout."
+  },
+  "executionSteps": [
+    {
+      "action": "pump",
+      "durationMs": 1
+    },
+    {
+      "action": "expectText",
+      "text": "Toast body 098"
+    },
+    {
+      "action": "wait",
+      "durationMs": 140
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectNothing",
+      "text": "Toast body 098"
+    }
+  ]
+}

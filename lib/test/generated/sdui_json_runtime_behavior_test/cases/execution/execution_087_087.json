@@ -344,16 +344,20 @@
   },
   "runtimeAssertions": [
     {
+      "path": "type",
+      "equals": "box:scroll"
+    },
+    {
       "path": "children.length",
       "equals": 1
     },
     {
       "path": "children[0].type",
-      "equals": "box:scroll"
+      "equals": "box:col"
     },
     {
       "path": "children[0].children.length",
-      "equals": 1
+      "equals": 21
     }
   ],
   "runtimeBehavior": {

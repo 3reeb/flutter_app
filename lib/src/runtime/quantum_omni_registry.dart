@@ -90,72 +90,49 @@ void clearQuantumInputRegistry() {
   _dummyForms.clear();
   _designCache.clear();
 }
+// ════════════════════════════════════════════════════════════════════════════
+// THE HIGH-PERFORMANCE CONTROLLER RESOLVER (quantum_omni_registry.dart)
+// ════════════════════════════════════════════════════════════════════════════
 
-/// Resolves a Quantum Field Controller.
-/// If inside a form, uses the Form Graph. If standalone, binds to the global DataStore.
-T _resolveFieldController<T extends QLFieldController>(
-  QLContext ctx,
-  String id,
-  String bindPath,
-  T Function(QLFormController form) creator,
-) {
-  final formCtrl = QLDataScope.readNode(ctx.flutterContext)
-      ?.localData['__formController'] as QLFormController?;
-  final effectivePath = bindPath.isNotEmpty ? bindPath : id;
-
-  void syncControllerFromStore(QLFieldController controller) {
-    if (bindPath.isEmpty) return;
-    final initVal = ctx.store.get(bindPath);
-    if (initVal != null && controller.data.value != initVal) {
-      // Bypass validation on initial sync so runtime execution starts from the
-      // store's real value instead of a default placeholder.
-      controller.mutateFast(initVal as dynamic, applyMiddleware: false);
-    }
-
-    final syncFlagKey = '_ql_bind_sync::$bindPath';
-    if (controller.meta.value[syncFlagKey] == true) return;
-    controller.meta.value = {
-      ...controller.meta.value,
-      syncFlagKey: true,
-    };
-
-    controller.data.addListener(() {
-      final current = ctx.store.get(bindPath);
-      if (current != controller.data.value) {
-        ctx.store.set(bindPath, controller.data.value);
-      }
-    });
+// 🚀 HELPER: Dynamically Extracts or Creates the Form Controller directly from Env
+QLFormController _getFormController(Map<String, dynamic> env) {
+  // Check if a parent Form/Control shell injected a controller into the env
+  if (env['__formController'] is QLFormController) {
+    return env['__formController'] as QLFormController;
   }
 
-  // 1. Managed by Form Graph
-  if (formCtrl != null) {
-    final existing = formCtrl.getNode(effectivePath);
-    if (existing is T) {
-      syncControllerFromStore(existing);
-      return existing;
-    }
-    final created = creator(formCtrl);
-    syncControllerFromStore(created);
-    return created;
-  }
-
-  // 2. Standalone Mode
-  if (_standaloneFieldRegistry.containsKey(id)) {
-    final existing = _standaloneFieldRegistry[id] as T;
-    syncControllerFromStore(existing);
-    return existing;
-  }
-
-  final dummyForm = _dummyForms.putIfAbsent(id, () => QLFormController());
-  final ctrl = creator(dummyForm);
-
-  // Sync with global store manually for standalone fields
-  syncControllerFromStore(ctrl);
-
-  _standaloneFieldRegistry[id] = ctrl;
-  return ctrl;
+  // 🚀 FALLBACK: If no form scope exists, create an ephemeral one attached to the UI context
+  // This guarantees every field has a math engine even if the developer forgot to wrap it in a form!
+  final form = QLFormController();
+  env['__formController'] = form;
+  return form;
 }
 
+T _resolveFieldController<T extends QLFieldController>(
+  dynamic ctx, // Works with both QLContext and _AliasContext
+  String id,
+  String bindPath,
+  T Function(QLFormController) creator,
+) {
+  final String actualPath = bindPath.isNotEmpty ? bindPath : id;
+
+  // 🚀 FIX: Pass ctx.env directly, bypassing the 'rawCtx' error completely
+  final form = _getFormController(ctx.env);
+
+  T ctrl;
+  if (form.hasNode(actualPath)) {
+    ctrl = form.getNode(actualPath) as T;
+  } else {
+    ctrl = creator(form);
+  }
+
+  // 🚀 FIX: Use public getter isStoreBound
+  if (!ctrl.isStoreBound) {
+    ctrl.bindStore(ctx.store, actualPath);
+  }
+
+  return ctrl;
+}
 // ─────────────────────────────────────────────────────────────────────── §2 ─
 //  QUANTUM OMNI-MATRIX (9-Dimensional Procedural CSS Generator)
 // ────────────────────────────────────────────────────────────────────────────

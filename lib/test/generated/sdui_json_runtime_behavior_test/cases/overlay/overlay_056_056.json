@@ -1,0 +1,209 @@
+{
+  "__meta": {
+    "id": "floating-056-context_menu-056",
+    "title": "context_menu trigger flow #056",
+    "description": "Open a context_menu surface from a trigger button, verify the content appears, then dismiss it with an outside tap for case 056.",
+    "tags": [
+      "overlay",
+      "context_menu",
+      "floating",
+      "execution"
+    ],
+    "allowBlank": false,
+    "priority": "high"
+  },
+  "input": {
+    "state": {
+      "overlay.visible.056": false,
+      "overlay.count.056": 0
+    },
+    "type": "box:col",
+    "props": {
+      "width": 800,
+      "height": 600,
+      "gap": 10,
+      "padding": 0
+    },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Context_Menu background 056"
+        }
+      },
+      {
+        "type": "portal:context_menu",
+        "props": {
+          "allowUnderlyingInteraction": true,
+          "bgEffect": "blur",
+          "barrierOpacity": 0.35,
+          "triggerBind": "overlay.visible.056",
+          "surfaceKind": "temporary_overlay",
+          "matchAnchorWidth": false
+        },
+        "slots": {
+          "trigger": {
+            "type": "action:button",
+            "props": {
+              "text": "Open context_menu 056",
+              "onTap": [
+                {
+                  "action": "toggle",
+                  "path": "overlay.visible.056"
+                }
+              ]
+            }
+          },
+          "content": {
+            "type": "box:col",
+            "props": {
+              "gap": 8
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "Context_Menu body 056"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "type": "system",
+    "props": {
+      "__subType": "store_provider",
+      "initialState": {
+        "overlay.visible.056": false,
+        "overlay.count.056": 0
+      }
+    },
+    "debugPath": "root.store_provider",
+    "children": [
+      {
+        "type": "box:col",
+        "props": {
+          "width": 800,
+          "height": 600,
+          "gap": 10,
+          "padding": 0
+        },
+        "debugPath": "root",
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Context_Menu background 056"
+            },
+            "debugPath": "root[0]"
+          },
+          {
+            "type": "portal",
+            "props": {
+              "__subType": "context_menu",
+              "allowUnderlyingInteraction": true,
+              "bgEffect": "blur",
+              "barrierOpacity": 0.35,
+              "triggerBind": "overlay.visible.056",
+              "surfaceKind": "temporary_overlay",
+              "matchAnchorWidth": false
+            },
+            "debugPath": "root[1]",
+            "slots": {
+              "trigger": {
+                "type": "action",
+                "props": {
+                  "__subType": "button",
+                  "text": "Open context_menu 056",
+                  "onTap": [
+                    {
+                      "action": "toggle",
+                      "path": "overlay.visible.056"
+                    }
+                  ]
+                },
+                "debugPath": "root[1].slots[trigger]"
+              },
+              "content": {
+                "type": "box:col",
+                "props": {
+                  "gap": 8
+                },
+                "debugPath": "root[1].slots[content]",
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Context_Menu body 056"
+                    },
+                    "debugPath": "root[1].slots[content][0]"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "runtimeAssertions": [
+    {
+      "path": "props.__subType",
+      "equals": "context_menu"
+    },
+    {
+      "path": "props.allowUnderlyingInteraction",
+      "equals": true
+    },
+    {
+      "path": "props.bgEffect",
+      "equals": "blur"
+    },
+    {
+      "path": "props.barrierOpacity",
+      "greaterThan": 0.0
+    },
+    {
+      "path": "props.triggerBind",
+      "equals": "overlay.visible.056"
+    }
+  ],
+  "runtimeBehavior": {
+    "gesture": "tap",
+    "description": "Open a context_menu surface from a trigger button and verify its content mounts and dismisses."
+  },
+  "executionSteps": [
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "tap",
+      "finder": {
+        "type": "text",
+        "match": "Open context_menu 056"
+      }
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectText",
+      "text": "Context_Menu body 056"
+    },
+    {
+      "action": "tapAt",
+      "x": 760,
+      "y": 560
+    },
+    {
+      "action": "pumpAndSettle"
+    },
+    {
+      "action": "expectNothing",
+      "text": "Context_Menu body 056"
+    }
+  ]
+}

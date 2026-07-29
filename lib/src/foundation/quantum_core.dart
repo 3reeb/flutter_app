@@ -76,52 +76,6 @@ abstract final class QLFieldFlags {
   static const int isReadOnly = 1 << 7;
 }
 
-// class QLSignal<T> {
-//   T _value;
-//   final StreamController<T> _controller =
-//       StreamController<T>.broadcast(sync: true);
-
-//   QLSignal(this._value);
-
-//   T get value => _value;
-
-//   set value(T next) {
-//     if (_value == next) return;
-//     _value = next;
-//     forceNotify();
-//   }
-
-//   void setSilent(T next) => _value = next;
-
-//   void forceNotify() {
-//     if (!_controller.isClosed) {
-//       _controller.add(_value);
-//     }
-//   }
-
-//   Stream<T> get stream => _controller.stream;
-
-//   StreamSubscription<T> listen(
-//     void Function(T event) onData, {
-//     Function? onError,
-//     void Function()? onDone,
-//     bool? cancelOnError,
-//   }) {
-//     return _controller.stream.listen(
-//       onData,
-//       onError: onError,
-//       onDone: onDone,
-//       cancelOnError: cancelOnError,
-//     );
-//   }
-
-//   void dispose() {
-//     if (!_controller.isClosed) {
-//       _controller.close();
-//     }
-//   }
-// }
-
 abstract final class QLPathUtils {
   static final LinkedHashMap<String, List<dynamic>> _cache =
       LinkedHashMap<String, List<dynamic>>();
@@ -262,38 +216,36 @@ abstract final class QLFormatParser {
     if (cleanString.isEmpty) return {};
 
     // 1. FAST PATH: JSON Auto-Detection
-    // If it starts with { or [, it's almost certainly JSON.
-    // JSON decoding is natively implemented in C++ in the Dart SDK and is much faster.
     if (cleanString.startsWith('{') || cleanString.startsWith('[')) {
       try {
         final decoded = jsonDecode(cleanString);
         return decoded is Map ? Map<String, dynamic>.from(decoded) : {};
       } catch (_) {
-        // Silent catch: If JSON parsing fails, fall back to the YAML parser.
+        // Silent catch: Fall back to YAML parser
       }
     }
 
-    // 2. ROBUST PATH: YAML Parsing
-    final yamlDoc = loadYaml(cleanString);
-    final cleanMap = _cleanYamlNode(yamlDoc);
-
-    return cleanMap is Map ? Map<String, dynamic>.from(cleanMap) : {};
+    // 2. ROBUST PATH: YAML Parsing with Absolute Crash Immunity
+    try {
+      final yamlDoc = loadYaml(cleanString);
+      final cleanMap = _cleanYamlNode(yamlDoc);
+      return cleanMap is Map ? Map<String, dynamic>.from(cleanMap) : {};
+    } catch (_) {
+      // If the string is absolute garbage, return an empty map. Never crash.
+      return {};
+    }
   }
 
-  /// Recursively purges `YamlMap` and `YamlList` poisoning.
-  /// Converts all immutable YAML structures into standard, mutable Dart types.
   static dynamic _cleanYamlNode(dynamic node) {
     if (node is YamlMap) {
       final map = <String, dynamic>{};
       for (final entry in node.entries) {
-        // Enforce String keys, as YAML allows non-string keys but JSON/QuantumVM do not.
         map[entry.key.toString()] = _cleanYamlNode(entry.value);
       }
       return map;
     } else if (node is YamlList) {
       return node.map((item) => _cleanYamlNode(item)).toList(growable: true);
     }
-    // Primitives (String, int, double, bool, null) pass through untouched
     return node;
   }
 }

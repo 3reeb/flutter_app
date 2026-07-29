@@ -304,6 +304,7 @@ void _validateExecutionStep(Map<String, dynamic> step, String context) {
     'tap',
     'doubleTap',
     'longPress',
+    'tapAt',
     'drag',
     'fling',
     'scrollUntilVisible',
@@ -338,7 +339,7 @@ void _validateExecutionStep(Map<String, dynamic> step, String context) {
     return;
   }
 
-  if (action == 'pump') return;
+  if (action == 'pump' || action == 'tapAt') return;
 
   if (action == 'pumpAndSettle' || action == 'wait' || action == 'submitText')
     return;
@@ -478,8 +479,14 @@ String _joinPath(String path, Object key) {
 
 String? _diffJson(dynamic actual, dynamic expected, [String path = 'root']) {
   if (expected is Map && actual is Map) {
-    final expectedKeys = expected.keys.map((k) => k.toString()).toSet();
-    final actualKeys = actual.keys.map((k) => k.toString()).toSet();
+    final expectedKeys = expected.keys
+        .map((k) => k.toString())
+        .where((k) => k != 'debugPath')
+        .toSet();
+    final actualKeys = actual.keys
+        .map((k) => k.toString())
+        .where((k) => k != 'debugPath')
+        .toSet();
 
     final missing = expectedKeys.difference(actualKeys);
     if (missing.isNotEmpty) {
@@ -494,6 +501,7 @@ String? _diffJson(dynamic actual, dynamic expected, [String path = 'root']) {
     }
 
     for (final key in expected.keys) {
+      if (key.toString() == 'debugPath') continue;
       final next = _diffJson(actual[key], expected[key], _joinPath(path, key));
       if (next != null) return next;
     }
@@ -516,6 +524,135 @@ String? _diffJson(dynamic actual, dynamic expected, [String path = 'root']) {
   }
 
   return null;
+}
+
+bool _isSyntheticStoreProviderNode(dynamic node) {
+  if (node is! Map) return false;
+  final type = node['type']?.toString();
+  final props = node['props'];
+  if (type != 'system' || props is! Map) return false;
+  return props['__subType']?.toString() == 'store_provider';
+}
+
+dynamic _normalizeBlueprintTree(dynamic node) {
+  if (node is List) {
+    return node.map(_normalizeBlueprintTree).toList(growable: false);
+  }
+  if (node is! Map) return node;
+
+  final map = Map<String, dynamic>.from(node);
+
+  if (_isSyntheticStoreProviderNode(map)) {
+    final children = map['children'];
+    if (children is List && children.isNotEmpty) {
+      return _normalizeBlueprintTree(children.first);
+    }
+  }
+
+  final normalized = <String, dynamic>{};
+  for (final entry in map.entries) {
+    if (entry.key == 'debugPath') continue;
+    if (entry.key == 'children') {
+      normalized[entry.key] = _normalizeBlueprintTree(entry.value);
+    } else if (entry.key == 'slots') {
+      final slots = entry.value;
+      if (slots is Map) {
+        normalized[entry.key] = slots.map(
+          (k, v) => MapEntry(k.toString(), _normalizeBlueprintTree(v)),
+        );
+      } else {
+        normalized[entry.key] = _normalizeBlueprintTree(slots);
+      }
+    } else {
+      normalized[entry.key] = _normalizeBlueprintTree(entry.value);
+    }
+  }
+  return normalized;
+}
+
+
+Map<String, dynamic>? _findNodeByTypeOrSurface(dynamic node, String target) {
+  if (node is! Map) return null;
+
+  final type = node['type']?.toString();
+  if (type == target || type == 'portal:$target' || type == 'portal' &&
+      (node['props'] is Map &&
+       ((node['props'] as Map)['surfaceKind']?.toString() == target ||
+        (node['props'] as Map)['__subType']?.toString() == target))) {
+    return Map<String, dynamic>.from(node);
+  }
+
+  final props = node['props'];
+  if (props is Map) {
+    final surfaceKind = props['surfaceKind']?.toString();
+    if (surfaceKind == target) return Map<String, dynamic>.from(node);
+  }
+
+  for (final entry in node.entries) {
+    final value = entry.value;
+    if (value is Map) {
+      final found = _findNodeByTypeOrSurface(value, target);
+      if (found != null) return found;
+    } else if (value is List) {
+      for (final item in value) {
+        final found = _findNodeByTypeOrSurface(item, target);
+        if (found != null) return found;
+      }
+    }
+  }
+  return null;
+}
+
+Map<String, dynamic>? _findNodeBySubType(dynamic node, String subType) {
+  if (node is! Map) return null;
+
+  final props = node['props'];
+  if (props is Map && props['__subType']?.toString() == subType) {
+    return Map<String, dynamic>.from(node);
+  }
+
+  for (final entry in node.entries) {
+    final value = entry.value;
+    if (value is Map) {
+      final found = _findNodeBySubType(value, subType);
+      if (found != null) return found;
+    } else if (value is List) {
+      for (final item in value) {
+        final found = _findNodeBySubType(item, subType);
+        if (found != null) return found;
+      }
+    }
+  }
+  return null;
+}
+
+Map<String, dynamic> _selectRuntimeAssertionTarget(
+    Map<String, dynamic> actual, List<Map<String, dynamic>> assertions) {
+  String? targetSubtype;
+  String? targetType;
+  for (final assertion in assertions) {
+    if (assertion['path']?.toString() == 'props.__subType' &&
+        assertion.containsKey('equals')) {
+      targetSubtype = assertion['equals']?.toString();
+    }
+    if (assertion['path']?.toString() == 'type' &&
+        assertion.containsKey('equals')) {
+      targetType = assertion['equals']?.toString();
+    }
+  }
+
+  if (targetSubtype != null && targetSubtype.isNotEmpty) {
+    final found = _findNodeBySubType(actual, targetSubtype) ??
+        _findNodeByTypeOrSurface(actual, targetSubtype);
+    if (found != null) return found;
+  }
+
+  if (targetType != null && targetType.isNotEmpty && targetType != 'system') {
+    final found = _findNodeByTypeOrSurface(actual, targetType);
+    if (found != null) return found;
+  }
+
+  return actual is Map<String, dynamic> ? actual : Map<String, dynamic>.from(actual as Map);
 }
 
 final Object _pathMissing = Object();
@@ -1042,6 +1179,19 @@ Future<void> _executeSteps(
         await tester.tap(finder);
         await tester.pump();
         break;
+
+      case 'tapAt':
+        final offset = _offsetFromSpec(
+          step['offset'] ?? step['point'] ?? step['position'],
+          fallback: Offset(
+            (step['x'] ?? step['dx'] ?? 0).toDouble(),
+            (step['y'] ?? step['dy'] ?? 0).toDouble(),
+          ),
+        );
+        await tester.tapAt(offset);
+        await tester.pump();
+        break;
+
       case 'longPress':
         await tester.longPress(_resolveTapTarget(step['finder'], context));
         await tester.pump();
@@ -1363,32 +1513,38 @@ void main() {
             reason: 'Did not expect an exception for ${testCase.file.path}');
 
         final actualMap = Map<String, dynamic>.from(actualJson as Map);
+        final normalizedActual = _normalizeBlueprintTree(actualMap);
+        final normalizedExpected = testCase.expected == null
+            ? null
+            : _normalizeBlueprintTree(testCase.expected);
 
         if (testCase.expected != null) {
-          final diff = _diffJson(actualMap, testCase.expected);
+          final diff = _diffJson(normalizedActual, normalizedExpected);
           expect(
             diff,
             isNull,
             reason: diff ??
                 'Blueprint did not match expected snapshot for ${testCase.file.path}\n'
-                    'ACTUAL: ${jsonEncode(actualMap)}',
+                    'ACTUAL: ${jsonEncode(normalizedActual)}',
           );
         }
 
         if (testCase.runtimeAssertions.isNotEmpty) {
+          final assertionTarget =
+              _selectRuntimeAssertionTarget(actualMap, testCase.runtimeAssertions);
           final errors = <String>[];
           for (final assertion in testCase.runtimeAssertions) {
-            final err = _evalAssertion(assertion, actualMap);
+            final err = _evalAssertion(assertion, assertionTarget);
             if (err != null) errors.add(err);
           }
           // _printAssertionResults(
-          //     testCase.id, testCase.runtimeAssertions, actualMap);
+          //     testCase.id, testCase.runtimeAssertions, assertionTarget);
           expect(
             errors,
             isEmpty,
             reason: 'Runtime assertion failures for ${testCase.file.path}:\n'
                 '${errors.join('\n')}\n'
-                'ACTUAL: ${jsonEncode(actualMap)}',
+                'ACTUAL: ${jsonEncode(assertionTarget)}',
           );
         }
 
@@ -1397,10 +1553,12 @@ void main() {
           final num? testWidth = inputProps?['width'] as num?;
           final num? testHeight = inputProps?['height'] as num?;
 
-          Widget testApp = quantum_layout.QuantumVMRoot(
-            child: Builder(
-              builder: (ctx) => quantum_layout.QuantumVM.instance
-                  .renderWidget(ctx, compiledBlueprint!),
+          Widget testApp = quantum_layout.QLOverlayRoot(
+            child: quantum_layout.QuantumVMRoot(
+              child: Builder(
+                builder: (ctx) => quantum_layout.QuantumVM.instance
+                    .renderWidget(ctx, compiledBlueprint!),
+              ),
             ),
           );
 

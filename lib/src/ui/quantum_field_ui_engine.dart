@@ -861,3 +861,226 @@ class _QLRawTriggerState extends State<QLRawTrigger> {
     );
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────── §0 ─
+//  HEADLESS INTERFACE OBJECTS (The "Remote Controls")
+// ────────────────────────────────────────────────────────────────────────────
+
+class QLArrayInterface<T> {
+  final QLFieldController<List<T>> controller;
+  final List<T> items;
+
+  QLArrayInterface(this.controller, this.items);
+
+  void add(dynamic itemOrType) {
+    if (controller.isDisabled || controller.isReadonly) return;
+    if (controller is QLBlockArrayController) {
+      (controller as QLBlockArrayController).addBlock(itemOrType.toString());
+    } else if (controller is QLScalarArrayController) {
+      (controller as QLScalarArrayController).push(itemOrType);
+    }
+  }
+
+  void remove(int index) {
+    if (controller.isDisabled || controller.isReadonly) return;
+    if (controller is QLBlockArrayController) {
+      (controller as QLBlockArrayController).removeAt(index);
+    } else if (controller is QLScalarArrayController) {
+      (controller as QLScalarArrayController).removeAt(index);
+    }
+  }
+
+  void reorder(int from, int to) {
+    if (controller.isDisabled || controller.isReadonly) return;
+    if (controller is QLBlockArrayController) {
+      (controller as QLBlockArrayController).moveBlock(from, to);
+    } else if (controller is QLScalarArrayController) {
+      (controller as QLScalarArrayController).swap(from, to);
+    }
+  }
+
+  String pathFor(T item) {
+    if (controller is QLBlockArrayController && item is QLBlockInstance) {
+      return (controller as QLBlockArrayController).blockPathFor(item);
+    }
+    return '${controller.path}[${items.indexOf(item)}]';
+  }
+}
+
+class QLMediaInterface {
+  final QLMediaController controller;
+  final Map<String, dynamic>? data;
+
+  QLMediaInterface(this.controller, this.data);
+
+  bool get hasMedia => data != null;
+  String? get src => data?['src'] ?? data?['url'];
+  String? get mimeType => data?['mimeType'];
+
+  void clear() {
+    if (!controller.isDisabled && !controller.isReadonly) {
+      controller.setMedia(null);
+    }
+  }
+
+  void setFile(String url, {String? mimeType, int? sizeBytes}) {
+    if (!controller.isDisabled && !controller.isReadonly) {
+      controller.setMedia({
+        'src': url,
+        if (mimeType != null) 'mimeType': mimeType,
+        if (sizeBytes != null) 'sizeBytes': sizeBytes,
+      });
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────── §7 ─
+//  HEADLESS ARRAY / BLOCK LIST
+// ────────────────────────────────────────────────────────────────────────────
+
+class QLRawArray<T> extends StatefulWidget {
+  final QLFieldController<List<T>> controller;
+  final Widget Function(
+    BuildContext context,
+    QLFieldUIState state,
+    QLArrayInterface<T> api,
+  ) builder;
+
+  const QLRawArray({
+    super.key,
+    required this.controller,
+    required this.builder,
+  });
+
+  @override
+  State<QLRawArray<T>> createState() => _QLRawArrayState<T>();
+}
+
+class _QLRawArrayState<T> extends State<QLRawArray<T>> {
+  final ValueNotifier<bool> _isHovered = ValueNotifier(false);
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => _isHovered.value = true,
+      onExit: (_) => _isHovered.value = false,
+      child: AnimatedBuilder(
+        animation: Listenable.merge([
+          widget.controller.data,
+          widget.controller.stateFlags,
+          widget.controller.errors,
+          _isHovered,
+        ]),
+        builder: (context, _) {
+          final state = QLFieldUIState(
+            isFocused: widget.controller.isFocused,
+            isHovered: _isHovered.value,
+            isDisabled: widget.controller.isDisabled,
+            isReadOnly: widget.controller.isReadonly,
+            hasError: !widget.controller.isValid,
+            isEmpty: widget.controller.data.value.isEmpty,
+            errorText: widget.controller.errorText,
+          );
+
+          final api = QLArrayInterface<T>(
+              widget.controller, widget.controller.data.value);
+
+          return widget.builder(context, state, api);
+        },
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────── §8 ─
+//  HEADLESS MEDIA DROPZONE
+// ────────────────────────────────────────────────────────────────────────────
+
+class QLRawMedia extends StatefulWidget {
+  final QLMediaController controller;
+  final Widget Function(
+    BuildContext context,
+    QLFieldUIState state,
+    QLMediaInterface api,
+  ) builder;
+
+  const QLRawMedia({
+    super.key,
+    required this.controller,
+    required this.builder,
+  });
+
+  @override
+  State<QLRawMedia> createState() => _QLRawMediaState();
+}
+
+class _QLRawMediaState extends State<QLRawMedia> {
+  final ValueNotifier<bool> _isHovered = ValueNotifier(false);
+  late final FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode()..addListener(_syncFocus);
+    widget.controller.stateFlags.addListener(_onEngineFlagsChanged);
+  }
+
+  void _syncFocus() =>
+      qlMirrorFocusNodeToController(_focusNode, widget.controller);
+  void _onEngineFlagsChanged() =>
+      qlMirrorControllerToFocusNode(_focusNode, widget.controller);
+
+  @override
+  void dispose() {
+    widget.controller.stateFlags.removeListener(_onEngineFlagsChanged);
+    _focusNode.dispose();
+    _isHovered.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => _isHovered.value = true,
+      onExit: (_) => _isHovered.value = false,
+      cursor: widget.controller.isDisabled
+          ? SystemMouseCursors.forbidden
+          : SystemMouseCursors.click,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          if (!widget.controller.isDisabled && !widget.controller.isReadonly) {
+            _focusNode.requestFocus();
+          }
+        },
+        child: Focus(
+          focusNode: _focusNode,
+          child: AnimatedBuilder(
+            animation: Listenable.merge([
+              widget.controller.data,
+              widget.controller.stateFlags,
+              widget.controller.errors,
+              _isHovered,
+            ]),
+            builder: (context, _) {
+              final state = QLFieldUIState(
+                isFocused: widget.controller.isFocused,
+                isHovered: _isHovered.value,
+                isDisabled: widget.controller.isDisabled,
+                isReadOnly: widget.controller.isReadonly,
+                hasError: !widget.controller.isValid,
+                isEmpty: widget.controller.data.value == null,
+                errorText: widget.controller.errorText,
+              );
+
+              final api = QLMediaInterface(
+                  widget.controller, widget.controller.data.value);
+
+              return widget.builder(context, state, api);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
