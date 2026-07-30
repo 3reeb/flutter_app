@@ -3,7 +3,7 @@
 // quantum_omni_registry.dart
 //
 // BREAKTHROUGHS & REFACTORING:
-// 1. The 16 Omniversal Cores: Every UI element routes through 16 root builders.
+// 1. The 20 Omniversal Cores: Every UI element routes through 16 root builders.
 // 2. Colon Syntax (Base:Sub): `box:row`, `field:email`, `portal:dialog`.
 // 3. Implicit Behaviors: Eliminates AST depth. Draggable, DropZone, Magneto
 //    are applied natively if props exist.

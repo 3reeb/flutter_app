@@ -67,8 +67,10 @@ void main() {
         expect(result.isSuccess, isTrue, reason: 'Registration failed: ${result.error?.message}');
         
         final session = await Quantum.auth.me();
+        // userId is set on successful registration
         expect(session.data['userId'], isNotNull);
-        expect(session.data['email'], testEmail);
+        // email is stored inside the claims map by FirebaseAuthDriver
+        expect(session.data['claims']['email'], testEmail);
       });
 
       testWidgets('Update User Profile', (WidgetTester tester) async {
@@ -87,7 +89,9 @@ void main() {
         expect(result.isSuccess, isTrue);
         
         final session = await Quantum.auth.me();
-        expect(session.data['isAuthenticated'], isFalse);
+        // SessionContext.toJson() does not include 'isAuthenticated'.
+        // After logout, userId is null (unauthenticated guest session).
+        expect(session.data['userId'], isNull);
       });
 
       testWidgets('Login User', (WidgetTester tester) async {
@@ -98,7 +102,9 @@ void main() {
 
         expect(result.isSuccess, isTrue, reason: 'Login failed: ${result.error?.message}');
         final session = await Quantum.auth.me();
-        expect(session.data['isAuthenticated'], isTrue);
+        // SessionContext.toJson() does not include 'isAuthenticated'.
+        // After login, userId is set (authenticated).
+        expect(session.data['userId'], isNotNull);
       });
     });
 
@@ -164,8 +170,10 @@ void main() {
         expect(result.isSuccess, isTrue);
 
         final verify = await Quantum.db.collection(testCollection).readById(createdDocId);
-        expect(verify.isSuccess, isFalse); 
-        expect(verify.error?.code, 'not_found');
+        expect(verify.isSuccess, isFalse);
+        // Firestore returns 'not-found' (with dash); the driver may normalise it.
+        // Accept both 'not_found' and 'not-found' to be robust.
+        expect(verify.error?.code, anyOf('not_found', 'not-found'));
       });
     });
 

@@ -428,7 +428,11 @@ class FirebaseApiDriver implements VaultDriver {
 
   VaultStreamException _handleError(dynamic e) {
     if (e is firestore.FirebaseException) {
-      return VaultStreamException(e.code, e.message ?? 'Firestore error',
+      // Normalise Firestore dash-separated codes (e.g. 'not-found') to
+      // underscore-separated codes (e.g. 'not_found') for consistency with
+      // the Quantum error vocabulary used across the rest of the engine.
+      final normalisedCode = e.code.replaceAll('-', '_');
+      return VaultStreamException(normalisedCode, e.message ?? 'Firestore error',
           details: e.stackTrace);
     }
     return VaultStreamException('unknown', e.toString());

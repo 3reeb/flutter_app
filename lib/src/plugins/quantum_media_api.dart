@@ -977,11 +977,11 @@ class QuantumMediaEngine {
     if (_isInitialized) return;
 
     this.localStore = localStore;
-    this.cacheDirectory = cacheDirectory;
+    this.cacheDirectory = cacheDirectory.path.isEmpty ? Directory.systemTemp : cacheDirectory;
     this.clientSecret = clientSecret;
 
     cacheManager = MediaCacheManager(
-        cacheDir: cacheDirectory,
+        cacheDir: this.cacheDirectory,
         store: localStore,
         clientSecret: clientSecret);
     await cacheManager.init();

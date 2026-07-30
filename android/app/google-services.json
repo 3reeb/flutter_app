@@ -1,36 +1,27 @@
 {
   "project_info": {
-    "project_number": "388970688838",
-    "project_id": "fast-ability-437320-n7",
-    "storage_bucket": "fast-ability-437320-n7.firebasestorage.app"
+    "project_number": "1010031342818",
+    "firebase_url": "https://store-d6218-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "store-d6218",
+    "storage_bucket": "store-d6218.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:388970688838:android:cb13f9ddb8785527d9b547",
+        "mobilesdk_app_id": "1:1010031342818:android:b895b0373a3d643bf55abb",
         "android_client_info": {
           "package_name": "com.example.responsive_layout"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "388970688838-c4cb3k7hos9n21g1t8d2gsflomd72uhj.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAgM9KoJdtY9xTaFxUqolUYJZOjaywIQiw"
+          "current_key": "AIzaSyAPvzMuxrOgxQvaW3UaiKQ4WVY3MGXOUdE"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "388970688838-c4cb3k7hos9n21g1t8d2gsflomd72uhj.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

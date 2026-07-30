@@ -41,48 +41,51 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAca4kZKqScIYmmQbuoRlL5puX9zUuR4wU',
-    appId: '1:388970688838:web:35505df4fee3ca84d9b547',
-    messagingSenderId: '388970688838',
-    projectId: 'fast-ability-437320-n7',
-    authDomain: 'fast-ability-437320-n7.firebaseapp.com',
-    storageBucket: 'fast-ability-437320-n7.firebasestorage.app',
+    apiKey: 'AIzaSyDSATC-hLytH-BF2oQXFZVzmFePCS5bgok',
+    appId: '1:1010031342818:web:d922c32215db9ceef55abb',
+    messagingSenderId: '1010031342818',
+    projectId: 'store-d6218',
+    authDomain: 'store-d6218.firebaseapp.com',
+    databaseURL: 'https://store-d6218-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'store-d6218.firebasestorage.app',
+    measurementId: 'G-DXE14K380F',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAgM9KoJdtY9xTaFxUqolUYJZOjaywIQiw',
-    appId: '1:388970688838:android:cb13f9ddb8785527d9b547',
-    messagingSenderId: '388970688838',
-    projectId: 'fast-ability-437320-n7',
-    storageBucket: 'fast-ability-437320-n7.firebasestorage.app',
+    apiKey: 'AIzaSyAPvzMuxrOgxQvaW3UaiKQ4WVY3MGXOUdE',
+    appId: '1:1010031342818:android:b895b0373a3d643bf55abb',
+    messagingSenderId: '1010031342818',
+    projectId: 'store-d6218',
+    databaseURL: 'https://store-d6218-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'store-d6218.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA3USMXlI3B-Z22MHRgsnjxSCSs_DVbCZw',
-    appId: '1:388970688838:ios:a940d59410323caad9b547',
-    messagingSenderId: '388970688838',
-    projectId: 'fast-ability-437320-n7',
-    storageBucket: 'fast-ability-437320-n7.firebasestorage.app',
-    iosClientId: '388970688838-25gp5mtp4vd6e67igbp1h6p2232u7sum.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAuwZ9TzTPL78l5W2WuiZ-Mga1cO8NHUU8',
+    appId: '1:1010031342818:ios:2d03038711551c73f55abb',
+    messagingSenderId: '1010031342818',
+    projectId: 'store-d6218',
+    databaseURL: 'https://store-d6218-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'store-d6218.firebasestorage.app',
     iosBundleId: 'com.example.responsiveLayout',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyA3USMXlI3B-Z22MHRgsnjxSCSs_DVbCZw',
-    appId: '1:388970688838:ios:a940d59410323caad9b547',
-    messagingSenderId: '388970688838',
-    projectId: 'fast-ability-437320-n7',
-    storageBucket: 'fast-ability-437320-n7.firebasestorage.app',
-    iosClientId: '388970688838-25gp5mtp4vd6e67igbp1h6p2232u7sum.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAuwZ9TzTPL78l5W2WuiZ-Mga1cO8NHUU8',
+    appId: '1:1010031342818:ios:2d03038711551c73f55abb',
+    messagingSenderId: '1010031342818',
+    projectId: 'store-d6218',
+    databaseURL: 'https://store-d6218-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'store-d6218.firebasestorage.app',
     iosBundleId: 'com.example.responsiveLayout',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAca4kZKqScIYmmQbuoRlL5puX9zUuR4wU',
-    appId: '1:388970688838:web:5f58e3392491eb65d9b547',
-    messagingSenderId: '388970688838',
-    projectId: 'fast-ability-437320-n7',
-    authDomain: 'fast-ability-437320-n7.firebaseapp.com',
-    storageBucket: 'fast-ability-437320-n7.firebasestorage.app',
+    apiKey: 'AIzaSyDSATC-hLytH-BF2oQXFZVzmFePCS5bgok',
+    appId: '1:1010031342818:web:f7251b11a6efd1fff55abb',
+    messagingSenderId: '1010031342818',
+    projectId: 'store-d6218',
+    authDomain: 'store-d6218.firebaseapp.com',
+    databaseURL: 'https://store-d6218-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'store-d6218.firebasestorage.app',
+    measurementId: 'G-YBTDQNHBR7',
   );
 }
