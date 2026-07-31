@@ -1,8 +1,3 @@
-// ════════════════════════════════════════════════════════════════════════════
-// QUANTUM MEDIA ENGINE v10.0 - OMEGA TIKTOK/NETFLIX PARITY BUILD
-// quantum_media_engine.dart
-// ════════════════════════════════════════════════════════════════════════════
-
 import 'dart:async';
 import 'dart:math' as math;
 import 'dart:typed_data';
@@ -11,12 +6,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
+
 // Ecosystem Primitives
 import '../../foundation/quantum_primitives.dart';
 import '../../foundation/quantum_async.dart';
 import 'package:quantum_layout/quantum.dart';
-// 🚀 IMPORT YOUR BACKEND API FILE HERE
-import '../../plugins/quantum_media_api.dart'; // 🚀 IMPORT YOUR BACKEND API FILE HERE
+
+// 🚀 TRUE PRODUCTION CORE IMPORT
+import 'package:quantum_layout/src/runtime/api/network_shell.dart';
 
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  FRONTEND POLICIES & MODELS
@@ -95,56 +92,50 @@ class QLSubtitleTrack {
 abstract final class QLSubtitleParser {
   static Future<QLSubtitleTrack?> parseNetwork(String url, int offsetMs) async {
     try {
-      final client = mediaHttpClientFactory();
-      try {
-        final request = await client.getUrl(Uri.parse(url));
-        final response = await request.close();
-        final builder = BytesBuilder();
-        await for (final chunk in response.stream) {
-          builder.add(chunk);
-        }
-        final String raw = utf8.decode(builder.takeBytes());
-        final List<double> timingsList = [];
-        final List<String> textsList = [];
-        final RegExp timeRegExp = RegExp(
-            r'(\d{2}):(\d{2}):(\d{2})[,.](\d{3})\s*-->\s*(\d{2}):(\d{2}):(\d{2})[,.](\d{3})');
+      // 🚀 BOILERPLATE REMOVED: Routed strictly through OmniCloud Network Shell
+      // This applies automatic retries, auth tokens, and traceparent tracking.
+      final Uint8List bytes = await Quantum.media.getBytes(url);
+      final String raw = utf8.decode(bytes);
 
-        final lines = raw.split('\n');
-        String currentText = '';
-        double currentStart = -1, currentEnd = -1;
+      final List<double> timingsList = [];
+      final List<String> textsList = [];
+      final RegExp timeRegExp = RegExp(
+          r'(\d{2}):(\d{2}):(\d{2})[,.](\d{3})\s*-->\s*(\d{2}):(\d{2}):(\d{2})[,.](\d{3})');
 
-        for (final rawLine in lines) {
-          final line = rawLine.trim();
-          if (line.isEmpty) {
-            if (currentStart != -1 && currentText.isNotEmpty) {
-              timingsList.addAll([currentStart, currentEnd]);
-              textsList.add(currentText.trim());
-            }
-            currentStart = -1;
-            currentEnd = -1;
-            currentText = '';
-            continue;
+      final lines = raw.split('\n');
+      String currentText = '';
+      double currentStart = -1, currentEnd = -1;
+
+      for (final rawLine in lines) {
+        final line = rawLine.trim();
+        if (line.isEmpty) {
+          if (currentStart != -1 && currentText.isNotEmpty) {
+            timingsList.addAll([currentStart, currentEnd]);
+            textsList.add(currentText.trim());
           }
-          final match = timeRegExp.firstMatch(line);
-          if (match != null) {
-            currentStart = _parseMs(match, 1) + offsetMs;
-            currentEnd = _parseMs(match, 5) + offsetMs;
-          } else if (currentStart != -1 && int.tryParse(line) == null) {
-            currentText += (currentText.isEmpty ? '' : '\n') + line;
-          }
+          currentStart = -1;
+          currentEnd = -1;
+          currentText = '';
+          continue;
         }
-
-        if (currentStart != -1 && currentText.isNotEmpty) {
-          timingsList.addAll([currentStart, currentEnd]);
-          textsList.add(currentText.trim());
+        final match = timeRegExp.firstMatch(line);
+        if (match != null) {
+          currentStart = _parseMs(match, 1) + offsetMs;
+          currentEnd = _parseMs(match, 5) + offsetMs;
+        } else if (currentStart != -1 && int.tryParse(line) == null) {
+          currentText += (currentText.isEmpty ? '' : '\n') + line;
         }
-
-        if (timingsList.isEmpty) return null;
-        return QLSubtitleTrack(Float64List.fromList(timingsList), textsList);
-      } finally {
-        client.close(force: true);
       }
+
+      if (currentStart != -1 && currentText.isNotEmpty) {
+        timingsList.addAll([currentStart, currentEnd]);
+        textsList.add(currentText.trim());
+      }
+
+      if (timingsList.isEmpty) return null;
+      return QLSubtitleTrack(Float64List.fromList(timingsList), textsList);
     } catch (e) {
+      debugPrint('🚨 Subtitle Fetch Failed: $e');
       return null;
     }
   }
@@ -202,24 +193,22 @@ class QLMediaPlaybackController {
     try {
       final List<Future<dynamic>> initTasks = [];
 
-      // 🚀 PROXY ROUTING: Intercept Network Requests for Play-While-Downloading
-      // We route the request through your quantum_media_api.dart instance!
+      // 🚀 PROXY ROUTING: Intercept Network Requests for Secure Playback
       String finalVideoUrl = source.videoUrl ?? '';
       String finalAudioUrl = source.audioUrl ?? '';
 
-      // Only route through Proxy if we are NOT on Web (since dart:io crashes Web)
+      // Only route through Proxy if we are NOT on Web (Local servers don't run in browsers)
       if (!kIsWeb) {
         try {
           if (finalVideoUrl.isNotEmpty && finalVideoUrl.startsWith('http')) {
-            finalVideoUrl =
-                QuantumMediaEngine.instance.getProxyPlayUrl(finalVideoUrl);
+            // Await the proxy URL from the Network Shell
+            finalVideoUrl = await Quantum.media.getProxyPlayUrl(finalVideoUrl);
           }
           if (finalAudioUrl.isNotEmpty && finalAudioUrl.startsWith('http')) {
-            finalAudioUrl =
-                QuantumMediaEngine.instance.getProxyPlayUrl(finalAudioUrl);
+            finalAudioUrl = await Quantum.media.getProxyPlayUrl(finalAudioUrl);
           }
-        } catch (_) {
-          // If the engine wasn't initialized, we gracefully fallback to direct URLs
+        } catch (e) {
+          debugPrint('Proxy routing failed, falling back to direct URL: $e');
         }
       }
 
@@ -230,15 +219,6 @@ class QLMediaPlaybackController {
           httpHeaders: source.httpHeaders,
         );
         initTasks.add(_videoCtrl!.initialize());
-      }
-
-      if (finalAudioUrl.isNotEmpty) {
-        _audioCtrl = VideoPlayerController.networkUrl(
-          Uri.parse(finalAudioUrl),
-          formatHint: _mapFormat(source.formatHint),
-          httpHeaders: source.httpHeaders,
-        );
-        initTasks.add(_audioCtrl!.initialize());
       }
 
       if (source.subtitleUrl != null) {
@@ -403,21 +383,27 @@ class QuantumMediaOrchestrator {
         .toList();
     for (final index in toKill) _activeControllers.remove(index)?.dispose();
 
-    // 🚀 TIKTOK PRE-BUFFERING: Trigger the Background Isolates
+    // 🚀 TIKTOK PRE-BUFFERING: Initialize controllers ahead of time
     final List<String> upcomingUrls = [];
     for (int i = minKeepAlive; i <= maxPreload; i++) {
       if (playlist[i].videoUrl != null) upcomingUrls.add(playlist[i].videoUrl!);
       if (!_activeControllers.containsKey(i)) {
         final ctrl = QLMediaPlaybackController(playlist[i]);
         _activeControllers[i] = ctrl;
-        ctrl.initialize();
+        ctrl.initialize(); // This natively fetches the first chunk via the Proxy!
       }
     }
 
+    // 🚀 OMEGA CACHE WARMUP (Network Range Trick)
+    // For upcoming videos further down the feed, we fetch the first 1MB (1048576 bytes)
+    // directly through Quantum.media to warm up the caching layer instantly.
     if (!kIsWeb) {
-      try {
-        QuantumMediaEngine.instance.prefetchMedia(upcomingUrls);
-      } catch (_) {}
+      for (final url in upcomingUrls) {
+        // Fire-and-forget background fetch for the first megabyte
+        Quantum.media.getBytes(url, headers: {
+          'Range': 'bytes=0-1048576'
+        }).catchError((_) => Uint8List(0));
+      }
     }
   }
 

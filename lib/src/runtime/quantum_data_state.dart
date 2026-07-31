@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quantum_layout/quantum.dart';
+import 'package:quantum_layout/src/runtime/api/network_shell.dart';
 
 typedef QLJsonMap = Map<String, dynamic>;
 typedef QLJsonList = List<dynamic>;

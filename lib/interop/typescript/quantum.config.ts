@@ -444,7 +444,7 @@ const statCardTemplateProps = {
   tone: q.optional(q.enum('brand', 'success', 'warning', 'danger', 'neutral')),
 } as const;
 
-const statCardTemplate = defineTemplate<typeof statCardTemplateProps>({
+const statCardTemplate = defineTemplate({
   name: 'stat_card',
   props: statCardTemplateProps,
   defaultProps: {
@@ -518,35 +518,41 @@ const pageHeaderProps = {
   actionLabel: q.optional(q.string()),
 } as const;
 
-const pageHeaderComponent = defineComponent<typeof pageHeaderProps>(
+// Look: No <typeof pageHeaderProps> generic needed anymore! 
+const pageHeaderComponent = defineComponent(
   'page_header',
-  (props, slots) =>
-    sdui.box(
-      [
-        sdui.box(
-          [
-            sdui.title(props.title),
-            ...(props.subtitle ? [sdui.text(props.subtitle)] : []),
-          ],
-          {
-            props: {
-              direction: 'col',
-              gap: 8,
+  {
+    props: pageHeaderProps,
+    ui: (props) =>
+      sdui.box(
+        [
+          sdui.box(
+            [
+              sdui.title(props.title),
+              // Defer conditional rendering to Dart at runtime
+              sdui.text(props.subtitle).if(props.subtitle),
+            ],
+            {
+              props: {
+                direction: 'col',
+                gap: 8,
+              },
             },
+          ),
+          // Emit a slot node. Dart VM will inject the caller's slot here!
+          sdui.node('slot', { props: { name: 'action' } })
+        ],
+        {
+          props: {
+            direction: 'row',
+            crossAlignment: 'center',
+            mainAlignment: 'space-between',
+            gap: 16,
+            padding: 0,
           },
-        ),
-        ...(slots.action ? [slots.action] : []),
-      ],
-      {
-        props: {
-          direction: 'row',
-          crossAlignment: 'center',
-          mainAlignment: 'space-between',
-          gap: 16,
-          padding: 0,
         },
-      },
-    ),
+      ),
+  }
 );
 
 const navRailProps = {
@@ -554,24 +560,28 @@ const navRailProps = {
   collapsed: q.optional(q.boolean()),
 } as const;
 
-const navRailComponent = defineComponent<typeof navRailProps>(
+// Look: No generic needed! Auto-inferred flawlessly.
+const navRailComponent = defineComponent(
   'nav_rail',
-  (props) =>
-    sdui.box(
-      [
-        sdui.text('Navigation'),
-        sdui.text(props.current),
-      ],
-      {
-        props: {
-          direction: 'col',
-          gap: 8,
-          padding: 16,
-          radius: 20,
-          bg: '$colors.surface',
+  {
+    props: navRailProps,
+    ui: (props) =>
+      sdui.box(
+        [
+          sdui.text('Navigation'),
+          sdui.text(props.current),
+        ],
+        {
+          props: {
+            direction: 'col',
+            gap: 8,
+            padding: 16,
+            radius: 20,
+            bg: '$colors.surface',
+          },
         },
-      },
-    ),
+      ),
+  }
 );
 
 /* ============================================================
@@ -580,24 +590,29 @@ const navRailComponent = defineComponent<typeof navRailProps>(
 
 const pagePaddingMacro = defineMacro(
   'page_padding',
-  sdui.box([], {
-    props: {
-      padding: 24,
-      radius: 24,
-    },
-  }),
+  {
+    ui: sdui.box([], {
+      props: {
+        padding: 24,
+        radius: 24,
+      },
+    }),
+  }
 );
 
 const contentFrameMacro = defineMacro(
   'content_frame',
-  sdui.box([], {
-    props: {
-      direction: 'col',
-      gap: 20,
-      padding: 24,
-    },
-  }),
+  {
+    ui: sdui.box([], {
+      props: {
+        direction: 'col',
+        gap: 20,
+        padding: 24,
+      },
+    }),
+  }
 );
+
 
 /* ============================================================
  * 10) CUSTOM NODE TYPES

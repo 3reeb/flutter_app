@@ -6,7 +6,8 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:quantum_layout/quantum.dart';
-import '../plugins/quantum_api_shell.dart';
+import 'package:quantum_layout/src/runtime/api/network_shell.dart';
+
 /// Convenience factory for fluent domain construction.
 QuantumDomainBuilder quantumDomain(String name) => QuantumDomainBuilder(name);
 

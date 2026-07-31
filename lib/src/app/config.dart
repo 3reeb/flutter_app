@@ -23,9 +23,9 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../foundation/quantum_yaml_engine.dart';
-import '../plugins/quantum_api_engine.dart';
-import '../plugins/quantum_sdui_engine.dart';
-import '../plugins/quantum_api_shell.dart';
+import 'package:quantum_layout/src/runtime/api/network_shell.dart';
+import 'package:quantum_layout/src/runtime/api/network.dart';
+
 import 'quantum_app_boot.dart';
 import 'quantum_boot_schema.dart';
 import 'quantum_http_transport.dart';
@@ -108,7 +108,7 @@ class QuantumBuildOverlay {
 // Source model
 // ────────────────────────────────────────────────────────────────────────────
 
-enum QuantumConfigSourceKind {
+enum OmniShellConfigSourceKind {
   inline,
   asset,
   file,
@@ -116,16 +116,16 @@ enum QuantumConfigSourceKind {
   custom,
 }
 
-enum QuantumConfigListMergeMode {
+enum OmniShellConfigListMergeMode {
   replace,
   concat,
   uniqueConcat,
 }
 
 @immutable
-class QuantumConfigSourceResult {
+class OmniShellConfigSourceResult {
   final String sourceId;
-  final QuantumConfigSourceKind kind;
+  final OmniShellConfigSourceKind kind;
   final Map<String, dynamic> data;
   final String contentHash;
   final DateTime fetchedAt;
@@ -134,7 +134,7 @@ class QuantumConfigSourceResult {
   final bool fromCache;
   final Map<String, dynamic> meta;
 
-  const QuantumConfigSourceResult({
+  const OmniShellConfigSourceResult({
     required this.sourceId,
     required this.kind,
     required this.data,
@@ -147,20 +147,21 @@ class QuantumConfigSourceResult {
   });
 }
 
-typedef QuantumConfigSourceLoader = Future<QuantumConfigSourceResult> Function(
-  QuantumConfigSource source,
-  QuantumConfigSourceContext context,
+typedef OmniShellConfigSourceLoader = Future<OmniShellConfigSourceResult>
+    Function(
+  OmniShellConfigSource source,
+  OmniShellConfigSourceContext context,
 );
 
 @immutable
-class QuantumConfigSourceContext {
+class OmniShellConfigSourceContext {
   final QuantumYamlEngine yaml;
   final QuantumHttpTransport http;
   final Map<String, String> env;
-  final SecureSduiVault? secureVault;
+  final SecureStorageDelegate? secureVault; // <-- CHANGED HERE
   final bool useCache;
 
-  const QuantumConfigSourceContext({
+  const OmniShellConfigSourceContext({
     required this.yaml,
     required this.http,
     required this.env,
@@ -170,9 +171,9 @@ class QuantumConfigSourceContext {
 }
 
 @immutable
-abstract class QuantumConfigSource {
+abstract class OmniShellConfigSource {
   final String id;
-  final QuantumConfigSourceKind kind;
+  final OmniShellConfigSourceKind kind;
   final int priority;
   final bool enabled;
   final Duration? ttl;
@@ -180,7 +181,7 @@ abstract class QuantumConfigSource {
   final bool required;
   final bool allowOverrides;
 
-  const QuantumConfigSource({
+  const OmniShellConfigSource({
     required this.id,
     required this.kind,
     this.priority = 0,
@@ -191,13 +192,14 @@ abstract class QuantumConfigSource {
     this.allowOverrides = true,
   });
 
-  Future<QuantumConfigSourceResult> load(QuantumConfigSourceContext context);
+  Future<OmniShellConfigSourceResult> load(
+      OmniShellConfigSourceContext context);
 
   String get stableKey => '$kind::$id::$priority';
 }
 
 @immutable
-class QuantumInlineConfigSource extends QuantumConfigSource {
+class QuantumInlineConfigSource extends OmniShellConfigSource {
   final Map<String, dynamic> value;
 
   const QuantumInlineConfigSource({
@@ -207,14 +209,14 @@ class QuantumInlineConfigSource extends QuantumConfigSource {
     super.enabled = true,
     super.required = true,
     super.allowOverrides = true,
-  }) : super(kind: QuantumConfigSourceKind.inline);
+  }) : super(kind: OmniShellConfigSourceKind.inline);
 
   @override
-  Future<QuantumConfigSourceResult> load(
-      QuantumConfigSourceContext context) async {
+  Future<OmniShellConfigSourceResult> load(
+      OmniShellConfigSourceContext context) async {
     final normalized = _normalizeMap(value);
     final hash = _sha256OfMap(normalized);
-    return QuantumConfigSourceResult(
+    return OmniShellConfigSourceResult(
       sourceId: id,
       kind: kind,
       data: normalized,
@@ -226,7 +228,7 @@ class QuantumInlineConfigSource extends QuantumConfigSource {
 }
 
 @immutable
-class QuantumAssetConfigSource extends QuantumConfigSource {
+class QuantumAssetConfigSource extends OmniShellConfigSource {
   final String assetPath;
   final Map<String, String>? extraEnv;
 
@@ -240,18 +242,18 @@ class QuantumAssetConfigSource extends QuantumConfigSource {
     super.headers = const {},
     super.required = true,
     super.allowOverrides = true,
-  }) : super(kind: QuantumConfigSourceKind.asset);
+  }) : super(kind: OmniShellConfigSourceKind.asset);
 
   @override
-  Future<QuantumConfigSourceResult> load(
-      QuantumConfigSourceContext context) async {
+  Future<OmniShellConfigSourceResult> load(
+      OmniShellConfigSourceContext context) async {
     final raw = await context.yaml.load(
       assetPath,
       useCache: context.useCache,
       extraEnv: extraEnv,
     );
     final hash = _sha256OfMap(raw);
-    return QuantumConfigSourceResult(
+    return OmniShellConfigSourceResult(
       sourceId: id,
       kind: kind,
       data: _normalizeMap(raw),
@@ -263,7 +265,7 @@ class QuantumAssetConfigSource extends QuantumConfigSource {
 }
 
 @immutable
-class QuantumFileConfigSource extends QuantumConfigSource {
+class QuantumFileConfigSource extends OmniShellConfigSource {
   final String filePath;
   final Encoding encoding;
 
@@ -277,15 +279,15 @@ class QuantumFileConfigSource extends QuantumConfigSource {
     super.headers = const {},
     super.required = true,
     super.allowOverrides = true,
-  }) : super(kind: QuantumConfigSourceKind.file);
+  }) : super(kind: OmniShellConfigSourceKind.file);
 
   @override
-  Future<QuantumConfigSourceResult> load(
-      QuantumConfigSourceContext context) async {
+  Future<OmniShellConfigSourceResult> load(
+      OmniShellConfigSourceContext context) async {
     final raw = await File(filePath).readAsString(encoding: encoding);
     final parsed = await context.yaml.parseString(raw, debugPath: filePath);
     final hash = _sha256OfMap(parsed);
-    return QuantumConfigSourceResult(
+    return OmniShellConfigSourceResult(
       sourceId: id,
       kind: kind,
       data: _normalizeMap(parsed),
@@ -297,14 +299,14 @@ class QuantumFileConfigSource extends QuantumConfigSource {
 }
 
 @immutable
-class QuantumHttpConfigSource extends QuantumConfigSource {
+class QuantumHttpConfigSource extends OmniShellConfigSource {
   final Uri uri;
   final String method;
   final Object? body;
   final Duration timeout;
   final bool cacheByEtag;
   final String? expectedSha256;
-  final QuantumConfigSourceLoader? customLoader;
+  final OmniShellConfigSourceLoader? customLoader;
 
   const QuantumHttpConfigSource({
     required super.id,
@@ -321,11 +323,11 @@ class QuantumHttpConfigSource extends QuantumConfigSource {
     super.headers = const {},
     super.required = true,
     super.allowOverrides = true,
-  }) : super(kind: QuantumConfigSourceKind.http);
+  }) : super(kind: OmniShellConfigSourceKind.http);
 
   @override
-  Future<QuantumConfigSourceResult> load(
-      QuantumConfigSourceContext context) async {
+  Future<OmniShellConfigSourceResult> load(
+      OmniShellConfigSourceContext context) async {
     if (customLoader != null) {
       return customLoader!(this, context);
     }
@@ -349,7 +351,7 @@ class QuantumHttpConfigSource extends QuantumConfigSource {
       return _cachedBySource[stableKey]!;
     }
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw QuantumConfigException(
+      throw OmniShellConfigException(
         'Remote config request failed',
         sourceId: id,
         details: {'statusCode': response.statusCode, 'uri': uri.toString()},
@@ -366,7 +368,7 @@ class QuantumHttpConfigSource extends QuantumConfigSource {
     if (expectedSha256 != null &&
         expectedSha256!.isNotEmpty &&
         expectedSha256 != hash) {
-      throw QuantumConfigException(
+      throw OmniShellConfigException(
         'Remote config hash mismatch',
         sourceId: id,
         details: {'expected': expectedSha256, 'actual': hash},
@@ -379,7 +381,7 @@ class QuantumHttpConfigSource extends QuantumConfigSource {
     final lastModified = response.headers[HttpHeaders.lastModifiedHeader] ??
         response.headers['last-modified'];
 
-    final result = QuantumConfigSourceResult(
+    final result = OmniShellConfigSourceResult(
       sourceId: id,
       kind: kind,
       data: normalized,
@@ -401,13 +403,13 @@ class QuantumHttpConfigSource extends QuantumConfigSource {
   }
 
   static final Map<String, String> _etagBySource = <String, String>{};
-  static final Map<String, QuantumConfigSourceResult> _cachedBySource =
-      <String, QuantumConfigSourceResult>{};
+  static final Map<String, OmniShellConfigSourceResult> _cachedBySource =
+      <String, OmniShellConfigSourceResult>{};
 }
 
 @immutable
-class QuantumCustomConfigSource extends QuantumConfigSource {
-  final QuantumConfigSourceLoader loader;
+class QuantumCustomConfigSource extends OmniShellConfigSource {
+  final OmniShellConfigSourceLoader loader;
 
   const QuantumCustomConfigSource({
     required super.id,
@@ -418,10 +420,11 @@ class QuantumCustomConfigSource extends QuantumConfigSource {
     super.headers = const {},
     super.required = true,
     super.allowOverrides = true,
-  }) : super(kind: QuantumConfigSourceKind.custom);
+  }) : super(kind: OmniShellConfigSourceKind.custom);
 
   @override
-  Future<QuantumConfigSourceResult> load(QuantumConfigSourceContext context) {
+  Future<OmniShellConfigSourceResult> load(
+      OmniShellConfigSourceContext context) {
     return loader(this, context);
   }
 }
@@ -431,15 +434,15 @@ class QuantumCustomConfigSource extends QuantumConfigSource {
 // ────────────────────────────────────────────────────────────────────────────
 
 @immutable
-class QuantumConfigMergePolicy {
-  final QuantumConfigListMergeMode listMode;
+class OmniShellConfigMergePolicy {
+  final OmniShellConfigListMergeMode listMode;
   final bool deepMergeMaps;
   final bool mergeNulls;
   final bool allowNewKeys;
   final bool preferRemoteOnConflict;
 
-  const QuantumConfigMergePolicy({
-    this.listMode = QuantumConfigListMergeMode.replace,
+  const OmniShellConfigMergePolicy({
+    this.listMode = OmniShellConfigListMergeMode.replace,
     this.deepMergeMaps = true,
     this.mergeNulls = false,
     this.allowNewKeys = true,
@@ -448,7 +451,7 @@ class QuantumConfigMergePolicy {
 }
 
 @immutable
-class QuantumConfigSecurityPolicy {
+class OmniShellConfigSecurityPolicy {
   final Set<String> lockedPaths;
   final Set<String> sensitivePaths;
   final bool requireBuildLockForSensitive;
@@ -460,7 +463,7 @@ class QuantumConfigSecurityPolicy {
   final String? remoteSignatureKeyEnv;
   final String? remoteEncryptionKeyEnv;
 
-  const QuantumConfigSecurityPolicy({
+  const OmniShellConfigSecurityPolicy({
     this.lockedPaths = const <String>{},
     this.sensitivePaths = const <String>{},
     this.requireBuildLockForSensitive = true,
@@ -489,7 +492,7 @@ class QuantumConfigSecurityPolicy {
 }
 
 @immutable
-class QuantumConfigCachePolicy {
+class OmniShellConfigCachePolicy {
   final bool enableMemoization;
   final Duration remoteTtl;
   final Duration localTtl;
@@ -497,7 +500,7 @@ class QuantumConfigCachePolicy {
   final bool singleFlight;
   final bool useSourceDigests;
 
-  const QuantumConfigCachePolicy({
+  const OmniShellConfigCachePolicy({
     this.enableMemoization = true,
     this.remoteTtl = const Duration(minutes: 5),
     this.localTtl = const Duration(days: 3650),
@@ -512,7 +515,7 @@ class QuantumConfigCachePolicy {
 // ────────────────────────────────────────────────────────────────────────────
 
 @immutable
-class QuantumConfigThemeSection {
+class OmniShellConfigThemeSection {
   final String mode;
   final Map<String, dynamic> colors;
   final Map<String, dynamic> typography;
@@ -521,7 +524,7 @@ class QuantumConfigThemeSection {
   final Map<String, dynamic> shadows;
   final Map<String, dynamic> radii;
 
-  const QuantumConfigThemeSection({
+  const OmniShellConfigThemeSection({
     this.mode = 'system',
     this.colors = const {},
     this.typography = const {},
@@ -543,13 +546,13 @@ class QuantumConfigThemeSection {
 }
 
 @immutable
-class QuantumConfigRouterSection {
+class OmniShellConfigRouterSection {
   final String initialRoute;
   final String pagesDir;
   final String? notFoundPage;
   final List<Map<String, dynamic>> globalGuards;
 
-  const QuantumConfigRouterSection({
+  const OmniShellConfigRouterSection({
     this.initialRoute = '/',
     this.pagesDir = 'pages',
     this.notFoundPage,
@@ -565,11 +568,11 @@ class QuantumConfigRouterSection {
 }
 
 @immutable
-class QuantumConfigVmSection {
+class OmniShellConfigVmSection {
   final int workerThreads;
   final int simdArenaCapacity;
 
-  const QuantumConfigVmSection({
+  const OmniShellConfigVmSection({
     this.workerThreads = 4,
     this.simdArenaCapacity = 4096,
   });
@@ -581,11 +584,11 @@ class QuantumConfigVmSection {
 }
 
 @immutable
-class QuantumConfigTelemetrySection {
+class OmniShellConfigTelemetrySection {
   final bool enabled;
   final bool frameMonitor;
 
-  const QuantumConfigTelemetrySection({
+  const OmniShellConfigTelemetrySection({
     this.enabled = true,
     this.frameMonitor = true,
   });
@@ -597,15 +600,15 @@ class QuantumConfigTelemetrySection {
 }
 
 @immutable
-class QuantumConfigAppSection {
+class OmniShellConfigAppSection {
   final String appName;
   final String title;
   final String locale;
   final String version;
-  final QuantumConfigThemeSection theme;
-  final QuantumConfigRouterSection router;
-  final QuantumConfigVmSection vm;
-  final QuantumConfigTelemetrySection telemetry;
+  final OmniShellConfigThemeSection theme;
+  final OmniShellConfigRouterSection router;
+  final OmniShellConfigVmSection vm;
+  final OmniShellConfigTelemetrySection telemetry;
   final List<Map<String, dynamic>> domains;
   final Map<String, dynamic> state;
   final Map<String, dynamic> macros;
@@ -615,15 +618,15 @@ class QuantumConfigAppSection {
   final Map<String, dynamic> sdui;
   final Map<String, dynamic>? boot;
 
-  const QuantumConfigAppSection({
+  const OmniShellConfigAppSection({
     required this.appName,
     this.title = '',
     this.locale = 'en',
     this.version = '1.0.0',
-    this.theme = const QuantumConfigThemeSection(),
-    this.router = const QuantumConfigRouterSection(),
-    this.vm = const QuantumConfigVmSection(),
-    this.telemetry = const QuantumConfigTelemetrySection(),
+    this.theme = const OmniShellConfigThemeSection(),
+    this.router = const OmniShellConfigRouterSection(),
+    this.vm = const OmniShellConfigVmSection(),
+    this.telemetry = const OmniShellConfigTelemetrySection(),
     this.domains = const [],
     this.state = const {},
     this.macros = const {},
@@ -657,7 +660,7 @@ class QuantumConfigAppSection {
 }
 
 @immutable
-class QuantumConfigApiSection {
+class OmniShellConfigApiSection {
   final String apiUrl;
   final String socketUrl;
   final String cacheDirectoryPath;
@@ -670,7 +673,7 @@ class QuantumConfigApiSection {
   final Duration mockMaxLatency;
   final double mockFailureProbability;
 
-  const QuantumConfigApiSection({
+  const OmniShellConfigApiSection({
     required this.apiUrl,
     required this.socketUrl,
     required this.cacheDirectoryPath,
@@ -702,13 +705,13 @@ class QuantumConfigApiSection {
 }
 
 @immutable
-class QuantumConfigRemoteSourceSpec {
-  final List<QuantumConfigSource> sources;
+class OmniShellConfigRemoteSourceSpec {
+  final List<OmniShellConfigSource> sources;
   final bool enableRemote;
   final bool allowFallbackToLocal;
   final Duration timeout;
 
-  const QuantumConfigRemoteSourceSpec({
+  const OmniShellConfigRemoteSourceSpec({
     this.sources = const [],
     this.enableRemote = true,
     this.allowFallbackToLocal = true,
@@ -717,52 +720,52 @@ class QuantumConfigRemoteSourceSpec {
 }
 
 @immutable
-class QuantumConfigLocalSourceSpec {
-  final List<QuantumConfigSource> sources;
+class OmniShellConfigLocalSourceSpec {
+  final List<OmniShellConfigSource> sources;
 
-  const QuantumConfigLocalSourceSpec({
+  const OmniShellConfigLocalSourceSpec({
     this.sources = const [],
   });
 }
 
 @immutable
-class QuantumConfigSources {
-  final QuantumConfigLocalSourceSpec local;
-  final QuantumConfigRemoteSourceSpec remote;
+class OmniShellConfigSources {
+  final OmniShellConfigLocalSourceSpec local;
+  final OmniShellConfigRemoteSourceSpec remote;
 
-  const QuantumConfigSources({
-    this.local = const QuantumConfigLocalSourceSpec(),
-    this.remote = const QuantumConfigRemoteSourceSpec(),
+  const OmniShellConfigSources({
+    this.local = const OmniShellConfigLocalSourceSpec(),
+    this.remote = const OmniShellConfigRemoteSourceSpec(),
   });
 
-  List<QuantumConfigSource> orderedSources() {
-    final list = <QuantumConfigSource>[
+  List<OmniShellConfigSource> orderedSources() {
+    final list = <OmniShellConfigSource>[
       ...local.sources.where((s) => s.enabled),
       if (remote.enableRemote) ...remote.sources.where((s) => s.enabled),
     ];
     list.sort((a, b) => a.priority.compareTo(b.priority));
-    return List<QuantumConfigSource>.unmodifiable(list);
+    return List<OmniShellConfigSource>.unmodifiable(list);
   }
 }
 
 @immutable
-class QuantumConfigRoot {
-  final QuantumConfigAppSection app;
-  final QuantumConfigApiSection api;
-  final QuantumConfigSecurityPolicy security;
-  final QuantumConfigMergePolicy merge;
-  final QuantumConfigCachePolicy cache;
-  final QuantumConfigSources sources;
+class OmniShellConfigRoot {
+  final OmniShellConfigAppSection app;
+  final OmniShellConfigApiSection api;
+  final OmniShellConfigSecurityPolicy security;
+  final OmniShellConfigMergePolicy merge;
+  final OmniShellConfigCachePolicy cache;
+  final OmniShellConfigSources sources;
   final Map<String, dynamic> extras;
   final QuantumBuildOverlay buildOverlay;
 
-  const QuantumConfigRoot({
+  const OmniShellConfigRoot({
     required this.app,
     required this.api,
-    this.security = const QuantumConfigSecurityPolicy(),
-    this.merge = const QuantumConfigMergePolicy(),
-    this.cache = const QuantumConfigCachePolicy(),
-    this.sources = const QuantumConfigSources(),
+    this.security = const OmniShellConfigSecurityPolicy(),
+    this.merge = const OmniShellConfigMergePolicy(),
+    this.cache = const OmniShellConfigCachePolicy(),
+    this.sources = const OmniShellConfigSources(),
     this.extras = const {},
     this.buildOverlay = const QuantumBuildOverlay(
       data: <String, dynamic>{},
@@ -770,8 +773,8 @@ class QuantumConfigRoot {
     ),
   });
 
-  QuantumConfigRoot withBuildOverlay(QuantumBuildOverlay overlay) {
-    return QuantumConfigRoot(
+  OmniShellConfigRoot withBuildOverlay(QuantumBuildOverlay overlay) {
+    return OmniShellConfigRoot(
       app: app,
       api: api,
       security: security,
@@ -783,8 +786,8 @@ class QuantumConfigRoot {
     );
   }
 
-  QuantumConfigRoot withExtras(Map<String, dynamic> newExtras) {
-    return QuantumConfigRoot(
+  OmniShellConfigRoot withExtras(Map<String, dynamic> newExtras) {
+    return OmniShellConfigRoot(
       app: app,
       api: api,
       security: security,
@@ -802,7 +805,7 @@ class QuantumConfigRoot {
 // ────────────────────────────────────────────────────────────────────────────
 
 @immutable
-class QuantumConfigResolutionReport {
+class OmniShellConfigResolutionReport {
   final List<String> sourceOrder;
   final Map<String, String> sourceHashes;
   final List<String> skippedLockedPaths;
@@ -810,7 +813,7 @@ class QuantumConfigResolutionReport {
   final Duration elapsed;
   final bool usedCache;
 
-  const QuantumConfigResolutionReport({
+  const OmniShellConfigResolutionReport({
     required this.sourceOrder,
     required this.sourceHashes,
     required this.skippedLockedPaths,
@@ -819,7 +822,7 @@ class QuantumConfigResolutionReport {
     required this.usedCache,
   });
 
-  QuantumConfigResolutionReport copyWith({
+  OmniShellConfigResolutionReport copyWith({
     List<String>? sourceOrder,
     Map<String, String>? sourceHashes,
     List<String>? skippedLockedPaths,
@@ -827,7 +830,7 @@ class QuantumConfigResolutionReport {
     Duration? elapsed,
     bool? usedCache,
   }) {
-    return QuantumConfigResolutionReport(
+    return OmniShellConfigResolutionReport(
       sourceOrder: sourceOrder ?? this.sourceOrder,
       sourceHashes: sourceHashes ?? this.sourceHashes,
       skippedLockedPaths: skippedLockedPaths ?? this.skippedLockedPaths,
@@ -840,9 +843,9 @@ class QuantumConfigResolutionReport {
 
 @immutable
 class QuantumResolvedConfig {
-  final QuantumConfigRoot blueprint;
+  final OmniShellConfigRoot blueprint;
   final Map<String, dynamic> raw;
-  final QuantumConfigResolutionReport report;
+  final OmniShellConfigResolutionReport report;
 
   const QuantumResolvedConfig({
     required this.blueprint,
@@ -923,7 +926,7 @@ class QuantumResolvedConfig {
     });
   }
 
-  QuantumConfig toQuantumRuntimeConfig() {
+  OmniShellConfig toQuantumRuntimeConfig() {
     final map = toApiBootstrapMap();
     final driverName = map['driverMode']?.toString().toLowerCase() ?? 'http';
     final driverMode = QuantumDriverMode.values.firstWhere(
@@ -931,7 +934,7 @@ class QuantumResolvedConfig {
       orElse: () => blueprint.api.driverMode,
     );
 
-    return QuantumConfig(
+    return OmniShellConfig(
       apiUrl: map['apiUrl']?.toString() ?? '',
       socketUrl: map['socketUrl']?.toString() ?? '',
       cacheDirectoryPath: map['cacheDirectoryPath']?.toString() ?? '',
@@ -940,14 +943,6 @@ class QuantumResolvedConfig {
       enableTelemetry: map['enableTelemetry'] as bool? ?? true,
       enableOfflineQueueing: map['enableOfflineQueueing'] as bool? ?? true,
       driverMode: driverMode,
-      mockMinLatency: Duration(
-        milliseconds: (map['mockMinLatencyMs'] as num?)?.toInt() ?? 1,
-      ),
-      mockMaxLatency: Duration(
-        milliseconds: (map['mockMaxLatencyMs'] as num?)?.toInt() ?? 5,
-      ),
-      mockFailureProbability:
-          (map['mockFailureProbability'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -960,12 +955,12 @@ class QuantumResolvedConfig {
 // Resolver
 // ────────────────────────────────────────────────────────────────────────────
 
-class QuantumConfigException implements Exception {
+class OmniShellConfigException implements Exception {
   final String message;
   final String? sourceId;
   final Map<String, dynamic> details;
 
-  const QuantumConfigException(
+  const OmniShellConfigException(
     this.message, {
     this.sourceId,
     this.details = const {},
@@ -974,13 +969,13 @@ class QuantumConfigException implements Exception {
   @override
   String toString() {
     final id = sourceId == null ? '' : ' [$sourceId]';
-    return 'QuantumConfigException$id: $message';
+    return 'OmniShellConfigException$id: $message';
   }
 }
 
-class QuantumConfigResolver {
-  final QuantumConfigRoot blueprint;
-  final QuantumConfigSourceContext context;
+class OmniShellConfigResolver {
+  final OmniShellConfigRoot blueprint;
+  final OmniShellConfigSourceContext context;
 
   final Map<String, QuantumResolvedConfig> _memo =
       <String, QuantumResolvedConfig>{};
@@ -988,15 +983,15 @@ class QuantumConfigResolver {
   final Map<String, Future<QuantumResolvedConfig>> _inFlight =
       <String, Future<QuantumResolvedConfig>>{};
 
-  QuantumConfigResolver(
+  OmniShellConfigResolver(
     this.blueprint, {
-    QuantumConfigSourceContext? context,
+    OmniShellConfigSourceContext? context,
     QuantumHttpTransport? http,
     Map<String, String>? env,
-    SecureSduiVault? secureVault,
+    SecureStorageDelegate? secureVault, // <-- CHANGED HERE
     bool useCache = true,
   }) : context = context ??
-            QuantumConfigSourceContext(
+            OmniShellConfigSourceContext(
               yaml: QuantumYamlEngine.instance,
               http: http ?? QuantumHttpTransport.platform(),
               env: env ?? const {},
@@ -1127,7 +1122,7 @@ class QuantumConfigResolver {
       );
     }
 
-    final report = QuantumConfigResolutionReport(
+    final report = OmniShellConfigResolutionReport(
       sourceOrder: List<String>.unmodifiable(order),
       sourceHashes: Map<String, String>.unmodifiable(hashes),
       skippedLockedPaths: List<String>.unmodifiable(skipped),
@@ -1180,9 +1175,9 @@ class QuantumConfigResolver {
   }
 }
 
-extension on QuantumConfigSecurityPolicy {
-  QuantumConfigSecurityPolicy copyWithLocked(Set<String> locked) {
-    return QuantumConfigSecurityPolicy(
+extension on OmniShellConfigSecurityPolicy {
+  OmniShellConfigSecurityPolicy copyWithLocked(Set<String> locked) {
+    return OmniShellConfigSecurityPolicy(
       lockedPaths: <String>{...lockedPaths, ...locked},
       sensitivePaths: sensitivePaths,
       requireBuildLockForSensitive: requireBuildLockForSensitive,
@@ -1204,8 +1199,8 @@ extension on QuantumConfigSecurityPolicy {
 void _deepOverlay(
   Map<String, dynamic> target,
   Map<String, dynamic> overlay,
-  QuantumConfigMergePolicy merge,
-  QuantumConfigSecurityPolicy security, {
+  OmniShellConfigMergePolicy merge,
+  OmniShellConfigSecurityPolicy security, {
   required String path,
   required List<String> skippedLockedPaths,
   required List<String> sensitivePaths,
@@ -1247,16 +1242,16 @@ void _deepOverlay(
 
     if (value is List && current is List) {
       switch (merge.listMode) {
-        case QuantumConfigListMergeMode.replace:
+        case OmniShellConfigListMergeMode.replace:
           target[key] = List<dynamic>.unmodifiable(value);
           return;
-        case QuantumConfigListMergeMode.concat:
+        case OmniShellConfigListMergeMode.concat:
           target[key] = List<dynamic>.unmodifiable(<dynamic>[
             ...current,
             ...value,
           ]);
           return;
-        case QuantumConfigListMergeMode.uniqueConcat:
+        case OmniShellConfigListMergeMode.uniqueConcat:
           final seen = <String>{};
           final out = <dynamic>[];
           for (final item in current) {

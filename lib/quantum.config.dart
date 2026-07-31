@@ -1,20 +1,21 @@
 import 'package:quantum_layout/quantum.dart';
+import 'package:quantum_layout/src/runtime/api/network_shell.dart';
 
 // ────────────────────────────────────────────────────────────────────────────
-// Quantum Configuration
+// OmniShell Configuration
 //
 // This is the static baseline configuration for your app.
-// Note: In this architecture, the actual pages, layouts, schemas, and global 
+// Note: In this architecture, the actual pages, layouts, schemas, and global
 // configs are driven entirely by `assets/config/kernel.json` and `assets/pages/`.
 // ────────────────────────────────────────────────────────────────────────────
 
-final QuantumConfigRoot quantumConfig = QuantumConfigRoot(
-  app: QuantumConfigAppSection(
-    appName: 'Quantum Omega SDUI',
+final OmniShellConfigRoot quantumConfig = OmniShellConfigRoot(
+  app: OmniShellConfigAppSection(
+    appName: 'OmniShell Omega SDUI',
     title: 'SDUI Application',
     locale: 'en',
     version: '1.0.0',
-    theme: QuantumConfigThemeSection(
+    theme: OmniShellConfigThemeSection(
       mode: 'system',
       colors: const <String, dynamic>{},
       typography: const <String, dynamic>{},
@@ -23,17 +24,17 @@ final QuantumConfigRoot quantumConfig = QuantumConfigRoot(
       shadows: const <String, dynamic>{},
       radii: const <String, dynamic>{},
     ),
-    router: QuantumConfigRouterSection(
+    router: OmniShellConfigRouterSection(
       initialRoute: '/',
       pagesDir: 'assets/pages', // Point to our generated pages folder
       notFoundPage: null,
       globalGuards: const <Map<String, dynamic>>[],
     ),
-    vm: QuantumConfigVmSection(
+    vm: OmniShellConfigVmSection(
       workerThreads: 4,
       simdArenaCapacity: 16384,
     ),
-    telemetry: QuantumConfigTelemetrySection(
+    telemetry: OmniShellConfigTelemetrySection(
       enabled: true,
       frameMonitor: true,
     ),
@@ -45,11 +46,11 @@ final QuantumConfigRoot quantumConfig = QuantumConfigRoot(
     actions: const <String, dynamic>{},
     sdui: const <String, dynamic>{},
     boot: const <String, dynamic>{
-      'appName': 'Quantum Omega SDUI',
+      'appName': 'OmniShell Omega SDUI',
       'pagesDir': 'assets/pages',
     },
   ),
-  api: QuantumConfigApiSection(
+  api: OmniShellConfigApiSection(
     apiUrl: '',
     socketUrl: '',
     cacheDirectoryPath: '',
@@ -58,11 +59,8 @@ final QuantumConfigRoot quantumConfig = QuantumConfigRoot(
     enableTelemetry: true,
     enableOfflineQueueing: true,
     driverMode: QuantumDriverMode.http,
-    mockMinLatency: const Duration(milliseconds: 1),
-    mockMaxLatency: const Duration(milliseconds: 5),
-    mockFailureProbability: 0.0,
   ),
-  security: QuantumConfigSecurityPolicy(
+  security: OmniShellConfigSecurityPolicy(
     lockedPaths: const <String>{},
     sensitivePaths: const <String>{},
     requireBuildLockForSensitive: true,
@@ -71,14 +69,14 @@ final QuantumConfigRoot quantumConfig = QuantumConfigRoot(
     persistEncryptedRemoteCache: true,
     cacheSensitiveValuesInVault: true,
   ),
-  merge: QuantumConfigMergePolicy(
-    listMode: QuantumConfigListMergeMode.replace,
+  merge: OmniShellConfigMergePolicy(
+    listMode: OmniShellConfigListMergeMode.replace,
     deepMergeMaps: true,
     mergeNulls: false,
     allowNewKeys: true,
     preferRemoteOnConflict: true,
   ),
-  cache: QuantumConfigCachePolicy(
+  cache: OmniShellConfigCachePolicy(
     enableMemoization: true,
     remoteTtl: const Duration(minutes: 5),
     localTtl: const Duration(days: 3650),
@@ -86,9 +84,14 @@ final QuantumConfigRoot quantumConfig = QuantumConfigRoot(
     singleFlight: true,
     useSourceDigests: true,
   ),
-  sources: QuantumConfigSources(
-    local: QuantumConfigLocalSourceSpec(
-      sources: const <QuantumConfigSource>[],
+  sources: OmniShellConfigSources(
+    local: OmniShellConfigLocalSourceSpec(
+      sources: const <OmniShellConfigSource>[
+        QuantumAssetConfigSource(
+          id: 'kernel',
+          assetPath: 'assets/config/kernel.json',
+        ),
+      ],
     ),
   ),
   extras: const <String, dynamic>{},

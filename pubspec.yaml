@@ -40,6 +40,4 @@ flutter:
   assets:
     - assets/
     - assets/pages/
-    - assets/pages/users/
-    - assets/pages/blog/
     - assets/config/

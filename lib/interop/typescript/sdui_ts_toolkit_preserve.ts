@@ -760,13 +760,64 @@ export interface CollabProps extends BaseProps {
   field?: string;
   color?: Expr<string> | DesignToken;
 }
+/* ============================================================
+ * STRICT COMPONENT & MACRO TYPES (Matches Dart VM)
+ * ============================================================ */
+
+export interface ComponentComputedSpec {
+  deps?: string[];
+  op?: 'constant' | 'copy' | 'concat' | 'sum' | 'product' | 'min' | 'max' | 'and' | 'or' | 'not' | 'eq' | 'neq' | 'gt' | 'gte' | 'lt' | 'lte' | 'first' | 'last' | 'list' | 'pick' | 'coalesce';
+  args?: any[];
+  fallback?: any;
+  immediate?: boolean;
+}
+
+export interface ComponentEffectSpec {
+  deps?: string[];
+  actions?: AnyAction | AnyAction[];
+  debounceMs?: number;
+  immediate?: boolean;
+}
+
+export interface ComponentHookBundle {
+  mount?: AnyAction | AnyAction[];
+  unmount?: AnyAction | AnyAction[];
+  effect?: ComponentEffectSpec | ComponentEffectSpec[];
+  bridge?: AnyAction | AnyAction[];
+  guard?: AnyAction | AnyAction[];
+  memo?: AnyAction | AnyAction[];
+  scope?: Record<string, any>;
+  controller?: AnyAction | AnyAction[];
+}
 
 export interface ComponentProps extends BaseProps {
-  __subType?: ComponentSubtype | string;
+  __subType?: 'define' | 'use' | 'instance' | 'render' | 'scoped' | 'link' | string;
   name?: string;
-  templateName?: string;
-  props?: JsonObject;
+  component?: string;
+  description?: string;
+  props?: Record<string, any>;
+  state?: Record<string, any>;
+  computed?: Record<string, ComponentComputedSpec>;
+  hooks?: ComponentHookBundle;
+  links?: Record<string, any>;
+  variants?: Record<string, any>;
+  animations?: Record<string, any>;
+  runtime?: Record<string, any>;
+  policy?: Record<string, any>;
+  capabilities?: string[];
   slots?: Record<string, NodeInput>;
+  ui?: NodeInput;
+  variant?: string;
+}
+
+export interface MacroProps extends BaseProps {
+  __subType?: string;
+  name?: string;
+  defaultProps?: Record<string, any>;
+  defaultSlots?: Record<string, NodeInput>;
+  $view?: NodeInput;
+  view?: NodeInput;
+  template?: NodeInput;
 }
 
 export interface VisualProps extends BaseProps {
@@ -1888,56 +1939,155 @@ export function defineTemplate<
   };
 }
 
+
+/* ============================================================
+ * STRICT COMPONENT FACTORY (100% Auto-Inferred)
+ * ============================================================ */
+
+/** Helper to force TypeScript to infer types ONLY from the 'props' and 'state' objects */
+export type ExactInfer<T> = [T][T extends any ? 0 : never];
+
 export interface TypedComponent<P extends Record<string, any>> {
   name: string;
-  use(props: P, slots?: Record<string, NodeInput>): SduiElement<P>;
+  use(props?: Partial<P> & { variant?: string }, slots?: Record<string, NodeInput>): SduiElement<ComponentProps>;
   define: SduiNode;
   toJSON(): JsonObject;
 }
 
-export function defineComponent<P extends Record<string, QSchema<any, any>>>(
+function _buildBindingProxy(pathPrefix: string): any {
+  return new Proxy({}, {
+    get(target, prop) {
+      if (typeof prop !== 'string') return undefined;
+      return `{{${pathPrefix}.${prop}}}`;
+    }
+  });
+}
+
+export interface ComponentConfig<
+  P extends Record<string, QSchema<any, any>>,
+  S extends Record<string, any>
+> {
+  description?: string;
+  props?: P; // TypeScript infers 'P' from here!
+  state?: S; // TypeScript infers 'S' from here!
+  computed?: Record<string, ComponentComputedSpec>;
+  hooks?: ComponentHookBundle;
+  links?: Record<string, any>;
+  variants?: Record<string, Partial<ExactInfer<{ [K in keyof P]: Infer<P[K]> }>>>;
+  animations?: Record<string, any>;
+  runtime?: Record<string, any>;
+  policy?: Record<string, any>;
+  ui: NodeInput | ((
+    props: ExactInfer<{ [K in keyof P]: Binding<Infer<P[K]>> }>,
+    state: ExactInfer<{ [K in keyof S]: Binding<S[K]> }>
+  ) => NodeInput);
+}
+
+export function defineComponent<
+  P extends Record<string, QSchema<any, any>> = {},
+  S extends Record<string, any> = {}
+>(
   name: string,
-  factory: (props: { [K in keyof P]: Infer<P[K]> }, slots: Record<string, NodeInput>) => NodeInput,
+  def: ComponentConfig<P, S>
 ): TypedComponent<{ [K in keyof P]: Infer<P[K]> }> {
   type Props = { [K in keyof P]: Infer<P[K]> };
 
+  const renderedUi = typeof def.ui === 'function'
+    ? def.ui(_buildBindingProxy('props'), _buildBindingProxy('state'))
+    : def.ui;
+
+  const defineNode: SduiNode = {
+    type: 'component:define',
+    name: name,
+    props: {
+      name: name,
+      description: def.description,
+      props: def.props ? Object.keys(def.props).reduce((acc, k) => ({ ...acc, [k]: (def.props as any)[k]?._tag ?? 'any' }), {}) : undefined,
+      state: def.state,
+      computed: def.computed,
+      hooks: def.hooks,
+      links: def.links,
+      variants: def.variants,
+      animations: def.animations,
+      runtime: def.runtime,
+      policy: def.policy,
+      ui: _normalizeAny(renderedUi)
+    } as unknown as JsonObject,
+  };
+
   return {
-    name,
-    use(props: Props, slots: Record<string, NodeInput> = {}): SduiElement<Props> {
-      const result = factory(props, slots);
-      const el = new SduiElement<Props>('component:render');
-      el.set('__componentName', name as JsonValue);
-      el.props({ __componentName: name, ...props } as any);
+    name: name,
+    use(props?: Partial<Props> & { variant?: string }, slots?: Record<string, NodeInput>): SduiElement<ComponentProps> {
+      const el = new SduiElement<ComponentProps>('component:use');
+      el.props({ component: name, ...props } as any);
       if (slots && Object.keys(slots).length > 0) el.slots(slots);
-      el.child(result);
       return el;
     },
-    define: {
-      type: 'component:define',
-      name,
-      props: {} as JsonObject,
-    } as SduiNode,
+    define: defineNode,
     toJSON(): JsonObject {
-      return { name } as JsonObject;
+      return defineNode as unknown as JsonObject;
     },
   };
 }
 
-export interface MacroDefinition {
+/* ============================================================
+ * STRICT MACRO FACTORY (100% Auto-Inferred)
+ * ============================================================ */
+
+export interface TypedMacro<P extends Record<string, any>, Slots extends string = never> {
   name: string;
-  body: NodeInput;
+  use(props?: Partial<P>, slots?: Partial<Record<Slots, NodeInput>>): SduiElement<BaseProps>;
   define: SduiNode;
+  toJSON(): JsonObject;
 }
 
-export function defineMacro(name: string, body: NodeInput): MacroDefinition {
+export interface MacroConfig<
+  P extends Record<string, QSchema<any, any>>,
+  Slots extends string
+> {
+  props?: P; // TypeScript infers 'P' from here!
+  defaultProps?: Partial<ExactInfer<{ [K in keyof P]: Infer<P[K]> }>>;
+  defaultSlots?: Partial<Record<Slots, NodeInput>>;
+  ui: NodeInput | ((
+    props: ExactInfer<{ [K in keyof P]: Binding<Infer<P[K]>> }>
+  ) => NodeInput);
+}
+
+export function defineMacro<
+  P extends Record<string, QSchema<any, any>> = {},
+  Slots extends string = never
+>(
+  name: string,
+  def: MacroConfig<P, Slots>
+): TypedMacro<{ [K in keyof P]: Infer<P[K]> }, Slots> {
+  type Props = { [K in keyof P]: Infer<P[K]> };
+
+  const renderedUi = typeof def.ui === 'function'
+    ? def.ui(_buildBindingProxy('props'))
+    : def.ui;
+
+  const defineNode: SduiNode = {
+    type: 'macro',
+    name: name,
+    props: {
+      defaultProps: def.defaultProps,
+      defaultSlots: def.defaultSlots,
+      $view: _normalizeAny(renderedUi)
+    } as unknown as JsonObject
+  };
+
   return {
-    name,
-    body,
-    define: {
-      type: 'template',
-      name,
-      $define: { [name]: _normalizeAny(body) as unknown as JsonValue },
-    } as SduiNode,
+    name: name,
+    use(props?: Partial<Props>, slots?: Partial<Record<Slots, NodeInput>>): SduiElement<BaseProps> {
+      const el = new SduiElement<BaseProps>(name);
+      if (props) el.props(props as any);
+      if (slots && Object.keys(slots).length > 0) el.slots(slots as any);
+      return el;
+    },
+    define: defineNode,
+    toJSON(): JsonObject {
+      return defineNode as unknown as JsonObject;
+    },
   };
 }
 
@@ -2018,7 +2168,7 @@ export interface QuantumConfigInput<
   DataSources extends Record<string, DataSourceDocument>,
   Templates extends Record<string, TypedTemplate<any, any>>,
   Components extends Record<string, TypedComponent<any>>,
-  Macros extends Record<string, MacroDefinition>,
+  Macros extends Record<string, TypedMacro<any, any>>, // <--- FIXED HERE
   Pipelines extends Record<string, TypedPipeline>,
   Extensions extends Record<string, readonly string[]>,
   App extends Record<string, any>,
@@ -2044,7 +2194,7 @@ export type TypedConfig<
   DataSources extends Record<string, DataSourceDocument>,
   Templates extends Record<string, TypedTemplate<any, any>>,
   Components extends Record<string, TypedComponent<any>>,
-  Macros extends Record<string, MacroDefinition>,
+  Macros extends Record<string, TypedMacro<any, any>>, // <--- FIXED HERE
   Pipelines extends Record<string, TypedPipeline>,
   Extensions extends Record<string, readonly string[]>,
   App extends Record<string, any>,
@@ -2065,7 +2215,7 @@ export function defineConfig<
   DataSources extends Record<string, DataSourceDocument> = {},
   Templates extends Record<string, TypedTemplate<any, any>> = {},
   Components extends Record<string, TypedComponent<any>> = {},
-  Macros extends Record<string, MacroDefinition> = {},
+  Macros extends Record<string, TypedMacro<any, any>> = {}, // <--- FIXED HERE
   Pipelines extends Record<string, TypedPipeline> = {},
   Extensions extends Record<string, readonly string[]> = {},
   App extends Record<string, any> = {}
@@ -2142,6 +2292,7 @@ export function defineConfig<
   return config;
 }
 
+
 /**
  * defineKernel()
  * Optional central graph helper for zero-cycle app composition.
@@ -2155,7 +2306,7 @@ export function defineKernel<
   DataSources extends Record<string, DataSourceDocument> = {},
   Templates extends Record<string, TypedTemplate<any, any>> = {},
   Components extends Record<string, TypedComponent<any>> = {},
-  Macros extends Record<string, MacroDefinition> = {},
+  Macros extends Record<string, TypedMacro<any, any>> = {}, // <--- FIXED HERE
   Pipelines extends Record<string, TypedPipeline> = {},
   Extensions extends Record<string, readonly string[]> = {},
   App extends Record<string, any> = {},
@@ -2317,9 +2468,18 @@ export const sdui = {
   template(def: any) {
     return defineTemplate(def);
   },
+componentDef<
+    P extends Record<string, QSchema<any, any>> = {},
+    S extends Record<string, any> = {}
+  >(name: string, def: Parameters<typeof defineComponent<P, S>>[1]) {
+    return defineComponent<P, S>(name, def);
+  },
 
-  componentDef(name: string, factory: any) {
-    return defineComponent(name, factory);
+  macroDef<
+    P extends Record<string, QSchema<any, any>> = {},
+    Slots extends string = never
+  >(name: string, def: Parameters<typeof defineMacro<P, Slots>>[1]) {
+    return defineMacro<P, Slots>(name, def);
   },
 
   nodeType(def: any) {

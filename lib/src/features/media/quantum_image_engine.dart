@@ -7,14 +7,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-
+import 'dart:io' as io;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../foundation/quantum_primitives.dart';
 import '../../foundation/quantum_async.dart';
-import '../../plugins/quantum_media_api.dart'; // 🚀 IMPORT YOUR BACKEND API FILE HERE
-
+import 'package:quantum_layout/src/runtime/api/network_shell.dart';
+import 'package:crypto/crypto.dart';
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  RESOLVERS & CONFIGURATION (Smart CDN Resizing)
 // ────────────────────────────────────────────────────────────────────────────
@@ -112,7 +112,8 @@ class QuantumImagePipeline {
   Future<Uint8List?> _fetchResolverBytes(String url) async {
     if (resolver is QLDefaultCdnResolver) return null;
     try {
-      final Map<String, Uint8List> batch = await resolver.fetchBatch(<String>[url]);
+      final Map<String, Uint8List> batch =
+          await resolver.fetchBatch(<String>[url]);
       return batch[url];
     } catch (_) {
       return null;
@@ -419,4 +420,63 @@ class _QLHardwareImagePainter extends CustomPainter {
       old.highRes != highRes ||
       old.crossfadeT != crossfadeT ||
       old.placeholder != placeholder;
+}
+
+// ───────────────────────────────────────────────────────────────────────
+//  NATIVE DISK & RAM MEDIA CACHE ENGINE
+// ────────────────────────────────────────────────────────────────────────────
+
+// ───────────────────────────────────────────────────────────────────────
+//  NATIVE DISK & RAM MEDIA CACHE ENGINE (INTEGRATED WITH OMNICLOUD CORE)
+// ────────────────────────────────────────────────────────────────────────────
+
+class QuantumMediaEngine {
+  static final QuantumMediaEngine instance = QuantumMediaEngine._();
+
+  // Level 1: Fast RAM Cache for instant zero-frame re-renders
+  final Map<String, Uint8List> _ramCache = {};
+
+  QuantumMediaEngine._();
+
+  Future<Uint8List> getMediaBytes(String url) async {
+    // 1. Instant Return from L1 Cache
+    if (_ramCache.containsKey(url)) {
+      return _ramCache[url]!;
+    }
+
+    // 2. Web Fallback (dart:io filesystem isn't available on Web)
+    if (kIsWeb) {
+      final bytes =
+          await Quantum.media.getBytes(url); // Routes through network.dart
+      _ramCache[url] = bytes;
+      return bytes;
+    }
+
+    // 3. L2 Native Disk Cache (Zero 3rd-party dependency, uses crypto & dart:io)
+    // Hashing URL ensures valid filenames regardless of query parameters
+    final String hash = sha256.convert(utf8.encode(url)).toString();
+    final io.Directory tempDir = io.Directory.systemTemp;
+    final io.File cacheFile = io.File('${tempDir.path}/q_media_$hash.bin');
+
+    if (await cacheFile.exists()) {
+      final bytes = await cacheFile.readAsBytes();
+      _ramCache[url] = bytes; // Promote to L1
+      return bytes;
+    }
+
+    // 4. 🚀 THE REAL NETWORK FETCH
+    // Routed strictly through OmniCloud/Quantum ApiClient.
+    // This applies TraceparentPolicy, RateLimiterPolicy, and HmacSigning automatically!
+    final Uint8List bytes = await Quantum.media.getBytes(url);
+
+    // 5. Fire-and-Forget Disk Write
+    // Done asynchronously so we don't block the UI thread returning the image to the canvas
+    cacheFile.writeAsBytes(bytes, flush: true).catchError((_) {
+      // Silently ignore disk write limits (e.g. storage full) to prevent app crashes
+    });
+
+    // 6. Promote to L1 & Return to Pipeline
+    _ramCache[url] = bytes;
+    return bytes;
+  }
 }

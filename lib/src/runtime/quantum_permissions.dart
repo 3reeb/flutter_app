@@ -6,7 +6,8 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import '../plugins/quantum_auth_engine.dart';
+import 'package:quantum_layout/src/runtime/api/network.dart';
+
 class QuantumPermissionException implements Exception {
   final String code;
   final String message;

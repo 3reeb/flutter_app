@@ -7,17 +7,19 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'package:quantum_layout/quantum.dart';
+import 'package:quantum_layout/src/runtime/api/network_shell.dart';
+
 // ────────────────────────────────────────────────────────────────────────────
 // Example starter object
 // ────────────────────────────────────────────────────────────────────────────
 
-final QuantumConfigRoot quantumConfig = QuantumConfigRoot(
-  app: QuantumConfigAppSection(
-    appName: 'QuantumApp',
+final OmniShellConfigRoot quantumConfig = OmniShellConfigRoot(
+  app: OmniShellConfigAppSection(
+    appName: 'OmniShellApp',
     title: '',
     locale: 'en',
     version: '1.0.0',
-    theme: QuantumConfigThemeSection(
+    theme: OmniShellConfigThemeSection(
       mode: 'system',
       colors: <String, dynamic>{},
       typography: <String, dynamic>{},
@@ -26,17 +28,17 @@ final QuantumConfigRoot quantumConfig = QuantumConfigRoot(
       shadows: <String, dynamic>{},
       radii: <String, dynamic>{},
     ),
-    router: QuantumConfigRouterSection(
+    router: OmniShellConfigRouterSection(
       initialRoute: '/',
       pagesDir: 'pages',
       notFoundPage: null,
       globalGuards: <Map<String, dynamic>>[],
     ),
-    vm: QuantumConfigVmSection(
+    vm: OmniShellConfigVmSection(
       workerThreads: 4,
       simdArenaCapacity: 4096,
     ),
-    telemetry: QuantumConfigTelemetrySection(
+    telemetry: OmniShellConfigTelemetrySection(
       enabled: true,
       frameMonitor: true,
     ),
@@ -48,11 +50,11 @@ final QuantumConfigRoot quantumConfig = QuantumConfigRoot(
     actions: <String, dynamic>{},
     sdui: <String, dynamic>{},
     boot: <String, dynamic>{
-      'appName': 'QuantumApp',
+      'appName': 'OmniShellApp',
       'pagesDir': 'pages',
     },
   ),
-  api: QuantumConfigApiSection(
+  api: OmniShellConfigApiSection(
     apiUrl: '',
     socketUrl: '',
     cacheDirectoryPath: '',
@@ -65,7 +67,7 @@ final QuantumConfigRoot quantumConfig = QuantumConfigRoot(
     mockMaxLatency: Duration(milliseconds: 5),
     mockFailureProbability: 0.0,
   ),
-  security: QuantumConfigSecurityPolicy(
+  security: OmniShellConfigSecurityPolicy(
     lockedPaths: <String>{
       'api.clientSecret',
     },
@@ -79,14 +81,14 @@ final QuantumConfigRoot quantumConfig = QuantumConfigRoot(
     persistEncryptedRemoteCache: true,
     cacheSensitiveValuesInVault: true,
   ),
-  merge: QuantumConfigMergePolicy(
-    listMode: QuantumConfigListMergeMode.replace,
+  merge: OmniShellConfigMergePolicy(
+    listMode: OmniShellConfigListMergeMode.replace,
     deepMergeMaps: true,
     mergeNulls: false,
     allowNewKeys: true,
     preferRemoteOnConflict: true,
   ),
-  cache: QuantumConfigCachePolicy(
+  cache: OmniShellConfigCachePolicy(
     enableMemoization: true,
     remoteTtl: Duration(minutes: 5),
     localTtl: Duration(days: 3650),
@@ -94,9 +96,9 @@ final QuantumConfigRoot quantumConfig = QuantumConfigRoot(
     singleFlight: true,
     useSourceDigests: true,
   ),
-  sources: QuantumConfigSources(
-    local: QuantumConfigLocalSourceSpec(
-      sources: <QuantumConfigSource>[
+  sources: OmniShellConfigSources(
+    local: OmniShellConfigLocalSourceSpec(
+      sources: <OmniShellConfigSource>[
         QuantumAssetConfigSource(
           id: 'app-yaml',
           assetPath: 'APP.yaml',
@@ -104,9 +106,9 @@ final QuantumConfigRoot quantumConfig = QuantumConfigRoot(
         ),
       ],
     ),
-    // remote: QuantumConfigRemoteSourceSpec(
-    //   sources: <QuantumConfigSource>[
-    //     QuantumHttpConfigSource(
+    // remote: OmniShellConfigRemoteSourceSpec(
+    //   sources: <OmniShellConfigSource>[
+    //     OmniShellHttpConfigSource(
     //       id: 'remote-config',
     //       uri: Uri.parse('https://example.invalid/quantum-config.yaml'),
     //       priority: 100,
