@@ -1,0 +1,3222 @@
+{
+  "contracts": {
+    "session": {
+      "_tag": "object",
+      "_meta": {
+        "shape": {
+          "userId": {
+            "_tag": "string"
+          },
+          "accessToken": {
+            "_tag": "optional",
+            "_meta": {
+              "inner": {
+                "_tag": "string"
+              }
+            }
+          },
+          "refreshToken": {
+            "_tag": "optional",
+            "_meta": {
+              "inner": {
+                "_tag": "string"
+              }
+            }
+          },
+          "roles": {
+            "_tag": "array",
+            "_meta": {
+              "item": {
+                "_tag": "string"
+              }
+            }
+          },
+          "flags": {
+            "_tag": "record",
+            "_meta": {
+              "value": {
+                "_tag": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "pageMeta": {
+      "_tag": "object",
+      "_meta": {
+        "shape": {
+          "title": {
+            "_tag": "string"
+          },
+          "description": {
+            "_tag": "optional",
+            "_meta": {
+              "inner": {
+                "_tag": "string"
+              }
+            }
+          },
+          "canonical": {
+            "_tag": "optional",
+            "_meta": {
+              "inner": {
+                "_tag": "string"
+              }
+            }
+          },
+          "ogImage": {
+            "_tag": "optional",
+            "_meta": {
+              "inner": {
+                "_tag": "string"
+              }
+            }
+          },
+          "keywords": {
+            "_tag": "optional",
+            "_meta": {
+              "inner": {
+                "_tag": "array",
+                "_meta": {
+                  "item": {
+                    "_tag": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "routeState": {
+      "_tag": "object",
+      "_meta": {
+        "shape": {
+          "path": {
+            "_tag": "string"
+          },
+          "params": {
+            "_tag": "record",
+            "_meta": {
+              "value": {
+                "_tag": "string"
+              }
+            }
+          },
+          "query": {
+            "_tag": "record",
+            "_meta": {
+              "value": {
+                "_tag": "string"
+              }
+            }
+          },
+          "locale": {
+            "_tag": "optional",
+            "_meta": {
+              "inner": {
+                "_tag": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "uiFlags": {
+      "_tag": "object",
+      "_meta": {
+        "shape": {
+          "isMobile": {
+            "_tag": "boolean"
+          },
+          "reducedMotion": {
+            "_tag": "boolean"
+          },
+          "highContrast": {
+            "_tag": "boolean"
+          },
+          "darkMode": {
+            "_tag": "boolean"
+          }
+        }
+      }
+    },
+    "dashboardStats": {
+      "_tag": "object",
+      "_meta": {
+        "shape": {
+          "usersOnline": {
+            "_tag": "number"
+          },
+          "requestsPerMinute": {
+            "_tag": "number"
+          },
+          "errorRate": {
+            "_tag": "number"
+          }
+        }
+      }
+    }
+  },
+  "theme": {
+    "colors": {
+      "brand": {
+        "50": "#eef7ff",
+        "100": "#d9ecff",
+        "200": "#b9ddff",
+        "300": "#89c6ff",
+        "400": "#58a8ff",
+        "500": "#2c86ff",
+        "600": "#1667e6",
+        "700": "#124fb4",
+        "800": "#103f8f",
+        "900": "#0e3575"
+      },
+      "neutral": {
+        "50": "#f9fafb",
+        "100": "#f3f4f6",
+        "200": "#e5e7eb",
+        "300": "#d1d5db",
+        "400": "#9ca3af",
+        "500": "#6b7280",
+        "600": "#4b5563",
+        "700": "#374151",
+        "800": "#1f2937",
+        "900": "#111827"
+      },
+      "success": "#16a34a",
+      "warning": "#f59e0b",
+      "danger": "#ef4444",
+      "info": "#0ea5e9",
+      "surface": "#ffffff",
+      "background": "#f8fafc",
+      "text": "#0f172a"
+    },
+    "spacing": {
+      "0": 0,
+      "1": 4,
+      "2": 8,
+      "3": 12,
+      "4": 16,
+      "5": 20,
+      "6": 24,
+      "8": 32,
+      "10": 40,
+      "12": 48,
+      "16": 64,
+      "20": 80,
+      "24": 96
+    },
+    "typography": {
+      "display": {
+        "fontSize": 56,
+        "fontWeight": 800,
+        "lineHeight": 1.05
+      },
+      "h1": {
+        "fontSize": 40,
+        "fontWeight": 800,
+        "lineHeight": 1.1
+      },
+      "h2": {
+        "fontSize": 32,
+        "fontWeight": 700,
+        "lineHeight": 1.15
+      },
+      "h3": {
+        "fontSize": 24,
+        "fontWeight": 700,
+        "lineHeight": 1.2
+      },
+      "body": {
+        "fontSize": 16,
+        "fontWeight": 400,
+        "lineHeight": 1.6
+      },
+      "caption": {
+        "fontSize": 12,
+        "fontWeight": 500,
+        "lineHeight": 1.4
+      },
+      "mono": {
+        "fontSize": 13,
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "fontFamily": "monospace"
+      }
+    },
+    "radii": {
+      "xs": 6,
+      "sm": 10,
+      "md": 14,
+      "lg": 18,
+      "xl": 24,
+      "full": 999
+    },
+    "shadows": {
+      "sm": {
+        "offsetX": 0,
+        "offsetY": 1,
+        "blurRadius": 2,
+        "color": "rgba(15, 23, 42, 0.08)"
+      },
+      "md": {
+        "offsetX": 0,
+        "offsetY": 8,
+        "blurRadius": 24,
+        "color": "rgba(15, 23, 42, 0.12)"
+      },
+      "lg": {
+        "offsetX": 0,
+        "offsetY": 16,
+        "blurRadius": 40,
+        "color": "rgba(15, 23, 42, 0.14)"
+      }
+    },
+    "animations": {
+      "fast": {
+        "duration": 120,
+        "curve": "easeOut"
+      },
+      "normal": {
+        "duration": 220,
+        "curve": "easeInOut"
+      },
+      "slow": {
+        "duration": 360,
+        "curve": "easeOutCubic"
+      }
+    },
+    "breakpoints": {
+      "sm": 640,
+      "md": 768,
+      "lg": 1024,
+      "xl": 1280,
+      "xxl": 1536
+    },
+    "zIndex": {
+      "base": 0,
+      "content": 1,
+      "sticky": 20,
+      "overlay": 100,
+      "dropdown": 200,
+      "modal": 300,
+      "toast": 400
+    }
+  },
+  "stores": {
+    "auth": {
+      "namespace": "auth",
+      "state": {
+        "status": "anonymous",
+        "userId": null,
+        "accessToken": null,
+        "refreshToken": null,
+        "roles": [],
+        "flags": {},
+        "lastSyncedAt": null
+      }
+    },
+    "ui": {
+      "namespace": "ui",
+      "state": {
+        "sidebarOpen": true,
+        "searchOpen": false,
+        "commandPaletteOpen": false,
+        "reducedMotion": false,
+        "compactMode": false,
+        "density": "comfortable"
+      }
+    },
+    "navigation": {
+      "namespace": "navigation",
+      "state": {
+        "path": "/",
+        "params": {},
+        "query": {},
+        "activeRouteId": null,
+        "history": [],
+        "breadcrumbs": []
+      }
+    },
+    "pageRuntime": {
+      "namespace": "pageRuntime",
+      "state": {
+        "currentPageId": null,
+        "currentLayoutId": null,
+        "loading": false,
+        "error": null,
+        "cacheKey": null,
+        "prefetchQueue": []
+      }
+    }
+  },
+  "slices": {
+    "auth": {
+      "namespace": "auth",
+      "schema": "session",
+      "state": {
+        "status": "anonymous",
+        "userId": null,
+        "accessToken": null,
+        "refreshToken": null,
+        "roles": [],
+        "flags": {}
+      },
+      "computed": {
+        "isAuthenticated": "state.status === \"authenticated\" && !!state.userId",
+        "isAnonymous": "state.status === \"anonymous\""
+      },
+      "mutations": {
+        "signIn": "auth.signIn",
+        "signOut": "auth.signOut",
+        "refreshSession": "auth.refresh"
+      },
+      "queries": {
+        "me": {
+          "source": "auth.me"
+        }
+      },
+      "resources": {
+        "session": {
+          "source": "auth.me",
+          "cache": true
+        }
+      },
+      "runtime": {
+        "persist": true,
+        "hydrateOnStart": true
+      },
+      "pipelines": {
+        "onSignIn": "auth_sign_in_pipeline",
+        "onSignOut": "auth_sign_out_pipeline"
+      }
+    },
+    "page": {
+      "namespace": "page",
+      "schema": "routeState",
+      "state": {
+        "path": "/",
+        "params": {},
+        "query": {},
+        "locale": "en"
+      },
+      "computed": {
+        "currentPath": "state.path"
+      },
+      "mutations": {
+        "setRoute": "page.setRoute",
+        "setLocale": "page.setLocale"
+      },
+      "runtime": {
+        "persist": false
+      }
+    },
+    "dashboard": {
+      "namespace": "dashboard",
+      "schema": "dashboardStats",
+      "state": {
+        "usersOnline": 0,
+        "requestsPerMinute": 0,
+        "errorRate": 0
+      },
+      "computed": {
+        "healthy": "state.errorRate < 1"
+      },
+      "mutations": {
+        "setStats": "dashboard.setStats"
+      }
+    }
+  },
+  "dataSources": {
+    "me": {
+      "name": "auth.me",
+      "schema": "session",
+      "type": "rest",
+      "domain": "api_collection",
+      "action": "readOne",
+      "resource": "/me",
+      "direction": "inbound",
+      "select": [
+        "userId",
+        "roles",
+        "flags"
+      ],
+      "query": {
+        "include": [
+          "roles",
+          "flags"
+        ]
+      }
+    },
+    "dashboardStats": {
+      "name": "dashboard.stats",
+      "schema": "dashboardStats",
+      "type": "rest",
+      "domain": "api_collection",
+      "action": "readOne",
+      "resource": "/dashboard/stats",
+      "direction": "inbound"
+    },
+    "feed": {
+      "name": "feed.list",
+      "type": "rest",
+      "domain": "api_collection",
+      "action": "readMany",
+      "resource": "/feed",
+      "direction": "inbound",
+      "select": [
+        "id",
+        "title",
+        "summary",
+        "author",
+        "createdAt"
+      ],
+      "query": {
+        "pageSize": 20,
+        "includeComments": false
+      }
+    },
+    "article": {
+      "name": "articles.bySlug",
+      "type": "rest",
+      "domain": "api_collection",
+      "action": "readOne",
+      "resource": "/articles/:slug",
+      "direction": "inbound",
+      "params": {
+        "slug": "{{route.params.slug}}"
+      }
+    },
+    "settings": {
+      "name": "settings.get",
+      "type": "rest",
+      "domain": "api_collection",
+      "action": "readOne",
+      "resource": "/settings",
+      "direction": "inbound"
+    }
+  },
+  "templates": {
+    "hero": {
+      "name": "hero",
+      "props": {
+        "eyebrow": "optional",
+        "title": "string",
+        "body": "optional",
+        "primaryLabel": "optional",
+        "secondaryLabel": "optional"
+      },
+      "slots": [
+        "actions"
+      ],
+      "ui": {
+        "type": "box",
+        "props": {
+          "direction": "col",
+          "gap": 24,
+          "padding": 24,
+          "radius": 24,
+          "bg": "$colors.surface",
+          "shadow": "$shadows.md"
+        },
+        "children": [
+          {
+            "_node": {
+              "type": "box",
+              "props": {
+                "direction": "col",
+                "gap": 12,
+                "padding": 0
+              },
+              "children": [
+                {
+                  "_node": {
+                    "type": "text",
+                    "props": {
+                      "text": "{{props.eyebrow}}"
+                    },
+                    "children": []
+                  }
+                },
+                {
+                  "_node": {
+                    "type": "text",
+                    "props": {
+                      "text": "{{props.title}}",
+                      "variant": "heading"
+                    },
+                    "children": []
+                  }
+                },
+                {
+                  "_node": {
+                    "type": "text",
+                    "props": {
+                      "text": "{{props.body}}"
+                    },
+                    "children": []
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "_node": {
+              "type": "box",
+              "props": {},
+              "children": []
+            }
+          }
+        ]
+      },
+      "tags": [],
+      "metadata": {}
+    },
+    "statCard": {
+      "name": "stat_card",
+      "props": {
+        "label": "string",
+        "value": "string",
+        "hint": "optional",
+        "tone": "optional"
+      },
+      "slots": [],
+      "ui": {
+        "type": "box",
+        "props": {
+          "direction": "col",
+          "gap": 6,
+          "padding": 18,
+          "radius": 18,
+          "bg": "$colors.surface",
+          "shadow": "$shadows.sm"
+        },
+        "children": [
+          {
+            "_node": {
+              "type": "text",
+              "props": {
+                "text": "{{props.label}}"
+              },
+              "children": []
+            }
+          },
+          {
+            "_node": {
+              "type": "text",
+              "props": {
+                "text": "{{props.value}}",
+                "variant": "heading"
+              },
+              "children": []
+            }
+          },
+          {
+            "_node": {
+              "type": "text",
+              "props": {
+                "text": "{{props.hint}}"
+              },
+              "children": []
+            }
+          }
+        ]
+      },
+      "tags": [],
+      "metadata": {}
+    },
+    "section": {
+      "name": "section",
+      "props": {
+        "title": "string",
+        "description": "optional",
+        "compact": "optional"
+      },
+      "slots": [
+        "body",
+        "footer"
+      ],
+      "ui": {
+        "type": "box",
+        "props": {
+          "direction": "col",
+          "gap": 12,
+          "padding": 16
+        },
+        "children": [
+          {
+            "_node": {
+              "type": "box",
+              "props": {
+                "direction": "col",
+                "gap": 8
+              },
+              "children": [
+                {
+                  "_node": {
+                    "type": "text",
+                    "props": {
+                      "text": "{{props.title}}",
+                      "variant": "heading"
+                    },
+                    "children": []
+                  }
+                },
+                {
+                  "_node": {
+                    "type": "text",
+                    "props": {
+                      "text": "{{props.description}}"
+                    },
+                    "children": []
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "_node": {
+              "type": "box",
+              "props": {},
+              "children": []
+            }
+          },
+          {
+            "_node": {
+              "type": "box",
+              "props": {},
+              "children": []
+            }
+          }
+        ]
+      },
+      "tags": [],
+      "metadata": {}
+    }
+  },
+  "components": {
+    "pageHeader": {
+      "name": "page_header"
+    },
+    "navRail": {
+      "name": "nav_rail"
+    }
+  },
+  "macros": {
+    "pagePadding": {
+      "name": "page_padding",
+      "body": {
+        "_node": {
+          "type": "box",
+          "props": {
+            "padding": 24,
+            "radius": 24
+          },
+          "children": []
+        }
+      },
+      "define": {
+        "type": "template",
+        "name": "page_padding",
+        "$define": {
+          "page_padding": {
+            "type": "box",
+            "props": {
+              "padding": 24,
+              "radius": 24
+            },
+            "children": []
+          }
+        }
+      }
+    },
+    "contentFrame": {
+      "name": "content_frame",
+      "body": {
+        "_node": {
+          "type": "box",
+          "props": {
+            "direction": "col",
+            "gap": 20,
+            "padding": 24
+          },
+          "children": []
+        }
+      },
+      "define": {
+        "type": "template",
+        "name": "content_frame",
+        "$define": {
+          "content_frame": {
+            "type": "box",
+            "props": {
+              "direction": "col",
+              "gap": 20,
+              "padding": 24
+            },
+            "children": []
+          }
+        }
+      }
+    }
+  },
+  "pipelines": {
+    "hydratePage": {
+      "name": "page_hydrate",
+      "namespace": "app.pages",
+      "steps": [
+        {
+          "op": "resolveRoute"
+        },
+        {
+          "op": "hydratePageState"
+        },
+        {
+          "op": "loadLayout"
+        },
+        {
+          "op": "prefetchVisibleFragments"
+        },
+        {
+          "op": "renderFrame"
+        }
+      ]
+    },
+    "authSignIn": {
+      "name": "auth_sign_in_pipeline",
+      "namespace": "auth",
+      "steps": [
+        {
+          "op": "submitAuth"
+        },
+        {
+          "op": "storeSession"
+        },
+        {
+          "op": "warmUserCaches"
+        },
+        {
+          "op": "navigate",
+          "to": "/dashboard"
+        }
+      ]
+    },
+    "authSignOut": {
+      "name": "auth_sign_out_pipeline",
+      "namespace": "auth",
+      "steps": [
+        {
+          "op": "clearSession"
+        },
+        {
+          "op": "clearPrivateCaches"
+        },
+        {
+          "op": "navigate",
+          "to": "/login"
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "roots": {
+      "surface": [
+        "page",
+        "shell",
+        "section",
+        "panel",
+        "hero",
+        "metric",
+        "feed",
+        "board"
+      ]
+    },
+    "sdui": {},
+    "factories": {}
+  },
+  "app": {
+    "name": "Quantum Super App",
+    "version": "1.0.0",
+    "description": "A schema-first SDUI platform with nested pages, layouts, fragments, guards, and prefetch.",
+    "pagesDir": "pages",
+    "layouts": {
+      "public_shell": {
+        "name": "public_shell",
+        "mode": "shell",
+        "viewport": "responsive",
+        "scaffold": true,
+        "safeArea": "all",
+        "template": {
+          "type": "page_shell",
+          "props": {
+            "title": "Public",
+            "compact": false,
+            "showSidebar": false,
+            "showFooter": true
+          },
+          "slots": {
+            "header": {
+              "type": "box",
+              "_node": {
+                "type": "box",
+                "props": {
+                  "padding": 24
+                },
+                "children": [
+                  {
+                    "_node": {
+                      "type": "component:render",
+                      "props": {
+                        "__componentName": "page_header",
+                        "title": "Quantum",
+                        "subtitle": "The fastest SDUI runtime"
+                      },
+                      "children": [
+                        {
+                          "_node": {
+                            "type": "box",
+                            "props": {
+                              "direction": "row",
+                              "crossAlignment": "center",
+                              "mainAlignment": "space-between",
+                              "gap": 16,
+                              "padding": 0
+                            },
+                            "children": [
+                              {
+                                "_node": {
+                                  "type": "box",
+                                  "props": {
+                                    "direction": "col",
+                                    "gap": 8
+                                  },
+                                  "children": [
+                                    {
+                                      "_node": {
+                                        "type": "text",
+                                        "props": {
+                                          "text": "Quantum",
+                                          "variant": "heading"
+                                        },
+                                        "children": []
+                                      }
+                                    },
+                                    {
+                                      "_node": {
+                                        "type": "text",
+                                        "props": {
+                                          "text": "The fastest SDUI runtime"
+                                        },
+                                        "children": []
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "__componentName": "page_header"
+                    }
+                  }
+                ]
+              }
+            },
+            "content": {
+              "type": "box",
+              "_node": {
+                "type": "box",
+                "props": {
+                  "direction": "col",
+                  "gap": 24,
+                  "padding": 24
+                },
+                "children": []
+              }
+            },
+            "footer": {
+              "type": "box",
+              "_node": {
+                "type": "box",
+                "props": {
+                  "padding": 24
+                },
+                "children": [
+                  {
+                    "_node": {
+                      "type": "text",
+                      "props": {
+                        "text": "© Quantum"
+                      },
+                      "children": []
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "slots": {
+          "header": {
+            "scrollable": false
+          },
+          "content": {
+            "scrollable": true
+          },
+          "footer": {
+            "scrollable": false
+          }
+        },
+        "meta": {
+          "name": "public",
+          "layer": "shell"
+        },
+        "kind": "layout",
+        "type": "layout"
+      },
+      "dashboard_shell": {
+        "name": "dashboard_shell",
+        "mode": "shell",
+        "viewport": "responsive",
+        "scaffold": true,
+        "safeArea": "all",
+        "template": {
+          "type": "page_shell",
+          "props": {
+            "title": "Dashboard",
+            "compact": false,
+            "showSidebar": true,
+            "showFooter": false
+          },
+          "slots": {
+            "sidebar": {
+              "type": "box",
+              "_node": {
+                "type": "component:render",
+                "props": {
+                  "__componentName": "nav_rail",
+                  "current": "/dashboard",
+                  "collapsed": false
+                },
+                "children": [
+                  {
+                    "_node": {
+                      "type": "box",
+                      "props": {
+                        "direction": "col",
+                        "gap": 8,
+                        "padding": 16,
+                        "radius": 20,
+                        "bg": "$colors.surface"
+                      },
+                      "children": [
+                        {
+                          "_node": {
+                            "type": "text",
+                            "props": {
+                              "text": "Navigation"
+                            },
+                            "children": []
+                          }
+                        },
+                        {
+                          "_node": {
+                            "type": "text",
+                            "props": {
+                              "text": "/dashboard"
+                            },
+                            "children": []
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "__componentName": "nav_rail"
+              }
+            },
+            "content": {
+              "type": "box",
+              "_node": {
+                "type": "box",
+                "props": {
+                  "direction": "col",
+                  "gap": 24,
+                  "padding": 24
+                },
+                "children": []
+              }
+            }
+          }
+        },
+        "slots": {
+          "sidebar": {
+            "scrollable": true,
+            "sticky": true
+          },
+          "content": {
+            "scrollable": true
+          }
+        },
+        "meta": {
+          "name": "dashboard",
+          "layer": "shell"
+        },
+        "kind": "layout",
+        "type": "layout"
+      },
+      "auth_shell": {
+        "name": "auth_shell",
+        "mode": "shell",
+        "viewport": "responsive",
+        "scaffold": true,
+        "safeArea": "all",
+        "template": {
+          "type": "page_shell",
+          "props": {
+            "title": "Auth",
+            "compact": true,
+            "showSidebar": false,
+            "showFooter": false
+          },
+          "slots": {
+            "content": {
+              "type": "box",
+              "_node": {
+                "type": "box",
+                "props": {
+                  "direction": "col",
+                  "gap": 20,
+                  "padding": 24
+                },
+                "children": []
+              }
+            }
+          }
+        },
+        "kind": "layout",
+        "type": "layout"
+      },
+      "docs_shell": {
+        "name": "docs_shell",
+        "mode": "matrix",
+        "viewport": "responsive",
+        "scaffold": true,
+        "safeArea": "all",
+        "template": {
+          "type": "page_shell",
+          "props": {
+            "title": "Docs",
+            "compact": false,
+            "showSidebar": true,
+            "showFooter": true
+          },
+          "slots": {
+            "sidebar": {
+              "type": "box",
+              "_node": {
+                "type": "component:render",
+                "props": {
+                  "__componentName": "nav_rail",
+                  "current": "/docs",
+                  "collapsed": false
+                },
+                "children": [
+                  {
+                    "_node": {
+                      "type": "box",
+                      "props": {
+                        "direction": "col",
+                        "gap": 8,
+                        "padding": 16,
+                        "radius": 20,
+                        "bg": "$colors.surface"
+                      },
+                      "children": [
+                        {
+                          "_node": {
+                            "type": "text",
+                            "props": {
+                              "text": "Navigation"
+                            },
+                            "children": []
+                          }
+                        },
+                        {
+                          "_node": {
+                            "type": "text",
+                            "props": {
+                              "text": "/docs"
+                            },
+                            "children": []
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "__componentName": "nav_rail"
+              }
+            },
+            "content": {
+              "type": "box",
+              "_node": {
+                "type": "box",
+                "props": {
+                  "direction": "col",
+                  "gap": 20,
+                  "padding": 24
+                },
+                "children": []
+              }
+            },
+            "footer": {
+              "type": "box",
+              "_node": {
+                "type": "box",
+                "props": {
+                  "padding": 16
+                },
+                "children": [
+                  {
+                    "_node": {
+                      "type": "text",
+                      "props": {
+                        "text": "Built with Quantum"
+                      },
+                      "children": []
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "kind": "layout",
+        "type": "layout"
+      }
+    },
+    "fragments": {
+      "home_hero": {
+        "name": "home_hero",
+        "lazy": false,
+        "hydrate": "immediate",
+        "template": {
+          "type": "template",
+          "props": {
+            "eyebrow": "Introducing",
+            "title": "Build anything with one JSON graph",
+            "body": "Pages, layouts, fragments, guards, pipelines, and nested routes all compile into a fast Flutter render tree.",
+            "primaryLabel": "Start",
+            "secondaryLabel": "Docs",
+            "__templateName": "hero"
+          },
+          "slots": {
+            "actions": {
+              "type": "box",
+              "_node": {
+                "type": "box",
+                "props": {
+                  "direction": "row",
+                  "gap": 12
+                },
+                "children": [
+                  {
+                    "_node": {
+                      "type": "action",
+                      "props": {
+                        "text": "Get Started",
+                        "intent": "primary",
+                        "variant": "solid"
+                      },
+                      "children": []
+                    }
+                  },
+                  {
+                    "_node": {
+                      "type": "action",
+                      "props": {
+                        "text": "Read Docs",
+                        "intent": "ghost",
+                        "variant": "outline"
+                      },
+                      "children": []
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "tags": [
+          "hero",
+          "landing",
+          "marketing"
+        ],
+        "meta": {
+          "section": "home"
+        },
+        "kind": "fragment",
+        "type": "fragment"
+      },
+      "home_stats": {
+        "name": "home_stats",
+        "lazy": true,
+        "hydrate": "visible",
+        "template": {
+          "type": "box",
+          "props": {
+            "direction": "row",
+            "gap": 16
+          },
+          "children": [
+            {
+              "type": "box",
+              "_node": {
+                "type": "template",
+                "props": {
+                  "label": "Users Online",
+                  "value": "12.4K",
+                  "hint": "+14% today",
+                  "__templateName": "stat_card"
+                },
+                "children": []
+              }
+            },
+            {
+              "type": "box",
+              "_node": {
+                "type": "template",
+                "props": {
+                  "label": "RPM",
+                  "value": "1.2M",
+                  "hint": "stable",
+                  "__templateName": "stat_card"
+                },
+                "children": []
+              }
+            },
+            {
+              "type": "box",
+              "_node": {
+                "type": "template",
+                "props": {
+                  "label": "Error Rate",
+                  "value": "0.08%",
+                  "hint": "last 5 min",
+                  "__templateName": "stat_card"
+                },
+                "children": []
+              }
+            }
+          ]
+        },
+        "kind": "fragment",
+        "type": "fragment"
+      },
+      "dashboard_home": {
+        "name": "dashboard_home",
+        "lazy": false,
+        "hydrate": "immediate",
+        "template": {
+          "type": "box",
+          "props": {
+            "direction": "col",
+            "gap": 24
+          },
+          "children": [
+            {
+              "type": "box",
+              "_node": {
+                "type": "component:render",
+                "props": {
+                  "__componentName": "page_header",
+                  "title": "Dashboard",
+                  "subtitle": "Live metrics, activity, and drill-down pages"
+                },
+                "children": [
+                  {
+                    "_node": {
+                      "type": "box",
+                      "props": {
+                        "direction": "row",
+                        "crossAlignment": "center",
+                        "mainAlignment": "space-between",
+                        "gap": 16,
+                        "padding": 0
+                      },
+                      "children": [
+                        {
+                          "_node": {
+                            "type": "box",
+                            "props": {
+                              "direction": "col",
+                              "gap": 8
+                            },
+                            "children": [
+                              {
+                                "_node": {
+                                  "type": "text",
+                                  "props": {
+                                    "text": "Dashboard",
+                                    "variant": "heading"
+                                  },
+                                  "children": []
+                                }
+                              },
+                              {
+                                "_node": {
+                                  "type": "text",
+                                  "props": {
+                                    "text": "Live metrics, activity, and drill-down pages"
+                                  },
+                                  "children": []
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "__componentName": "page_header"
+              }
+            },
+            {
+              "type": "box",
+              "_node": {
+                "type": "template",
+                "props": {
+                  "title": "Overview",
+                  "description": "Everything that matters at a glance.",
+                  "compact": false,
+                  "__templateName": "section"
+                },
+                "children": [],
+                "slots": {
+                  "body": {
+                    "_node": {
+                      "type": "box",
+                      "props": {
+                        "direction": "row",
+                        "gap": 16
+                      },
+                      "children": [
+                        {
+                          "_node": {
+                            "type": "template",
+                            "props": {
+                              "label": "Users Online",
+                              "value": "18.2K",
+                              "hint": "peak 1h",
+                              "__templateName": "stat_card"
+                            },
+                            "children": []
+                          }
+                        },
+                        {
+                          "_node": {
+                            "type": "template",
+                            "props": {
+                              "label": "Requests / Min",
+                              "value": "240K",
+                              "hint": "rolling average",
+                              "__templateName": "stat_card"
+                            },
+                            "children": []
+                          }
+                        },
+                        {
+                          "_node": {
+                            "type": "template",
+                            "props": {
+                              "label": "Error Rate",
+                              "value": "0.04%",
+                              "hint": "healthy",
+                              "__templateName": "stat_card"
+                            },
+                            "children": []
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "kind": "fragment",
+        "type": "fragment"
+      },
+      "article_view": {
+        "name": "article_view",
+        "lazy": true,
+        "hydrate": "visible",
+        "template": {
+          "type": "box",
+          "props": {
+            "direction": "col",
+            "gap": 24
+          },
+          "children": [
+            {
+              "type": "box",
+              "_node": {
+                "type": "component:render",
+                "props": {
+                  "__componentName": "page_header",
+                  "title": "Article",
+                  "subtitle": "Nested route content"
+                },
+                "children": [
+                  {
+                    "_node": {
+                      "type": "box",
+                      "props": {
+                        "direction": "row",
+                        "crossAlignment": "center",
+                        "mainAlignment": "space-between",
+                        "gap": 16,
+                        "padding": 0
+                      },
+                      "children": [
+                        {
+                          "_node": {
+                            "type": "box",
+                            "props": {
+                              "direction": "col",
+                              "gap": 8
+                            },
+                            "children": [
+                              {
+                                "_node": {
+                                  "type": "text",
+                                  "props": {
+                                    "text": "Article",
+                                    "variant": "heading"
+                                  },
+                                  "children": []
+                                }
+                              },
+                              {
+                                "_node": {
+                                  "type": "text",
+                                  "props": {
+                                    "text": "Nested route content"
+                                  },
+                                  "children": []
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "__componentName": "page_header"
+              }
+            },
+            {
+              "type": "box",
+              "_node": {
+                "type": "template",
+                "props": {
+                  "title": "Body",
+                  "description": "This block renders the fetched article content.",
+                  "compact": false,
+                  "__templateName": "section"
+                },
+                "children": [],
+                "slots": {
+                  "body": {
+                    "_node": {
+                      "type": "box",
+                      "props": {
+                        "direction": "col",
+                        "gap": 16
+                      },
+                      "children": []
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "kind": "fragment",
+        "type": "fragment"
+      },
+      "settings_view": {
+        "name": "settings_view",
+        "lazy": false,
+        "hydrate": "immediate",
+        "template": {
+          "type": "box",
+          "props": {
+            "direction": "col",
+            "gap": 24
+          },
+          "children": [
+            {
+              "type": "box",
+              "_node": {
+                "type": "component:render",
+                "props": {
+                  "__componentName": "page_header",
+                  "title": "Settings",
+                  "subtitle": "Profile, security, and preferences"
+                },
+                "children": [
+                  {
+                    "_node": {
+                      "type": "box",
+                      "props": {
+                        "direction": "row",
+                        "crossAlignment": "center",
+                        "mainAlignment": "space-between",
+                        "gap": 16,
+                        "padding": 0
+                      },
+                      "children": [
+                        {
+                          "_node": {
+                            "type": "box",
+                            "props": {
+                              "direction": "col",
+                              "gap": 8
+                            },
+                            "children": [
+                              {
+                                "_node": {
+                                  "type": "text",
+                                  "props": {
+                                    "text": "Settings",
+                                    "variant": "heading"
+                                  },
+                                  "children": []
+                                }
+                              },
+                              {
+                                "_node": {
+                                  "type": "text",
+                                  "props": {
+                                    "text": "Profile, security, and preferences"
+                                  },
+                                  "children": []
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "__componentName": "page_header"
+              }
+            },
+            {
+              "type": "box",
+              "_node": {
+                "type": "template",
+                "props": {
+                  "title": "Account",
+                  "description": "Manage your account details.",
+                  "compact": false,
+                  "__templateName": "section"
+                },
+                "children": []
+              }
+            }
+          ]
+        },
+        "kind": "fragment",
+        "type": "fragment"
+      },
+      "docs_index": {
+        "name": "docs_index",
+        "lazy": false,
+        "hydrate": "immediate",
+        "template": {
+          "type": "box",
+          "props": {
+            "direction": "col",
+            "gap": 24
+          },
+          "children": [
+            {
+              "type": "box",
+              "_node": {
+                "type": "component:render",
+                "props": {
+                  "__componentName": "page_header",
+                  "title": "Documentation",
+                  "subtitle": "A nested, route-driven knowledge surface"
+                },
+                "children": [
+                  {
+                    "_node": {
+                      "type": "box",
+                      "props": {
+                        "direction": "row",
+                        "crossAlignment": "center",
+                        "mainAlignment": "space-between",
+                        "gap": 16,
+                        "padding": 0
+                      },
+                      "children": [
+                        {
+                          "_node": {
+                            "type": "box",
+                            "props": {
+                              "direction": "col",
+                              "gap": 8
+                            },
+                            "children": [
+                              {
+                                "_node": {
+                                  "type": "text",
+                                  "props": {
+                                    "text": "Documentation",
+                                    "variant": "heading"
+                                  },
+                                  "children": []
+                                }
+                              },
+                              {
+                                "_node": {
+                                  "type": "text",
+                                  "props": {
+                                    "text": "A nested, route-driven knowledge surface"
+                                  },
+                                  "children": []
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "__componentName": "page_header"
+              }
+            },
+            {
+              "type": "box",
+              "_node": {
+                "type": "template",
+                "props": {
+                  "title": "Start here",
+                  "description": "Explore nested docs pages with layout inheritance.",
+                  "compact": false,
+                  "__templateName": "section"
+                },
+                "children": []
+              }
+            }
+          ]
+        },
+        "kind": "fragment",
+        "type": "fragment"
+      }
+    },
+    "bundle": {
+      "pages": {
+        "routes": [
+          {
+            "kind": "page",
+            "type": "route",
+            "name": "home",
+            "id": "home",
+            "path": "/",
+            "nested": false,
+            "layout": {
+              "kind": "layout",
+              "name": "public_shell"
+            },
+            "page": {
+              "kind": "fragment",
+              "name": "home_hero"
+            },
+            "children": {
+              "routes": [
+                {
+                  "kind": "page",
+                  "type": "route",
+                  "name": "pricing",
+                  "id": "pricing",
+                  "path": "/pricing",
+                  "nested": false,
+                  "layout": {
+                    "kind": "layout",
+                    "name": "public_shell"
+                  },
+                  "page": {
+                    "kind": "fragment",
+                    "name": "home_hero"
+                  },
+                  "seo": {
+                    "title": "Pricing | Quantum",
+                    "description": "Flexible pricing for teams that need real performance."
+                  },
+                  "meta": {
+                    "area": "marketing",
+                    "section": "pricing"
+                  },
+                  "routeId": "pricing"
+                },
+                {
+                  "kind": "page",
+                  "type": "route",
+                  "name": "about",
+                  "id": "about",
+                  "path": "/about",
+                  "nested": false,
+                  "layout": {
+                    "kind": "layout",
+                    "name": "public_shell"
+                  },
+                  "page": {
+                    "kind": "fragment",
+                    "name": "home_stats"
+                  },
+                  "seo": {
+                    "title": "About | Quantum",
+                    "description": "The engine behind the page graph."
+                  },
+                  "meta": {
+                    "area": "marketing",
+                    "section": "about"
+                  },
+                  "routeId": "about"
+                }
+              ]
+            },
+            "seo": {
+              "title": "Quantum",
+              "description": "A powerful SDUI runtime for Flutter and JSON render graphs.",
+              "canonical": "/",
+              "robots": "index,follow",
+              "customMeta": {
+                "section": "home"
+              }
+            },
+            "prefetch": {
+              "routes": [
+                "/dashboard",
+                "/docs"
+              ],
+              "layout": true,
+              "priority": "high",
+              "viewport": "idle"
+            },
+            "meta": {
+              "area": "marketing",
+              "kind": "landing"
+            },
+            "routeId": "home"
+          },
+          {
+            "kind": "page",
+            "type": "route",
+            "name": "login",
+            "id": "login",
+            "path": "/login",
+            "nested": false,
+            "layout": {
+              "kind": "layout",
+              "name": "auth_shell"
+            },
+            "page": {
+              "kind": "fragment",
+              "name": "home_hero"
+            },
+            "seo": {
+              "title": "Login | Quantum",
+              "description": "Authenticate to continue.",
+              "robots": "noindex,follow"
+            },
+            "meta": {
+              "area": "auth"
+            },
+            "routeId": "login"
+          },
+          {
+            "kind": "page",
+            "type": "route",
+            "name": "dashboard",
+            "id": "dashboard",
+            "path": "/dashboard",
+            "nested": false,
+            "layout": {
+              "kind": "layout",
+              "name": "dashboard_shell"
+            },
+            "page": {
+              "kind": "fragment",
+              "name": "dashboard_home"
+            },
+            "children": {
+              "routes": [
+                {
+                  "kind": "page",
+                  "type": "route",
+                  "name": "dashboard_reports",
+                  "id": "dashboard_reports",
+                  "path": "/dashboard/reports",
+                  "nested": false,
+                  "layout": {
+                    "kind": "layout",
+                    "name": "dashboard_shell"
+                  },
+                  "page": {
+                    "kind": "fragment",
+                    "name": "dashboard_home"
+                  },
+                  "children": {
+                    "routes": [
+                      {
+                        "kind": "page",
+                        "type": "route",
+                        "name": "dashboard_report_detail",
+                        "id": "dashboard_report_detail",
+                        "path": "/dashboard/reports/[reportId]",
+                        "nested": false,
+                        "layout": {
+                          "kind": "layout",
+                          "name": "dashboard_shell"
+                        },
+                        "page": {
+                          "kind": "fragment",
+                          "name": "article_view"
+                        },
+                        "seo": {
+                          "title": "Report Detail | Dashboard",
+                          "description": "Route parameter driven deep page."
+                        },
+                        "guards": [
+                          {
+                            "name": "require_auth",
+                            "type": "auth",
+                            "redirectTo": "/login"
+                          }
+                        ],
+                        "meta": {
+                          "area": "app",
+                          "section": "report_detail"
+                        },
+                        "routeId": "dashboard_report_detail"
+                      }
+                    ]
+                  },
+                  "seo": {
+                    "title": "Reports | Dashboard",
+                    "description": "Analytics and report breakdown pages."
+                  },
+                  "guards": [
+                    {
+                      "name": "require_auth",
+                      "type": "auth",
+                      "redirectTo": "/login"
+                    }
+                  ],
+                  "prefetch": {
+                    "routes": [
+                      "/dashboard/reports/[reportId]"
+                    ],
+                    "data": [
+                      "dashboard.stats"
+                    ],
+                    "layout": true,
+                    "priority": "high"
+                  },
+                  "meta": {
+                    "area": "app",
+                    "section": "reports"
+                  },
+                  "routeId": "dashboard_reports"
+                },
+                {
+                  "kind": "page",
+                  "type": "route",
+                  "name": "dashboard_settings",
+                  "id": "dashboard_settings",
+                  "path": "/dashboard/settings",
+                  "nested": false,
+                  "layout": {
+                    "kind": "layout",
+                    "name": "dashboard_shell"
+                  },
+                  "page": {
+                    "kind": "fragment",
+                    "name": "settings_view"
+                  },
+                  "seo": {
+                    "title": "Settings | Dashboard",
+                    "description": "User preferences and security."
+                  },
+                  "guards": [
+                    {
+                      "name": "require_auth",
+                      "type": "auth",
+                      "redirectTo": "/login"
+                    }
+                  ],
+                  "meta": {
+                    "area": "app",
+                    "section": "settings"
+                  },
+                  "routeId": "dashboard_settings"
+                }
+              ]
+            },
+            "seo": {
+              "title": "Dashboard | Quantum",
+              "description": "Live metrics and deep nested pages.",
+              "canonical": "/dashboard",
+              "robots": "noindex,follow"
+            },
+            "guards": [
+              {
+                "name": "require_auth",
+                "type": "auth",
+                "redirectTo": "/login"
+              },
+              {
+                "name": "require_admin",
+                "type": "role",
+                "role": [
+                  "admin"
+                ],
+                "redirectTo": "/dashboard"
+              }
+            ],
+            "prefetch": {
+              "routes": [
+                "/dashboard/reports",
+                "/dashboard/settings"
+              ],
+              "assets": [
+                "images/dashboard-hero.png"
+              ],
+              "data": [
+                "dashboard.stats"
+              ],
+              "layout": true,
+              "fragments": [
+                "dashboard_home"
+              ],
+              "priority": "high",
+              "viewport": "idle"
+            },
+            "meta": {
+              "area": "app",
+              "section": "dashboard"
+            },
+            "routeId": "dashboard"
+          },
+          {
+            "kind": "page",
+            "type": "route",
+            "name": "settings",
+            "id": "settings",
+            "path": "/settings",
+            "nested": false,
+            "layout": {
+              "kind": "layout",
+              "name": "dashboard_shell"
+            },
+            "page": {
+              "kind": "fragment",
+              "name": "settings_view"
+            },
+            "children": {
+              "routes": [
+                {
+                  "kind": "page",
+                  "type": "route",
+                  "name": "settings_profile",
+                  "id": "settings_profile",
+                  "path": "/settings/profile",
+                  "nested": false,
+                  "layout": {
+                    "kind": "layout",
+                    "name": "dashboard_shell"
+                  },
+                  "page": {
+                    "kind": "fragment",
+                    "name": "settings_view"
+                  },
+                  "seo": {
+                    "title": "Profile | Settings"
+                  },
+                  "guards": [
+                    {
+                      "name": "require_auth",
+                      "type": "auth",
+                      "redirectTo": "/login"
+                    }
+                  ],
+                  "routeId": "settings_profile"
+                },
+                {
+                  "kind": "page",
+                  "type": "route",
+                  "name": "settings_security",
+                  "id": "settings_security",
+                  "path": "/settings/security",
+                  "nested": false,
+                  "layout": {
+                    "kind": "layout",
+                    "name": "dashboard_shell"
+                  },
+                  "page": {
+                    "kind": "fragment",
+                    "name": "settings_view"
+                  },
+                  "seo": {
+                    "title": "Security | Settings"
+                  },
+                  "guards": [
+                    {
+                      "name": "require_auth",
+                      "type": "auth",
+                      "redirectTo": "/login"
+                    }
+                  ],
+                  "routeId": "settings_security"
+                }
+              ]
+            },
+            "seo": {
+              "title": "Settings | Quantum",
+              "description": "Full settings surface."
+            },
+            "guards": [
+              {
+                "name": "require_auth",
+                "type": "auth",
+                "redirectTo": "/login"
+              }
+            ],
+            "meta": {
+              "area": "app"
+            },
+            "routeId": "settings"
+          },
+          {
+            "kind": "page",
+            "type": "route",
+            "name": "docs",
+            "id": "docs",
+            "path": "/docs",
+            "nested": false,
+            "layout": {
+              "kind": "layout",
+              "name": "docs_shell"
+            },
+            "page": {
+              "kind": "fragment",
+              "name": "docs_index"
+            },
+            "children": {
+              "routes": [
+                {
+                  "kind": "page",
+                  "type": "route",
+                  "name": "docs_getting_started",
+                  "id": "docs_getting_started",
+                  "path": "/docs/getting-started",
+                  "nested": false,
+                  "layout": {
+                    "kind": "layout",
+                    "name": "docs_shell"
+                  },
+                  "page": {
+                    "kind": "fragment",
+                    "name": "docs_index"
+                  },
+                  "seo": {
+                    "title": "Getting Started | Docs"
+                  },
+                  "routeId": "docs_getting_started"
+                },
+                {
+                  "kind": "page",
+                  "type": "route",
+                  "name": "docs_api",
+                  "id": "docs_api",
+                  "path": "/docs/api",
+                  "nested": false,
+                  "layout": {
+                    "kind": "layout",
+                    "name": "docs_shell"
+                  },
+                  "page": {
+                    "kind": "fragment",
+                    "name": "article_view"
+                  },
+                  "seo": {
+                    "title": "API | Docs"
+                  },
+                  "routeId": "docs_api"
+                },
+                {
+                  "kind": "page",
+                  "type": "route",
+                  "name": "docs_catch_all",
+                  "id": "docs_catch_all",
+                  "path": "/docs/[...slug]",
+                  "nested": true,
+                  "layout": {
+                    "kind": "layout",
+                    "name": "docs_shell"
+                  },
+                  "page": {
+                    "kind": "fragment",
+                    "name": "article_view"
+                  },
+                  "seo": {
+                    "title": "Docs Page"
+                  },
+                  "routeId": "docs_catch_all"
+                }
+              ]
+            },
+            "seo": {
+              "title": "Docs | Quantum",
+              "description": "Nested docs with route-aware layouts and fragments.",
+              "canonical": "/docs"
+            },
+            "prefetch": {
+              "routes": [
+                "/docs/getting-started",
+                "/docs/api",
+                "/docs/guides"
+              ],
+              "layout": true,
+              "fragments": [
+                "docs_index"
+              ],
+              "priority": "normal",
+              "viewport": "visible"
+            },
+            "meta": {
+              "area": "docs"
+            },
+            "routeId": "docs"
+          }
+        ]
+      },
+      "layouts": {
+        "public_shell": {
+          "name": "public_shell",
+          "mode": "shell",
+          "viewport": "responsive",
+          "scaffold": true,
+          "safeArea": "all",
+          "template": {
+            "type": "page_shell",
+            "props": {
+              "title": "Public",
+              "compact": false,
+              "showSidebar": false,
+              "showFooter": true
+            },
+            "slots": {
+              "header": {
+                "type": "box",
+                "_node": {
+                  "type": "box",
+                  "props": {
+                    "padding": 24
+                  },
+                  "children": [
+                    {
+                      "_node": {
+                        "type": "component:render",
+                        "props": {
+                          "__componentName": "page_header",
+                          "title": "Quantum",
+                          "subtitle": "The fastest SDUI runtime"
+                        },
+                        "children": [
+                          {
+                            "_node": {
+                              "type": "box",
+                              "props": {
+                                "direction": "row",
+                                "crossAlignment": "center",
+                                "mainAlignment": "space-between",
+                                "gap": 16,
+                                "padding": 0
+                              },
+                              "children": [
+                                {
+                                  "_node": {
+                                    "type": "box",
+                                    "props": {
+                                      "direction": "col",
+                                      "gap": 8
+                                    },
+                                    "children": [
+                                      {
+                                        "_node": {
+                                          "type": "text",
+                                          "props": {
+                                            "text": "Quantum",
+                                            "variant": "heading"
+                                          },
+                                          "children": []
+                                        }
+                                      },
+                                      {
+                                        "_node": {
+                                          "type": "text",
+                                          "props": {
+                                            "text": "The fastest SDUI runtime"
+                                          },
+                                          "children": []
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "__componentName": "page_header"
+                      }
+                    }
+                  ]
+                }
+              },
+              "content": {
+                "type": "box",
+                "_node": {
+                  "type": "box",
+                  "props": {
+                    "direction": "col",
+                    "gap": 24,
+                    "padding": 24
+                  },
+                  "children": []
+                }
+              },
+              "footer": {
+                "type": "box",
+                "_node": {
+                  "type": "box",
+                  "props": {
+                    "padding": 24
+                  },
+                  "children": [
+                    {
+                      "_node": {
+                        "type": "text",
+                        "props": {
+                          "text": "© Quantum"
+                        },
+                        "children": []
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "slots": {
+            "header": {
+              "scrollable": false
+            },
+            "content": {
+              "scrollable": true
+            },
+            "footer": {
+              "scrollable": false
+            }
+          },
+          "meta": {
+            "name": "public",
+            "layer": "shell"
+          },
+          "kind": "layout",
+          "type": "layout"
+        },
+        "dashboard_shell": {
+          "name": "dashboard_shell",
+          "mode": "shell",
+          "viewport": "responsive",
+          "scaffold": true,
+          "safeArea": "all",
+          "template": {
+            "type": "page_shell",
+            "props": {
+              "title": "Dashboard",
+              "compact": false,
+              "showSidebar": true,
+              "showFooter": false
+            },
+            "slots": {
+              "sidebar": {
+                "type": "box",
+                "_node": {
+                  "type": "component:render",
+                  "props": {
+                    "__componentName": "nav_rail",
+                    "current": "/dashboard",
+                    "collapsed": false
+                  },
+                  "children": [
+                    {
+                      "_node": {
+                        "type": "box",
+                        "props": {
+                          "direction": "col",
+                          "gap": 8,
+                          "padding": 16,
+                          "radius": 20,
+                          "bg": "$colors.surface"
+                        },
+                        "children": [
+                          {
+                            "_node": {
+                              "type": "text",
+                              "props": {
+                                "text": "Navigation"
+                              },
+                              "children": []
+                            }
+                          },
+                          {
+                            "_node": {
+                              "type": "text",
+                              "props": {
+                                "text": "/dashboard"
+                              },
+                              "children": []
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "__componentName": "nav_rail"
+                }
+              },
+              "content": {
+                "type": "box",
+                "_node": {
+                  "type": "box",
+                  "props": {
+                    "direction": "col",
+                    "gap": 24,
+                    "padding": 24
+                  },
+                  "children": []
+                }
+              }
+            }
+          },
+          "slots": {
+            "sidebar": {
+              "scrollable": true,
+              "sticky": true
+            },
+            "content": {
+              "scrollable": true
+            }
+          },
+          "meta": {
+            "name": "dashboard",
+            "layer": "shell"
+          },
+          "kind": "layout",
+          "type": "layout"
+        },
+        "auth_shell": {
+          "name": "auth_shell",
+          "mode": "shell",
+          "viewport": "responsive",
+          "scaffold": true,
+          "safeArea": "all",
+          "template": {
+            "type": "page_shell",
+            "props": {
+              "title": "Auth",
+              "compact": true,
+              "showSidebar": false,
+              "showFooter": false
+            },
+            "slots": {
+              "content": {
+                "type": "box",
+                "_node": {
+                  "type": "box",
+                  "props": {
+                    "direction": "col",
+                    "gap": 20,
+                    "padding": 24
+                  },
+                  "children": []
+                }
+              }
+            }
+          },
+          "kind": "layout",
+          "type": "layout"
+        },
+        "docs_shell": {
+          "name": "docs_shell",
+          "mode": "matrix",
+          "viewport": "responsive",
+          "scaffold": true,
+          "safeArea": "all",
+          "template": {
+            "type": "page_shell",
+            "props": {
+              "title": "Docs",
+              "compact": false,
+              "showSidebar": true,
+              "showFooter": true
+            },
+            "slots": {
+              "sidebar": {
+                "type": "box",
+                "_node": {
+                  "type": "component:render",
+                  "props": {
+                    "__componentName": "nav_rail",
+                    "current": "/docs",
+                    "collapsed": false
+                  },
+                  "children": [
+                    {
+                      "_node": {
+                        "type": "box",
+                        "props": {
+                          "direction": "col",
+                          "gap": 8,
+                          "padding": 16,
+                          "radius": 20,
+                          "bg": "$colors.surface"
+                        },
+                        "children": [
+                          {
+                            "_node": {
+                              "type": "text",
+                              "props": {
+                                "text": "Navigation"
+                              },
+                              "children": []
+                            }
+                          },
+                          {
+                            "_node": {
+                              "type": "text",
+                              "props": {
+                                "text": "/docs"
+                              },
+                              "children": []
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "__componentName": "nav_rail"
+                }
+              },
+              "content": {
+                "type": "box",
+                "_node": {
+                  "type": "box",
+                  "props": {
+                    "direction": "col",
+                    "gap": 20,
+                    "padding": 24
+                  },
+                  "children": []
+                }
+              },
+              "footer": {
+                "type": "box",
+                "_node": {
+                  "type": "box",
+                  "props": {
+                    "padding": 16
+                  },
+                  "children": [
+                    {
+                      "_node": {
+                        "type": "text",
+                        "props": {
+                          "text": "Built with Quantum"
+                        },
+                        "children": []
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "kind": "layout",
+          "type": "layout"
+        }
+      },
+      "fragments": {
+        "home_hero": {
+          "name": "home_hero",
+          "lazy": false,
+          "hydrate": "immediate",
+          "template": {
+            "type": "template",
+            "props": {
+              "eyebrow": "Introducing",
+              "title": "Build anything with one JSON graph",
+              "body": "Pages, layouts, fragments, guards, pipelines, and nested routes all compile into a fast Flutter render tree.",
+              "primaryLabel": "Start",
+              "secondaryLabel": "Docs",
+              "__templateName": "hero"
+            },
+            "slots": {
+              "actions": {
+                "type": "box",
+                "_node": {
+                  "type": "box",
+                  "props": {
+                    "direction": "row",
+                    "gap": 12
+                  },
+                  "children": [
+                    {
+                      "_node": {
+                        "type": "action",
+                        "props": {
+                          "text": "Get Started",
+                          "intent": "primary",
+                          "variant": "solid"
+                        },
+                        "children": []
+                      }
+                    },
+                    {
+                      "_node": {
+                        "type": "action",
+                        "props": {
+                          "text": "Read Docs",
+                          "intent": "ghost",
+                          "variant": "outline"
+                        },
+                        "children": []
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "tags": [
+            "hero",
+            "landing",
+            "marketing"
+          ],
+          "meta": {
+            "section": "home"
+          },
+          "kind": "fragment",
+          "type": "fragment"
+        },
+        "home_stats": {
+          "name": "home_stats",
+          "lazy": true,
+          "hydrate": "visible",
+          "template": {
+            "type": "box",
+            "props": {
+              "direction": "row",
+              "gap": 16
+            },
+            "children": [
+              {
+                "type": "box",
+                "_node": {
+                  "type": "template",
+                  "props": {
+                    "label": "Users Online",
+                    "value": "12.4K",
+                    "hint": "+14% today",
+                    "__templateName": "stat_card"
+                  },
+                  "children": []
+                }
+              },
+              {
+                "type": "box",
+                "_node": {
+                  "type": "template",
+                  "props": {
+                    "label": "RPM",
+                    "value": "1.2M",
+                    "hint": "stable",
+                    "__templateName": "stat_card"
+                  },
+                  "children": []
+                }
+              },
+              {
+                "type": "box",
+                "_node": {
+                  "type": "template",
+                  "props": {
+                    "label": "Error Rate",
+                    "value": "0.08%",
+                    "hint": "last 5 min",
+                    "__templateName": "stat_card"
+                  },
+                  "children": []
+                }
+              }
+            ]
+          },
+          "kind": "fragment",
+          "type": "fragment"
+        },
+        "dashboard_home": {
+          "name": "dashboard_home",
+          "lazy": false,
+          "hydrate": "immediate",
+          "template": {
+            "type": "box",
+            "props": {
+              "direction": "col",
+              "gap": 24
+            },
+            "children": [
+              {
+                "type": "box",
+                "_node": {
+                  "type": "component:render",
+                  "props": {
+                    "__componentName": "page_header",
+                    "title": "Dashboard",
+                    "subtitle": "Live metrics, activity, and drill-down pages"
+                  },
+                  "children": [
+                    {
+                      "_node": {
+                        "type": "box",
+                        "props": {
+                          "direction": "row",
+                          "crossAlignment": "center",
+                          "mainAlignment": "space-between",
+                          "gap": 16,
+                          "padding": 0
+                        },
+                        "children": [
+                          {
+                            "_node": {
+                              "type": "box",
+                              "props": {
+                                "direction": "col",
+                                "gap": 8
+                              },
+                              "children": [
+                                {
+                                  "_node": {
+                                    "type": "text",
+                                    "props": {
+                                      "text": "Dashboard",
+                                      "variant": "heading"
+                                    },
+                                    "children": []
+                                  }
+                                },
+                                {
+                                  "_node": {
+                                    "type": "text",
+                                    "props": {
+                                      "text": "Live metrics, activity, and drill-down pages"
+                                    },
+                                    "children": []
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "__componentName": "page_header"
+                }
+              },
+              {
+                "type": "box",
+                "_node": {
+                  "type": "template",
+                  "props": {
+                    "title": "Overview",
+                    "description": "Everything that matters at a glance.",
+                    "compact": false,
+                    "__templateName": "section"
+                  },
+                  "children": [],
+                  "slots": {
+                    "body": {
+                      "_node": {
+                        "type": "box",
+                        "props": {
+                          "direction": "row",
+                          "gap": 16
+                        },
+                        "children": [
+                          {
+                            "_node": {
+                              "type": "template",
+                              "props": {
+                                "label": "Users Online",
+                                "value": "18.2K",
+                                "hint": "peak 1h",
+                                "__templateName": "stat_card"
+                              },
+                              "children": []
+                            }
+                          },
+                          {
+                            "_node": {
+                              "type": "template",
+                              "props": {
+                                "label": "Requests / Min",
+                                "value": "240K",
+                                "hint": "rolling average",
+                                "__templateName": "stat_card"
+                              },
+                              "children": []
+                            }
+                          },
+                          {
+                            "_node": {
+                              "type": "template",
+                              "props": {
+                                "label": "Error Rate",
+                                "value": "0.04%",
+                                "hint": "healthy",
+                                "__templateName": "stat_card"
+                              },
+                              "children": []
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "kind": "fragment",
+          "type": "fragment"
+        },
+        "article_view": {
+          "name": "article_view",
+          "lazy": true,
+          "hydrate": "visible",
+          "template": {
+            "type": "box",
+            "props": {
+              "direction": "col",
+              "gap": 24
+            },
+            "children": [
+              {
+                "type": "box",
+                "_node": {
+                  "type": "component:render",
+                  "props": {
+                    "__componentName": "page_header",
+                    "title": "Article",
+                    "subtitle": "Nested route content"
+                  },
+                  "children": [
+                    {
+                      "_node": {
+                        "type": "box",
+                        "props": {
+                          "direction": "row",
+                          "crossAlignment": "center",
+                          "mainAlignment": "space-between",
+                          "gap": 16,
+                          "padding": 0
+                        },
+                        "children": [
+                          {
+                            "_node": {
+                              "type": "box",
+                              "props": {
+                                "direction": "col",
+                                "gap": 8
+                              },
+                              "children": [
+                                {
+                                  "_node": {
+                                    "type": "text",
+                                    "props": {
+                                      "text": "Article",
+                                      "variant": "heading"
+                                    },
+                                    "children": []
+                                  }
+                                },
+                                {
+                                  "_node": {
+                                    "type": "text",
+                                    "props": {
+                                      "text": "Nested route content"
+                                    },
+                                    "children": []
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "__componentName": "page_header"
+                }
+              },
+              {
+                "type": "box",
+                "_node": {
+                  "type": "template",
+                  "props": {
+                    "title": "Body",
+                    "description": "This block renders the fetched article content.",
+                    "compact": false,
+                    "__templateName": "section"
+                  },
+                  "children": [],
+                  "slots": {
+                    "body": {
+                      "_node": {
+                        "type": "box",
+                        "props": {
+                          "direction": "col",
+                          "gap": 16
+                        },
+                        "children": []
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "kind": "fragment",
+          "type": "fragment"
+        },
+        "settings_view": {
+          "name": "settings_view",
+          "lazy": false,
+          "hydrate": "immediate",
+          "template": {
+            "type": "box",
+            "props": {
+              "direction": "col",
+              "gap": 24
+            },
+            "children": [
+              {
+                "type": "box",
+                "_node": {
+                  "type": "component:render",
+                  "props": {
+                    "__componentName": "page_header",
+                    "title": "Settings",
+                    "subtitle": "Profile, security, and preferences"
+                  },
+                  "children": [
+                    {
+                      "_node": {
+                        "type": "box",
+                        "props": {
+                          "direction": "row",
+                          "crossAlignment": "center",
+                          "mainAlignment": "space-between",
+                          "gap": 16,
+                          "padding": 0
+                        },
+                        "children": [
+                          {
+                            "_node": {
+                              "type": "box",
+                              "props": {
+                                "direction": "col",
+                                "gap": 8
+                              },
+                              "children": [
+                                {
+                                  "_node": {
+                                    "type": "text",
+                                    "props": {
+                                      "text": "Settings",
+                                      "variant": "heading"
+                                    },
+                                    "children": []
+                                  }
+                                },
+                                {
+                                  "_node": {
+                                    "type": "text",
+                                    "props": {
+                                      "text": "Profile, security, and preferences"
+                                    },
+                                    "children": []
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "__componentName": "page_header"
+                }
+              },
+              {
+                "type": "box",
+                "_node": {
+                  "type": "template",
+                  "props": {
+                    "title": "Account",
+                    "description": "Manage your account details.",
+                    "compact": false,
+                    "__templateName": "section"
+                  },
+                  "children": []
+                }
+              }
+            ]
+          },
+          "kind": "fragment",
+          "type": "fragment"
+        },
+        "docs_index": {
+          "name": "docs_index",
+          "lazy": false,
+          "hydrate": "immediate",
+          "template": {
+            "type": "box",
+            "props": {
+              "direction": "col",
+              "gap": 24
+            },
+            "children": [
+              {
+                "type": "box",
+                "_node": {
+                  "type": "component:render",
+                  "props": {
+                    "__componentName": "page_header",
+                    "title": "Documentation",
+                    "subtitle": "A nested, route-driven knowledge surface"
+                  },
+                  "children": [
+                    {
+                      "_node": {
+                        "type": "box",
+                        "props": {
+                          "direction": "row",
+                          "crossAlignment": "center",
+                          "mainAlignment": "space-between",
+                          "gap": 16,
+                          "padding": 0
+                        },
+                        "children": [
+                          {
+                            "_node": {
+                              "type": "box",
+                              "props": {
+                                "direction": "col",
+                                "gap": 8
+                              },
+                              "children": [
+                                {
+                                  "_node": {
+                                    "type": "text",
+                                    "props": {
+                                      "text": "Documentation",
+                                      "variant": "heading"
+                                    },
+                                    "children": []
+                                  }
+                                },
+                                {
+                                  "_node": {
+                                    "type": "text",
+                                    "props": {
+                                      "text": "A nested, route-driven knowledge surface"
+                                    },
+                                    "children": []
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "__componentName": "page_header"
+                }
+              },
+              {
+                "type": "box",
+                "_node": {
+                  "type": "template",
+                  "props": {
+                    "title": "Start here",
+                    "description": "Explore nested docs pages with layout inheritance.",
+                    "compact": false,
+                    "__templateName": "section"
+                  },
+                  "children": []
+                }
+              }
+            ]
+          },
+          "kind": "fragment",
+          "type": "fragment"
+        }
+      },
+      "seo": {
+        "home": {
+          "title": "Quantum",
+          "description": "A powerful SDUI runtime for Flutter and JSON render graphs.",
+          "canonical": "/",
+          "robots": "index,follow",
+          "customMeta": {
+            "section": "home"
+          }
+        },
+        "dashboard": {
+          "title": "Dashboard | Quantum",
+          "description": "Live metrics and deep nested pages.",
+          "canonical": "/dashboard",
+          "robots": "noindex,follow"
+        },
+        "docs": {
+          "title": "Docs | Quantum",
+          "description": "Nested docs with route-aware layouts and fragments.",
+          "canonical": "/docs"
+        }
+      },
+      "guards": {
+        "auth": {
+          "name": "require_auth",
+          "type": "auth",
+          "redirectTo": "/login"
+        },
+        "admin": {
+          "name": "require_admin",
+          "type": "role",
+          "role": [
+            "admin"
+          ],
+          "redirectTo": "/dashboard"
+        }
+      },
+      "prefetch": {
+        "dashboard": {
+          "routes": [
+            "/dashboard/reports",
+            "/dashboard/settings"
+          ],
+          "assets": [
+            "images/dashboard-hero.png"
+          ],
+          "data": [
+            "dashboard.stats"
+          ],
+          "layout": true,
+          "fragments": [
+            "dashboard_home"
+          ],
+          "priority": "high",
+          "viewport": "idle"
+        },
+        "docs": {
+          "routes": [
+            "/docs/getting-started",
+            "/docs/api",
+            "/docs/guides"
+          ],
+          "layout": true,
+          "fragments": [
+            "docs_index"
+          ],
+          "priority": "normal",
+          "viewport": "visible"
+        }
+      },
+      "meta": {
+        "appName": "Quantum Super App",
+        "runtime": "flutter",
+        "pagesDir": "pages"
+      }
+    },
+    "routing": {
+      "basePath": "/",
+      "defaultTransition": "slideRight",
+      "notFoundPath": "/404",
+      "scrollRestoration": true,
+      "trailingSlash": false
+    },
+    "performance": {
+      "lazyPages": true,
+      "lazyLayouts": true,
+      "lazyFragments": true,
+      "cacheRoutes": true,
+      "cacheBundles": true,
+      "prefetchOnHover": true,
+      "prefetchOnVisible": true
+    },
+    "navigation": {
+      "nestedPages": true,
+      "routeGroups": true,
+      "routeParams": true,
+      "catchAllRoutes": true
+    },
+    "featureFlags": {
+      "dashboard": true,
+      "docs": true,
+      "auth": true,
+      "prefetch": true,
+      "nestedRouting": true,
+      "routeGroups": true
+    },
+    "telemetry": {
+      "enabled": true,
+      "logRoutes": true,
+      "logGuards": true,
+      "logPrefetch": true
+    },
+    "runtime": {
+      "engine": "flutter",
+      "sdui": "json",
+      "version": "v2"
+    }
+  }
+}
