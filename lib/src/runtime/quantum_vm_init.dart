@@ -20,9 +20,10 @@ import 'quantum_data_state.dart';
 import 'quantum_omni_registry.dart';
 import 'quantum_core_schema_registry.dart';
 import 'quantum_sdui_type_engine.dart';
-import 'quantum_vm.dart';
+import '../quantum_vm_core/quantum_vm.dart';
 import 'quantum_data_pipeline.dart';
 import 'package:quantum_layout/quantum.dart';
+
 class _BuiltInActionPlugin extends QLActionPlugin {
   final Future<dynamic> Function(
       Map<String, dynamic>, QLDataStore, BuildContext) func;
@@ -96,7 +97,6 @@ void initQuantumBuiltIns(QuantumVM vm) {
       'slice': ctx.namespace,
     };
   });
-
 
   // Register SDUI JSON DSL definitions (templates & layouts)
   vm.registerJsonDslPlugins();
@@ -341,9 +341,8 @@ void initQuantumBuiltIns(QuantumVM vm) {
       LambdaActionPlugin((payload, store, ctx) async {
     final key = payload['key']?.toString() ?? payload['path']?.toString();
     if (key == null || key.isEmpty) return null;
-    final num amount = (payload['amount'] as num?) ??
-        (payload['delta'] as num?) ??
-        1;
+    final num amount =
+        (payload['amount'] as num?) ?? (payload['delta'] as num?) ?? 1;
     final current = store.get(key);
     num base = 0;
     if (current is num) {
@@ -366,9 +365,8 @@ void initQuantumBuiltIns(QuantumVM vm) {
       LambdaActionPlugin((payload, store, ctx) async {
     final key = payload['path']?.toString() ?? payload['key']?.toString();
     if (key == null || key.isEmpty) return null;
-    final num amount = (payload['amount'] as num?) ??
-        (payload['delta'] as num?) ??
-        1;
+    final num amount =
+        (payload['amount'] as num?) ?? (payload['delta'] as num?) ?? 1;
     final current = store.get(key);
     num base = 0;
     if (current is num) {
@@ -401,8 +399,7 @@ void initQuantumBuiltIns(QuantumVM vm) {
       engine: 'QuantumVM',
       tags: const ['state', 'core']);
 
-  vm.registerAction('toggle',
-      LambdaActionPlugin((payload, store, ctx) async {
+  vm.registerAction('toggle', LambdaActionPlugin((payload, store, ctx) async {
     final key = payload['path']?.toString() ?? payload['key']?.toString();
     if (key == null || key.isEmpty) return null;
     final current = store.get(key);

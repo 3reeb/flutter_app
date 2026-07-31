@@ -75,7 +75,7 @@ files:
     heading_count: 5
     first_heading: Plugin-layer unified data routing
     summary:
-      "# Plugin-layer unified data routing This project’s plugin layer is the
+      "# Plugin-layer unified data routing This projectأ¢â‚¬â„¢s plugin layer is the
       bridge between slice/datasource intent and the backend or device capabilities
       that actually fulfill it."
   - docs_file: docs/src/foundation/quantum_reactive_graph.dart.md
@@ -88,7 +88,7 @@ files:
       "A foundation module. These files define the base reactive state, async
       primitives, parsing utilities, data structures, math helpers, and error-handling
       machinery used everywhere else. Author-intent note: QUANTUM REACTIVE GRAPH ENGINE
-      v1.0 — SIGNAL-DRIVEN ANIMATION COMPOSITOR"
+      v1.0 أ¢â‚¬â€‌ SIGNAL-DRIVEN ANIMATION COMPOSITOR"
   - docs_file: docs/src/foundation/quantum_render_scheduler.dart.md
     source_file: lib/src/foundation/quantum_render_scheduler.dart
     line_count: 64
@@ -99,7 +99,7 @@ files:
       "A foundation module. These files define the base reactive state, async
       primitives, parsing utilities, data structures, math helpers, and error-handling
       machinery used everywhere else. Author-intent note: QUANTUM RENDER SCHEDULER v1.0
-      — FRAME-BUDGET RENDER QUEUE"
+      أ¢â‚¬â€‌ FRAME-BUDGET RENDER QUEUE"
   - docs_file: docs/src/foundation/quantum_core.dart.md
     source_file: lib/src/foundation/quantum_core.dart
     line_count: 62
@@ -122,7 +122,7 @@ files:
       "A subsystem engine. Files with this role typically own state, lifecycle,
       rendering, decoding, or orchestration for one feature area and expose a higher-level
       API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
-      — OMEGA YAML-FIRST CONFIG SYSTEM"
+      أ¢â‚¬â€‌ OMEGA YAML-FIRST CONFIG SYSTEM"
   - docs_file: docs/src/foundation/quantum_atoms.dart.md
     source_file: lib/src/foundation/quantum_atoms.dart
     line_count: 57
@@ -220,7 +220,7 @@ files:
       "A foundation module. These files define the base reactive state, async
       primitives, parsing utilities, data structures, math helpers, and error-handling
       machinery used everywhere else. Author-intent note: QUANTUM ISOLATE WORKER ENGINE
-      v1.0 — ZERO-COPY BACKGROUND COMPUTE"
+      v1.0 أ¢â‚¬â€‌ ZERO-COPY BACKGROUND COMPUTE"
   - docs_file: docs/src/ui/quantum_behaviors.dart.md
     source_file: lib/src/ui/quantum_behaviors.dart
     line_count: 68
@@ -260,7 +260,7 @@ files:
       "A subsystem engine. Files with this role typically own state, lifecycle,
       rendering, decoding, or orchestration for one feature area and expose a higher-level
       API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE)
-      v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
+      v14.0 أ¢â‚¬â€‌ OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
   - docs_file: docs/src/ui/quantum_layout_engine.dart.md
     source_file: lib/src/ui/quantum_layout_engine.dart
     line_count: 80
@@ -271,7 +271,7 @@ files:
       "A subsystem engine. Files with this role typically own state, lifecycle,
       rendering, decoding, or orchestration for one feature area and expose a higher-level
       API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE (QLE)
-      v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM"
+      v14.0 أ¢â‚¬â€‌ HIGH-PERFORMANCE VIRTUALIZED DOM"
   - docs_file: docs/src/ui/quantum_scene_layer.dart.md
     source_file: lib/src/ui/quantum_scene_layer.dart
     line_count: 72
@@ -322,7 +322,7 @@ files:
       "A subsystem engine. Files with this role typically own state, lifecycle,
       rendering, decoding, or orchestration for one feature area and expose a higher-level
       API to the rest of the framework. Author-intent note: QUANTUM ANIMATION ENGINE
-      v2.0 — OMEGA TIMELINE + iOS SPRING CORE"
+      v2.0 أ¢â‚¬â€‌ OMEGA TIMELINE + iOS SPRING CORE"
   - docs_file: docs/src/ui/quantum_forms_engine.dart.md
     source_file: lib/src/ui/quantum_forms_engine.dart
     line_count: 78
@@ -342,7 +342,7 @@ files:
     summary:
       "A UI-layer implementation file. It owns widget composition, layout, interactions,
       theming, telemetry, overlays, hydration, or other Flutter-facing behavior. Author-intent
-      note: Quantum ecosystem — only the barrel import is needed after decoupling."
+      note: Quantum ecosystem أ¢â‚¬â€‌ only the barrel import is needed after decoupling."
   - docs_file: docs/src/ui/quantum_field_ui_engine.dart.md
     source_file: lib/src/ui/quantum_field_ui_engine.dart
     line_count: 73
@@ -364,7 +364,7 @@ files:
       "A subsystem engine. Files with this role typically own state, lifecycle,
       rendering, decoding, or orchestration for one feature area and expose a higher-level
       API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
-      v2.0 — PRODUCTION GRADE"
+      v2.0 أ¢â‚¬â€‌ PRODUCTION GRADE"
   - docs_file: docs/src/ui/quantum_hydration_reader_stub.dart.md
     source_file: lib/src/ui/quantum_hydration_reader_stub.dart
     line_count: 28
@@ -471,7 +471,7 @@ files:
     summary:
       "A stub implementation used when the current platform does not support
       the hydration reader behavior. It intentionally stays minimal so unsupported builds
-      still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER — stub (non-web
+      still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER أ¢â‚¬â€‌ stub (non-web
       platforms)"
   - docs_file: docs/src/runtime/quantum_widget_image_exporter.dart.md
     source_file: lib/src/runtime/quantum_widget_image_exporter.dart
@@ -493,7 +493,7 @@ files:
       "A subsystem engine. Files with this role typically own state, lifecycle,
       rendering, decoding, or orchestration for one feature area and expose a higher-level
       API to the rest of the framework. Author-intent note: QUANTUM SDUI TYPE ENGINE
-      — schema export + TypeScript bundle generator"
+      أ¢â‚¬â€‌ schema export + TypeScript bundle generator"
   - docs_file: docs/src/runtime/quantum_vm_init.dart.md
     source_file: lib/src/runtime/quantum_vm_init.dart
     line_count: 46
@@ -522,7 +522,7 @@ files:
       "A subsystem engine. Files with this role typically own state, lifecycle,
       rendering, decoding, or orchestration for one feature area and expose a higher-level
       API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0
-      — ENCRYPTED SERVER-DRIVEN UI"
+      أ¢â‚¬â€‌ ENCRYPTED SERVER-DRIVEN UI"
   - docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
     source_file: lib/src/runtime/quantum_core_schema_registry.dart
     line_count: 57
@@ -532,7 +532,7 @@ files:
     summary:
       "A registry module. It stores keyed definitions or instances, exposes lookup
       and registration helpers, and centralizes a class of metadata that multiple runtime
-      subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY — lazy file-backed
+      subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY أ¢â‚¬â€‌ lazy file-backed
       schema catalog"
   - docs_file: docs/src/runtime/quantum_omni_registry.dart.md
     source_file: lib/src/runtime/quantum_omni_registry.dart
@@ -543,7 +543,7 @@ files:
     summary:
       "A registry module. It stores keyed definitions or instances, exposes lookup
       and registration helpers, and centralizes a class of metadata that multiple runtime
-      subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0 — 20-CORE
+      subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0 أ¢â‚¬â€‌ 20-CORE
       OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
   - docs_file: docs/src/runtime/quantum_test_engine_stub.md
     source_file: null
@@ -561,26 +561,6 @@ files:
     summary:
       This file bootstraps manifests into live runtime state. It is the orchestration
       layer that connects schemas, data sources, slices, actions, and pipelines.
-  - docs_file: docs/src/runtime/quantum_embodiment_examples.dart.md
-    source_file: lib/src/runtime/quantum_embodiment_examples.dart
-    line_count: 48
-    byte_count: 4624
-    heading_count: 9
-    first_heading: "`src/runtime/quantum_embodiment_examples.dart`"
-    summary:
-      "A framework source file that participates in the Quantum runtime. Author-intent
-      note: QEE EXAMPLE SCENARIOS — quantum_embodiment_examples.dart"
-  - docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
-    source_file: lib/src/runtime/quantum_embodiment_engine.dart
-    line_count: 81
-    byte_count: 7711
-    heading_count: 9
-    first_heading: "`src/runtime/quantum_embodiment_engine.dart`"
-    summary:
-      "A subsystem engine. Files with this role typically own state, lifecycle,
-      rendering, decoding, or orchestration for one feature area and expose a higher-level
-      API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
-      (QEE) v1.0 — RUNTIME INTERACTION ENGINE"
   - docs_file: docs/src/runtime/quantum_data_state.dart.md
     source_file: lib/src/runtime/quantum_data_state.dart
     line_count: 55
@@ -631,7 +611,7 @@ files:
     summary:
       This is the framework VM and rendering runtime. It manages module registration,
       schema views, widget rendering, action dispatch, plugin metadata, caches, and
-      a large amount of the framework’s compile-time-to-runtime translation work.
+      a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
   - docs_file: docs/src/runtime/quantum_export_dom_web.dart.md
     source_file: lib/src/runtime/quantum_export_dom_web.dart
     line_count: 32
@@ -641,7 +621,7 @@ files:
     summary:
       "An export-oriented helper file. Its main role is to move data or widgets
       out of the framework in a structured way rather than implementing business logic
-      itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)"
+      itself. Author-intent note: QUANTUM EXPORT DOM HELPER أ¢â‚¬â€‌ web implementation (dart:html)"
   - docs_file: docs/src/runtime/omni_cores/data_core.dart.md
     source_file: lib/src/runtime/omni_cores/data_core.dart
     line_count: 29
@@ -660,7 +640,7 @@ files:
     summary:
       "A core primitives file. These modules define low-level types, flags, value
       objects, or utility abstractions used throughout the framework. Author-intent
-      note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)"
+      note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ MEDIA ENGINE (PURE RENDER, ZERO-GC)"
   - docs_file: docs/src/runtime/omni_cores/box_core.dart.md
     source_file: lib/src/runtime/omni_cores/box_core.dart
     line_count: 39
@@ -670,7 +650,7 @@ files:
     summary:
       "A core primitives file. These modules define low-level types, flags, value
       objects, or utility abstractions used throughout the framework. Author-intent
-      note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY"
+      note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ BOX & LAYOUT FACTORY"
   - docs_file: docs/src/runtime/omni_cores/hook_core.dart.md
     source_file: lib/src/runtime/omni_cores/hook_core.dart
     line_count: 63
@@ -707,7 +687,7 @@ files:
     summary:
       "A core primitives file. These modules define low-level types, flags, value
       objects, or utility abstractions used throughout the framework. Author-intent
-      note: STREAM CORE — Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
+      note: STREAM CORE أ¢â‚¬â€‌ Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
   - docs_file: docs/src/runtime/omni_cores/field_core.dart.md
     source_file: lib/src/runtime/omni_cores/field_core.dart
     line_count: 34
@@ -744,7 +724,7 @@ files:
     summary:
       "A core primitives file. These modules define low-level types, flags, value
       objects, or utility abstractions used throughout the framework. Author-intent
-      note: QUANTUM OMNI REGISTRY — TEXT ENGINE"
+      note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ TEXT ENGINE"
   - docs_file: docs/src/runtime/omni_cores/animation_core.dart.md
     source_file: lib/src/runtime/omni_cores/animation_core.dart
     line_count: 56
@@ -781,7 +761,7 @@ files:
     summary:
       "A core primitives file. These modules define low-level types, flags, value
       objects, or utility abstractions used throughout the framework. Author-intent
-      note: QUANTUM OMNI REGISTRY — DECORATION ENGINE"
+      note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ DECORATION ENGINE"
   - docs_file: docs/src/runtime/omni_cores/collab_core.dart.md
     source_file: lib/src/runtime/omni_cores/collab_core.dart
     line_count: 43
@@ -791,7 +771,7 @@ files:
     summary:
       "A core primitives file. These modules define low-level types, flags, value
       objects, or utility abstractions used throughout the framework. Author-intent
-      note: COLLAB CORE — Real-time collaboration primitives"
+      note: COLLAB CORE أ¢â‚¬â€‌ Real-time collaboration primitives"
   - docs_file: docs/src/runtime/omni_cores/portal_core.dart.md
     source_file: lib/src/runtime/omni_cores/portal_core.dart
     line_count: 39
@@ -847,7 +827,7 @@ files:
     summary:
       "An app-level support module. These files usually connect boot-time config,
       shell behavior, HTTP transport, or file routing into the overall Flutter application.
-      Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER"
+      Author-intent note: QUANTUM APP ENTRY v1.0 أ¢â‚¬â€‌ SINGLE-FILE APP BOOTSTRAPPER"
   - docs_file: docs/src/app/config.dart.md
     source_file: lib/src/app/config.dart
     line_count: 86
@@ -888,7 +868,7 @@ files:
     summary:
       "An app-level support module. These files usually connect boot-time config,
       shell behavior, HTTP transport, or file routing into the overall Flutter application.
-      Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog"
+      Author-intent note: QUANTUM BOOT SCHEMA أ¢â‚¬â€‌ schema-first, lazy-loaded file catalog"
   - docs_file: docs/src/app/quantum_file_router.dart.md
     source_file: lib/src/app/quantum_file_router.dart
     line_count: 64
@@ -898,7 +878,7 @@ files:
     summary:
       "A file-based routing subsystem. It discovers route assets, converts naming
       conventions into URL patterns, caches route metadata, and exposes runtime route
-      injection and invalidation. Author-intent note: QUANTUM FILE ROUTER v1.0 — NEXT.JS-STYLE
+      injection and invalidation. Author-intent note: QUANTUM FILE ROUTER v1.0 أ¢â‚¬â€‌ NEXT.JS-STYLE
       FILE-BASED ROUTING"
   - docs_file: docs/src/app/quantum_http_transport_io.dart.md
     source_file: lib/src/app/quantum_http_transport_io.dart

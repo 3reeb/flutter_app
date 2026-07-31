@@ -36,7 +36,11 @@ extension QLPipeline on Widget {
     Clip clip = Clip.none,
     VoidCallback? onTap,
     String? semantics,
+    String? semanticHint,
     bool interactiveScale = false,
+    bool focusable = false,
+    bool excludeSemantics = false,
+    bool mergeSemantics = false,
   }) {
     Widget tree = this;
 
@@ -64,8 +68,45 @@ extension QLPipeline on Widget {
       );
     }
 
-    if (semantics != null) {
-      tree = Semantics(label: semantics, button: onTap != null, child: tree);
+    final bool needsSemantics = semantics != null || semanticHint != null || onTap != null;
+    if (needsSemantics) {
+      tree = Semantics(
+        container: true,
+        label: semantics,
+        hint: semanticHint,
+        button: onTap != null,
+        excludeSemantics: excludeSemantics,
+        child: tree,
+      );
+      if (mergeSemantics) {
+        tree = MergeSemantics(child: tree);
+      }
+    }
+
+    if (onTap != null || focusable) {
+      tree = FocusableActionDetector(
+        autofocus: false,
+        mouseCursor: onTap != null ? SystemMouseCursors.click : MouseCursor.defer,
+        shortcuts: onTap != null
+            ? <ShortcutActivator, Intent>{
+                const SingleActivator(LogicalKeyboardKey.enter):
+                    const ActivateIntent(),
+                const SingleActivator(LogicalKeyboardKey.space):
+                    const ActivateIntent(),
+              }
+            : null,
+        actions: onTap != null
+            ? <Type, Action<Intent>>{
+                ActivateIntent: CallbackAction<ActivateIntent>(
+                  onInvoke: (_) {
+                    onTap();
+                    return null;
+                  },
+                ),
+              }
+            : null,
+        child: tree,
+      );
     }
 
     return tree;
@@ -81,6 +122,10 @@ class QLSensor extends StatefulWidget {
   final VoidCallback? onLongPress;
   final void Function(Offset)? onContextMenu;
   final ValueChanged<bool>? onHoverChange; // 🚀 ADD THIS
+  final String? semanticLabel;
+  final String? semanticHint;
+  final bool semanticsEnabled;
+  final bool focusable;
 
   // Interaction Flags
   final bool scaleOnHover;
@@ -96,6 +141,10 @@ class QLSensor extends StatefulWidget {
     this.onLongPress,
     this.onContextMenu,
     this.onHoverChange, // 🚀 ADD THIS
+    this.semanticLabel,
+    this.semanticHint,
+    this.semanticsEnabled = true,
+    this.focusable = false,
     this.scaleOnHover = false,
     this.scaleOnTap = false,
     this.enable3DTilt = false,
@@ -226,7 +275,7 @@ class _QLSensorState extends State<QLSensor>
       );
     }
 
-    return MouseRegion(
+    Widget node = MouseRegion(
       cursor:
           widget.onTap != null ? SystemMouseCursors.click : MouseCursor.defer,
       onEnter: (_) {
@@ -242,6 +291,42 @@ class _QLSensorState extends State<QLSensor>
       onHover: _onHoverMove,
       child: gestureNode,
     );
+
+    if (widget.semanticsEnabled &&
+        (widget.semanticLabel != null || widget.semanticHint != null || widget.onTap != null)) {
+      node = Semantics(
+        container: true,
+        label: widget.semanticLabel,
+        hint: widget.semanticHint,
+        button: widget.onTap != null,
+        child: node,
+      );
+    }
+
+    if (widget.onTap != null || widget.focusable) {
+      node = FocusableActionDetector(
+        mouseCursor: widget.onTap != null ? SystemMouseCursors.click : MouseCursor.defer,
+        shortcuts: widget.onTap != null
+            ? <ShortcutActivator, Intent>{
+                const SingleActivator(LogicalKeyboardKey.enter): const ActivateIntent(),
+                const SingleActivator(LogicalKeyboardKey.space): const ActivateIntent(),
+              }
+            : null,
+        actions: widget.onTap != null
+            ? <Type, Action<Intent>>{
+                ActivateIntent: CallbackAction<ActivateIntent>(
+                  onInvoke: (_) {
+                    widget.onTap?.call();
+                    return null;
+                  },
+                ),
+              }
+            : null,
+        child: node,
+      );
+    }
+
+    return node;
   }
 }
 

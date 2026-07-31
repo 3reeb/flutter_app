@@ -4,8 +4,13 @@
   "description": "Flutter Web application preview wrapper",
   "main": "server.js",
   "scripts": {
-    "dev": "node server.js",
+    "build:sdui": "tsx scripts/build-sdui.ts",
+    "dev": "concurrently \"tsx --watch scripts/build-sdui.ts\" \"node server.js\"",
     "build": "bash ./build.sh"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "tsx": "^4.19.1"
   },
   "engines": {
     "node": "24.x"

@@ -40,7 +40,6 @@ source_metadata:
   - src/runtime/quantum_data_pipeline.dart
   - src/runtime/quantum_data_state.dart
   - src/runtime/quantum_domain_builder.dart
-  - src/runtime/quantum_embodiment_engine.dart
   - src/runtime/quantum_embodiment_examples.dart
   - src/runtime/quantum_omni_manifold.dart
   - src/runtime/quantum_design_system_manifest.dart

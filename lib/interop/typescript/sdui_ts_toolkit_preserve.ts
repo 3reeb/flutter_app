@@ -1,325 +1,925 @@
-
 /**
- * Quantum SDUI TypeScript authoring toolkit.
+ * Quantum SDUI v2
+ * ----------------
+ * A schema-first, registry-driven TypeScript kernel for building complex SDUI apps
+ * with strong end-to-end typing and a single composition root.
  *
- * Core rule:
- *   This toolkit preserves authoring operators as JSON.
- *   It does NOT resolve $if / $repeat / $switch / $apply / etc.
- *   Your Dart VM resolves those operators at runtime.
+ * Core invariant:
+ * - Preserve authoring operators as JSON.
+ * - Never evaluate runtime operators in TypeScript.
+ * - Let the engine / VM resolve expressions, bindings, and operators at runtime.
  *
- * The emitted JSON stays close to the native Quantum shape:
- *   type, props, style, children, slots, debugPath
- * plus the original authoring keys.
+ * Design goals:
+ * - Zero-cycle architecture: features export definitions, the kernel wires them.
+ * - Zod-like schema inference via `q.*`.
+ * - Zustand-like registries / stores / slices / pipelines / themes.
+ * - Small helper APIs with strong types and optional manual escape hatches.
  */
 
-/* -------------------------------------------------------------------------------------------------
- * JSON primitives and node shapes
- * ------------------------------------------------------------------------------------------------- */
+/* ============================================================
+ * 1) JSON / BRANDS / EXPRESSIONS
+ * ============================================================ */
 
 export type JsonPrimitive = string | number | boolean | null;
 export type JsonValue = JsonPrimitive | JsonObject | JsonValue[];
 export interface JsonObject { [key: string]: JsonValue; }
 
-export const OMNI_SUBTYPE_CATALOG = {
-  "box": [
-    "split",
-    "expanded",
-    "flexible",
-    "morph",
-    "safe",
-    "aspect",
-    "sticky",
-    "virtual_grid",
-    "measure",
-    "builder",
-    "matrix",
-    "layer",
-    "surface",
-    "shell",
-    "responsive",
-    "viewport",
-    "row",
-    "col",
-    "stack",
-    "wrap",
-    "grid",
-    "masonry",
-    "scroll",
-  ],
-  "action": [
-    "gesture",
-    "viewport",
-    "raw_pointer",
-    "pointer",
-    "focus",
-    "button",
-    "icon_button",
-    "chip",
-    "long_press",
-    "double_tap",
-    "hover",
-  ],
-  "field": [
-    "password",
-    "email",
-    "tel",
-    "url",
-    "number",
-    "textarea",
-    "multiline",
-    "search",
-    "toggle",
-    "radio",
-    "slider",
-    "cell",
-    "rich_text",
-  ],
-  "text": [
-    "h1",
-    "h2",
-    "h3",
-    "label",
-    "code",
-    "rich",
-  ],
-  "media": [
-    "icon",
-    "svg_path",
-    "path",
-    "video",
-    "avatar",
-    "audio",
-    "camera",
-    "stream",
-    "audio_visualizer",
-    "webrtc",
-    "canvas_video",
-  ],
-  "visual": [
-    "chart",
-    "animation",
-    "canvas",
-    "portal",
-    "connect",
-    "field",
-    "box",
-    "media",
-    "system",
-    "template",
-    "action",
-    "control",
-    "data",
-    "layout",
-    "decoration",
-    "text",
-    "delegate",
-    "scene",
-    "stack",
-    "overlay",
-    "shell",
-    "surface",
-    "layer",
-    "compose",
-  ],
-  "hook": [
-    "guard",
-    "memo",
-    "scope",
-    "delegate",
-    "effect",
-    "change",
-    "lifecycle",
-    "mount",
-    "bridge",
-    "store",
-    "atom",
-    "slice",
-    "ref",
-    "interval",
-    "observable",
-    "error_boundary",
-  ],
-  "data": [
-    "sliver_plane",
-    "sliver",
-    "repeat",
-    "stream",
-    "diff",
-    "slice",
-    "cursor",
-    "realtime",
-    "paginated",
-    "virtual_scroll",
-    "aggregate",
-    "timeline",
-    "infinite",
-    "kanban",
-    "table",
-    "grid",
-    "masonry",
-  ],
-  "portal": [
-    "overlay_entry",
-    "overlay",
-    "drawer",
-    "toast",
-    "window",
-    "expandable_inline",
-    "sheet",
-    "popover",
-    "menu",
-    "context_menu",
-    "dropdown",
-    "flyout",
-    "context_panel",
-    "anchored_floating",
-  ],
-  "control": [
-    "form_scope",
-    "tabs",
-    "stepper",
-    "accordion",
-    "flow",
-    "tca",
-    "architecture",
-    "machine",
-    "reducer",
-    "optimistic",
-    "saga",
-  ],
-  "canvas": [
-    "draw",
-    "plot",
-    "shader",
-    "shape",
-  ],
-  "system": [
-    "timer",
-    "data_pipe",
-    "kinetic_pipe",
-    "omega_macro",
-    "macro",
-    "worker",
-    "sync_scroll",
-    "ticker",
-    "repeater",
-    "store_provider",
-    "async",
-    "throttle",
-    "debounce",
-    "geo",
-    "haptic",
-    "clipboard",
-    "upload",
-    "download",
-    "notification",
-    "share",
-    "sensor",
-  ],
-  "layout": [
-  ],
-  "decoration": [
-    "text",
-    "rich",
-    "span",
-    "blur",
-    "gradient",
-    "border",
-    "shadow",
-    "badge",
-    "skeleton",
-    "ripple",
-  ],
-  "template": [
-  ],
-  "connect": [
-  ],
-  "chart": [
-  ],
-  "animation": [
-  ],
-  "stream": [
-    "ws",
-    "sse",
-    "tick",
-    "ring",
-    "multiplex",
-  ],
-  "collab": [
-    "presence",
-    "cursor",
-    "awareness",
-    "lock",
-    "patch",
-  ],
+export type Opaque<T, Brand extends string> = T & { readonly __brand: Brand };
+export type Binding<T> = string & { readonly _bindingType?: T };
+export type Expr<T> = T | Binding<T>;
+export type StyleValue = string & {};
+export type StatePath = string & {};
+export type DesignToken = string & { readonly __designToken: true };
+export type SlotName = string & {};
+export type ActionName = string & {};
+
+export type DeepReadonly<T> =
+  T extends (...args: any[]) => any ? T :
+  T extends readonly any[] ? Readonly<{ [K in keyof T]: DeepReadonly<T[K]> }> :
+  T extends object ? { readonly [K in keyof T]: DeepReadonly<T[K]> } :
+  T;
+
+export type Simplify<T> = { [K in keyof T]: T[K] } & {};
+
+/* ============================================================
+ * 2) Q-SCHEMA SYSTEM
+ * ============================================================ */
+
+export interface QSchema<T, Meta extends Record<string, unknown> = Record<string, unknown>> {
+  readonly _type: T;
+  readonly _tag: string;
+  readonly _meta?: Meta;
+}
+
+export type Infer<S extends QSchema<any, any>> = S['_type'];
+
+type InferUnion<T extends readonly QSchema<any, any>[]> =
+  T extends readonly [infer H, ...infer Rest]
+    ? H extends QSchema<any, any>
+      ? Rest extends readonly QSchema<any, any>[]
+        ? Infer<H> | InferUnion<Rest>
+        : Infer<H>
+      : never
+    : never;
+
+function qSchema<T, M extends Record<string, unknown> = Record<string, unknown>>(
+  tag: string,
+  meta?: M,
+): QSchema<T, M> {
+  return { _type: undefined as any, _tag: tag, _meta: meta } as QSchema<T, M>;
+}
+
+export const q = {
+  string: (): QSchema<string> => qSchema('string'),
+  number: (): QSchema<number> => qSchema('number'),
+  boolean: (): QSchema<boolean> => qSchema('boolean'),
+  null: (): QSchema<null> => qSchema('null'),
+  any: (): QSchema<JsonValue> => qSchema('any'),
+  json: (): QSchema<JsonObject> => qSchema('json'),
+
+  literal: <T extends string | number | boolean>(value: T): QSchema<T, { value: T }> =>
+    qSchema('literal', { value }),
+
+  enum: <T extends readonly [string, ...string[]]>(...values: T): QSchema<T[number], { values: T }> =>
+    qSchema('enum', { values }),
+
+  expr: <T>(inner: QSchema<T, any>): QSchema<Expr<T>, { inner: QSchema<T, any> }> =>
+    qSchema('expr', { inner }),
+
+  binding: <T>(inner: QSchema<T, any>): QSchema<Binding<T>, { inner: QSchema<T, any> }> =>
+    qSchema('binding', { inner }),
+
+  optional: <T>(inner: QSchema<T, any>): QSchema<T | undefined, { inner: QSchema<T, any> }> =>
+    qSchema('optional', { inner }),
+
+  nullable: <T>(inner: QSchema<T, any>): QSchema<T | null, { inner: QSchema<T, any> }> =>
+    qSchema('nullable', { inner }),
+
+  object: <T extends Record<string, QSchema<any, any>>>(
+    shape: T,
+  ): QSchema<{ [K in keyof T]: Infer<T[K]> }, { shape: T }> =>
+    qSchema('object', { shape }),
+
+  array: <T>(item: QSchema<T, any>): QSchema<T[], { item: QSchema<T, any> }> =>
+    qSchema('array', { item }),
+
+  record: <V>(value: QSchema<V, any>): QSchema<Record<string, V>, { value: QSchema<V, any> }> =>
+    qSchema('record', { value }),
+
+  partial: <T extends Record<string, any>>(inner: QSchema<T, any>): QSchema<Partial<T>, { inner: QSchema<T, any> }> =>
+    qSchema('partial', { inner }),
+
+  union: <T extends readonly [QSchema<any, any>, ...QSchema<any, any>[]]>(...schemas: T): QSchema<InferUnion<T>, { schemas: T }> =>
+    qSchema('union', { schemas }),
+
+  merge: <A, B>(a: QSchema<A, any>, b: QSchema<B, any>): QSchema<A & B, { a: QSchema<A, any>; b: QSchema<B, any> }> =>
+    qSchema('merge', { a, b }),
+
+  extend: <T extends Record<string, any>, Extra extends Record<string, QSchema<any, any>>>(
+    base: QSchema<T, any>,
+    extra: Extra,
+  ): QSchema<T & { [K in keyof Extra]: Infer<Extra[K]> }, { base: QSchema<T, any>; extra: Extra }> =>
+    qSchema('extend', { base, extra }),
+
+  node: (): QSchema<NodeInput> => qSchema('node'),
+  action: (): QSchema<ActionSpec> => qSchema('action'),
+  style: (): QSchema<StyleValue> => qSchema('style'),
+  slot: (): QSchema<NodeInput> => qSchema('slot'),
+  token: (): QSchema<DesignToken> => qSchema('token'),
+  path: (): QSchema<StatePath> => qSchema('path'),
+  jsonValue: (): QSchema<JsonValue> => qSchema('jsonValue'),
+};
+
+/* ============================================================
+ * 3) CATALOG / ROOTS / SUBTYPES
+ * ============================================================ */
+
+export const QUANTUM_CATALOG = {
+  box: [
+    'aspect','builder','col','expanded','flexible','grid','layer',
+    'masonry','matrix','measure','morph','responsive','row','safe',
+    'scroll','shell','split','stack','sticky','surface','viewport',
+    'virtual_grid','wrap',
+  ] as const,
+
+  action: [
+    'button','chip','double_tap','focus','gesture','hover',
+    'icon_button','link','long_press','pointer','press',
+    'raw_pointer','tap','viewport',
+  ] as const,
+
+  field: [
+    'cell','checkbox','email','multiline','number','password',
+    'radio','rich_text','search','slider','tel','text',
+    'textarea','toggle','url',
+  ] as const,
+
+  text: ['h1','h2','h3','label','code','rich'] as const,
+
+  media: [
+    'audio','audio_visualizer','avatar','camera','canvas_video',
+    'icon','path','stream','svg_path','video','webrtc',
+  ] as const,
+
+  data: [
+    'aggregate','cursor','diff','grid','infinite','kanban',
+    'masonry','paginated','realtime','repeat','slice','sliver',
+    'sliver_plane','stream','table','timeline','virtual_scroll',
+  ] as const,
+
+  portal: [
+    'action_sheet','alert','anchored_floating','centered','confirm',
+    'context_menu','context_panel','dialog','docked','drawer',
+    'dropdown','edge_attached','expandable_inline','flyout',
+    'form_modal','full_page_sheet','full_screen','full_screen_surface',
+    'immersive_editor','inline_details','inline_editor','inspector',
+    'lightbox','left_panel','menu','mobile_sheet','modal',
+    'navigation_rail','nonModal','non_modal','overlay','overlay_entry',
+    'persistent_drawer','persistent_panel','popover','popup_modal',
+    'right_panel','sheet','sidebar','side_sheet','toast',
+    'temporary_overlay','tooltip','utility_panel','window',
+  ] as const,
+
+  hook: [
+    'atom','bridge','change','delegate','effect','error_boundary',
+    'guard','interval','lifecycle','memo','mount','observable',
+    'ref','scope','slice','store',
+  ] as const,
+
+  control: [
+    'accordion','architecture','flow','form_scope','machine',
+    'optimistic','reducer','saga','stepper','tabs','tca',
+  ] as const,
+
+  system: [
+    'async','clipboard','data_pipe','debounce','download','geo',
+    'haptic','kinetic_pipe','macro','notification','omega_macro',
+    'repeater','sensor','share','store_provider','sync_scroll',
+    'throttle','ticker','timer','upload','worker',
+  ] as const,
+
+  canvas: ['draw','plot','shader','shape'] as const,
+
+  decoration: [
+    'badge','blur','border','gradient','rich','ripple',
+    'shadow','skeleton','span','text',
+  ] as const,
+
+  chart: [
+    'line','bar','area','pie','donut','radar','scatter','bubble',
+    'candlestick','funnel','waterfall','histogram','gauge',
+    'sparkline','treemap','sankey',
+  ] as const,
+
+  component: ['define','use','instance','render','scoped','link'] as const,
+
+  visual: [
+    'action','animation','box','canvas','chart','compose',
+    'connect','control','data','decoration','delegate','field',
+    'layer','layout','media','overlay','portal','scene','shell',
+    'stack','surface','system','template','text',
+  ] as const,
+
+  stream: ['ws','sse','tick','ring','multiplex'] as const,
+  collab: ['presence','cursor','awareness','lock','patch'] as const,
+
+  template: [] as const,
+  layout: [] as const,
+  connect: [] as const,
+  animation: [] as const,
 } as const;
 
-export type QuantumOmniRoot = keyof typeof OMNI_SUBTYPE_CATALOG;
-export type QuantumOmniSubtype<R extends QuantumOmniRoot> = typeof OMNI_SUBTYPE_CATALOG[R][number];
+export type CatalogRoot = keyof typeof QUANTUM_CATALOG;
+export type CatalogSubtype<R extends CatalogRoot> = typeof QUANTUM_CATALOG[R][number];
+
+export type BoxSubtype = CatalogSubtype<'box'>;
+export type ActionSubtype = CatalogSubtype<'action'>;
+export type FieldSubtype = CatalogSubtype<'field'>;
+export type TextSubtype = CatalogSubtype<'text'>;
+export type MediaSubtype = CatalogSubtype<'media'>;
+export type DataSubtype = CatalogSubtype<'data'>;
+export type PortalSubtype = CatalogSubtype<'portal'>;
+export type HookSubtype = CatalogSubtype<'hook'>;
+export type ControlSubtype = CatalogSubtype<'control'>;
+export type SystemSubtype = CatalogSubtype<'system'>;
+export type CanvasSubtype = CatalogSubtype<'canvas'>;
+export type DecorationSubtype = CatalogSubtype<'decoration'>;
+export type ChartSubtype = CatalogSubtype<'chart'>;
+export type ComponentSubtype = CatalogSubtype<'component'>;
+export type VisualSubtype = CatalogSubtype<'visual'>;
+export type StreamSubtype = CatalogSubtype<'stream'>;
+export type CollabSubtype = CatalogSubtype<'collab'>;
+
 export type QuantumNodeType = string & {};
-export type QuantumDslOperator = typeof KNOWN_VM_OPERATORS[number];
 
-export interface SduiNode {
-  type: QuantumNodeType;
-  props?: { [key: string]: JsonValue };
-  style?: string;
-  children?: NodeInput[];
-  slots?: { [key: string]: any };
-  debugPath?: string;
+/* ============================================================
+ * 4) ACTION / EVENT SPECS
+ * ============================================================ */
 
+export interface ActionSpec {
+  action?: ActionName;
+  params?: JsonObject;
+  payload?: JsonObject;
+  args?: JsonObject;
+  target?: string;
+  domain?: string;
+  resource?: string;
+  slug?: string;
+  then?: ActionSpec | ActionSpec[];
+  catch?: ActionSpec;
+  optimistic?: JsonObject;
+  debounce?: number;
+  throttle?: number;
+  [key: string]: JsonValue | ActionSpec | ActionSpec[] | undefined;
+}
+
+export interface NavActionSpec {
+  action: 'navigate' | 'push' | 'pop' | 'replace' | 'popToRoot';
+  route?: string;
+  params?: JsonObject;
+  animated?: boolean;
+}
+
+export interface MutationActionSpec {
+  action: ActionName;
+  namespace?: string;
+  mutation?: string;
+  payload?: JsonObject;
+  optimistic?: JsonObject;
+}
+
+export type AnyAction = ActionSpec | NavActionSpec | MutationActionSpec | string;
+
+export interface EventHandlers {
+  onTap?: AnyAction;
+  onPress?: AnyAction;
+  onLongPress?: AnyAction;
+  onDoubleTap?: AnyAction;
+  onChange?: AnyAction;
+  onSubmit?: AnyAction;
+  onFocus?: AnyAction;
+  onBlur?: AnyAction;
+  onHover?: AnyAction;
+  onHoverExit?: AnyAction;
+  onScroll?: AnyAction;
+  onSwipe?: AnyAction;
+  onDragStart?: AnyAction;
+  onDragEnd?: AnyAction;
+  onDrop?: AnyAction;
+  onMount?: AnyAction;
+  onUnmount?: AnyAction;
+  onVisible?: AnyAction;
+  onInvisible?: AnyAction;
+  [key: string]: unknown;
+}
+
+/* ============================================================
+ * 5) PROPS INTERFACES
+ * ============================================================ */
+
+export interface BaseProps extends EventHandlers {
+  id?: string;
+  key?: string;
+  testId?: string;
+  accessible?: boolean;
+  semanticLabel?: Expr<string>;
+  tooltip?: Expr<string> | boolean | JsonObject;
+  enabled?: Expr<boolean>;
+  visible?: Expr<boolean>;
+  opacity?: Expr<number>;
+  elevation?: number;
+  zIndex?: number;
+  cursor?: 'pointer' | 'default' | 'text' | 'grab' | 'not-allowed' | string;
+  behaviors?: JsonValue[];
+  [key: string]: unknown;
+}
+
+export interface BoxProps extends BaseProps {
+  direction?: 'row' | 'col' | 'row-reverse' | 'col-reverse';
+  alignment?: Expr<string>;
+  crossAlignment?: Expr<string>;
+  mainAlignment?: Expr<string>;
+  gap?: Expr<number> | DesignToken;
+  gapX?: Expr<number> | DesignToken;
+  gapY?: Expr<number> | DesignToken;
+  padding?: Expr<number> | DesignToken;
+  paddingX?: Expr<number> | DesignToken;
+  paddingY?: Expr<number> | DesignToken;
+  paddingTop?: Expr<number> | DesignToken;
+  paddingBottom?: Expr<number> | DesignToken;
+  paddingLeft?: Expr<number> | DesignToken;
+  paddingRight?: Expr<number> | DesignToken;
+  margin?: Expr<number> | DesignToken;
+  marginX?: Expr<number> | DesignToken;
+  marginY?: Expr<number> | DesignToken;
+  width?: Expr<number | string> | DesignToken;
+  height?: Expr<number | string> | DesignToken;
+  minWidth?: Expr<number | string> | DesignToken;
+  maxWidth?: Expr<number | string> | DesignToken;
+  minHeight?: Expr<number | string> | DesignToken;
+  maxHeight?: Expr<number | string> | DesignToken;
+  flex?: number;
+  flexGrow?: number;
+  flexShrink?: number;
+  flexBasis?: number | string;
+  wrap?: boolean | 'wrap' | 'nowrap' | 'wrap-reverse';
+  overflow?: 'visible' | 'hidden' | 'scroll' | 'auto' | 'clip';
+  overflowX?: 'visible' | 'hidden' | 'scroll' | 'auto' | 'clip';
+  overflowY?: 'visible' | 'hidden' | 'scroll' | 'auto' | 'clip';
+  clip?: boolean;
+  radius?: Expr<number | string> | DesignToken;
+  radiusTopLeft?: Expr<number | string> | DesignToken;
+  radiusTopRight?: Expr<number | string> | DesignToken;
+  radiusBottomLeft?: Expr<number | string> | DesignToken;
+  radiusBottomRight?: Expr<number | string> | DesignToken;
+  bg?: Expr<string> | DesignToken;
+  background?: Expr<string> | DesignToken;
+  border?: Expr<string> | DesignToken;
+  borderWidth?: Expr<number> | DesignToken;
+  borderColor?: Expr<string> | DesignToken;
+  borderStyle?: 'solid' | 'dashed' | 'dotted' | 'none';
+  shadow?: Expr<string> | DesignToken;
+  blur?: Expr<number>;
+  scrollable?: boolean;
+  scrollDirection?: 'vertical' | 'horizontal' | 'both';
+  reverse?: boolean;
+  shrinkWrap?: boolean;
+  physics?: 'bounce' | 'clamp' | 'never' | 'always' | string;
+  columns?: Expr<number>;
+  rows?: Expr<number>;
+  columnSpan?: Expr<number>;
+  rowSpan?: Expr<number>;
+  columnGap?: Expr<number> | DesignToken;
+  rowGap?: Expr<number> | DesignToken;
+  autoColumns?: string;
+  autoRows?: string;
+  aspectRatio?: Expr<number>;
+  breakpoints?: Record<string, Partial<BoxProps>>;
+  top?: Expr<number | string> | DesignToken;
+  bottom?: Expr<number | string> | DesignToken;
+  left?: Expr<number | string> | DesignToken;
+  right?: Expr<number | string> | DesignToken;
+  position?: 'relative' | 'absolute' | 'fixed' | 'sticky' | 'static';
+  safeArea?: boolean | 'top' | 'bottom' | 'left' | 'right' | 'all';
+  __subType?: BoxSubtype | string;
+}
+
+export interface TextProps extends BaseProps {
+  text: Expr<string>;
+  variant?: 'display' | 'heading' | 'subheading' | 'body' | 'caption' | 'label' | 'code' | TextSubtype | string;
+  color?: Expr<string> | DesignToken;
+  fontSize?: Expr<number> | DesignToken;
+  fontWeight?: Expr<number | string> | DesignToken;
+  fontFamily?: Expr<string> | DesignToken;
+  lineHeight?: Expr<number> | DesignToken;
+  letterSpacing?: Expr<number> | DesignToken;
+  textAlign?: 'left' | 'center' | 'right' | 'justify' | 'start' | 'end';
+  textDecoration?: 'none' | 'underline' | 'line-through' | 'overline';
+  textTransform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
+  maxLines?: number;
+  overflow?: 'clip' | 'ellipsis' | 'fade' | 'visible';
+  softWrap?: boolean;
+  selectable?: boolean;
+  italic?: boolean;
+  bold?: boolean;
+  __subType?: TextSubtype | string;
+}
+
+export interface ActionProps extends BaseProps {
+  text?: Expr<string>;
+  label?: Expr<string>;
+  icon?: Expr<string>;
+  iconPosition?: 'left' | 'right' | 'top' | 'bottom';
+  iconSize?: Expr<number> | DesignToken;
+  intent?: 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'ghost' | 'link' | string;
+  variant?: 'solid' | 'outline' | 'ghost' | 'link' | 'soft' | string;
+  fill?: 'solid' | 'outline' | 'ghost' | 'soft';
+  shape?: 'square' | 'rounded' | 'pill' | 'circle';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | string | DesignToken;
+  loading?: Expr<boolean>;
+  disabled?: Expr<boolean>;
+  href?: Expr<string>;
+  target?: '_blank' | '_self' | '_parent' | '_top' | string;
+  type?: 'button' | 'submit' | 'reset';
+  color?: Expr<string> | DesignToken;
+  bg?: Expr<string> | DesignToken;
+  padding?: Expr<number | string> | DesignToken;
+  radius?: Expr<number | string> | DesignToken;
+  __subType?: ActionSubtype | string;
+}
+
+export interface FieldProps extends BaseProps {
+  label?: Expr<string>;
+  placeholder?: Expr<string>;
+  hint?: Expr<string>;
+  helperText?: Expr<string>;
+  errorText?: Expr<string>;
+  value?: Expr<JsonPrimitive>;
+  defaultValue?: JsonPrimitive;
   name?: string;
-  slot?: string;
-  env?: { [key: string]: JsonValue };
+  required?: boolean;
+  disabled?: Expr<boolean>;
+  readOnly?: Expr<boolean>;
+  autoFocus?: boolean;
+  autoComplete?: string;
+  clearable?: boolean;
+  prefix?: Expr<string>;
+  suffix?: Expr<string>;
+  prefixIcon?: Expr<string>;
+  suffixIcon?: Expr<string>;
+  variant?: 'outline' | 'filled' | 'underline' | 'ghost' | string;
+  size?: 'sm' | 'md' | 'lg' | string | DesignToken;
+  color?: Expr<string> | DesignToken;
+  radius?: Expr<number | string> | DesignToken;
+  __subType?: FieldSubtype | string;
+}
 
-  $define?: { [key: string]: JsonValue };
-  $let?: { [key: string]: JsonValue };
-  $call?: string;
-  $classes?: { [key: string]: JsonValue };
-  $scope?: JsonValue;
-  $switch?: JsonValue;
-  cases?: { [key: string]: NodeInput };
-  default?: NodeInput;
-  $if?: JsonValue;
-  $repeat?: JsonValue;
+export interface SliderFieldProps extends FieldProps {
+  min?: number;
+  max?: number;
+  step?: number;
+  marks?: boolean | JsonObject[];
+}
+
+export interface ToggleFieldProps extends FieldProps {
+  checked?: Expr<boolean>;
+  onColor?: Expr<string> | DesignToken;
+  offColor?: Expr<string> | DesignToken;
+}
+
+export interface SelectFieldProps extends FieldProps {
+  options?: Expr<Array<{ label: string; value: JsonPrimitive }>> | JsonObject[];
+  multiple?: boolean;
+  searchable?: boolean;
+  clearable?: boolean;
+  emptyText?: Expr<string>;
+}
+
+export interface RadioFieldProps extends FieldProps {
+  options?: JsonObject[];
+  direction?: 'row' | 'col';
+}
+
+export interface MediaProps extends BaseProps {
+  src?: Expr<string>;
+  alt?: Expr<string>;
+  fit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
+  width?: Expr<number | string> | DesignToken;
+  height?: Expr<number | string> | DesignToken;
+  radius?: Expr<number | string> | DesignToken;
+  placeholder?: NodeInput;
+  fallback?: Expr<string>;
+  lazy?: boolean;
+  blurHash?: string;
+  loop?: boolean;
+  autoPlay?: boolean;
+  muted?: boolean;
+  controls?: boolean;
+  preload?: 'none' | 'metadata' | 'auto';
+  volume?: Expr<number>;
+  icon?: Expr<string>;
+  iconFamily?: 'material' | 'cupertino' | 'feather' | string;
+  iconSize?: Expr<number> | DesignToken;
+  iconColor?: Expr<string> | DesignToken;
+  initials?: Expr<string>;
+  size?: Expr<number | string> | DesignToken;
+  __subType?: MediaSubtype | string;
+}
+
+export interface DataProps extends BaseProps {
+  __subType?: DataSubtype | string;
+  bind?: Expr<any[]> | StatePath;
   as?: string;
   indexAs?: string;
-  $apply?: { props?: { [key: string]: JsonValue }; style?: string; mode?: "merge" | "override" };
-  $layout?: string[];
-  $try?: NodeInput;
-  $catch?: NodeInput;
-  $finally?: NodeInput;
-  $async?: JsonValue;
-  $loading?: NodeInput;
-  $data?: NodeInput;
-  $error?: NodeInput;
-  $portal?: string;
-  $reactive_map?: JsonValue | { bind: JsonValue; key?: JsonValue; as?: JsonValue };
-  $compose?: JsonValue[];
-  $watch?: JsonValue;
-  $parallel?: NodeInput[];
-  $throttle?: number;
-  $debounce?: number;
-  $machine?: JsonObject;
-  $stream?: JsonValue | { bind: JsonValue; as?: JsonValue };
-  $spread?: JsonValue;
-  $view?: JsonValue;
-  $slot?: string;
-  $slots?: { [key: string]: NodeInput };
-
-  [key: string]: any;
+  keyField?: string;
+  pageSize?: number;
+  initialPage?: number;
+  bufferSize?: number;
+  schema?: string;
+  source?: string;
+  namespace?: string;
+  searchBind?: StatePath;
+  filterBind?: StatePath;
+  sortBind?: StatePath;
+  emptySlot?: NodeInput;
+  loadingSlot?: NodeInput;
+  errorSlot?: NodeInput;
+  columnBind?: Expr<any[]>;
+  columnKey?: string;
+  columns?: JsonObject[];
+  selectable?: boolean;
+  aggregates?: JsonObject[];
+  direction?: 'forward' | 'reverse';
+  threshold?: number;
 }
 
-export type NodeInput = SduiNode | SduiElement | JsonPrimitive | NodeInput[];
-
-export interface ValidationIssue {
-  path: string;
-  message: string;
+export interface PortalProps extends BaseProps {
+  __subType?: PortalSubtype | string;
+  portalType?: PortalSubtype | string;
+  title?: Expr<string>;
+  subtitle?: Expr<string>;
+  visible?: Expr<boolean>;
+  dismissible?: boolean;
+  barrierColor?: Expr<string> | DesignToken;
+  barrierDismissible?: boolean;
+  elevation?: number;
+  width?: Expr<number | string> | DesignToken;
+  height?: Expr<number | string> | DesignToken;
+  maxWidth?: Expr<number | string> | DesignToken;
+  maxHeight?: Expr<number | string> | DesignToken;
+  anchor?: 'top' | 'bottom' | 'left' | 'right' | 'center' | string;
+  offset?: { x?: number; y?: number };
+  animation?: 'fade' | 'slide' | 'scale' | 'bounce' | string;
+  duration?: number;
+  onDismiss?: AnyAction;
+  onConfirm?: AnyAction;
+  confirmText?: Expr<string>;
+  cancelText?: Expr<string>;
+  position?: 'top' | 'bottom' | 'center' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';
+  autoDismiss?: number;
+  drawerSide?: 'left' | 'right' | 'top' | 'bottom';
 }
 
-export interface ValidationResult {
-  ok: boolean;
-  issues: ValidationIssue[];
+export interface HookProps extends BaseProps {
+  __subType?: HookSubtype | string;
+  namespace?: string;
+  key?: string;
+  initial?: JsonValue;
+  deps?: string[];
+  effect?: ActionSpec;
+  interval?: number;
+  once?: boolean;
+  lazy?: boolean;
+  persist?: boolean;
+  atomKey?: string;
+  atomValue?: JsonValue;
+  condition?: Expr<boolean>;
+  fallback?: NodeInput;
+  redirect?: string;
+  bridge?: string;
+  channel?: string;
 }
+
+export interface ControlProps extends BaseProps {
+  __subType?: ControlSubtype | string;
+  tabs?: Array<{ label: string; value: string; icon?: string }>;
+  activeTab?: Expr<string>;
+  tabVariant?: 'line' | 'pills' | 'boxed' | string;
+  steps?: Array<{ label: string; description?: string }>;
+  activeStep?: Expr<number>;
+  orientation?: 'horizontal' | 'vertical';
+  expanded?: Expr<boolean | string[]>;
+  multiple?: boolean;
+  formId?: string;
+  id?: string;
+  initial?: string;
+  states?: JsonObject;
+  context?: JsonObject;
+  current?: Expr<string>;
+  optimisticKey?: string;
+  reducer?: JsonObject;
+}
+
+export interface SystemProps extends BaseProps {
+  __subType?: SystemSubtype | string;
+  action?: ActionName;
+  params?: JsonObject;
+  loading?: NodeInput;
+  data?: NodeInput;
+  error?: NodeInput;
+  autoStart?: boolean;
+  interval?: number;
+  duration?: number;
+  repeat?: boolean;
+  delay?: number;
+  script?: string;
+  entrypoint?: string;
+  ms?: number;
+  accept?: string;
+  maxSize?: number;
+  multiple?: boolean;
+  url?: string;
+  accuracy?: 'low' | 'medium' | 'high' | 'best';
+  hapticType?: 'light' | 'medium' | 'heavy' | 'selection' | 'success' | 'warning' | 'error';
+  notificationId?: string;
+  notificationTitle?: Expr<string>;
+  notificationBody?: Expr<string>;
+  clipboardText?: Expr<string>;
+  shareText?: Expr<string>;
+  shareTitle?: Expr<string>;
+  shareUrl?: Expr<string>;
+  namespace?: string;
+  pipeId?: string;
+  pipeSource?: string;
+}
+
+export interface CanvasProps extends BaseProps {
+  __subType?: CanvasSubtype | string;
+  width?: Expr<number | string> | DesignToken;
+  height?: Expr<number | string> | DesignToken;
+  shader?: string;
+  shaderUniforms?: JsonObject;
+  antiAlias?: boolean;
+  color?: Expr<string> | DesignToken;
+  fill?: Expr<string> | DesignToken;
+  stroke?: Expr<string> | DesignToken;
+  strokeWidth?: Expr<number>;
+  shape?: 'rect' | 'circle' | 'ellipse' | 'line' | 'path' | 'polygon' | string;
+  points?: Array<{ x: number; y: number }>;
+  d?: string;
+  data?: Expr<any[]>;
+  x?: string;
+  y?: string;
+}
+
+export interface DecorationProps extends BaseProps {
+  __subType?: DecorationSubtype | string;
+  count?: Expr<number>;
+  dot?: boolean;
+  badgeColor?: Expr<string> | DesignToken;
+  gradient?: JsonObject;
+  gradientType?: 'linear' | 'radial' | 'sweep';
+  colors?: Expr<string[]>;
+  stops?: number[];
+  angle?: number;
+  shadow?: JsonObject | string;
+  offsetX?: number;
+  offsetY?: number;
+  blur?: number;
+  spread?: number;
+  color?: Expr<string> | DesignToken;
+  blurRadius?: number;
+  sigmaX?: number;
+  sigmaY?: number;
+  borderWidth?: Expr<number>;
+  borderColor?: Expr<string> | DesignToken;
+  borderStyle?: 'solid' | 'dashed' | 'dotted';
+  radius?: Expr<number | string> | DesignToken;
+  loading?: Expr<boolean>;
+  skeletonColor?: Expr<string> | DesignToken;
+  rippleColor?: Expr<string> | DesignToken;
+  text?: Expr<string>;
+  spans?: JsonObject[];
+}
+
+export interface ChartProps extends BaseProps {
+  __subType?: ChartSubtype | string;
+  chartType?: ChartSubtype | string;
+  data?: Expr<any[]>;
+  series?: JsonObject[];
+  xField?: string;
+  yField?: string;
+  colorField?: string;
+  categoryField?: string;
+  colors?: string[];
+  legend?: boolean | JsonObject;
+  tooltip?: boolean | JsonObject;
+  grid?: boolean | JsonObject;
+  axis?: JsonObject;
+  xAxis?: JsonObject;
+  yAxis?: JsonObject;
+  smooth?: boolean;
+  stacked?: boolean;
+  filled?: boolean;
+  animated?: boolean;
+  responsive?: boolean;
+  width?: Expr<number | string> | DesignToken;
+  height?: Expr<number | string> | DesignToken;
+  padding?: Expr<number | string> | DesignToken;
+  min?: number;
+  max?: number;
+  value?: Expr<number>;
+  innerRadius?: number;
+  outerRadius?: number;
+  startAngle?: number;
+  endAngle?: number;
+  valueField?: string;
+  nameField?: string;
+  parentField?: string;
+}
+
+export interface StreamNodeProps extends BaseProps {
+  __subType?: StreamSubtype | string;
+  url?: Expr<string>;
+  channel?: Expr<string>;
+  topic?: Expr<string>;
+  as?: string;
+  autoConnect?: boolean;
+  reconnect?: boolean;
+  reconnectDelay?: number;
+  headers?: JsonObject;
+  bufferSize?: number;
+  capacity?: number;
+}
+
+export interface CollabProps extends BaseProps {
+  __subType?: CollabSubtype | string;
+  roomId?: Expr<string>;
+  userId?: Expr<string>;
+  docId?: Expr<string>;
+  field?: string;
+  color?: Expr<string> | DesignToken;
+}
+
+export interface ComponentProps extends BaseProps {
+  __subType?: ComponentSubtype | string;
+  name?: string;
+  templateName?: string;
+  props?: JsonObject;
+  slots?: Record<string, NodeInput>;
+}
+
+export interface VisualProps extends BaseProps {
+  __subType?: VisualSubtype | string;
+  animationType?: string;
+  boxType?: BoxSubtype | string;
+  chartType?: ChartSubtype | string;
+  canvasType?: CanvasSubtype | string;
+  fieldType?: FieldSubtype | string;
+  mediaType?: MediaSubtype | string;
+  portalType?: PortalSubtype | string;
+  systemType?: SystemSubtype | string;
+  connectType?: string;
+  delegateProps?: JsonObject;
+  isComplex?: boolean;
+  willChange?: string;
+  body?: NodeInput;
+  header?: NodeInput;
+  footer?: NodeInput;
+  content?: NodeInput;
+  overlay?: NodeInput;
+  target?: NodeInput;
+  chrome?: NodeInput;
+  child?: NodeInput;
+  layout?: string[];
+}
+
+export type KnownPropsMap = {
+  box: BoxProps;
+  action: ActionProps;
+  field: FieldProps;
+  text: TextProps;
+  media: MediaProps;
+  data: DataProps;
+  portal: PortalProps;
+  hook: HookProps;
+  control: ControlProps;
+  system: SystemProps;
+  canvas: CanvasProps;
+  decoration: DecorationProps;
+  chart: ChartProps;
+  stream: StreamNodeProps;
+  collab: CollabProps;
+  component: ComponentProps;
+  visual: VisualProps;
+};
+
+export type PropsFor<R extends string> = R extends keyof KnownPropsMap ? KnownPropsMap[R] : BaseProps;
+
+/* ============================================================
+ * 6) VM OPERATORS
+ * ============================================================ */
+
+export interface IfOperator { $if?: Expr<boolean> | string; }
+export interface RepeatOperator { $repeat?: Expr<any[]> | string; as?: string; indexAs?: string; }
+export interface SwitchOperator { $switch?: Expr<any> | string; cases?: Record<string, NodeInput>; default?: NodeInput; }
+export interface DefineOperator { $define?: Record<string, JsonValue>; }
+export interface LetOperator { $let?: Record<string, JsonValue>; }
+export interface ClassesOperator { $classes?: Record<string, Expr<boolean>>; }
+export interface ScopeOperator { $scope?: Expr<string>; }
+export interface CallOperator { $call?: string; }
+export interface ApplyOperator { $apply?: { props?: JsonObject; style?: StyleValue; mode?: 'merge' | 'override' }; }
+export interface LayoutOperator { $layout?: string[]; }
+export interface TryCatchOperator { $try?: NodeInput; $catch?: NodeInput; $finally?: NodeInput; }
+export interface AsyncOperator { $async?: AsyncSpec | JsonValue; $loading?: NodeInput; $data?: NodeInput; $error?: NodeInput; }
+export interface StreamOperator { $stream?: StreamBindSpec | Expr<any>; }
+export interface MachineOperator { $machine?: MachineSpec | JsonObject; }
+export interface TimingOperator { $throttle?: number; $debounce?: number; }
+export interface PortalOperator { $portal?: string; }
+export interface ReactiveMapOperator { $reactive_map?: ReactiveMapSpec | Expr<any>; }
+export interface ComposeOperator { $compose?: JsonValue[]; }
+export interface WatchOperator { $watch?: Expr<any> | StatePath; }
+export interface ParallelOperator { $parallel?: NodeInput[]; }
+export interface SpreadOperator { $spread?: Expr<JsonObject> | StatePath; }
+export interface ViewOperator { $view?: Expr<any> | StatePath; }
+export interface SlotOperator { $slot?: string; $slots?: Record<string, NodeInput>; }
+export interface StateOperator { $state?: StatePath; }
+export interface EnvOperator { $env?: string; }
+export interface RouteOperator { $route?: string; }
+export interface LocalOperator { $local?: string; }
+
+export type AllVmOperators =
+  IfOperator & RepeatOperator & SwitchOperator &
+  DefineOperator & LetOperator & ClassesOperator & ScopeOperator & CallOperator &
+  ApplyOperator & LayoutOperator & TryCatchOperator & AsyncOperator &
+  StreamOperator & MachineOperator & TimingOperator & PortalOperator &
+  ReactiveMapOperator & ComposeOperator & WatchOperator & ParallelOperator &
+  SpreadOperator & ViewOperator & SlotOperator &
+  StateOperator & EnvOperator & RouteOperator & LocalOperator;
+
+export interface AsyncSpec {
+  action: ActionName;
+  params?: JsonObject;
+  loading?: NodeInput;
+  data?: NodeInput;
+  error?: NodeInput;
+  autoStart?: boolean;
+  debounce?: number;
+  throttle?: number;
+}
+
+export interface StreamBindSpec {
+  bind: Expr<any> | StatePath;
+  as?: string;
+}
+
+export interface ReactiveMapSpec {
+  bind: Expr<any> | StatePath;
+  key?: string | Expr<string>;
+  as?: string | Expr<string>;
+}
+
+export interface MachineSpec {
+  id: string;
+  initial: string;
+  states: Record<string, MachineState>;
+  context?: JsonObject;
+}
+
+export interface MachineState {
+  on?: Record<string, string | JsonObject>;
+  entry?: AnyAction | AnyAction[];
+  exit?: AnyAction | AnyAction[];
+  type?: 'atomic' | 'compound' | 'parallel' | 'final' | 'history';
+  initial?: string;
+  states?: Record<string, MachineState>;
+}
+
+export interface SduiNode extends AllVmOperators {
+  type: QuantumNodeType;
+  props?: JsonObject;
+  style?: StyleValue;
+  children?: NodeInput[];
+  slots?: Record<string, NodeInput>;
+  name?: string;
+  slot?: string;
+  env?: Record<string, JsonValue>;
+  debugPath?: string;
+  cases?: Record<string, NodeInput>;
+  default?: NodeInput;
+  as?: string;
+  indexAs?: string;
+  [key: string]: unknown;
+}
+
+export type NodeInput = SduiNode | SduiElement<any> | JsonPrimitive | NodeInput[];
+
+/* ============================================================
+ * 7) INTERNAL HELPERS
+ * ============================================================ */
+
+export interface ValidationIssue { path: string; message: string; }
+export interface ValidationResult { ok: boolean; issues: ValidationIssue[]; }
 
 export interface EmitOptions {
   pretty?: boolean;
@@ -329,474 +929,134 @@ export interface EmitOptions {
   preserveNameAndSlot?: boolean;
 }
 
-/* -------------------------------------------------------------------------------------------------
- * Builder
- * ------------------------------------------------------------------------------------------------- */
+function _isArray(value: any): value is any[] {
+  return Object.prototype.toString.call(value) === '[object Array]';
+}
 
-export class SduiElement {
-  private node: SduiNode;
+function _hasOwn(obj: any, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(obj, key);
+}
 
-  constructor(type: string, init?: Partial<SduiNode>) {
-    this.node = createNode(type);
-    if (init) mergeNode(this.node, init);
+function _isPlainObject(value: any): value is Record<string, any> {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    !_isArray(value) &&
+    !(value instanceof SduiElement)
+  );
+}
+
+function _objectSize(obj: Record<string, any>): number {
+  let n = 0;
+  for (const k in obj) if (_hasOwn(obj, k)) n++;
+  return n;
+}
+
+function _clone<T>(value: T): T {
+  if (value === undefined || value === null) return value;
+  if (typeof value !== 'object') return value;
+  if (_isArray(value)) {
+    const arr: any[] = [];
+    for (let i = 0; i < (value as any).length; i++) arr.push(_clone((value as any)[i]));
+    return arr as any;
   }
-
-  prop(key: string, value: JsonValue): this {
-    if (!this.node.props) this.node.props = {};
-    this.node.props[key] = value;
-    return this;
+  const out: any = {};
+  for (const k in value as any) {
+    if (_hasOwn(value as any, k)) out[k] = _clone((value as any)[k]);
   }
+  return out;
+}
 
-  props(values: { [key: string]: JsonValue }): this {
-    if (!this.node.props) this.node.props = {};
-    copyInto(this.node.props, values);
-    return this;
-  }
-
-  style(value: string): this {
-    this.node.style = mergeStyle(this.node.style, value);
-    return this;
-  }
-
-  child(...items: NodeInput[]): this {
-    if (!this.node.children) this.node.children = [];
-    for (let i = 0; i < items.length; i++) this.node.children.push(items[i]);
-    return this;
-  }
-
-  children(items: NodeInput[]): this {
-    this.node.children = items.slice();
-    return this;
-  }
-
-  slot(name: string, content: NodeInput): this {
-    if (!this.node.slots) this.node.slots = {};
-    this.node.slots[name] = content;
-    return this;
-  }
-
-  slots(values: { [key: string]: NodeInput }): this {
-    if (!this.node.slots) this.node.slots = {};
-    copyInto(this.node.slots, values);
-    return this;
-  }
-
-  define(values: { [key: string]: JsonValue }): this {
-    this.node.$define = copyObject(this.node.$define, values);
-    return this;
-  }
-
-  let(values: { [key: string]: JsonValue }): this {
-    this.node.$let = copyObject(this.node.$let, values);
-    return this;
-  }
-
-  call(name: string): this {
-    this.node.$call = name;
-    return this;
-  }
-
-  classes(values: { [key: string]: JsonValue }): this {
-    this.node.$classes = copyObject(this.node.$classes, values);
-    return this;
-  }
-
-  scope(value: JsonValue): this {
-    this.node.$scope = value;
-    return this;
-  }
-
-  when(value: JsonValue, cases: { [key: string]: NodeInput }, fallback?: NodeInput): this {
-    this.node.$switch = value;
-    this.node.cases = clone(cases);
-    this.node.default = fallback;
-    return this;
-  }
-
-  if(condition: JsonValue): this {
-    this.node.$if = condition;
-    return this;
-  }
-
-  repeat(bind: JsonValue, asName: string, indexAsName: string): this {
-    this.node.$repeat = bind;
-    this.node.as = asName;
-    this.node.indexAs = indexAsName;
-    return this;
-  }
-
-  apply(opts: { props?: { [key: string]: JsonValue }; style?: string; mode?: "merge" | "override" }): this {
-    this.node.$apply = {
-      props: opts.props ? clone(opts.props) : undefined,
-      style: opts.style,
-      mode: opts.mode,
-    };
-    return this;
-  }
-
-  layout(rows: string[]): this {
-    this.node.$layout = rows.slice();
-    return this;
-  }
-
-  tryCatch(spec: { try: NodeInput; catch?: NodeInput; finally?: NodeInput }): this {
-    this.node.$try = spec.try;
-    this.node.$catch = spec.catch;
-    this.node.$finally = spec.finally;
-    return this;
-  }
-
-  async(spec: JsonValue): this {
-    this.node.$async = spec;
-    return this;
-  }
-
-  loading(node: NodeInput): this {
-    this.node.$loading = node;
-    return this;
-  }
-
-  data(node: NodeInput): this {
-    this.node.$data = node;
-    return this;
-  }
-
-  error(node: NodeInput): this {
-    this.node.$error = node;
-    return this;
-  }
-
-  portal(name: string): this {
-    this.node.$portal = name;
-    return this;
-  }
-
-  reactiveMap(spec: JsonValue | { bind: JsonValue; key?: JsonValue; as?: JsonValue }): this {
-    this.node.$reactive_map = spec;
-    return this;
-  }
-
-  compose(values: JsonValue[]): this {
-    this.node.$compose = values.slice();
-    return this;
-  }
-
-  watch(expr: JsonValue): this {
-    this.node.$watch = expr;
-    return this;
-  }
-
-  parallel(nodes: NodeInput[]): this {
-    this.node.$parallel = nodes.slice();
-    return this;
-  }
-
-  throttle(ms: number): this {
-    this.node.$throttle = ms;
-    this.node.$debounce = undefined;
-    return this;
-  }
-
-  debounce(ms: number): this {
-    this.node.$debounce = ms;
-    this.node.$throttle = undefined;
-    return this;
-  }
-
-  machine(spec: JsonObject): this {
-    this.node.$machine = clone(spec);
-    return this;
-  }
-
-  stream(spec: JsonValue | { bind: JsonValue; as?: JsonValue }): this {
-    this.node.$stream = spec;
-    return this;
-  }
-
-  spread(value: JsonValue): this {
-    this.node.$spread = value;
-    return this;
-  }
-
-  view(value: JsonValue): this {
-    this.node.$view = value;
-    return this;
-  }
-
-  withDebugPath(path: string): this {
-    this.node.debugPath = path;
-    return this;
-  }
-
-  toAuthoringNode(): SduiNode {
-    return clone(this.node);
-  }
-
-  toNativeObject(options?: EmitOptions): SduiNode {
-    return emitNode(this.node, options || {});
-  }
-
-  toNativeJson(options?: EmitOptions): string {
-    const emitted = this.toNativeObject(options);
-    return JSON.stringify(emitted, null, options && options.pretty ? (options.indent || 2) : 0);
+function _copyInto(target: Record<string, any>, source: Record<string, any>): void {
+  for (const k in source) {
+    if (!_hasOwn(source, k)) continue;
+    target[k] = _clone(source[k]);
   }
 }
 
-/* -------------------------------------------------------------------------------------------------
- * Factory API
- * ------------------------------------------------------------------------------------------------- */
-
-export var sdui = {
-  node: function (type: QuantumNodeType, init?: Partial<SduiNode>) {
-    return new SduiElement(type, init);
-  },
-
-  type: function (type: QuantumNodeType, init?: Partial<SduiNode>) {
-    return new SduiElement(type, init);
-  },
-
-  core: function<R extends QuantumOmniRoot>(
-    root: R,
-    subType: QuantumOmniSubtype<R> | string,
-    init?: Partial<SduiNode>
-  ) {
-    return new SduiElement(
-      root === "box" ? `box:${String(subType)}` : root,
-      buildInit(init, root === "box"
-        ? {}
-        : { props: mergeProps(init && init.props, { __subType: subType }) })
-    );
-  },
-
-  subtype: function<R extends QuantumOmniRoot>(
-    root: R,
-    subType: QuantumOmniSubtype<R> | string,
-    init?: Partial<SduiNode>
-  ) {
-    return sdui.core(root, subType, init);
-  },
-
-  page: function (children: NodeInput[], init?: Partial<SduiNode>) {
-    return new SduiElement("page", buildInit(init, { children: children.slice() }));
-  },
-
-  box: function (children: NodeInput[], init?: Partial<SduiNode>) {
-    return new SduiElement("box", buildInit(init, { children: children.slice() }));
-  },
-
-  row: function (children: NodeInput[], init?: Partial<SduiNode>) {
-    return new SduiElement("box:row", buildInit(init, { children: children.slice() }));
-  },
-
-  col: function (children: NodeInput[], init?: Partial<SduiNode>) {
-    return new SduiElement("box:col", buildInit(init, { children: children.slice() }));
-  },
-
-  stack: function (children: NodeInput[], init?: Partial<SduiNode>) {
-    return new SduiElement("box:stack", buildInit(init, { children: children.slice() }));
-  },
-
-  grid: function (children: NodeInput[], init?: Partial<SduiNode>) {
-    return new SduiElement("box:grid", buildInit(init, { children: children.slice() }));
-  },
-
-  text: function (text: string, init?: Partial<SduiNode>) {
-    return new SduiElement("text", buildInit(init, { props: mergeProps(init && init.props, { text: text }) }));
-  },
-
-  image: function (src: string, init?: Partial<SduiNode>) {
-    return new SduiElement("image", buildInit(init, { props: mergeProps(init && init.props, { src: src }) }));
-  },
-
-  avatar: function (src: string, init?: Partial<SduiNode>) {
-    return new SduiElement("avatar", buildInit(init, { props: mergeProps(init && init.props, { src: src }) }));
-  },
-
-  button: function (text: string, init?: Partial<SduiNode>) {
-    return new SduiElement("action:button", buildInit(init, { props: mergeProps(init && init.props, { text: text }) }));
-  },
-
-  link: function (text: string, href: string, init?: Partial<SduiNode>) {
-    return new SduiElement("action:link", buildInit(init, { props: mergeProps(init && init.props, { text: text, href: href }) }));
-  },
-
-  input: function (init?: Partial<SduiNode>) {
-    return new SduiElement("field:input", init);
-  },
-
-  select: function (init?: Partial<SduiNode>) {
-    return new SduiElement("field:select", init);
-  },
-
-  card: function (children: NodeInput[], init?: Partial<SduiNode>) {
-    return new SduiElement("card", buildInit(init, { children: children.slice() }));
-  },
-
-  center: function (children: NodeInput[], init?: Partial<SduiNode>) {
-    return new SduiElement("center", buildInit(init, { children: children.slice() }));
-  },
-
-  layout: function (rows: string[], slots: { [key: string]: NodeInput }, init?: Partial<SduiNode>) {
-    return new SduiElement("box:grid", buildInit(init, { $layout: rows.slice(), slots: clone(slots) }));
-  },
-
-  if: function (condition: JsonValue, node: NodeInput) {
-    return new SduiElement("box", { $if: condition, children: [node] });
-  },
-
-  repeat: function (bind: JsonValue, child: NodeInput, asName: string, indexAsName: string) {
-    return new SduiElement("data", {
-      props: mergeProps(undefined, {
-        __subType: "repeat",
-        bind: bind,
-        as: asName,
-        indexAs: indexAsName,
-      }),
-      $repeat: bind,
-      as: asName,
-      indexAs: indexAsName,
-      children: [child],
-    });
-  },
-
-  switch: function (value: JsonValue, cases: { [key: string]: NodeInput }, fallback?: NodeInput) {
-    return new SduiElement("switch", { $switch: value, cases: clone(cases), default: fallback });
-  },
-
-  async: function (spec: JsonValue, init?: Partial<SduiNode>) {
-    return new SduiElement("system", buildInit(init, { $async: spec }));
-  },
-
-  tryCatch: function (spec: { try: NodeInput; catch?: NodeInput; finally?: NodeInput }) {
-    return new SduiElement("hook", {
-      props: { __subType: "error_boundary" },
-      $try: spec.try,
-      $catch: spec.catch,
-      $finally: spec.finally,
-    });
-  },
-
-  apply: function (children: NodeInput[], opts?: { props?: { [key: string]: JsonValue }; style?: string; mode?: "merge" | "override" }) {
-    return new SduiElement("$apply", { $apply: opts, children: children.slice() });
-  },
-
-  portal: function (name: string, content: NodeInput) {
-    return new SduiElement("portal", { $portal: name, children: [content] });
-  },
-
-  stream: function (spec: JsonValue | { bind: JsonValue; as?: JsonValue }, children?: NodeInput[]) {
-    var streamSpec: any = spec;
-    var bindValue: JsonValue = spec as JsonValue;
-    var asValue: JsonValue = "item";
-    if (spec && typeof spec === "object" && !isArray(spec)) {
-      if ((spec as any).bind !== undefined) bindValue = (spec as any).bind;
-      if ((spec as any).as !== undefined) asValue = (spec as any).as;
-    }
-    return new SduiElement("data", {
-      props: mergeProps(undefined, {
-        __subType: "stream",
-        bind: bindValue,
-        as: asValue,
-      }),
-      $stream: streamSpec,
-      children: children ? children.slice() : [],
-    });
-  },
-
-  watch: function (expr: JsonValue, child: NodeInput) {
-    return new SduiElement("box", { $watch: expr, children: [child] });
-  },
-
-  parallel: function (children: NodeInput[]) {
-    return new SduiElement("box:col", { $parallel: children.slice() });
-  },
-
-  machine: function (spec: JsonObject, children?: NodeInput[]) {
-    return new SduiElement("control", { $machine: clone(spec), children: children ? children.slice() : [] });
-  },
-
-  reactiveMap: function (spec: JsonValue | { bind: JsonValue; key?: JsonValue; as?: JsonValue }, children?: NodeInput[]) {
-    return new SduiElement("data", { $reactive_map: spec, children: children ? children.slice() : [] });
-  },
-
-  define: function (definitions: { [key: string]: JsonValue }, init?: Partial<SduiNode>) {
-    return new SduiElement("template", buildInit(init, { $define: clone(definitions) }));
-  },
-
-  let: function (values: { [key: string]: JsonValue }, init?: Partial<SduiNode>) {
-    return new SduiElement("template", buildInit(init, { $let: clone(values) }));
-  },
-
-  classes: function (values: { [key: string]: JsonValue }, init?: Partial<SduiNode>) {
-    return new SduiElement("box", buildInit(init, { $classes: clone(values) }));
-  },
-
-  scope: function (value: JsonValue, init?: Partial<SduiNode>) {
-    return new SduiElement("box", buildInit(init, { $scope: value }));
-  },
-
-  spread: function (value: JsonValue, init?: Partial<SduiNode>) {
-    return new SduiElement("box", buildInit(init, { $spread: value }));
-  },
-};
-
-/* -------------------------------------------------------------------------------------------------
- * Public emitters and validation
- * ------------------------------------------------------------------------------------------------- */
-
-export function toNativeObject(node: NodeInput, options?: EmitOptions): SduiNode {
-  return emitNode(normalizeAny(node), options || {}, options && options.includeDebugPath === false ? undefined : "root");
+function _copyObject<T extends Record<string, any> | undefined>(
+  base: T,
+  extra: Record<string, any>,
+): T {
+  const out: any = {};
+  if (base) _copyInto(out, base);
+  _copyInto(out, extra);
+  return out;
 }
 
-export function toNativeJson(node: NodeInput, options?: EmitOptions): string {
-  return JSON.stringify(toNativeObject(node, options), null, options && options.pretty ? (options.indent || 2) : 0);
+function _createNode(type: string): SduiNode {
+  return { type, props: {}, children: [] };
 }
 
-export function validateNode(node: NodeInput): ValidationResult {
-  var issues: ValidationIssue[] = [];
-  validateAny(node, "root", issues);
-  return { ok: issues.length === 0, issues: issues };
+function _mergeStyle(base: string | undefined, next: string): string {
+  const a = base ? String(base).trim() : '';
+  const b = next ? String(next).trim() : '';
+  if (!a) return b;
+  if (!b) return a;
+  return `${a} ${b}`.trim();
 }
 
-export function knownVmOperators(): string[] {
-  return KNOWN_VM_OPERATORS.slice();
+function _mergeNode(target: any, source: any): void {
+  if (!source) return;
+  if (source.type !== undefined) target.type = source.type;
+  if (source.props !== undefined) target.props = _clone(source.props);
+  if (source.style !== undefined) target.style = source.style;
+  if (source.children !== undefined) target.children = _clone(source.children);
+  if (source.slots !== undefined) target.slots = _clone(source.slots);
+  if (source.name !== undefined) target.name = source.name;
+  if (source.slot !== undefined) target.slot = source.slot;
+  if (source.env !== undefined) target.env = _clone(source.env);
+  if (source.debugPath !== undefined) target.debugPath = source.debugPath;
+
+  const skip: Record<string, true> = { type: true, props: true, style: true, children: true, slots: true, name: true, slot: true, env: true, debugPath: true };
+
+  for (const k in source) {
+    if (!_hasOwn(source, k) || skip[k] || k in target) continue;
+    const v = source[k];
+    if (v !== undefined) target[k] = _clone(v);
+  }
 }
 
-/* -------------------------------------------------------------------------------------------------
- * Internal normalization
- * ------------------------------------------------------------------------------------------------- */
+function _buildInit(
+  init: Partial<SduiNode> | undefined,
+  patch: Partial<SduiNode>,
+): Partial<SduiNode> {
+  const out: any = {};
+  if (init) _mergeNode(out, init);
+  _mergeNode(out, patch);
+  return out;
+}
 
-function normalizeAny(input: any): SduiNode {
+function _normalizeAny(input: any): SduiNode {
   if (input instanceof SduiElement) return input.toAuthoringNode();
 
-  if (isArray(input)) {
-    if (input.length === 0) return { type: "empty" };
+  if (_isArray(input)) {
+    if (input.length === 0) return { type: 'empty' };
+    const head = input[0];
+    const type = String(head == null ? 'empty' : head);
+    const node: SduiNode = { type, props: {}, children: [] };
 
-    var head = input[0];
-    var type = String(head == null ? "empty" : head);
-    var node: SduiNode = { type: type, props: {}, children: [] };
+    for (let i = 1; i < input.length; i++) {
+      const item: any = input[i];
 
-    for (var i = 1; i < input.length; i++) {
-      var item: any = input[i];
-
-      if (i === 1 && isPlainObject(item)) {
-        for (var k in item) {
-          if (!hasOwn(item, k)) continue;
-          var v = item[k];
-
-          if (k === "$slots" && isPlainObject(v)) {
+      if (i === 1 && _isPlainObject(item)) {
+        for (const k in item) {
+          if (!_hasOwn(item, k)) continue;
+          const v = item[k];
+          if (k === '$slots' && _isPlainObject(v)) {
             node.slots = {};
-            for (var slotName in v) {
-              if (!hasOwn(v, slotName)) continue;
-              node.slots[slotName] = v[slotName];
-            }
-          } else if (k === "props" && isPlainObject(v)) {
-            node.props = clone(v);
-          } else if (k === "children" && isArray(v)) {
+            for (const sn in v) if (_hasOwn(v, sn)) (node.slots as any)[sn] = v[sn];
+          } else if (k === 'props' && _isPlainObject(v)) {
+            node.props = _clone(v);
+          } else if (k === 'children' && _isArray(v)) {
             node.children = (v as NodeInput[]).slice();
-          } else if (k === "style") {
+          } else if (k === 'style') {
             node.style = v == null ? undefined : String(v);
-          } else if (k === "name" || k === "slot" || startsWith(k, "$") || k === "cases" || k === "default" || k === "as" || k === "indexAs" || k === "debugPath" || k === "env") {
+          } else if (
+            k === 'name' || k === 'slot' || k === 'as' || k === 'indexAs' ||
+            k === 'cases' || k === 'default' || k === 'debugPath' || k === 'env' ||
+            k.charAt(0) === '$'
+          ) {
             (node as any)[k] = v;
           } else {
             node.props![k] = v;
@@ -805,28 +1065,32 @@ function normalizeAny(input: any): SduiNode {
         continue;
       }
 
-      if (typeof item === "string") {
-        if (i === 1 && (!node.props || objectSize(node.props) === 0) && (!node.children || node.children.length === 0)) {
-          if (startsWith(type, "text") || startsWith(type, "action")) {
+      if (typeof item === 'string') {
+        if (
+          i === 1 &&
+          (!node.props || _objectSize(node.props) === 0) &&
+          (!node.children || node.children.length === 0)
+        ) {
+          if ((type.indexOf('text') === 0) || (type.indexOf('action') === 0)) {
             if (!node.props) node.props = {};
             node.props.text = item;
           } else {
-            node.style = mergeStyle(node.style, item);
+            node.style = _mergeStyle(node.style, item);
           }
         } else {
           if (!node.children) node.children = [];
-          node.children.push({ type: "text", props: { text: item } });
+          node.children.push({ type: 'text', props: { text: item } });
         }
         continue;
       }
 
-      if (isArray(item)) {
+      if (_isArray(item)) {
         if (!node.children) node.children = [];
-        for (var j = 0; j < item.length; j++) node.children.push(item[j]);
+        for (let j = 0; j < item.length; j++) node.children.push(item[j]);
         continue;
       }
 
-      if (isPlainObject(item) && typeof item.type === "string" && input.length === 2) {
+      if (_isPlainObject(item) && typeof item.type === 'string' && input.length === 2) {
         if (!node.children) node.children = [];
         node.children.push(item as NodeInput);
         continue;
@@ -835,381 +1099,1783 @@ function normalizeAny(input: any): SduiNode {
       if (!node.children) node.children = [];
       node.children.push(item);
     }
-
     return node;
   }
 
-  if (isPlainObject(input)) return clone(input as SduiNode);
-
-  if (typeof input === "string") return { type: "text", props: { text: input } };
-  if (typeof input === "number" || typeof input === "boolean") return { type: "text", props: { text: String(input) } };
-
-  return { type: "empty" };
+  if (_isPlainObject(input)) return _clone(input as SduiNode);
+  if (typeof input === 'string') return { type: 'text', props: { text: input } };
+  if (typeof input === 'number' || typeof input === 'boolean') return { type: 'text', props: { text: String(input) } };
+  return { type: 'empty' };
 }
 
-function emitNode(node: any, options: EmitOptions, path?: string): SduiNode {
-  var input = clone(node);
-  var out: SduiNode = { type: String(input.type || "box") };
+function _emitNode(node: any, options: EmitOptions, path?: string): SduiNode {
+  const input = _clone(node);
+  const out: SduiNode = { type: String(input.type || 'box') };
 
-  if (input.props && objectSize(input.props) > 0) out.props = clone(input.props);
-  if (input.style != null && String(input.style).trim() !== "") out.style = String(input.style).trim();
+  if (input.props && _objectSize(input.props) > 0) out.props = _clone(input.props);
+  if (input.style != null && String(input.style).trim() !== '') out.style = String(input.style).trim();
 
   if (input.children && input.children.length > 0) {
     out.children = [];
-    for (var i = 0; i < input.children.length; i++) {
-      out.children.push(emitNode(normalizeAny(input.children[i]), options, (path || "root") + ".children[" + i + "]"));
+    for (let i = 0; i < input.children.length; i++) {
+      out.children.push(_emitNode(_normalizeAny(input.children[i]), options, `${path || 'root'}.children[${i}]`));
     }
   }
 
-  if (input.slots && objectSize(input.slots) > 0) {
+  if (input.slots && _objectSize(input.slots) > 0) {
     out.slots = {};
-    for (var slotName in input.slots) {
-      if (!hasOwn(input.slots, slotName)) continue;
-      out.slots[slotName] = emitNode(normalizeAny(input.slots[slotName]), options, (path || "root") + ".slots." + slotName);
+    for (const sn in input.slots) if (_hasOwn(input.slots, sn)) {
+      (out.slots as any)[sn] = _emitNode(_normalizeAny(input.slots[sn]), options, `${path || 'root'}.slots.${sn}`);
     }
   }
 
-  if (options.canonicalizeSlots) {
-    canonicalizeSlots(out);
-  }
-
-  if (options.preserveNameAndSlot !== false) {
+  if (options.includeDebugPath && input.debugPath !== undefined) out.debugPath = input.debugPath;
+  if (options.preserveNameAndSlot) {
     if (input.name !== undefined) out.name = input.name;
     if (input.slot !== undefined) out.slot = input.slot;
   }
 
-  if (options.includeDebugPath !== false) out.debugPath = input.debugPath || path || "root";
-
-  for (var i2 = 0; i2 < KNOWN_VM_OPERATORS.length; i2++) {
-    var key = KNOWN_VM_OPERATORS[i2];
-    if ((input as any)[key] !== undefined) (out as any)[key] = clone((input as any)[key]);
+  const extras = ['cases', 'default', 'as', 'indexAs', 'env'];
+  for (const k of extras) {
+    if ((input as any)[k] !== undefined && (out as any)[k] === undefined) (out as any)[k] = _clone((input as any)[k]);
   }
 
-  for (var k in input) {
-    if (!hasOwn(input, k)) continue;
-    if (k === "type" || k === "props" || k === "style" || k === "children" || k === "slots" || k === "debugPath" || k === "name" || k === "slot") continue;
+  for (const k in input) {
+    if (!_hasOwn(input, k)) continue;
+    if (
+      k === 'type' || k === 'props' || k === 'style' || k === 'children' ||
+      k === 'slots' || k === 'debugPath' || k === 'name' || k === 'slot'
+    ) continue;
     if ((out as any)[k] !== undefined) continue;
-    var v = (input as any)[k];
-    if (v === undefined) continue;
-    (out as any)[k] = clone(v);
+    const v = (input as any)[k];
+    if (v !== undefined) (out as any)[k] = _clone(v);
   }
 
   return out;
 }
 
-
-/* -------------------------------------------------------------------------------------------------
- * Internal helpers
- * ------------------------------------------------------------------------------------------------- */
-
-function createNode(type: string): SduiNode {
-  return { type: type, props: {}, children: [] };
-}
-
-function mergeStyle(base: string | undefined, next: string): string {
-  var a = base ? String(base).trim() : "";
-  var b = next ? String(next).trim() : "";
-  if (!a) return b;
-  if (!b) return a;
-  return (a + " " + b).trim();
-}
-
-function mergeProps(base: { [key: string]: JsonValue } | undefined, extra: { [key: string]: JsonValue }): { [key: string]: JsonValue } {
-  var out: { [key: string]: JsonValue } = {};
-  if (base) copyInto(out, base);
-  copyInto(out, extra);
-  return out;
-}
-
-function buildInit(init: Partial<SduiNode> | undefined, patch: Partial<SduiNode>): Partial<SduiNode> {
-  var out: any = {};
-  if (init) mergeNode(out, init);
-  mergeNode(out, patch);
-  return out;
-}
-
-function copyObject<T extends { [key: string]: any } | undefined>(base: T, extra: { [key: string]: any }): T {
-  var out: any = {};
-  if (base) copyInto(out, base);
-  copyInto(out, extra);
-  return out;
-}
-
-function copyInto(target: { [key: string]: any }, source: { [key: string]: any }): void {
-  for (var k in source) {
-    if (!hasOwn(source, k)) continue;
-    target[k] = clone(source[k]);
-  }
-}
-
-function mergeNode(target: any, source: any): void {
-  if (!source) return;
-  if (source.type !== undefined) target.type = source.type;
-  if (source.props !== undefined) target.props = clone(source.props);
-  if (source.style !== undefined) target.style = source.style;
-  if (source.children !== undefined) target.children = clone(source.children);
-  if (source.slots !== undefined) target.slots = clone(source.slots);
-  if (source.debugPath !== undefined) target.debugPath = source.debugPath;
-
-  if (source.name !== undefined) target.name = source.name;
-  if (source.slot !== undefined) target.slot = source.slot;
-  if (source.env !== undefined) target.env = clone(source.env);
-
-  if (source.$define !== undefined) target.$define = clone(source.$define);
-  if (source.$let !== undefined) target.$let = clone(source.$let);
-  if (source.$call !== undefined) target.$call = source.$call;
-  if (source.$classes !== undefined) target.$classes = clone(source.$classes);
-  if (source.$scope !== undefined) target.$scope = source.$scope;
-  if (source.$switch !== undefined) target.$switch = source.$switch;
-  if (source.cases !== undefined) target.cases = clone(source.cases);
-  if (source.default !== undefined) target.default = source.default;
-  if (source.$if !== undefined) target.$if = source.$if;
-  if (source.$repeat !== undefined) target.$repeat = source.$repeat;
-  if (source.as !== undefined) target.as = source.as;
-  if (source.indexAs !== undefined) target.indexAs = source.indexAs;
-  if (source.$apply !== undefined) target.$apply = clone(source.$apply);
-  if (source.$layout !== undefined) target.$layout = clone(source.$layout);
-  if (source.$try !== undefined) target.$try = source.$try;
-  if (source.$catch !== undefined) target.$catch = source.$catch;
-  if (source.$finally !== undefined) target.$finally = source.$finally;
-  if (source.$async !== undefined) target.$async = source.$async;
-  if (source.$loading !== undefined) target.$loading = source.$loading;
-  if (source.$data !== undefined) target.$data = source.$data;
-  if (source.$error !== undefined) target.$error = source.$error;
-  if (source.$portal !== undefined) target.$portal = source.$portal;
-  if (source.$reactive_map !== undefined) target.$reactive_map = clone(source.$reactive_map);
-  if (source.$compose !== undefined) target.$compose = clone(source.$compose);
-  if (source.$watch !== undefined) target.$watch = source.$watch;
-  if (source.$parallel !== undefined) target.$parallel = clone(source.$parallel);
-  if (source.$throttle !== undefined) target.$throttle = source.$throttle;
-  if (source.$debounce !== undefined) target.$debounce = source.$debounce;
-  if (source.$machine !== undefined) target.$machine = clone(source.$machine);
-  if (source.$stream !== undefined) target.$stream = clone(source.$stream);
-  if (source.$spread !== undefined) target.$spread = source.$spread;
-  if (source.$view !== undefined) target.$view = source.$view;
-  if (source.$slot !== undefined) target.$slot = source.$slot;
-  if (source.$slots !== undefined) target.$slots = clone(source.$slots);
-
-  for (var k in source) {
-    if (!hasOwn(source, k)) continue;
-    if (target[k] === undefined) target[k] = clone(source[k]);
-  }
-}
-
-function clone<T>(value: T): T {
-  if (value === undefined || value === null) return value;
-  if (typeof value !== "object") return value;
-  if (isArray(value)) {
-    var arr: any[] = [];
-    for (var i = 0; i < value.length; i++) arr.push(clone(value[i]));
-    return arr as any;
-  }
-  var out: any = {};
-  for (var k in value as any) {
-    if (!hasOwn(value as any, k)) continue;
-    out[k] = clone((value as any)[k]);
-  }
-  return out;
-}
-
-function isPlainObject(value: any): value is { [key: string]: any } {
-  return typeof value === "object" && value !== null && !isArray(value) && !(value instanceof SduiElement);
-}
-
-function isArray(value: any): value is any[] {
-  return Object.prototype.toString.call(value) === "[object Array]";
-}
-
-function startsWith(value: string, prefix: string): boolean {
-  return String(value).indexOf(prefix) === 0;
-}
-
-function hasOwn(obj: any, key: string): boolean {
-  return Object.prototype.hasOwnProperty.call(obj, key);
-}
-
-function objectSize(obj: { [key: string]: any }): number {
-  var n = 0;
-  for (var k in obj) if (hasOwn(obj, k)) n++;
-  return n;
-}
-
-function canonicalizeSlots(node: any): void {
+function _canonicalizeSlots(node: any): void {
   if (!node.children || node.children.length === 0) return;
-  var slots: any = node.slots ? clone(node.slots) : {};
-  var nextChildren: any[] = [];
-  for (var i = 0; i < node.children.length; i++) {
-    var child = normalizeAny(node.children[i]);
+  const slots: any = node.slots ? _clone(node.slots) : {};
+  const nextChildren: any[] = [];
+
+  for (const child0 of node.children) {
+    const child = _normalizeAny(child0);
     if (child.slot && !slots[child.slot]) {
       slots[child.slot] = child;
       continue;
     }
-    if (child.props && typeof child.props.slot === "string" && !slots[child.props.slot]) {
-      var slotName = String(child.props.slot);
-      var copied = clone(child);
+    if (child.props && typeof child.props.slot === 'string' && !slots[child.props.slot]) {
+      const slotName = String(child.props.slot);
+      const copied = _clone(child);
       if (copied.props) delete copied.props.slot;
       slots[slotName] = copied;
       continue;
     }
     nextChildren.push(child);
   }
+
   node.children = nextChildren;
-  if (objectSize(slots) > 0) node.slots = slots;
+  if (_objectSize(slots) > 0) node.slots = slots;
 }
 
-function validateAny(node: any, path: string, issues: ValidationIssue[]): void {
-  var n = normalizeAny(node);
-  if (!n.type || typeof n.type !== "string") {
-    issues.push({ path: path, message: "Missing or invalid type." });
-  }
-  if (n.props !== undefined && !isPlainObject(n.props)) {
-    issues.push({ path: path, message: "props must be an object." });
-  }
-  if (n.style !== undefined && typeof n.style !== "string") {
-    issues.push({ path: path, message: "style must be a string." });
-  }
+function _validateAny(node: any, path: string, issues: ValidationIssue[]): void {
+  const n = _normalizeAny(node);
+
+  if (!n.type || typeof n.type !== 'string') issues.push({ path, message: 'Missing or invalid type.' });
+  if (n.props !== undefined && !_isPlainObject(n.props)) issues.push({ path, message: 'props must be an object.' });
+  if (n.style !== undefined && typeof n.style !== 'string') issues.push({ path, message: 'style must be a string.' });
+
   if (n.$layout !== undefined) {
-    if (!isArray(n.$layout)) {
-      issues.push({ path: path, message: "$layout must be an array of strings." });
+    if (!_isArray(n.$layout)) {
+      issues.push({ path, message: '$layout must be an array of strings.' });
     } else {
-      for (var i = 0; i < n.$layout.length; i++) {
-        if (typeof n.$layout[i] !== "string") {
-          issues.push({ path: path, message: "$layout must contain only strings." });
+      for (const item of n.$layout) {
+        if (typeof item !== 'string') {
+          issues.push({ path, message: '$layout must contain only strings.' });
           break;
         }
       }
     }
   }
+
   if (n.children !== undefined) {
-    if (!isArray(n.children)) {
-      issues.push({ path: path, message: "children must be an array." });
+    if (!_isArray(n.children)) {
+      issues.push({ path, message: 'children must be an array.' });
     } else {
-      for (var j = 0; j < n.children.length; j++) {
-        validateAny(n.children[j], path + ".children[" + j + "]", issues);
-      }
+      n.children.forEach((child, i) => _validateAny(child, `${path}.children[${i}]`, issues));
     }
   }
+
   if (n.slots !== undefined) {
-    if (!isPlainObject(n.slots)) {
-      issues.push({ path: path, message: "slots must be an object." });
+    if (!_isPlainObject(n.slots)) {
+      issues.push({ path, message: 'slots must be an object.' });
     } else {
-      for (var slotName in n.slots) {
-        if (!hasOwn(n.slots, slotName)) continue;
-        validateAny(n.slots[slotName], path + ".slots." + slotName, issues);
+      for (const sn in n.slots) if (_hasOwn(n.slots, sn)) {
+        _validateAny((n.slots as any)[sn], `${path}.slots.${sn}`, issues);
       }
     }
   }
-  var maybeNodeKeys = ["$loading", "$data", "$error", "$try", "$catch", "$finally"];
-  for (var k = 0; k < maybeNodeKeys.length; k++) {
-    var key = maybeNodeKeys[k];
-    var value = n[key];
-    if (value !== undefined && value !== null && !isNodeLike(value)) {
-      issues.push({ path: path, message: key + " must be a node or null." });
+
+  const nodeSlotKeys = ['$loading', '$data', '$error', '$try', '$catch', '$finally'];
+  for (const key of nodeSlotKeys) {
+    const value = (n as any)[key];
+    if (value !== undefined && value !== null && !_isNodeLike(value)) {
+      issues.push({ path, message: `${key} must be a node or null.` });
     }
   }
 }
 
-function isNodeLike(value: any): boolean {
-  return value instanceof SduiElement || isPlainObject(value) || isArray(value) || typeof value === "string" || typeof value === "number" || typeof value === "boolean" || value === null;
+function _isNodeLike(value: any): boolean {
+  return (
+    value instanceof SduiElement ||
+    _isPlainObject(value) ||
+    _isArray(value) ||
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean' ||
+    value === null
+  );
 }
 
-/* -------------------------------------------------------------------------------------------------
- * Operator inventory
- * ------------------------------------------------------------------------------------------------- */
+/* ============================================================
+ * 8) SDUI ELEMENT BUILDER
+ * ============================================================ */
+
+export class SduiElement<P extends Record<string, any> = BaseProps> {
+  private _node: SduiNode;
+
+  constructor(type: string, init?: Partial<SduiNode>) {
+    this._node = _createNode(type);
+    if (init) _mergeNode(this._node, init);
+  }
+
+  prop<K extends string>(key: K, value: JsonValue): this {
+    if (!this._node.props) this._node.props = {};
+    this._node.props[key] = value;
+    return this;
+  }
+
+  props(values: Partial<P> & Record<string, JsonValue>): this {
+    if (!this._node.props) this._node.props = {};
+    _copyInto(this._node.props, values as Record<string, JsonValue>);
+    return this;
+  }
+
+  style(value: StyleValue): this {
+    this._node.style = _mergeStyle(this._node.style, value);
+    return this;
+  }
+
+  child(...items: NodeInput[]): this {
+    if (!this._node.children) this._node.children = [];
+    for (const item of items) this._node.children.push(item);
+    return this;
+  }
+
+  children(items: NodeInput[]): this {
+    this._node.children = items.slice();
+    return this;
+  }
+
+  slot(name: SlotName, content: NodeInput): this {
+    if (!this._node.slots) this._node.slots = {};
+    this._node.slots[name] = content;
+    return this;
+  }
+
+  slots(values: Record<SlotName, NodeInput>): this {
+    if (!this._node.slots) this._node.slots = {};
+    _copyInto(this._node.slots, values as any);
+    return this;
+  }
+
+  env(values: Record<string, JsonValue>): this {
+    this._node.env = _copyObject(this._node.env, values);
+    return this;
+  }
+
+  define(values: Record<string, JsonValue>): this {
+    this._node.$define = _copyObject(this._node.$define as any, values);
+    return this;
+  }
+
+  let(values: Record<string, JsonValue>): this {
+    this._node.$let = _copyObject(this._node.$let as any, values);
+    return this;
+  }
+
+  call(name: string): this {
+    this._node.$call = name;
+    return this;
+  }
+
+  classes(values: Record<string, Expr<boolean>>): this {
+    this._node.$classes = _copyObject(this._node.$classes as any, values as any);
+    return this;
+  }
+
+  scope(value: Expr<string> | string): this {
+    this._node.$scope = value as any;
+    return this;
+  }
+
+  when(value: Expr<any> | string, cases: Record<string, NodeInput>, fallback?: NodeInput): this {
+    this._node.$switch = value as any;
+    this._node.cases = _clone(cases) as any;
+    this._node.default = fallback;
+    return this;
+  }
+
+  if(condition: Expr<boolean> | string): this {
+    this._node.$if = condition as any;
+    return this;
+  }
+
+  repeat(bind: Expr<any[]> | StatePath | Binding<any>, asName: string, indexAsName: string): this {
+    this._node.$repeat = bind as any;
+    this._node.as = asName;
+    this._node.indexAs = indexAsName;
+    return this;
+  }
+
+  apply(opts: { props?: JsonObject; style?: StyleValue; mode?: 'merge' | 'override' }): this {
+    this._node.$apply = {
+      props: opts.props ? _clone(opts.props) : undefined,
+      style: opts.style,
+      mode: opts.mode,
+    } as any;
+    return this;
+  }
+
+  layout(rows: string[]): this {
+    this._node.$layout = rows.slice();
+    return this;
+  }
+
+  tryCatch(spec: { try: NodeInput; catch?: NodeInput; finally?: NodeInput }): this {
+    this._node.$try = spec.try;
+    this._node.$catch = spec.catch;
+    this._node.$finally = spec.finally;
+    return this;
+  }
+
+  async(spec: AsyncSpec | JsonValue): this {
+    this._node.$async = spec as any;
+    return this;
+  }
+
+  loading(node: NodeInput): this {
+    this._node.$loading = node;
+    return this;
+  }
+
+  data(node: NodeInput): this {
+    this._node.$data = node;
+    return this;
+  }
+
+  error(node: NodeInput): this {
+    this._node.$error = node;
+    return this;
+  }
+
+  portal(name: string): this {
+    this._node.$portal = name;
+    return this;
+  }
+
+  reactiveMap(spec: ReactiveMapSpec | JsonValue): this {
+    this._node.$reactive_map = spec as any;
+    return this;
+  }
+
+  compose(values: JsonValue[]): this {
+    this._node.$compose = values.slice();
+    return this;
+  }
+
+  watch(expr: Expr<any> | StatePath): this {
+    this._node.$watch = expr as any;
+    return this;
+  }
+
+  parallel(nodes: NodeInput[]): this {
+    this._node.$parallel = nodes.slice() as any;
+    return this;
+  }
+
+  throttle(ms: number): this {
+    this._node.$throttle = ms;
+    this._node.$debounce = undefined;
+    return this;
+  }
+
+  debounce(ms: number): this {
+    this._node.$debounce = ms;
+    this._node.$throttle = undefined;
+    return this;
+  }
+
+  machine(spec: MachineSpec | JsonObject): this {
+    this._node.$machine = _clone(spec) as any;
+    return this;
+  }
+
+  stream(spec: StreamBindSpec | JsonValue): this {
+    this._node.$stream = spec as any;
+    return this;
+  }
+
+  spread(value: Expr<JsonObject> | StatePath): this {
+    this._node.$spread = value as any;
+    return this;
+  }
+
+  view(value: Expr<any> | StatePath): this {
+    this._node.$view = value as any;
+    return this;
+  }
+
+  withDebugPath(path: string): this {
+    this._node.debugPath = path;
+    return this;
+  }
+
+  withName(name: string): this {
+    this._node.name = name;
+    return this;
+  }
+
+  set(key: string, value: JsonValue): this {
+    (this._node as any)[key] = value;
+    return this;
+  }
+
+  extend(partial: Partial<SduiNode>): this {
+    _mergeNode(this._node, partial as any);
+    return this;
+  }
+
+  toAuthoringNode(): SduiNode {
+    return _clone(this._node);
+  }
+
+  toNativeObject(options?: EmitOptions): SduiNode {
+    return _emitNode(this._node, options || {});
+  }
+
+  toNativeJson(options?: EmitOptions): string {
+    return JSON.stringify(
+      this.toNativeObject(options),
+      null,
+      options && options.pretty ? (options.indent || 2) : 0,
+    );
+  }
+}
+
+/* ============================================================
+ * 9) THEME / STORE / SLICE / PIPELINE / DATA SOURCE
+ * ============================================================ */
+
+export type ColorScale =
+  Partial<Record<'50'|'100'|'150'|'200'|'250'|'300'|'350'|'400'|'450'|'500'|'550'|'600'|'650'|'700'|'750'|'800'|'850'|'900'|'950', string>>;
+
+export type ColorValue = string | ColorScale;
+
+export interface TypographyInput {
+  fontFamily?: string;
+  fontSize?: number;
+  fontWeight?: number;
+  lineHeight?: number;
+  letterSpacing?: number;
+  textTransform?: string;
+  fontStyle?: string;
+}
+
+export interface ShadowInput {
+  offsetX?: number;
+  offsetY?: number;
+  blurRadius?: number;
+  spread?: number;
+  color?: string;
+  inset?: boolean;
+}
+
+export interface AnimationInput {
+  duration?: number;
+  curve?: string;
+  delay?: number;
+  repeat?: number | boolean;
+  fillMode?: string;
+}
+
+export interface ThemeInput {
+  colors?: Record<string, ColorValue>;
+  spacing?: Record<string, number | string>;
+  typography?: Record<string, TypographyInput>;
+  radii?: Record<string, number | string>;
+  shadows?: Record<string, ShadowInput | string>;
+  animations?: Record<string, AnimationInput>;
+  breakpoints?: Record<string, number>;
+  zIndex?: Record<string, number>;
+  [customGroup: string]: Record<string, any> | undefined;
+}
+
+export type ThemeTokenProxy<T> = {
+  [K in keyof T]:
+    T[K] extends Record<string, any>
+      ? ThemeTokenProxy<T[K]>
+      : DesignToken;
+};
+
+export interface SliceDocument {
+  namespace: string;
+  schema?: string;
+  dataSource?: string;
+  state?: JsonObject;
+  computed?: JsonObject;
+  mutations?: JsonObject;
+  queries?: JsonObject;
+  resources?: JsonObject;
+  fieldPolicies?: JsonObject;
+  protection?: JsonObject;
+  runtime?: JsonObject;
+  pipelines?: JsonObject;
+}
+
+export type TypedTheme<T extends ThemeInput> = Readonly<T> & {
+  tokens: ThemeTokenProxy<T>;
+  toSlice(namespace?: string): SliceDocument;
+  toJSON(): T;
+};
+
+function _buildTokenProxy(input: any, prefix: string): any {
+  const out: any = {};
+  for (const k in input) {
+    if (!_hasOwn(input, k)) continue;
+    const nextPath = prefix ? `${prefix}.${k}` : k;
+    const v = input[k];
+    if (v && typeof v === 'object' && !_isArray(v)) {
+      out[k] = _buildTokenProxy(v, nextPath);
+    } else {
+      out[k] = (`$${nextPath}`) as DesignToken;
+    }
+  }
+  return out;
+}
+
+export function createTheme<T extends ThemeInput>(theme: T): TypedTheme<T> {
+  const frozen = _clone(theme) as Readonly<T>;
+  const proxy = _buildTokenProxy(theme, '') as ThemeTokenProxy<T>;
+
+  const out: any = {};
+  _copyInto(out, frozen as any);
+  out.tokens = proxy;
+  out.toSlice = function(namespace = 'app.theme'): SliceDocument {
+    const slice: SliceDocument = { namespace };
+    if ((theme as any).colors) slice.state = { colors: (theme as any).colors as any };
+    if ((theme as any).spacing) (slice as any).spacing = (theme as any).spacing;
+    if ((theme as any).typography) (slice as any).typography = (theme as any).typography;
+    if ((theme as any).radii) (slice as any).radii = (theme as any).radii;
+    if ((theme as any).shadows) (slice as any).shadows = (theme as any).shadows;
+    if ((theme as any).animations) (slice as any).animations = (theme as any).animations;
+    if ((theme as any).breakpoints) (slice as any).breakpoints = (theme as any).breakpoints;
+    if ((theme as any).zIndex) (slice as any).zIndex = (theme as any).zIndex;
+    return slice;
+  };
+  out.toJSON = function(): T {
+    return _clone(theme);
+  };
+
+  return out as TypedTheme<T>;
+}
+
+export interface StoreDefinition<S extends Record<string, any>> {
+  namespace: string;
+  state: S;
+  computed?: Record<string, (state: S) => JsonValue>;
+  mutations?: Record<string, (state: S, payload?: any) => void>;
+  queries?: Record<string, JsonObject>;
+  resources?: Record<string, JsonObject>;
+  fieldPolicies?: JsonObject;
+  protection?: JsonObject;
+  runtime?: JsonObject;
+  pipelines?: JsonObject;
+}
+
+export interface BindingProxy<T> { readonly __binding?: T; }
+export interface PathProxy<T> { readonly __path?: T; }
+export interface ExprProxy<T> { readonly __expr?: T; }
+
+export interface TypedStoreDescriptor<S extends Record<string, any>> {
+  namespace: string;
+  bind: BindingProxy<S>;
+  path: PathProxy<S>;
+  ref: ExprProxy<S>;
+  toSlice(): SliceDocument;
+  toJSON(): JsonObject;
+}
+
+export function defineStore<S extends Record<string, any>>(
+  namespace: string,
+  factory: () => S,
+): TypedStoreDescriptor<S> {
+  const state = factory();
+  const stateJson: JsonObject = {};
+  for (const k in state) if (_hasOwn(state, k)) stateJson[k] = state[k] as JsonValue;
+
+  const bindProxy = {} as BindingProxy<S>;
+  const pathProxy = {} as PathProxy<S>;
+  const exprProxy = {} as ExprProxy<S>;
+
+  return {
+    namespace,
+    bind: bindProxy,
+    path: pathProxy,
+    ref: exprProxy,
+    toSlice(): SliceDocument {
+      return { namespace, state: stateJson };
+    },
+    toJSON(): JsonObject {
+      return { namespace, state: stateJson };
+    },
+  };
+}
+
+export interface TypedSlice<S extends Record<string, any>> {
+  namespace: string;
+  bind: BindingProxy<S>;
+  path: PathProxy<S>;
+  ref: ExprProxy<S>;
+  toJSON(): SliceDocument;
+}
+
+export interface SliceDefinition<S extends Record<string, any>> {
+  namespace: string;
+  schema?: string;
+  dataSource?: string;
+  state?: S | Record<string, any>;
+  computed?: JsonObject;
+  mutations?: JsonObject;
+  queries?: JsonObject;
+  resources?: JsonObject;
+  fieldPolicies?: JsonObject;
+  protection?: JsonObject;
+  runtime?: JsonObject;
+  pipelines?: JsonObject;
+}
+
+export function defineSlice<S extends Record<string, any>>(def: SliceDefinition<S>): TypedSlice<S> {
+  const stateJson: JsonObject = {};
+  if (def.state) for (const k in def.state) if (_hasOwn(def.state, k)) {
+    const v = (def.state as any)[k];
+    stateJson[k] = v && typeof v === 'object' && '_tag' in v ? null : (v as JsonValue);
+  }
+
+  return {
+    namespace: def.namespace,
+    bind: {} as BindingProxy<S>,
+    path: {} as PathProxy<S>,
+    ref: {} as ExprProxy<S>,
+    toJSON(): SliceDocument {
+      const out: SliceDocument = { namespace: def.namespace };
+      if (def.schema) out.schema = def.schema;
+      if (def.dataSource) out.dataSource = def.dataSource;
+      if (stateJson) out.state = stateJson;
+      if (def.computed) out.computed = def.computed;
+      if (def.mutations) out.mutations = def.mutations;
+      if (def.queries) out.queries = def.queries;
+      if (def.resources) out.resources = def.resources;
+      if (def.fieldPolicies) out.fieldPolicies = def.fieldPolicies;
+      if (def.protection) out.protection = def.protection;
+      if (def.runtime) out.runtime = def.runtime;
+      if (def.pipelines) out.pipelines = def.pipelines;
+      return out;
+    },
+  };
+}
+
+export interface DataSourceDefinition {
+  name: string;
+  schema?: string;
+  schemaName?: string;
+  type?: 'rest' | 'graphql' | 'grpc' | 'websocket' | 'sse' | string;
+  domain?: 'api_collection' | 'media' | 'realtime' | string;
+  action?: 'readMany' | 'readOne' | 'write' | 'delete' | 'subscribe' | string;
+  resource?: string;
+  slug?: string;
+  collection?: string;
+  direction?: 'inbound' | 'outbound' | 'bidirectional';
+  select?: string[];
+  fields?: string[];
+  query?: JsonObject;
+  body?: JsonObject;
+  params?: JsonObject;
+  payload?: JsonObject;
+  policy?: JsonObject;
+  seed?: JsonValue[];
+  initial?: JsonValue;
+  autoStart?: boolean;
+  smartSelect?: boolean;
+  localFirst?: boolean;
+  offlineQueue?: boolean;
+  subscribe?: boolean;
+  stream?: boolean;
+  realtime?: boolean;
+  fetchAction?: string;
+  streamAction?: string;
+  mediaAction?: string;
+  pushAction?: string;
+  pushDomain?: string;
+  emitAction?: string;
+  pushArgs?: JsonObject;
+  outbound?: JsonObject;
+  [key: string]: JsonValue | undefined;
+}
+
+export type DataSourceDocument = DataSourceDefinition;
+
+export function defineDataSource(def: DataSourceDefinition): DataSourceDocument {
+  return { ...def };
+}
+
+export interface PipelineDefinition {
+  name: string;
+  namespace?: string;
+  steps?: JsonObject[];
+  filters?: JsonObject[];
+  sort?: JsonObject;
+  search?: JsonObject;
+  projection?: string[];
+  [key: string]: JsonValue | undefined;
+}
+
+export interface TypedPipeline {
+  toJSON(): PipelineDefinition;
+}
+
+export function definePipeline(def: PipelineDefinition): TypedPipeline {
+  return { toJSON: () => ({ ...def }) };
+}
+
+/* ============================================================
+ * 10) TEMPLATE / COMPONENT / MACRO / NODE TYPE
+ * ============================================================ */
+
+export interface TypedTemplate<P extends Record<string, any>, Slots extends string = never> {
+  name: string;
+  define: SduiNode;
+  use(props: P, slots?: Partial<Record<Slots, NodeInput>>): SduiElement<P>;
+  call(overrideProps?: Partial<P>): SduiElement<P>;
+  toJSON(): JsonObject;
+}
+
+function _schemaProxyValue(schema: any, path: string): any {
+  if (!schema || typeof schema !== 'object') return `{{${path}}}`;
+  if (schema._tag === 'object' && schema._meta && _isPlainObject(schema._meta.shape)) {
+    return _schemaProxyObject(schema._meta.shape, path);
+  }
+  if (schema._tag === 'array') {
+    return [] as any;
+  }
+  if (schema._tag === 'optional' || schema._tag === 'nullable' || schema._tag === 'expr' || schema._tag === 'binding' || schema._tag === 'extend' || schema._tag === 'merge' || schema._tag === 'partial') {
+    const inner = schema._meta?.inner ?? schema._meta?.base ?? schema._meta?.a ?? schema._meta?.item;
+    if (inner) return _schemaProxyValue(inner, path);
+  }
+  return `{{${path}}}`;
+}
+
+function _schemaProxyObject(shape: Record<string, any>, prefix: string): any {
+  const out: any = {};
+  for (const k in shape) {
+    if (!_hasOwn(shape, k)) continue;
+    out[k] = _schemaProxyValue(shape[k], `${prefix}.${k}`);
+  }
+  return out;
+}
+
+export function defineTemplate<
+  P extends Record<string, QSchema<any, any>>,
+  Slots extends string = never,
+>(def: {
+  name: string;
+  props: P;
+  ui: NodeInput | ((props: { [K in keyof P]: Infer<P[K]> }, slots: Partial<Record<Slots, NodeInput>>) => NodeInput);
+  defaultProps?: Partial<{ [K in keyof P]: Infer<P[K]> }>;
+  slots?: readonly Slots[];
+  extends?: string;
+  description?: string;
+  tags?: string[];
+  metadata?: JsonObject;
+}): TypedTemplate<{ [K in keyof P]: Infer<P[K]> }, Slots> {
+  type Props = { [K in keyof P]: Infer<P[K]> };
+  const defaultProps: Partial<Props> = (def.defaultProps || {}) as any;
+  const templatePropsProxy = _schemaProxyObject(def.props as any, 'props') as Props;
+  const renderedUi = typeof def.ui === 'function'
+    ? def.ui(templatePropsProxy as any, {} as any)
+    : def.ui;
+
+  function buildElement(
+    props: Props,
+    slots?: Partial<Record<Slots, NodeInput>>,
+    variantName?: string,
+  ): SduiElement<Props> {
+    const mergedProps: JsonObject = {};
+    if (defaultProps) _copyInto(mergedProps, defaultProps as any);
+    _copyInto(mergedProps, props as any);
+
+    const init: Partial<SduiNode> = {
+      props: { ...mergedProps, __templateName: def.name } as JsonObject,
+    };
+
+    if (variantName) (init.props as JsonObject).__variant = variantName;
+
+    if (slots && Object.keys(slots).length > 0) {
+      init.slots = {};
+      for (const sk in slots) if (_hasOwn(slots as any, sk)) {
+        (init.slots as any)[sk] = slots[sk as Slots];
+      }
+    }
+
+    return new SduiElement<Props>('template', init);
+  }
+
+  const defineNode: SduiNode = {
+    type: 'component:define',
+    name: def.name,
+    props: {
+      ...(def.defaultProps || {}),
+      __templateName: def.name,
+    } as JsonObject,
+    slots: (function () {
+      if (!def.slots || def.slots.length === 0) return undefined;
+      const slotObj: JsonObject = {};
+      for (let i = 0; i < def.slots.length; i++) slotObj[String(def.slots[i])] = null as any;
+      return slotObj as any;
+    })(),
+    children: [_normalizeAny(renderedUi)],
+  };
+
+  return {
+    name: def.name,
+    use(props: Props, slots?: Partial<Record<Slots, NodeInput>>) {
+      return buildElement(props, slots);
+    },
+    call(overrideProps?: Partial<Props>) {
+      const el = new SduiElement<Props>('template', {
+        props: { ...(overrideProps || {}), __templateName: def.name } as JsonObject,
+      });
+      el.set('$call', def.name);
+      return el;
+    },
+    define: defineNode,
+    toJSON(): JsonObject {
+      return {
+        name: def.name,
+        props: Object.keys(def.props).reduce((acc, k) => {
+          (acc as any)[k] = (def.props as any)[k]?._tag ?? 'unknown';
+          return acc;
+        }, {} as JsonObject),
+        slots: (def.slots || []) as unknown as JsonValue,
+        ui: _normalizeAny(renderedUi) as unknown as JsonValue,
+        extends: def.extends as JsonValue,
+        description: def.description as JsonValue,
+        tags: (def.tags || []) as JsonValue,
+        metadata: (def.metadata || {}) as JsonValue,
+      };
+    },
+  };
+}
+
+export interface TypedComponent<P extends Record<string, any>> {
+  name: string;
+  use(props: P, slots?: Record<string, NodeInput>): SduiElement<P>;
+  define: SduiNode;
+  toJSON(): JsonObject;
+}
+
+export function defineComponent<P extends Record<string, QSchema<any, any>>>(
+  name: string,
+  factory: (props: { [K in keyof P]: Infer<P[K]> }, slots: Record<string, NodeInput>) => NodeInput,
+): TypedComponent<{ [K in keyof P]: Infer<P[K]> }> {
+  type Props = { [K in keyof P]: Infer<P[K]> };
+
+  return {
+    name,
+    use(props: Props, slots: Record<string, NodeInput> = {}): SduiElement<Props> {
+      const result = factory(props, slots);
+      const el = new SduiElement<Props>('component:render');
+      el.set('__componentName', name as JsonValue);
+      el.props({ __componentName: name, ...props } as any);
+      if (slots && Object.keys(slots).length > 0) el.slots(slots);
+      el.child(result);
+      return el;
+    },
+    define: {
+      type: 'component:define',
+      name,
+      props: {} as JsonObject,
+    } as SduiNode,
+    toJSON(): JsonObject {
+      return { name } as JsonObject;
+    },
+  };
+}
+
+export interface MacroDefinition {
+  name: string;
+  body: NodeInput;
+  define: SduiNode;
+}
+
+export function defineMacro(name: string, body: NodeInput): MacroDefinition {
+  return {
+    name,
+    body,
+    define: {
+      type: 'template',
+      name,
+      $define: { [name]: _normalizeAny(body) as unknown as JsonValue },
+    } as SduiNode,
+  };
+}
+
+export function defineNodeType<P extends Record<string, QSchema<any, any>>>(def: {
+  type: string;
+  props: P;
+  slots?: readonly string[];
+  children?: boolean;
+}): {
+  type: string;
+  create(
+    props: { [K in keyof P]: Infer<P[K]> },
+    slots?: Record<string, NodeInput>,
+    init?: Omit<Partial<SduiNode>, 'type' | 'props' | 'slots'>
+  ): SduiElement<{ [K in keyof P]: Infer<P[K]> }>;
+} {
+  type Props = { [K in keyof P]: Infer<P[K]> };
+  return {
+    type: def.type,
+    create(props: Props, slots?: Record<string, NodeInput>, init?: Omit<Partial<SduiNode>, 'type' | 'props' | 'slots'>): SduiElement<Props> {
+      return new SduiElement<Props>(def.type, {
+        ...init,
+        props: props as unknown as JsonObject,
+        slots: slots as any,
+      });
+    },
+  };
+}
+
+export interface ExtendedSduiFactory<NewRoots extends Record<string, readonly string[]>> {
+  node(type: string, init?: Partial<SduiNode>): SduiElement<BaseProps>;
+  core<R extends CatalogRoot | keyof NewRoots>(
+    root: R,
+    subtype: R extends keyof NewRoots ? NewRoots[R][number] : R extends CatalogRoot ? CatalogSubtype<R> : string,
+    init?: Partial<SduiNode>,
+  ): SduiElement<BaseProps>;
+}
+
+export interface ExtendedEngine<NewRoots extends Record<string, readonly string[]>> {
+  roots: NewRoots;
+  sdui: ExtendedSduiFactory<NewRoots>;
+  factories: { [R in keyof NewRoots]: (subtype: NewRoots[R][number], init?: Partial<SduiNode>) => SduiElement<BaseProps> };
+}
+
+export function extendCatalog<NewRoots extends Record<string, readonly string[]>>(extensions: NewRoots): ExtendedEngine<NewRoots> {
+  const factories: any = {};
+
+  for (const root in extensions) {
+    if (!_hasOwn(extensions, root)) continue;
+    factories[root] = (subtype: string, init?: Partial<SduiNode>) => new SduiElement<BaseProps>(`${root}:${subtype}`, init);
+  }
+
+  const extSdui: ExtendedSduiFactory<NewRoots> = {
+    node(type: string, init?: Partial<SduiNode>) {
+      return new SduiElement<BaseProps>(type, init);
+    },
+    core(root: any, subtype: any, init?: Partial<SduiNode>) {
+      const type = root === 'box' ? `box:${subtype}` : root;
+      const propsBase = root === 'box' ? {} : { props: _copyObject(init && init.props, { __subType: subtype }) };
+      return new SduiElement<BaseProps>(type, _buildInit(init, propsBase));
+    },
+  };
+
+  return { roots: extensions, sdui: extSdui, factories: factories as any };
+}
+
+/* ============================================================
+ * 11) CORE CONFIG / REGISTRY GRAPH
+ * ============================================================ */
+
+export type RegistryMap = Record<string, unknown>;
+
+export interface QuantumConfigInput<
+  Contracts extends Record<string, QSchema<any, any>>,
+  Theme extends ThemeInput,
+  Stores extends Record<string, TypedStoreDescriptor<any>>,
+  Slices extends Record<string, TypedSlice<any>>,
+  DataSources extends Record<string, DataSourceDocument>,
+  Templates extends Record<string, TypedTemplate<any, any>>,
+  Components extends Record<string, TypedComponent<any>>,
+  Macros extends Record<string, MacroDefinition>,
+  Pipelines extends Record<string, TypedPipeline>,
+  Extensions extends Record<string, readonly string[]>,
+  App extends Record<string, any>,
+> {
+  contracts?: Contracts;
+  theme?: TypedTheme<Theme>;
+  stores?: Stores;
+  slices?: Slices;
+  dataSources?: DataSources;
+  templates?: Templates;
+  components?: Components;
+  macros?: Macros;
+  pipelines?: Pipelines;
+  extensions?: ExtendedEngine<Extensions>;
+  app?: App;
+}
+
+export type TypedConfig<
+  Contracts extends Record<string, QSchema<any, any>>,
+  Theme extends ThemeInput,
+  Stores extends Record<string, TypedStoreDescriptor<any>>,
+  Slices extends Record<string, TypedSlice<any>>,
+  DataSources extends Record<string, DataSourceDocument>,
+  Templates extends Record<string, TypedTemplate<any, any>>,
+  Components extends Record<string, TypedComponent<any>>,
+  Macros extends Record<string, MacroDefinition>,
+  Pipelines extends Record<string, TypedPipeline>,
+  Extensions extends Record<string, readonly string[]>,
+  App extends Record<string, any>,
+> = QuantumConfigInput<Contracts, Theme, Stores, Slices, DataSources, Templates, Components, Macros, Pipelines, Extensions, App> & {
+  exportSlices(): SliceDocument[];
+  exportDataSources(): DataSourceDocument[];
+  exportTemplates(): JsonObject[];
+  exportTheme(namespace?: string): SliceDocument | null;
+  exportContracts(): JsonObject;
+  exportAll(): JsonObject;
+};
+
+export function defineConfig<
+  Contracts extends Record<string, QSchema<any, any>> = {},
+  Theme extends ThemeInput = {},
+  Stores extends Record<string, TypedStoreDescriptor<any>> = {},
+  Slices extends Record<string, TypedSlice<any>> = {},
+  DataSources extends Record<string, DataSourceDocument> = {},
+  Templates extends Record<string, TypedTemplate<any, any>> = {},
+  Components extends Record<string, TypedComponent<any>> = {},
+  Macros extends Record<string, MacroDefinition> = {},
+  Pipelines extends Record<string, TypedPipeline> = {},
+  Extensions extends Record<string, readonly string[]> = {},
+  App extends Record<string, any> = {}
+>(
+  input: QuantumConfigInput<Contracts, Theme, Stores, Slices, DataSources, Templates, Components, Macros, Pipelines, Extensions, App>,
+): TypedConfig<Contracts, Theme, Stores, Slices, DataSources, Templates, Components, Macros, Pipelines, Extensions, App> {
+  const config = {
+    ...input,
+    exportSlices(): SliceDocument[] {
+      const out: SliceDocument[] = [];
+      if (input.slices) for (const k in input.slices) if (_hasOwn(input.slices, k)) out.push(input.slices[k].toJSON());
+      if (input.stores) for (const k in input.stores) if (_hasOwn(input.stores, k)) out.push(input.stores[k].toSlice());
+      return out;
+    },
+
+    exportDataSources(): DataSourceDocument[] {
+      const out: DataSourceDocument[] = [];
+      if (input.dataSources) for (const k in input.dataSources) if (_hasOwn(input.dataSources, k)) out.push(input.dataSources[k]);
+      return out;
+    },
+
+    exportTemplates(): JsonObject[] {
+      const out: JsonObject[] = [];
+      if (input.templates) for (const k in input.templates) if (_hasOwn(input.templates, k)) out.push(input.templates[k].toJSON());
+      return out;
+    },
+
+    exportTheme(namespace = 'app.theme'): SliceDocument | null {
+      return input.theme ? input.theme.toSlice(namespace) : null;
+    },
+
+    exportContracts(): JsonObject {
+      const out: JsonObject = {};
+      if (input.contracts) {
+        for (const k in input.contracts) if (_hasOwn(input.contracts, k)) {
+          const schema = input.contracts[k] as QSchema<any, any>;
+          out[k] = { tag: schema._tag, meta: schema._meta ?? {} } as unknown as JsonValue;
+        }
+      }
+      return out;
+    },
+
+    exportAll(): JsonObject {
+      const out: JsonObject = {};
+      if (input.app) out['app'] = input.app as JsonValue;
+      const themeSlice = input.theme ? input.theme.toSlice() : null;
+      if (themeSlice) out['theme'] = themeSlice as unknown as JsonValue;
+      out['contracts'] = (this as any).exportContracts();
+      out['slices'] = (this as any).exportSlices();
+      out['dataSources'] = (this as any).exportDataSources();
+      out['templates'] = (this as any).exportTemplates();
+      if (input.components) {
+        const components: JsonObject = {};
+        for (const k in input.components) if (_hasOwn(input.components, k)) components[k] = input.components[k].toJSON() as JsonValue;
+        out['components'] = components;
+      }
+      if (input.macros) {
+        const macros: JsonObject = {};
+        for (const k in input.macros) if (_hasOwn(input.macros, k)) macros[k] = input.macros[k].define as unknown as JsonValue;
+        out['macros'] = macros;
+      }
+      if (input.pipelines) {
+        const pipelines: JsonObject = {};
+        for (const k in input.pipelines) if (_hasOwn(input.pipelines, k)) pipelines[k] = input.pipelines[k].toJSON() as unknown as JsonValue;
+        out['pipelines'] = pipelines;
+      }
+      if (input.extensions) {
+        out['extensions'] = { roots: input.extensions.roots as unknown as JsonValue };
+      }
+      return out;
+    },
+  } as TypedConfig<Contracts, Theme, Stores, Slices, DataSources, Templates, Components, Macros, Pipelines, Extensions, App>;
+
+  return config;
+}
+
+/**
+ * defineKernel()
+ * Optional central graph helper for zero-cycle app composition.
+ * This is the place where shared contracts, stores, nodes, components, and macros converge.
+ */
+export function defineKernel<
+  Contracts extends Record<string, QSchema<any, any>> = {},
+  Theme extends ThemeInput = {},
+  Stores extends Record<string, TypedStoreDescriptor<any>> = {},
+  Slices extends Record<string, TypedSlice<any>> = {},
+  DataSources extends Record<string, DataSourceDocument> = {},
+  Templates extends Record<string, TypedTemplate<any, any>> = {},
+  Components extends Record<string, TypedComponent<any>> = {},
+  Macros extends Record<string, MacroDefinition> = {},
+  Pipelines extends Record<string, TypedPipeline> = {},
+  Extensions extends Record<string, readonly string[]> = {},
+  App extends Record<string, any> = {},
+>(input: {
+  contracts?: Contracts;
+  theme?: TypedTheme<Theme>;
+  stores?: Stores;
+  slices?: Slices;
+  dataSources?: DataSources;
+  templates?: Templates;
+  components?: Components;
+  macros?: Macros;
+  pipelines?: Pipelines;
+  extensions?: ExtendedEngine<Extensions>;
+  app?: App;
+}) {
+  return {
+    ...input,
+    contractTypes: input.contracts || ({} as Contracts),
+    defineConfig: () => defineConfig({
+      contracts: input.contracts,
+      theme: input.theme as any,
+      stores: input.stores as any,
+      slices: input.slices as any,
+      dataSources: input.dataSources as any,
+      templates: input.templates as any,
+      components: input.components as any,
+      macros: input.macros as any,
+      pipelines: input.pipelines as any,
+      extensions: input.extensions as any,
+      app: input.app as any,
+    }),
+  };
+}
+
+/**
+ * defineContracts()
+ * Tiny central place for shared schema contracts.
+ */
+export function defineContracts<C extends Record<string, QSchema<any, any>>>(contracts: C): C {
+  return contracts;
+}
+
+/* ============================================================
+ * 12) PUBLIC FACTORY API
+ * ============================================================ */
+
+export const sdui = {
+  node<P extends Record<string, any> = BaseProps>(type: QuantumNodeType, init?: Partial<SduiNode>): SduiElement<P> {
+    return new SduiElement<P>(type, init);
+  },
+
+  type<P extends Record<string, any> = BaseProps>(type: QuantumNodeType, init?: Partial<SduiNode>): SduiElement<P> {
+    return new SduiElement<P>(type, init);
+  },
+
+  core<R extends CatalogRoot>(
+    root: R,
+    subtype: CatalogSubtype<R> | string,
+    init?: Partial<SduiNode>,
+  ): SduiElement<PropsFor<R>> {
+    const type = root === 'box' ? `box:${String(subtype)}` : root;
+    const extra = root === 'box' ? {} : { props: _copyObject(init && init.props, { __subType: subtype }) };
+    return new SduiElement<PropsFor<R>>(type, _buildInit(init, extra));
+  },
+
+  subtype<R extends CatalogRoot>(
+    root: R,
+    subtype: CatalogSubtype<R> | string,
+    init?: Partial<SduiNode>,
+  ): SduiElement<PropsFor<R>> {
+    return sdui.core(root, subtype, init);
+  },
+
+  page(children: NodeInput[], init?: Partial<SduiNode>): SduiElement<BoxProps> {
+    return new SduiElement<BoxProps>('page', _buildInit(init, { children: children.slice() }));
+  },
+
+  box(children: NodeInput[], init?: Partial<SduiNode>): SduiElement<BoxProps> {
+    return new SduiElement<BoxProps>('box', _buildInit(init, { children: children.slice() }));
+  },
+
+  text(value: Expr<string>, init?: Partial<SduiNode>): SduiElement<TextProps> {
+    return new SduiElement<TextProps>('text', _buildInit(init, { props: { text: value } as JsonObject }));
+  },
+
+  title(value: Expr<string>, init?: Partial<SduiNode>): SduiElement<TextProps> {
+    return new SduiElement<TextProps>('text', _buildInit(init, { props: { text: value, variant: 'heading' } as JsonObject }));
+  },
+
+  button(props: Partial<ActionProps> & { text?: Expr<string> }, init?: Partial<SduiNode>): SduiElement<ActionProps> {
+    return new SduiElement<ActionProps>('action', _buildInit(init, { props: props as unknown as JsonObject }));
+  },
+
+  input(props: Partial<FieldProps>, init?: Partial<SduiNode>): SduiElement<FieldProps> {
+    return new SduiElement<FieldProps>('field', _buildInit(init, { props: props as unknown as JsonObject }));
+  },
+
+  media(props: Partial<MediaProps>, init?: Partial<SduiNode>): SduiElement<MediaProps> {
+    return new SduiElement<MediaProps>('media', _buildInit(init, { props: props as unknown as JsonObject }));
+  },
+
+  data(props: Partial<DataProps>, init?: Partial<SduiNode>): SduiElement<DataProps> {
+    return new SduiElement<DataProps>('data', _buildInit(init, { props: props as unknown as JsonObject }));
+  },
+
+  portal(props: Partial<PortalProps>, init?: Partial<SduiNode>): SduiElement<PortalProps> {
+    return new SduiElement<PortalProps>('portal', _buildInit(init, { props: props as unknown as JsonObject }));
+  },
+
+  canvas(props: Partial<CanvasProps>, init?: Partial<SduiNode>): SduiElement<CanvasProps> {
+    return new SduiElement<CanvasProps>('canvas', _buildInit(init, { props: props as unknown as JsonObject }));
+  },
+
+  chart(props: Partial<ChartProps>, init?: Partial<SduiNode>): SduiElement<ChartProps> {
+    return new SduiElement<ChartProps>('chart', _buildInit(init, { props: props as unknown as JsonObject }));
+  },
+
+  decoration(props: Partial<DecorationProps>, init?: Partial<SduiNode>): SduiElement<DecorationProps> {
+    return new SduiElement<DecorationProps>('decoration', _buildInit(init, { props: props as unknown as JsonObject }));
+  },
+
+  stream(props: Partial<StreamNodeProps>, init?: Partial<SduiNode>): SduiElement<StreamNodeProps> {
+    return new SduiElement<StreamNodeProps>('stream', _buildInit(init, { props: props as unknown as JsonObject }));
+  },
+
+  collab(props: Partial<CollabProps>, init?: Partial<SduiNode>): SduiElement<CollabProps> {
+    return new SduiElement<CollabProps>('collab', _buildInit(init, { props: props as unknown as JsonObject }));
+  },
+
+  component(props: Partial<ComponentProps>, init?: Partial<SduiNode>): SduiElement<ComponentProps> {
+    return new SduiElement<ComponentProps>('component', _buildInit(init, { props: props as unknown as JsonObject }));
+  },
+
+  visual(props: Partial<VisualProps>, init?: Partial<SduiNode>): SduiElement<VisualProps> {
+    return new SduiElement<VisualProps>('visual', _buildInit(init, { props: props as unknown as JsonObject }));
+  },
+
+  store(namespace: string, state: Record<string, any>) {
+    return defineStore(namespace, () => ({ ...state }));
+  },
+
+  slice<S extends Record<string, any>>(def: SliceDefinition<S>) {
+    return defineSlice(def);
+  },
+
+  theme<T extends ThemeInput>(theme: T) {
+    return createTheme(theme);
+  },
+
+  dataSource(def: DataSourceDefinition) {
+    return defineDataSource(def);
+  },
+
+  pipeline(def: PipelineDefinition) {
+    return definePipeline(def);
+  },
+
+  template(def: any) {
+    return defineTemplate(def);
+  },
+
+  componentDef(name: string, factory: any) {
+    return defineComponent(name, factory);
+  },
+
+  nodeType(def: any) {
+    return defineNodeType(def);
+  },
+} as const;
+
+/* ============================================================
+ * 13) EXTRA HELPERS / EXPORTS
+ * ============================================================ */
+
+export function toNativeObject(node: NodeInput, options?: EmitOptions): SduiNode {
+  const n = _normalizeAny(node);
+  if (options?.canonicalizeSlots) _canonicalizeSlots(n);
+  return _emitNode(
+    n,
+    options || {},
+    options && options.includeDebugPath === false ? undefined : 'root',
+  );
+}
+
+export function toNativeJson(node: NodeInput, options?: EmitOptions): string {
+  return JSON.stringify(
+    toNativeObject(node, options),
+    null,
+    options && options.pretty ? (options.indent || 2) : 0,
+  );
+}
+
+export function validateNode(node: NodeInput): ValidationResult {
+  const issues: ValidationIssue[] = [];
+  _validateAny(node, 'root', issues);
+  return { ok: issues.length === 0, issues };
+}
+
+export function knownVmOperators(): string[] {
+  return KNOWN_VM_OPERATORS.slice();
+}
 
 export const KNOWN_VM_OPERATORS = [
-  "$define",
-  "$let",
-  "$call",
-  "$classes",
-  "$scope",
-  "$switch",
-  "$if",
-  "$repeat",
-  "$apply",
-  "$layout",
-  "$try",
-  "$catch",
-  "$finally",
-  "$async",
-  "$loading",
-  "$data",
-  "$error",
-  "$portal",
-  "$reactive_map",
-  "$compose",
-  "$watch",
-  "$parallel",
-  "$throttle",
-  "$debounce",
-  "$machine",
-  "$stream",
-  "$spread",
-  "$view",
-  "$slot",
-  "$slots",
-  "$state",
-  "$env",
-  "$route",
-  "$local",
+  '$define',
+  '$let',
+  '$call',
+  '$classes',
+  '$scope',
+  '$switch',
+  '$if',
+  '$repeat',
+  '$apply',
+  '$layout',
+  '$try',
+  '$catch',
+  '$finally',
+  '$async',
+  '$loading',
+  '$data',
+  '$error',
+  '$portal',
+  '$reactive_map',
+  '$compose',
+  '$watch',
+  '$parallel',
+  '$throttle',
+  '$debounce',
+  '$machine',
+  '$stream',
+  '$spread',
+  '$view',
+  '$slot',
+  '$slots',
+  '$state',
+  '$env',
+  '$route',
+  '$local',
 ] as const;
 
 export type QuantumVmOperator = typeof KNOWN_VM_OPERATORS[number];
 
 
-/* -------------------------------------------------------------------------------------------------
- * Example builder
- * ------------------------------------------------------------------------------------------------- */
+/* ============================================================
+ * 14) PAGE / ROUTE / LAYOUT DSL
+ * ============================================================ */
 
-export function buildExampleApp(): SduiNode {
-  return sdui.page([
-    sdui.col([
-      sdui.row([
-        sdui.col([
-          sdui.text("Quantum SDUI", { style: "text-2xl font-bold" }),
-          sdui.text("Preserve authoring operators for Dart resolution", { style: "text-slate-500" })
-        ]),
-        sdui.button("Deploy", { props: { intent: "indigo", fill: "solid", shape: "pill" } })
-      ], { style: "items-center justify-between gap-16 p-24 rounded-3xl bg-slate-950" }),
+export type QuantumPageRefKind = 'page' | 'route' | 'layout' | 'fragment';
 
-      sdui.layout(
-        ["hero hero stats", "feed feed stats"],
-        {
-          hero: sdui.card([
-            sdui.text("Hero", { style: "font-semibold" }),
-            sdui.if("${state.showHero}", sdui.text("This block is still unresolved here.", { style: "text-slate-600" }))
-          ], { style: "p-24 rounded-3xl bg-white shadow" }),
-
-          stats: sdui.card([
-            sdui.text("Stats"),
-            sdui.text("96%", { style: "text-4xl" })
-          ], { style: "p-24 rounded-3xl bg-white shadow" }),
-
-          feed: sdui.card([
-            sdui.text("Feed", { style: "font-semibold" }),
-            sdui.repeat("${state.items}",
-              sdui.row([
-                sdui.text("${item.title}"),
-                sdui.text("${item.status}", { style: "text-slate-500" })
-              ]),
-              "item",
-              "index"
-            )
-          ], { style: "p-24 rounded-3xl bg-white shadow" })
-        },
-        { style: "gap-16" }
-      ),
-
-      sdui.tryCatch({
-        try: sdui.async({
-          action: "load.dashboard",
-          params: { range: "${route.range}" },
-          loading: { type: "text", props: { text: "Loading..." } },
-          data: { type: "text", props: { text: "Loaded" } },
-          error: { type: "text", props: { text: "Failed" } }
-        }),
-        catch: sdui.text("Error boundary")
-      })
-    ], { style: "gap-16 p-24 bg-slate-100" })
-  ]).toNativeObject({ includeDebugPath: true });
+export interface QuantumPageRef<TKind extends QuantumPageRefKind = QuantumPageRefKind> {
+  kind: TKind;
+  name: string;
+  asset?: string;
+  version?: string;
+  hash?: string;
 }
+
+export interface QuantumPageSeo {
+  title?: Expr<string>;
+  description?: Expr<string>;
+  keywords?: Expr<string[]>;
+  canonical?: Expr<string>;
+  robots?: Expr<string>;
+  ogImage?: Expr<string>;
+  author?: Expr<string>;
+  tags?: Expr<string[]>;
+  customMeta?: Record<string, any>;
+}
+
+export interface QuantumPageGuard {
+  name?: string;
+  type?: 'auth' | 'role' | 'feature' | 'condition' | 'redirect' | 'custom' | string;
+  when?: Expr<boolean> | StatePath | string;
+  role?: string | string[];
+  feature?: string;
+  condition?: Expr<boolean> | string;
+  redirectTo?: Expr<string>;
+  allow?: boolean;
+  data?: Record<string, any>;
+  meta?: Record<string, any>;
+  otherwise?: Record<string, any>;
+}
+
+export interface QuantumPagePrefetch {
+  route?: Expr<string>;
+  routes?: Array<Expr<string>>;
+  assets?: string[];
+  data?: string[];
+  layout?: boolean;
+  fragments?: string[];
+  priority?: 'low' | 'normal' | 'high';
+  viewport?: 'visible' | 'idle' | 'immediate' | 'hover';
+}
+
+export interface QuantumPageLayoutSlot {
+  slot?: string;
+  fill?: any;
+  loading?: any;
+  error?: any;
+  empty?: any;
+  scrollable?: boolean;
+  sticky?: boolean;
+  hidden?: boolean;
+  className?: string;
+  style?: any;
+  props?: Record<string, any>;
+}
+
+export interface QuantumPageLayout {
+  kind?: 'layout';
+  type?: 'layout';
+  name?: string;
+  id?: string;
+  mode?: 'stack' | 'grid' | 'matrix' | 'shell' | 'custom';
+  template?: any;
+  slots?: Record<string, QuantumPageLayoutSlot | any>;
+  regions?: Record<string, QuantumPageLayoutSlot | any>;
+  viewport?: 'phone' | 'tablet' | 'desktop' | 'responsive' | string;
+  breakpoints?: Record<string, any>;
+  stickyHeader?: boolean;
+  stickyFooter?: boolean;
+  scaffold?: boolean;
+  safeArea?: boolean | 'all' | 'top' | 'bottom' | 'left' | 'right';
+  props?: Record<string, any>;
+  meta?: Record<string, any>;
+  ref?: QuantumPageRef<'layout'>;
+  version?: string;
+  cacheKey?: string;
+}
+
+export interface QuantumPageFragment {
+  kind?: 'fragment';
+  type?: 'fragment';
+  name?: string;
+  id?: string;
+  template?: any;
+  data?: Record<string, any>;
+  props?: Record<string, any>;
+  slots?: Record<string, any>;
+  lazy?: boolean;
+  hydrate?: 'immediate' | 'visible' | 'idle' | 'interaction';
+  cacheKey?: string;
+  version?: string;
+  tags?: string[];
+  meta?: Record<string, any>;
+  ref?: QuantumPageRef<'fragment'>;
+}
+
+export interface QuantumPageManifest {
+  kind?: 'page';
+  type?: 'route';
+  name?: string;
+  id?: string;
+  path?: string;
+  slug?: string;
+  nested?: boolean;
+  group?: string;
+  segment?: string;
+  params?: Record<string, any>;
+  query?: Record<string, any>;
+  layout?: QuantumPageLayout | QuantumPageRef<'layout'> | string;
+  page?: QuantumPageFragment | QuantumPageRef<'fragment'> | SduiNode | SduiElement<any> | any;
+  children?: QuantumPageManifest[] | QuantumPageTree;
+  slots?: Record<string, SduiNode | SduiElement<any> | any>;
+  seo?: QuantumPageSeo;
+  guards?: QuantumPageGuard[];
+  prefetch?: QuantumPagePrefetch;
+  loading?: SduiNode | SduiElement<any> | any;
+  error?: SduiNode | SduiElement<any> | any;
+  empty?: SduiNode | SduiElement<any> | any;
+  state?: Record<string, any>;
+  data?: Record<string, any>;
+  meta?: Record<string, any>;
+  layoutProps?: Record<string, any>;
+  transitions?: Record<string, any>;
+  cacheKey?: string;
+  version?: string;
+  routeId?: string;
+  ref?: QuantumPageRef<'page'>;
+}
+
+export interface QuantumPageTree {
+  routes: QuantumPageManifest[];
+}
+
+export interface QuantumPageBundle {
+  pages?: QuantumPageTree | QuantumPageManifest[];
+  layouts?: Record<string, QuantumPageLayout | QuantumPageRef<'layout'>>;
+  fragments?: Record<string, QuantumPageFragment | QuantumPageRef<'fragment'>>;
+  seo?: Record<string, QuantumPageSeo>;
+  guards?: Record<string, QuantumPageGuard>;
+  prefetch?: Record<string, QuantumPagePrefetch>;
+  meta?: Record<string, any>;
+}
+
+function _pageClone<T>(value: T): T {
+  if (value === undefined || value === null) return value;
+  if (typeof value !== 'object') return value;
+  if (value instanceof SduiElement) {
+    return toNativeObject(value) as any;
+  }
+  if (Array.isArray(value)) {
+    const arr: any[] = [];
+    for (let i = 0; i < value.length; i++) arr.push(_pageClone(value[i]));
+    return arr as any;
+  }
+  const out: Record<string, any> = {};
+  for (const key in value as any) {
+    if (Object.prototype.hasOwnProperty.call(value, key)) {
+      out[key] = _pageClone((value as any)[key]);
+    }
+  }
+  return out as any;
+}
+
+function _pageNormalizeNode(value: any): any {
+  if (value instanceof SduiElement) return toNativeObject(value);
+  if (Array.isArray(value)) {
+    const arr: any[] = [];
+    for (let i = 0; i < value.length; i++) arr.push(_pageNormalizeNode(value[i]));
+    return arr;
+  }
+  if (value && typeof value === 'object') return _pageClone(value);
+  if (
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean' ||
+    value === null
+  ) {
+    return value;
+  }
+  return String(value);
+}
+
+function _pageNormalizePath(path?: string): string | undefined {
+  const text = path ? path.trim() : '';
+  if (!text) return undefined;
+  return text.charAt(0) === '/' ? text : '/' + text;
+}
+
+function _pageNormalizeRef<TKind extends QuantumPageRefKind>(
+  ref: QuantumPageRef<TKind> | string | undefined,
+  kind: TKind,
+): QuantumPageRef<TKind> | undefined {
+  if (!ref) return undefined;
+  if (typeof ref === 'string') return { kind, name: ref } as QuantumPageRef<TKind>;
+  return ref;
+}
+
+function _pageNormalizeLayout(layout: QuantumPageManifest['layout']): any {
+  if (!layout) return undefined;
+  if (typeof layout === 'string') {
+    return { kind: 'layout', type: 'layout', name: layout };
+  }
+  if (
+    typeof layout === 'object' &&
+    layout !== null &&
+    (layout as any).kind === 'layout'
+  ) {
+    return _pageClone(layout);
+  }
+  return _pageClone(layout);
+}
+
+function _pageNormalizeFragment(fragment: QuantumPageManifest['page']): any {
+  if (!fragment) return undefined;
+  if (typeof fragment === 'string') {
+    return { kind: 'fragment', type: 'fragment', name: fragment };
+  }
+  if (
+    typeof fragment === 'object' &&
+    fragment !== null &&
+    (fragment as any).kind === 'fragment'
+  ) {
+    return _pageClone(fragment);
+  }
+  return _pageNormalizeNode(fragment);
+}
+
+function _pageNormalizeChildren(children: QuantumPageManifest['children']): any {
+  if (!children) return undefined;
+  if (Array.isArray(children)) {
+    const arr: any[] = [];
+    for (let i = 0; i < children.length; i++) {
+      arr.push(normalizePageManifest(children[i]));
+    }
+    return arr;
+  }
+  const routes = (children.routes || []);
+  const out: any[] = [];
+  for (let i = 0; i < routes.length; i++) {
+    out.push(normalizePageManifest(routes[i]));
+  }
+  return { routes: out };
+}
+
+function _pageFromObjectMap(input: Record<string, any> | undefined): Record<string, any> | undefined {
+  if (!input) return undefined;
+  const out: Record<string, any> = {};
+  for (const key in input) {
+    if (Object.prototype.hasOwnProperty.call(input, key)) {
+      out[key] = _pageClone(input[key]);
+    }
+  }
+  return out;
+}
+
+function _pageFromAnyMap(input: Record<string, any> | undefined): Record<string, any> | undefined {
+  return _pageFromObjectMap(input);
+}
+
+export function normalizePageManifest(input: QuantumPageManifest): Record<string, any> {
+  const name = ((input.name ?? input.id ?? '') as any).toString().trim();
+  const routeId = ((input.routeId ?? input.id ?? input.name ?? name) as any).toString().trim();
+
+  const slots: Record<string, any> | undefined = input.slots
+    ? (() => {
+        const out: Record<string, any> = {};
+        for (const key in input.slots) {
+          if (Object.prototype.hasOwnProperty.call(input.slots, key)) {
+            out[key] = _pageNormalizeNode((input.slots as any)[key]);
+          }
+        }
+        return out;
+      })()
+    : undefined;
+
+  return {
+    kind: 'page',
+    type: 'route',
+    name: name || undefined,
+    id: ((input.id ?? input.name) as any)?.toString().trim() || undefined,
+    path: _pageNormalizePath(input.path),
+    slug: input.slug ? input.slug.toString().trim() : undefined,
+    nested: !!input.nested,
+    group: input.group ? input.group.toString().trim() : undefined,
+    segment: input.segment ? input.segment.toString().trim() : undefined,
+    params: _pageFromObjectMap(input.params),
+    query: _pageFromObjectMap(input.query),
+    layout: _pageNormalizeLayout(input.layout),
+    page: _pageNormalizeFragment(input.page),
+    children: _pageNormalizeChildren(input.children),
+    slots: slots,
+    seo: input.seo ? _pageClone(input.seo) : undefined,
+    guards: input.guards ? _pageClone(input.guards) : undefined,
+    prefetch: input.prefetch ? _pageClone(input.prefetch) : undefined,
+    loading: input.loading ? _pageNormalizeNode(input.loading) : undefined,
+    error: input.error ? _pageNormalizeNode(input.error) : undefined,
+    empty: input.empty ? _pageNormalizeNode(input.empty) : undefined,
+    state: _pageFromAnyMap(input.state),
+    data: _pageFromAnyMap(input.data),
+    meta: _pageFromAnyMap(input.meta),
+    layoutProps: _pageFromAnyMap(input.layoutProps),
+    transitions: _pageFromAnyMap(input.transitions),
+    cacheKey: input.cacheKey ? input.cacheKey.toString().trim() : undefined,
+    version: input.version ? input.version.toString().trim() : undefined,
+    routeId: routeId || undefined,
+    ref: _pageNormalizeRef(input.ref, 'page'),
+  };
+}
+
+export function normalizePageTree(tree: QuantumPageTree | QuantumPageManifest[]): QuantumPageTree {
+  const routes = Array.isArray(tree) ? tree : tree.routes;
+  const out: QuantumPageManifest[] = [];
+  for (let i = 0; i < routes.length; i++) {
+    out.push(normalizePageManifest(routes[i]) as any);
+  }
+  return { routes: out };
+}
+
+export function normalizePageBundle(bundle: QuantumPageBundle): QuantumPageBundle {
+  const out: QuantumPageBundle = {};
+
+  if (bundle.pages) {
+    out.pages = Array.isArray(bundle.pages)
+      ? normalizePageTree(bundle.pages)
+      : normalizePageTree(bundle.pages.routes);
+  }
+
+  if (bundle.layouts) {
+    const layouts: Record<string, any> = {};
+    for (const key in bundle.layouts) {
+      if (Object.prototype.hasOwnProperty.call(bundle.layouts, key)) {
+        layouts[key] = _pageClone((bundle.layouts as any)[key]);
+      }
+    }
+    out.layouts = layouts;
+  }
+
+  if (bundle.fragments) {
+    const fragments: Record<string, any> = {};
+    for (const key in bundle.fragments) {
+      if (Object.prototype.hasOwnProperty.call(bundle.fragments, key)) {
+        fragments[key] = _pageClone((bundle.fragments as any)[key]);
+      }
+    }
+    out.fragments = fragments;
+  }
+
+  if (bundle.seo) out.seo = _pageClone(bundle.seo);
+  if (bundle.guards) out.guards = _pageClone(bundle.guards);
+  if (bundle.prefetch) out.prefetch = _pageClone(bundle.prefetch);
+  if (bundle.meta) out.meta = _pageClone(bundle.meta);
+
+  return out;
+}
+
+export function page(input: QuantumPageManifest): Record<string, any> {
+  return normalizePageManifest(input);
+}
+
+export function route(input: QuantumPageManifest): Record<string, any> {
+  return normalizePageManifest({
+    ...input,
+    kind: 'page',
+    type: 'route',
+  });
+}
+
+export function layout(input: QuantumPageLayout): Record<string, any> {
+  const out: Record<string, any> = _pageClone(input);
+  out.kind = 'layout';
+  out.type = 'layout';
+  out.ref = _pageNormalizeRef(input.ref, 'layout');
+  return out;
+}
+
+export function fragment(input: QuantumPageFragment): Record<string, any> {
+  const out: Record<string, any> = _pageClone(input);
+  out.kind = 'fragment';
+  out.type = 'fragment';
+  out.ref = _pageNormalizeRef(input.ref, 'fragment');
+  return out;
+}
+
+export function nested(routes: QuantumPageManifest[]): QuantumPageTree {
+  return normalizePageTree(routes);
+}
+
+export function tree(routes: QuantumPageManifest[] | QuantumPageTree): QuantumPageTree {
+  return normalizePageTree(routes);
+}
+
+export function pageRef(name: string, asset?: string): QuantumPageRef<'page'> {
+  return { kind: 'page', name, asset };
+}
+
+export function routeRef(name: string, asset?: string): QuantumPageRef<'route'> {
+  return { kind: 'route', name, asset };
+}
+
+export function layoutRef(name: string, asset?: string): QuantumPageRef<'layout'> {
+  return { kind: 'layout', name, asset };
+}
+
+export function fragmentRef(name: string, asset?: string): QuantumPageRef<'fragment'> {
+  return { kind: 'fragment', name, asset };
+}
+
+export function seo(input: QuantumPageSeo): QuantumPageSeo {
+  return _pageClone(input);
+}
+
+export function guard(input: QuantumPageGuard): QuantumPageGuard {
+  return _pageClone(input);
+}
+
+export function prefetch(input: QuantumPagePrefetch): QuantumPagePrefetch {
+  return _pageClone(input);
+}
+
+export function bundle(input: QuantumPageBundle): QuantumPageBundle {
+  return normalizePageBundle(input);
+}
+
+export function toPageJson(input: QuantumPageManifest): Record<string, any> {
+  return normalizePageManifest(input);
+}
+
+export const qpage = {
+  page,
+  route,
+  layout,
+  fragment,
+  nested,
+  tree,
+  pageRef,
+  routeRef,
+  layoutRef,
+  fragmentRef,
+  seo,
+  guard,
+  prefetch,
+  bundle,
+  toPageJson,
+} as const;
+
+/* ============================================================
+ * 15) DEFAULT EXPORTS FOR APP-SHAPED MODULES
+ * ============================================================ */
+
+export default {
+  q,
+  sdui,
+  qpage,
+  createTheme,
+  defineStore,
+  defineSlice,
+  defineDataSource,
+  definePipeline,
+  defineTemplate,
+  defineComponent,
+  defineMacro,
+  defineNodeType,
+  extendCatalog,
+  defineConfig,
+  defineKernel,
+  defineContracts,
+  toNativeObject,
+  toNativeJson,
+  validateNode,
+  knownVmOperators,
+} as const;

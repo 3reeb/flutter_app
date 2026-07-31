@@ -1,12 +1,11 @@
 ﻿import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'downloader.dart';
-import 'quantum.dart';
-
+import 'package:quantum_layout/src/runtime/quantum_sdui_test_engine_io.dart';
+import 'package:flutter/rendering.dart';
+import 'package:quantum_layout/downloader.dart';
+import 'package:quantum_layout/quantum.dart';
 void main() {
   bootQuantumApp(
     QuantumAppConfig(
@@ -74,6 +73,9 @@ class _SduiStudioWidgetState extends State<SduiStudioWidget> {
   bool _isExportingImage = false;
   bool _isExportingJson = false;
   bool _isRunningAllExamples = false;
+  String _lastErrorSignature = '';
+  String _blankRenderWarning = '';
+  Size _lastPreviewSize = Size.zero;
   int _exampleCounter = 0;
 
   static const String _initialJson = r'''{
@@ -236,8 +238,7 @@ class _SduiStudioWidgetState extends State<SduiStudioWidget> {
       // Ignore — fallback below.
     }
 
-    final firstLine = sanitized.split('''
-''').first.trim();
+    final firstLine = sanitized.split('\\n').first.trim();
     if (firstLine.isNotEmpty)
       return firstLine.length > 40 ? firstLine.substring(0, 40) : firstLine;
     return 'Untitled Example';
@@ -715,45 +716,45 @@ class _SduiStudioWidgetState extends State<SduiStudioWidget> {
       _healthStatus = 'Running folder-based SDUI tests in sdui_tests...';
     });
 
-    // try {
-    //   final report = await QuantumSduiTestEngine.instance.runFolder(
-    //     context,
-    //     folderPath: 'sdui_tests',
-    //     recursive: true,
-    //     outputJsonPath: 'build/reports/sdui-report.json',
-    //     outputImageDirectory: 'build/reports/screenshots',
-    //     timeout: const Duration(seconds: 8),
-    //   );
+    try {
+      final report = await QuantumSduiTestEngine.instance.runFolder(
+        context,
+        folderPath: 'sdui_tests',
+        recursive: true,
+        outputJsonPath: 'build/reports/sdui-report.json',
+        outputImageDirectory: 'build/reports/screenshots',
+        timeout: const Duration(seconds: 8),
+      );
 
-    //   if (!mounted) return;
-    //   setState(() {
-    //     _isRunningAllExamples = false;
-    //     _healthStatus = report.healthy
-    //         ? 'Folder tests passed: ${report.passed}/${report.total}'
-    //         : 'Folder tests failed: ${report.failed}/${report.total}';
-    //     _status = _healthStatus;
-    //     if (report.results.isNotEmpty && !report.healthy) {
-    //       final failed = report.results.firstWhere((r) => !r.ok);
-    //       _error = failed.message ?? 'ssssssssss';
-    //       _stackTrace = failed.stackTrace ?? '';
-    //     } else {
-    //       _error = '';
-    //       _stackTrace = '';
-    //     }
-    //   });
+      if (!mounted) return;
+      setState(() {
+        _isRunningAllExamples = false;
+        _healthStatus = report.healthy
+            ? 'Folder tests passed: ${report.passed}/${report.total}'
+            : 'Folder tests failed: ${report.failed}/${report.total}';
+        _status = _healthStatus;
+        if (report.results.isNotEmpty && !report.healthy) {
+          final failed = report.results.firstWhere((r) => !r.ok);
+          _error = failed.message ?? 'ssssssssss';
+          _stackTrace = failed.stackTrace ?? '';
+        } else {
+          _error = '';
+          _stackTrace = '';
+        }
+      });
 
-    //   _toast(_healthStatus, isError: !report.healthy);
-    // } catch (e, st) {
-    //   if (!mounted) return;
-    //   setState(() {
-    //     _isRunningAllExamples = false;
-    //     _healthStatus = 'Folder test engine error.';
-    //     _status = _healthStatus;
-    //     _error = e.toString();
-    //     _stackTrace = st.toString();
-    //   });
-    //   _toast('Folder tests failed to run: $e', isError: true);
-    // }
+      _toast(_healthStatus, isError: !report.healthy);
+    } catch (e, st) {
+      if (!mounted) return;
+      setState(() {
+        _isRunningAllExamples = false;
+        _healthStatus = 'Folder test engine error.';
+        _status = _healthStatus;
+        _error = e.toString();
+        _stackTrace = st.toString();
+      });
+      _toast('Folder tests failed to run: $e', isError: true);
+    }
   }
 
   Future<void> _testExample(_StudioExample example) async {
@@ -822,6 +823,7 @@ class _SduiStudioWidgetState extends State<SduiStudioWidget> {
         _compiledBlueprint = null;
         _error = '';
         _status = 'Paste JSON, then render it.';
+        _blankRenderWarning = '';
       });
       return;
     }
@@ -838,6 +840,7 @@ class _SduiStudioWidgetState extends State<SduiStudioWidget> {
         _error = '';
         _stackTrace = '';
         _status = 'Valid JSON · Ready to render and export.';
+        _blankRenderWarning = '';
       });
     } catch (e, st) {
       if (!mounted) return;
@@ -847,6 +850,7 @@ class _SduiStudioWidgetState extends State<SduiStudioWidget> {
         _error = e.toString();
         _stackTrace = st.toString();
         _status = 'JSON validation failed.';
+        _blankRenderWarning = '';
       });
     }
   }
@@ -1074,12 +1078,6 @@ class _SduiStudioWidgetState extends State<SduiStudioWidget> {
                 label: _isRunningAllExamples ? 'Testing...' : 'Run All',
                 onPressed:
                     _isRunningAllExamples ? null : () => _runAllExampleHealth(),
-                filled: false,
-              ),
-              _toolbarButton(
-                icon: Icons.folder_copy_rounded,
-                label: 'Run Folder',
-                onPressed: _isRunningAllExamples ? null : _runFolderTests,
                 filled: false,
               ),
               _toolbarButton(
@@ -1424,11 +1422,11 @@ class _SduiStudioWidgetState extends State<SduiStudioWidget> {
         onError: (state) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (!mounted) return;
-            setState(() {
-              _error = state.error.toString();
-              _stackTrace = state.stackTrace?.toString() ?? '';
-              _status = 'Preview error captured.';
-            });
+            _captureRenderError(
+              state.error,
+              stackTrace: state.stackTrace,
+              source: 'Preview',
+            );
           });
         },
         fallback: (context, error, retry) => _runtimeErrorSurface(error, retry),
@@ -1437,17 +1435,28 @@ class _SduiStudioWidgetState extends State<SduiStudioWidget> {
             return Center(child: _buildEmptyPreviewState());
           }
 
-          return Padding(
-            padding: const EdgeInsets.all(20),
-            child: Center(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: QuantumVM.instance.renderWidget(
-                  context,
-                  _compiledBlueprint!,
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              return Padding(
+                padding: const EdgeInsets.all(20),
+                child: ClipRect(
+                  child: SizedBox(
+                    width: constraints.maxWidth,
+                    height: constraints.maxHeight,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: _MeasureSize(
+                        onChange: _handlePreviewSize,
+                        child: QuantumVM.instance.renderWidget(
+                          context,
+                          _compiledBlueprint!,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           );
         },
       ),
@@ -1543,7 +1552,9 @@ class _SduiStudioWidgetState extends State<SduiStudioWidget> {
             const SizedBox(height: 14),
             Text(
               _error.isEmpty
-                  ? 'Preview waiting for JSON.'
+                  ? (_blankRenderWarning.isNotEmpty
+                      ? 'Blank render detected.'
+                      : 'Preview waiting for JSON.')
                   : 'Fix JSON to render preview.',
               textAlign: TextAlign.center,
               style: const TextStyle(
@@ -1555,7 +1566,9 @@ class _SduiStudioWidgetState extends State<SduiStudioWidget> {
             const SizedBox(height: 8),
             Text(
               _error.isEmpty
-                  ? 'Paste a full SDUI document, register examples, and run the engine health checks.'
+                  ? (_blankRenderWarning.isNotEmpty
+                      ? _blankRenderWarning
+                      : 'Paste a full SDUI document, register examples, and run the engine health checks.')
                   : 'The editor catches invalid JSON before export and before render, so the workflow stays safe.',
               textAlign: TextAlign.center,
               style: const TextStyle(
@@ -1606,7 +1619,11 @@ class _SduiStudioWidgetState extends State<SduiStudioWidget> {
           ),
           const SizedBox(height: 8),
           SelectableText(
-            hasError ? _error : 'No parser or render errors right now.',
+            hasError
+                ? _error
+                : (_blankRenderWarning.isNotEmpty
+                    ? _blankRenderWarning
+                    : 'No parser or render errors right now.'),
             style: const TextStyle(fontSize: 12.5, height: 1.45),
           ),
           if (_stackTrace.trim().isNotEmpty) ...[
@@ -1832,10 +1849,84 @@ class _SduiStudioWidgetState extends State<SduiStudioWidget> {
     );
   }
 
+  String _errorSignature(Object error, [StackTrace? stackTrace]) {
+    return '$error\n${stackTrace?.toString() ?? ''}';
+  }
+
+  void _captureRenderError(
+    Object error, {
+    StackTrace? stackTrace,
+    String source = 'render',
+  }) {
+    final String signature = '$source|${_errorSignature(error, stackTrace)}';
+    if (signature == _lastErrorSignature) return;
+    _lastErrorSignature = signature;
+
+    if (!mounted) return;
+    setState(() {
+      _error = error.toString();
+      _stackTrace = stackTrace?.toString() ?? '';
+      _status = '$source error captured.';
+      _blankRenderWarning = '';
+    });
+  }
+
+  void _handlePreviewSize(Size size) {
+    if (!mounted) return;
+    final bool isBlank = size.width < 8 || size.height < 8;
+    if (size == _lastPreviewSize &&
+        ((_blankRenderWarning.isNotEmpty && isBlank) ||
+            (_blankRenderWarning.isEmpty && !isBlank))) {
+      return;
+    }
+    _lastPreviewSize = size;
+    setState(() {
+      if (isBlank && _compiledBlueprint != null && _error.isEmpty) {
+        _blankRenderWarning =
+            'Blank render detected: preview size is ${size.width.toStringAsFixed(1)} × ${size.height.toStringAsFixed(1)}.';
+      } else if (!isBlank) {
+        _blankRenderWarning = '';
+      }
+    });
+  }
+
   Future<void> _copyLastError() async {
     final combined = _stackTrace.isEmpty ? _error : '$_error\n\n$_stackTrace';
     await Clipboard.setData(ClipboardData(text: combined));
     _toast('Error copied to clipboard.', isError: true);
+  }
+}
+
+class _MeasureSize extends SingleChildRenderObjectWidget {
+  final ValueChanged<Size> onChange;
+
+  const _MeasureSize({required this.onChange, required super.child});
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _MeasureSizeRenderObject(onChange);
+
+  @override
+  void updateRenderObject(
+      BuildContext context, covariant _MeasureSizeRenderObject renderObject) {
+    renderObject.onChange = onChange;
+  }
+}
+
+class _MeasureSizeRenderObject extends RenderProxyBox {
+  ValueChanged<Size> onChange;
+  Size? _lastSize;
+
+  _MeasureSizeRenderObject(this.onChange);
+
+  @override
+  void performLayout() {
+    super.performLayout();
+    if (_lastSize == size) return;
+    _lastSize = size;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (attached) onChange(size);
+    });
   }
 }
 

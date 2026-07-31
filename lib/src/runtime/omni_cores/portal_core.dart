@@ -120,8 +120,9 @@ Widget _buildPortal(QLContext rawCtx) {
   }
 
   QLMotionSpec parseMotion() {
-    final dynamic motionValue =
-        ctx.map('motion') ?? ctx.map('animation') ?? ctx.map('motionSpec') ??
+    final dynamic motionValue = ctx.map('motion') ??
+        ctx.map('animation') ??
+        ctx.map('motionSpec') ??
         ctx.map('animationSpec');
     if (motionValue is Map || motionValue is String) {
       return QLMotionSpec.fromValue(motionValue);
@@ -161,8 +162,7 @@ Widget _buildPortal(QLContext rawCtx) {
   }
 
   QLOverlayRuntimeSpec parseRuntime() {
-    final dynamic runtimeValue =
-        ctx.map('runtime') ??
+    final dynamic runtimeValue = ctx.map('runtime') ??
         ctx.map('control') ??
         ctx.map('behavior') ??
         ctx.map('stack') ??
@@ -179,13 +179,21 @@ Widget _buildPortal(QLContext rawCtx) {
     return const QLOverlayRuntimeSpec();
   }
 
+  // FIX 3: Safe Size Parser to prevent NaN math layout crashes
+  double? safeSize(String key) {
+    final val = ctx.number(key, fallback: double.nan);
+    return val.isFinite ? val : null;
+  }
+
   Widget buildContent() {
     return ctx.slot('content') ??
         Q('col min-w-0 min-h-0', children: ctx.children);
   }
 
   Widget buildTrigger() {
-    return ctx.slot('trigger') ?? ctx.slot('content') ?? const SizedBox.shrink();
+    return ctx.slot('trigger') ??
+        ctx.slot('content') ??
+        const SizedBox.shrink();
   }
 
   // Detached overlay entry primitive.
@@ -201,7 +209,8 @@ Widget _buildPortal(QLContext rawCtx) {
   }
 
   final QLSurfacePattern surfaceKind = parseSurfacePattern(
-    ctx.string('surfaceKind', fallback: ctx.string('presentation', fallback: subType)),
+    ctx.string('surfaceKind',
+        fallback: ctx.string('presentation', fallback: subType)),
   );
   final QLMotionSpec motion = parseMotion();
   final QLOverlayRuntimeSpec runtime = parseRuntime();
@@ -211,7 +220,8 @@ Widget _buildPortal(QLContext rawCtx) {
   final bool barrier = ctx.boolean('barrierDismissible', fallback: true);
   final bool allowDrag = ctx.boolean('enableDrag', fallback: true);
   final bool allowResize = ctx.boolean('allowResize', fallback: true);
-  final bool underlying = ctx.boolean('allowUnderlyingInteraction', fallback: false);
+  final bool underlying =
+      ctx.boolean('allowUnderlyingInteraction', fallback: false);
   final QLBackgroundEffect effect = parseEffect(ctx.string('bgEffect',
       fallback: surfaceKind == QLSurfacePattern.bottomAttached ||
               surfaceKind == QLSurfacePattern.edgeDocked
@@ -231,17 +241,17 @@ Widget _buildPortal(QLContext rawCtx) {
       ctx.boolean('clipSheet', fallback: true) ? Clip.antiAlias : Clip.none;
   final Alignment? sheetAlignment =
       switch (ctx.string('sheetAlignment', fallback: ctx.string('align'))) {
-        'topLeft' => Alignment.topLeft,
-        'topCenter' => Alignment.topCenter,
-        'topRight' => Alignment.topRight,
-        'centerLeft' => Alignment.centerLeft,
-        'center' => Alignment.center,
-        'centerRight' => Alignment.centerRight,
-        'bottomLeft' => Alignment.bottomLeft,
-        'bottomCenter' => Alignment.bottomCenter,
-        'bottomRight' => Alignment.bottomRight,
-        _ => null,
-      };
+    'topLeft' => Alignment.topLeft,
+    'topCenter' => Alignment.topCenter,
+    'topRight' => Alignment.topRight,
+    'centerLeft' => Alignment.centerLeft,
+    'center' => Alignment.center,
+    'centerRight' => Alignment.centerRight,
+    'bottomLeft' => Alignment.bottomLeft,
+    'bottomCenter' => Alignment.bottomCenter,
+    'bottomRight' => Alignment.bottomRight,
+    _ => null,
+  };
   final EdgeInsetsGeometry sheetPadding = EdgeInsets.fromLTRB(
     ctx.number('sheetPaddingLeft',
         fallback: ctx.number('sheetPadding', fallback: 0.0)),
@@ -252,9 +262,9 @@ Widget _buildPortal(QLContext rawCtx) {
     ctx.number('sheetPaddingBottom',
         fallback: ctx.number('sheetPadding', fallback: 0.0)),
   );
-  final BorderRadius sheetRadius = BorderRadius.circular(
-      ctx.number('sheetRadius',
-          fallback: ctx.number('cornerRadius', fallback: 0.0)));
+  final BorderRadius sheetRadius = BorderRadius.circular(ctx.number(
+      'sheetRadius',
+      fallback: ctx.number('cornerRadius', fallback: 0.0)));
   final BoxConstraints constraints = BoxConstraints(
     maxWidth: ctx.number('maxWidth', fallback: double.nan).isFinite
         ? ctx.number('maxWidth')
@@ -265,7 +275,17 @@ Widget _buildPortal(QLContext rawCtx) {
   );
 
   QLSpatialConfig buildConfig(BuildContext mountCtx) {
-    final RenderBox? box = mountCtx.findRenderObject() as RenderBox?;
+    // FIX 5: Safe RenderObject retrieval
+    RenderBox? box;
+    if (mountCtx.mounted) {
+      try {
+        final renderObj = mountCtx.findRenderObject();
+        if (renderObj is RenderBox && renderObj.hasSize) {
+          box = renderObj;
+        }
+      } catch (_) {}
+    }
+
     final Offset origin = box?.localToGlobal(Offset.zero) ?? Offset.zero;
     final Size sz = box?.size ?? Size.zero;
 
@@ -278,10 +298,10 @@ Widget _buildPortal(QLContext rawCtx) {
     }
     if (subType == 'window') {
       return QLSpatialConfig.window(
-        initialX: ctx.number('x', fallback: 100),
-        initialY: ctx.number('y', fallback: 100),
-        initialWidth: ctx.number('w', fallback: 420),
-        initialHeight: ctx.number('h', fallback: 300),
+        initialX: safeSize('x') ?? 100,
+        initialY: safeSize('y') ?? 100,
+        initialWidth: safeSize('w') ?? 420,
+        initialHeight: safeSize('h') ?? 300,
         allowResize: ctx.boolean('allowResize', fallback: true),
         resizeEdges:
             parseResizeEdge(ctx.string('resizeEdges', fallback: 'bottomRight')),
@@ -368,8 +388,8 @@ Widget _buildPortal(QLContext rawCtx) {
         barrierColor: barrierColor,
         barrierOpacity: barrierOpacity,
         rootBgColor: rootBgColor,
-        initialWidth: ctx.number('w'),
-        initialHeight: ctx.number('h'),
+        initialWidth: safeSize('w'),
+        initialHeight: safeSize('h'),
         motion: motion,
         useSafeArea: ctx.boolean('useSafeArea', fallback: true),
         runtime: runtime,
@@ -395,8 +415,8 @@ Widget _buildPortal(QLContext rawCtx) {
         barrierColor: barrierColor,
         barrierOpacity: barrierOpacity,
         rootBgColor: rootBgColor,
-        initialWidth: ctx.number('w'),
-        initialHeight: ctx.number('h'),
+        initialWidth: safeSize('w'),
+        initialHeight: safeSize('h'),
         motion: motion,
         useSafeArea: ctx.boolean('useSafeArea', fallback: true),
         runtime: runtime,
@@ -410,9 +430,6 @@ Widget _buildPortal(QLContext rawCtx) {
         subType == 'dropdown' ||
         subType == 'flyout' ||
         subType == 'context_panel') {
-      final RenderBox? box = mountCtx.findRenderObject() as RenderBox?;
-      final Offset origin = box?.localToGlobal(Offset.zero) ?? Offset.zero;
-      final Size sz = box?.size ?? Size.zero;
       return QLSpatialConfig.surface(
         pattern: QLSurfacePattern.anchoredFloating,
         dismissible: true,
@@ -587,6 +604,9 @@ class _QLInlineSurfaceHostState extends State<_QLInlineSurfaceHost>
       preset: resolvedPreset,
       screenSize: MediaQuery.sizeOf(context),
     );
+
+    // FIX 2: Ensure the internal animation plays, otherwise the surface will remain invisible!
+    _composer.play();
   }
 
   @override
@@ -598,7 +618,8 @@ class _QLInlineSurfaceHostState extends State<_QLInlineSurfaceHost>
   @override
   Widget build(BuildContext context) {
     final c = widget.config;
-    final bool needsSafeArea = c.useSafeArea || (c.flags & QLNodeFlags.useSafeArea) != 0;
+    final bool needsSafeArea =
+        c.useSafeArea || (c.flags & QLNodeFlags.useSafeArea) != 0;
 
     Widget child = widget.child;
     child = AnimatedBuilder(
@@ -632,7 +653,8 @@ class _QLInlineSurfaceHostState extends State<_QLInlineSurfaceHost>
     if (c.sheetPadding != EdgeInsets.zero) {
       child = Padding(padding: c.sheetPadding, child: child);
     }
-    if (c.sheetBorderRadius != BorderRadius.zero || c.clipBehavior != Clip.none) {
+    if (c.sheetBorderRadius != BorderRadius.zero ||
+        c.clipBehavior != Clip.none) {
       child = ClipRRect(
         borderRadius: c.sheetBorderRadius,
         clipBehavior: c.clipBehavior,
@@ -696,17 +718,25 @@ class _QLOverlayEntryNodeState extends State<_QLOverlayEntryNode> {
   }
 
   void _openOverlay() {
-    if (!mounted || _closeOverlay != null) return;
-    context.mountOverlay(
-      QLSpatialConfig.window(
-        initialX: widget.ctx.number('x', fallback: 0),
-        initialY: widget.ctx.number('y', fallback: 0),
-      ),
-      (c, close) {
-        _closeOverlay = close;
-        return Q(widget.ctx.node.style ?? '', children: widget.ctx.children);
-      },
-    );
+    // FIX 1 & 4: Safe async mounting loop protection
+    if (_closeOverlay != null) return;
+
+    // Set a dummy closure to lock out subsequent calls while waiting for the next frame
+    _closeOverlay = () {};
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.mountOverlay(
+        QLSpatialConfig.window(
+          initialX: widget.ctx.number('x', fallback: 0),
+          initialY: widget.ctx.number('y', fallback: 0),
+        ),
+        (c, close) {
+          _closeOverlay = close;
+          return Q(widget.ctx.node.style ?? '', children: widget.ctx.children);
+        },
+      );
+    });
   }
 
   void _onTriggerChanged() {
@@ -755,6 +785,7 @@ class _QLTriggerBindPortal extends StatefulWidget {
 class _QLTriggerBindPortalState extends State<_QLTriggerBindPortal> {
   QLSignal<dynamic>? _signal;
   VoidCallback? _closeOverlay;
+  bool _isOpening = false;
 
   @override
   void initState() {
@@ -776,7 +807,7 @@ class _QLTriggerBindPortalState extends State<_QLTriggerBindPortal> {
   void _onSignalChanged() {
     if (!mounted) return;
     final value = _signal?.value;
-    if (value == true && _closeOverlay == null) {
+    if (value == true && _closeOverlay == null && !_isOpening) {
       _openOverlay();
     } else if (value == false && _closeOverlay != null) {
       _closeOverlay!.call();
@@ -785,7 +816,10 @@ class _QLTriggerBindPortalState extends State<_QLTriggerBindPortal> {
   }
 
   void _openOverlay() {
-    if (!mounted || _closeOverlay != null) return;
+    // FIX 4: Prevent double-mounting ghost layers if signal fires rapidly
+    if (!mounted || _closeOverlay != null || _isOpening) return;
+    _isOpening = true;
+
     context.mountOverlay(
       widget.configBuilder(context),
       (c, close) {
@@ -799,6 +833,7 @@ class _QLTriggerBindPortalState extends State<_QLTriggerBindPortal> {
     ).then((_) {
       if (mounted) {
         _closeOverlay = null;
+        _isOpening = false;
         _syncStateToFalse();
       }
     });
@@ -855,12 +890,17 @@ class _QLToastAutoMounterState extends State<_QLToastAutoMounter> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    // FIX 1: Delay mounting so it runs AFTER layout phase preventing build exceptions
     if (!_launched) {
       _launched = true;
-      context.mountOverlay(
-        widget.configBuilder(context),
-        (c, close) => widget.contentBuilder(),
-      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.mountOverlay(
+          widget.configBuilder(context),
+          (c, close) => widget.contentBuilder(),
+        );
+      });
     }
   }
 
@@ -873,14 +913,27 @@ class _QLToastAutoMounterState extends State<_QLToastAutoMounter> {
 // ════════════════════════════════════════════════════════════════════════════
 
 void _registerPortalAliases(QuantumVM vm) {
-  vm.defineAlias('overlay_entry', 'portal:overlay_entry', description: 'Overlay entry alias.', tags: const ['portal', 'overlay', 'alias']);
-  vm.defineAlias('overlay', 'portal:overlay', description: 'Overlay alias.', tags: const ['portal', 'overlay', 'alias']);
-  vm.defineAlias('dialog', 'portal:dialog', description: 'Dialog portal alias.', tags: const ['portal', 'alias']);
-  vm.defineAlias('drawer', 'portal:sheet', description: 'Drawer alias routed through sheet.', tags: const ['portal', 'alias']);
-  vm.defineAlias('sheet', 'portal:sheet', description: 'Sheet portal alias.', tags: const ['portal', 'alias']);
-  vm.defineAlias('popover', 'portal:popover', description: 'Popover portal alias.', tags: const ['portal', 'alias']);
-  vm.defineAlias('modal', 'portal:dialog', description: 'Modal alias.', tags: const ['portal', 'alias']);
-  vm.defineAlias('centered_overlay', 'portal:dialog', description: 'Centered overlay alias.', tags: const ['portal', 'alias']);
-  vm.defineAlias('persistent_panel', 'portal:overlay', description: 'Persistent panel alias.', tags: const ['portal', 'alias']);
-  vm.defineAlias('inline_expandable', 'portal:overlay', description: 'Inline expandable alias.', tags: const ['portal', 'alias']);
+  vm.defineAlias('overlay_entry', 'portal:overlay_entry',
+      description: 'Overlay entry alias.',
+      tags: const ['portal', 'overlay', 'alias']);
+  vm.defineAlias('overlay', 'portal:overlay',
+      description: 'Overlay alias.',
+      tags: const ['portal', 'overlay', 'alias']);
+  vm.defineAlias('dialog', 'portal:dialog',
+      description: 'Dialog portal alias.', tags: const ['portal', 'alias']);
+  vm.defineAlias('drawer', 'portal:sheet',
+      description: 'Drawer alias routed through sheet.',
+      tags: const ['portal', 'alias']);
+  vm.defineAlias('sheet', 'portal:sheet',
+      description: 'Sheet portal alias.', tags: const ['portal', 'alias']);
+  vm.defineAlias('popover', 'portal:popover',
+      description: 'Popover portal alias.', tags: const ['portal', 'alias']);
+  vm.defineAlias('modal', 'portal:dialog',
+      description: 'Modal alias.', tags: const ['portal', 'alias']);
+  vm.defineAlias('centered_overlay', 'portal:dialog',
+      description: 'Centered overlay alias.', tags: const ['portal', 'alias']);
+  vm.defineAlias('persistent_panel', 'portal:overlay',
+      description: 'Persistent panel alias.', tags: const ['portal', 'alias']);
+  vm.defineAlias('inline_expandable', 'portal:overlay',
+      description: 'Inline expandable alias.', tags: const ['portal', 'alias']);
 }

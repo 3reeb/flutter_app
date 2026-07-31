@@ -23,15 +23,16 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../foundation/quantum_yaml_engine.dart';
-import '../ui/quantum_navigation_engine.dart';
 import '../plugins/quantum_api_engine.dart';
 import '../plugins/quantum_sdui_engine.dart';
 import '../plugins/quantum_api_shell.dart';
-import 'quantum_app_entry.dart';
-import 'quantum_app_shell.dart';
+import 'quantum_app_boot.dart';
 import 'quantum_boot_schema.dart';
 import 'quantum_http_transport.dart';
 import 'quantum_file_router.dart';
+
+// consider to remove this in future
+import '../ui/quantum_navigation_engine.dart';
 // ────────────────────────────────────────────────────────────────────────────
 // Build-time defines
 // ────────────────────────────────────────────────────────────────────────────

@@ -858,6 +858,7 @@ class QLBehaviorAnimator {
   final double scaleDamping;
   final double tiltStiffness;
   final double tiltDamping;
+  final bool reduceMotion;
 
   QLBehaviorAnimator({
     required TickerProvider vsync,
@@ -867,6 +868,7 @@ class QLBehaviorAnimator {
     this.scaleDamping   = 38.0,
     this.tiltStiffness  = 350.0,
     this.tiltDamping    = 22.0,
+    this.reduceMotion = false,
   }) : _timeline = QLTimeline(vsync: vsync) {
     scaleSignal      = _timeline.spring(id: 'sc',   initial: 1.0, target: 1.0, stiffness: scaleStiffness, damping: scaleDamping);
     tiltXSignal      = _timeline.spring(id: 'tx',   initial: 0.0, target: 0.0, stiffness: tiltStiffness,  damping: tiltDamping);
@@ -879,11 +881,20 @@ class QLBehaviorAnimator {
   // ── Event handlers (call from gesture/mouse handlers) ──────────────────────
 
   void onHoverEnter() {
+    if (reduceMotion) {
+      scaleSignal.value = 1.0;
+      _resetAll();
+      return;
+    }
     _timeline.updateSpringTarget('sc', hoverScale);
     _timeline.play();
   }
 
   void onHoverExit() {
+    if (reduceMotion) {
+      _resetAll();
+      return;
+    }
     _resetTilt();
     _timeline.updateSpringTarget('sc', 1.0);
     _timeline.play();
@@ -891,6 +902,7 @@ class QLBehaviorAnimator {
 
   /// [nx], [ny] — normalized device coords relative to widget center (−1..1).
   void onHoverMove(double nx, double ny, {double tiltIntensity = 1.0, bool magnetic = false}) {
+    if (reduceMotion) return;
     _timeline.updateSpringTarget('tx', -ny * 0.3 * tiltIntensity);
     _timeline.updateSpringTarget('ty',  nx * 0.3 * tiltIntensity);
     if (magnetic) {
@@ -901,20 +913,41 @@ class QLBehaviorAnimator {
   }
 
   void onPressDown({double? customScale}) {
+    if (reduceMotion) {
+      scaleSignal.value = 1.0;
+      _resetTilt();
+      return;
+    }
     _resetTilt();
     _timeline.updateSpringTarget('sc', customScale ?? pressScale);
     _timeline.play();
   }
 
   void onPressUp() {
+    if (reduceMotion) {
+      _resetAll();
+      return;
+    }
     _timeline.updateSpringTarget('sc', 1.0);
     _timeline.play();
   }
 
-  void onPressCancel() { _resetAll(); _timeline.play(); }
+  void onPressCancel() {
+    if (reduceMotion) {
+      _resetAll();
+      return;
+    }
+    _resetAll();
+    _timeline.play();
+  }
 
   /// Animate element out (fade + shrink). Call before removing from tree.
   void onDismiss({Duration duration = const Duration(milliseconds: 200)}) {
+    if (reduceMotion) {
+      opacitySignal.value = 0.0;
+      scaleSignal.value = 1.0;
+      return;
+    }
     _timeline.updateSpringTarget('op', 0.0);
     _timeline.updateSpringTarget('sc', 0.8);
     _timeline.play();

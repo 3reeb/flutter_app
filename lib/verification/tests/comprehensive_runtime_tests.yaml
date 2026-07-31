@@ -1120,7 +1120,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
-        — OMEGA YAML-FIRST CONFIG SYSTEM"
+        أ¢â‚¬â€‌ OMEGA YAML-FIRST CONFIG SYSTEM"
       headings:
         - "`src/foundation/quantum_yaml_engine.dart`"
         - What this file is
@@ -1184,7 +1184,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
-        — OMEGA YAML-FIRST CONFIG SYSTEM"
+        أ¢â‚¬â€‌ OMEGA YAML-FIRST CONFIG SYSTEM"
       headings:
         - "`src/foundation/quantum_yaml_engine.dart`"
         - What this file is
@@ -1247,7 +1247,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
-        — OMEGA YAML-FIRST CONFIG SYSTEM"
+        أ¢â‚¬â€‌ OMEGA YAML-FIRST CONFIG SYSTEM"
       headings:
         - "`src/foundation/quantum_yaml_engine.dart`"
         - What this file is
@@ -1310,7 +1310,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
-        — OMEGA YAML-FIRST CONFIG SYSTEM"
+        أ¢â‚¬â€‌ OMEGA YAML-FIRST CONFIG SYSTEM"
       headings:
         - "`src/foundation/quantum_yaml_engine.dart`"
         - What this file is
@@ -1373,7 +1373,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
-        — OMEGA YAML-FIRST CONFIG SYSTEM"
+        أ¢â‚¬â€‌ OMEGA YAML-FIRST CONFIG SYSTEM"
       headings:
         - "`src/foundation/quantum_yaml_engine.dart`"
         - What this file is
@@ -1436,7 +1436,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
-        — OMEGA YAML-FIRST CONFIG SYSTEM"
+        أ¢â‚¬â€‌ OMEGA YAML-FIRST CONFIG SYSTEM"
       headings:
         - "`src/foundation/quantum_yaml_engine.dart`"
         - What this file is
@@ -1501,7 +1501,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
-        — OMEGA YAML-FIRST CONFIG SYSTEM"
+        أ¢â‚¬â€‌ OMEGA YAML-FIRST CONFIG SYSTEM"
       headings:
         - "`src/foundation/quantum_yaml_engine.dart`"
         - What this file is
@@ -1566,7 +1566,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
-        — OMEGA YAML-FIRST CONFIG SYSTEM"
+        أ¢â‚¬â€‌ OMEGA YAML-FIRST CONFIG SYSTEM"
       headings:
         - "`src/foundation/quantum_yaml_engine.dart`"
         - What this file is
@@ -1631,7 +1631,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
-        — OMEGA YAML-FIRST CONFIG SYSTEM"
+        أ¢â‚¬â€‌ OMEGA YAML-FIRST CONFIG SYSTEM"
       headings:
         - "`src/foundation/quantum_yaml_engine.dart`"
         - What this file is
@@ -1694,7 +1694,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
-        — OMEGA YAML-FIRST CONFIG SYSTEM"
+        أ¢â‚¬â€‌ OMEGA YAML-FIRST CONFIG SYSTEM"
       headings:
         - "`src/foundation/quantum_yaml_engine.dart`"
         - What this file is
@@ -1759,7 +1759,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
-        — OMEGA YAML-FIRST CONFIG SYSTEM"
+        أ¢â‚¬â€‌ OMEGA YAML-FIRST CONFIG SYSTEM"
       headings:
         - "`src/foundation/quantum_yaml_engine.dart`"
         - What this file is
@@ -1823,7 +1823,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM YAML ENGINE v1.1
-        — OMEGA YAML-FIRST CONFIG SYSTEM"
+        أ¢â‚¬â€‌ OMEGA YAML-FIRST CONFIG SYSTEM"
       headings:
         - "`src/foundation/quantum_yaml_engine.dart`"
         - What this file is
@@ -1883,7 +1883,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM REACTIVE GRAPH ENGINE
-        v1.0 — SIGNAL-DRIVEN ANIMATION COMPOSITOR"
+        v1.0 أ¢â‚¬â€‌ SIGNAL-DRIVEN ANIMATION COMPOSITOR"
       headings:
         - "`src/foundation/quantum_reactive_graph.dart`"
         - What this file is
@@ -1944,7 +1944,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM REACTIVE GRAPH ENGINE
-        v1.0 — SIGNAL-DRIVEN ANIMATION COMPOSITOR"
+        v1.0 أ¢â‚¬â€‌ SIGNAL-DRIVEN ANIMATION COMPOSITOR"
       headings:
         - "`src/foundation/quantum_reactive_graph.dart`"
         - What this file is
@@ -2004,7 +2004,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM REACTIVE GRAPH ENGINE
-        v1.0 — SIGNAL-DRIVEN ANIMATION COMPOSITOR"
+        v1.0 أ¢â‚¬â€‌ SIGNAL-DRIVEN ANIMATION COMPOSITOR"
       headings:
         - "`src/foundation/quantum_reactive_graph.dart`"
         - What this file is
@@ -2064,7 +2064,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM REACTIVE GRAPH ENGINE
-        v1.0 — SIGNAL-DRIVEN ANIMATION COMPOSITOR"
+        v1.0 أ¢â‚¬â€‌ SIGNAL-DRIVEN ANIMATION COMPOSITOR"
       headings:
         - "`src/foundation/quantum_reactive_graph.dart`"
         - What this file is
@@ -2124,7 +2124,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM REACTIVE GRAPH ENGINE
-        v1.0 — SIGNAL-DRIVEN ANIMATION COMPOSITOR"
+        v1.0 أ¢â‚¬â€‌ SIGNAL-DRIVEN ANIMATION COMPOSITOR"
       headings:
         - "`src/foundation/quantum_reactive_graph.dart`"
         - What this file is
@@ -2184,7 +2184,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM REACTIVE GRAPH ENGINE
-        v1.0 — SIGNAL-DRIVEN ANIMATION COMPOSITOR"
+        v1.0 أ¢â‚¬â€‌ SIGNAL-DRIVEN ANIMATION COMPOSITOR"
       headings:
         - "`src/foundation/quantum_reactive_graph.dart`"
         - What this file is
@@ -2246,7 +2246,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM REACTIVE GRAPH ENGINE
-        v1.0 — SIGNAL-DRIVEN ANIMATION COMPOSITOR"
+        v1.0 أ¢â‚¬â€‌ SIGNAL-DRIVEN ANIMATION COMPOSITOR"
       headings:
         - "`src/foundation/quantum_reactive_graph.dart`"
         - What this file is
@@ -2308,7 +2308,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM REACTIVE GRAPH ENGINE
-        v1.0 — SIGNAL-DRIVEN ANIMATION COMPOSITOR"
+        v1.0 أ¢â‚¬â€‌ SIGNAL-DRIVEN ANIMATION COMPOSITOR"
       headings:
         - "`src/foundation/quantum_reactive_graph.dart`"
         - What this file is
@@ -2370,7 +2370,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM REACTIVE GRAPH ENGINE
-        v1.0 — SIGNAL-DRIVEN ANIMATION COMPOSITOR"
+        v1.0 أ¢â‚¬â€‌ SIGNAL-DRIVEN ANIMATION COMPOSITOR"
       headings:
         - "`src/foundation/quantum_reactive_graph.dart`"
         - What this file is
@@ -2434,7 +2434,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM REACTIVE GRAPH ENGINE
-        v1.0 — SIGNAL-DRIVEN ANIMATION COMPOSITOR"
+        v1.0 أ¢â‚¬â€‌ SIGNAL-DRIVEN ANIMATION COMPOSITOR"
       headings:
         - "`src/foundation/quantum_reactive_graph.dart`"
         - What this file is
@@ -4337,7 +4337,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM RENDER SCHEDULER
-        v1.0 — FRAME-BUDGET RENDER QUEUE"
+        v1.0 أ¢â‚¬â€‌ FRAME-BUDGET RENDER QUEUE"
       headings:
         - "`src/foundation/quantum_render_scheduler.dart`"
         - What this file is
@@ -4398,7 +4398,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM RENDER SCHEDULER
-        v1.0 — FRAME-BUDGET RENDER QUEUE"
+        v1.0 أ¢â‚¬â€‌ FRAME-BUDGET RENDER QUEUE"
       headings:
         - "`src/foundation/quantum_render_scheduler.dart`"
         - What this file is
@@ -4458,7 +4458,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM RENDER SCHEDULER
-        v1.0 — FRAME-BUDGET RENDER QUEUE"
+        v1.0 أ¢â‚¬â€‌ FRAME-BUDGET RENDER QUEUE"
       headings:
         - "`src/foundation/quantum_render_scheduler.dart`"
         - What this file is
@@ -4518,7 +4518,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM RENDER SCHEDULER
-        v1.0 — FRAME-BUDGET RENDER QUEUE"
+        v1.0 أ¢â‚¬â€‌ FRAME-BUDGET RENDER QUEUE"
       headings:
         - "`src/foundation/quantum_render_scheduler.dart`"
         - What this file is
@@ -4578,7 +4578,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM RENDER SCHEDULER
-        v1.0 — FRAME-BUDGET RENDER QUEUE"
+        v1.0 أ¢â‚¬â€‌ FRAME-BUDGET RENDER QUEUE"
       headings:
         - "`src/foundation/quantum_render_scheduler.dart`"
         - What this file is
@@ -4638,7 +4638,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM RENDER SCHEDULER
-        v1.0 — FRAME-BUDGET RENDER QUEUE"
+        v1.0 أ¢â‚¬â€‌ FRAME-BUDGET RENDER QUEUE"
       headings:
         - "`src/foundation/quantum_render_scheduler.dart`"
         - What this file is
@@ -4700,7 +4700,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM RENDER SCHEDULER
-        v1.0 — FRAME-BUDGET RENDER QUEUE"
+        v1.0 أ¢â‚¬â€‌ FRAME-BUDGET RENDER QUEUE"
       headings:
         - "`src/foundation/quantum_render_scheduler.dart`"
         - What this file is
@@ -4762,7 +4762,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM RENDER SCHEDULER
-        v1.0 — FRAME-BUDGET RENDER QUEUE"
+        v1.0 أ¢â‚¬â€‌ FRAME-BUDGET RENDER QUEUE"
       headings:
         - "`src/foundation/quantum_render_scheduler.dart`"
         - What this file is
@@ -4824,7 +4824,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM RENDER SCHEDULER
-        v1.0 — FRAME-BUDGET RENDER QUEUE"
+        v1.0 أ¢â‚¬â€‌ FRAME-BUDGET RENDER QUEUE"
       headings:
         - "`src/foundation/quantum_render_scheduler.dart`"
         - What this file is
@@ -4888,7 +4888,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM RENDER SCHEDULER
-        v1.0 — FRAME-BUDGET RENDER QUEUE"
+        v1.0 أ¢â‚¬â€‌ FRAME-BUDGET RENDER QUEUE"
       headings:
         - "`src/foundation/quantum_render_scheduler.dart`"
         - What this file is
@@ -5702,7 +5702,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM ISOLATE WORKER ENGINE
-        v1.0 — ZERO-COPY BACKGROUND COMPUTE"
+        v1.0 أ¢â‚¬â€‌ ZERO-COPY BACKGROUND COMPUTE"
       headings:
         - "`src/foundation/quantum_isolate_worker.dart`"
         - What this file is
@@ -5763,7 +5763,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM ISOLATE WORKER ENGINE
-        v1.0 — ZERO-COPY BACKGROUND COMPUTE"
+        v1.0 أ¢â‚¬â€‌ ZERO-COPY BACKGROUND COMPUTE"
       headings:
         - "`src/foundation/quantum_isolate_worker.dart`"
         - What this file is
@@ -5823,7 +5823,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM ISOLATE WORKER ENGINE
-        v1.0 — ZERO-COPY BACKGROUND COMPUTE"
+        v1.0 أ¢â‚¬â€‌ ZERO-COPY BACKGROUND COMPUTE"
       headings:
         - "`src/foundation/quantum_isolate_worker.dart`"
         - What this file is
@@ -5883,7 +5883,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM ISOLATE WORKER ENGINE
-        v1.0 — ZERO-COPY BACKGROUND COMPUTE"
+        v1.0 أ¢â‚¬â€‌ ZERO-COPY BACKGROUND COMPUTE"
       headings:
         - "`src/foundation/quantum_isolate_worker.dart`"
         - What this file is
@@ -5943,7 +5943,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM ISOLATE WORKER ENGINE
-        v1.0 — ZERO-COPY BACKGROUND COMPUTE"
+        v1.0 أ¢â‚¬â€‌ ZERO-COPY BACKGROUND COMPUTE"
       headings:
         - "`src/foundation/quantum_isolate_worker.dart`"
         - What this file is
@@ -6003,7 +6003,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM ISOLATE WORKER ENGINE
-        v1.0 — ZERO-COPY BACKGROUND COMPUTE"
+        v1.0 أ¢â‚¬â€‌ ZERO-COPY BACKGROUND COMPUTE"
       headings:
         - "`src/foundation/quantum_isolate_worker.dart`"
         - What this file is
@@ -6065,7 +6065,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM ISOLATE WORKER ENGINE
-        v1.0 — ZERO-COPY BACKGROUND COMPUTE"
+        v1.0 أ¢â‚¬â€‌ ZERO-COPY BACKGROUND COMPUTE"
       headings:
         - "`src/foundation/quantum_isolate_worker.dart`"
         - What this file is
@@ -6127,7 +6127,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM ISOLATE WORKER ENGINE
-        v1.0 — ZERO-COPY BACKGROUND COMPUTE"
+        v1.0 أ¢â‚¬â€‌ ZERO-COPY BACKGROUND COMPUTE"
       headings:
         - "`src/foundation/quantum_isolate_worker.dart`"
         - What this file is
@@ -6189,7 +6189,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM ISOLATE WORKER ENGINE
-        v1.0 — ZERO-COPY BACKGROUND COMPUTE"
+        v1.0 أ¢â‚¬â€‌ ZERO-COPY BACKGROUND COMPUTE"
       headings:
         - "`src/foundation/quantum_isolate_worker.dart`"
         - What this file is
@@ -6253,7 +6253,7 @@ scenarios:
         "A foundation module. These files define the base reactive state, async
         primitives, parsing utilities, data structures, math helpers, and error-handling
         machinery used everywhere else. Author-intent note: QUANTUM ISOLATE WORKER ENGINE
-        v1.0 — ZERO-COPY BACKGROUND COMPUTE"
+        v1.0 أ¢â‚¬â€‌ ZERO-COPY BACKGROUND COMPUTE"
       headings:
         - "`src/foundation/quantum_isolate_worker.dart`"
         - What this file is
@@ -8382,7 +8382,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
-        (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM"
+        (QLE) v14.0 أ¢â‚¬â€‌ HIGH-PERFORMANCE VIRTUALIZED DOM"
       headings:
         - "`src/ui/quantum_layout_engine.dart`"
         - What this file is
@@ -8442,7 +8442,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
-        (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM"
+        (QLE) v14.0 أ¢â‚¬â€‌ HIGH-PERFORMANCE VIRTUALIZED DOM"
       headings:
         - "`src/ui/quantum_layout_engine.dart`"
         - What this file is
@@ -8501,7 +8501,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
-        (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM"
+        (QLE) v14.0 أ¢â‚¬â€‌ HIGH-PERFORMANCE VIRTUALIZED DOM"
       headings:
         - "`src/ui/quantum_layout_engine.dart`"
         - What this file is
@@ -8560,7 +8560,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
-        (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM"
+        (QLE) v14.0 أ¢â‚¬â€‌ HIGH-PERFORMANCE VIRTUALIZED DOM"
       headings:
         - "`src/ui/quantum_layout_engine.dart`"
         - What this file is
@@ -8619,7 +8619,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
-        (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM"
+        (QLE) v14.0 أ¢â‚¬â€‌ HIGH-PERFORMANCE VIRTUALIZED DOM"
       headings:
         - "`src/ui/quantum_layout_engine.dart`"
         - What this file is
@@ -8678,7 +8678,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
-        (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM"
+        (QLE) v14.0 أ¢â‚¬â€‌ HIGH-PERFORMANCE VIRTUALIZED DOM"
       headings:
         - "`src/ui/quantum_layout_engine.dart`"
         - What this file is
@@ -8739,7 +8739,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
-        (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM"
+        (QLE) v14.0 أ¢â‚¬â€‌ HIGH-PERFORMANCE VIRTUALIZED DOM"
       headings:
         - "`src/ui/quantum_layout_engine.dart`"
         - What this file is
@@ -8800,7 +8800,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
-        (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM"
+        (QLE) v14.0 أ¢â‚¬â€‌ HIGH-PERFORMANCE VIRTUALIZED DOM"
       headings:
         - "`src/ui/quantum_layout_engine.dart`"
         - What this file is
@@ -8861,7 +8861,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
-        (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM"
+        (QLE) v14.0 أ¢â‚¬â€‌ HIGH-PERFORMANCE VIRTUALIZED DOM"
       headings:
         - "`src/ui/quantum_layout_engine.dart`"
         - What this file is
@@ -8924,7 +8924,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
-        (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM"
+        (QLE) v14.0 أ¢â‚¬â€‌ HIGH-PERFORMANCE VIRTUALIZED DOM"
       headings:
         - "`src/ui/quantum_layout_engine.dart`"
         - What this file is
@@ -8987,7 +8987,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
-        (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM"
+        (QLE) v14.0 أ¢â‚¬â€‌ HIGH-PERFORMANCE VIRTUALIZED DOM"
       headings:
         - "`src/ui/quantum_layout_engine.dart`"
         - What this file is
@@ -9046,7 +9046,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM LAYOUT ENGINE
-        (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM"
+        (QLE) v14.0 أ¢â‚¬â€‌ HIGH-PERFORMANCE VIRTUALIZED DOM"
       headings:
         - "`src/ui/quantum_layout_engine.dart`"
         - What this file is
@@ -11014,7 +11014,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM ANIMATION ENGINE
-        v2.0 — OMEGA TIMELINE + iOS SPRING CORE"
+        v2.0 أ¢â‚¬â€‌ OMEGA TIMELINE + iOS SPRING CORE"
       headings:
         - "`src/ui/quantum_animation_engine.dart`"
         - What this file is
@@ -11074,7 +11074,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM ANIMATION ENGINE
-        v2.0 — OMEGA TIMELINE + iOS SPRING CORE"
+        v2.0 أ¢â‚¬â€‌ OMEGA TIMELINE + iOS SPRING CORE"
       headings:
         - "`src/ui/quantum_animation_engine.dart`"
         - What this file is
@@ -11133,7 +11133,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM ANIMATION ENGINE
-        v2.0 — OMEGA TIMELINE + iOS SPRING CORE"
+        v2.0 أ¢â‚¬â€‌ OMEGA TIMELINE + iOS SPRING CORE"
       headings:
         - "`src/ui/quantum_animation_engine.dart`"
         - What this file is
@@ -11192,7 +11192,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM ANIMATION ENGINE
-        v2.0 — OMEGA TIMELINE + iOS SPRING CORE"
+        v2.0 أ¢â‚¬â€‌ OMEGA TIMELINE + iOS SPRING CORE"
       headings:
         - "`src/ui/quantum_animation_engine.dart`"
         - What this file is
@@ -11251,7 +11251,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM ANIMATION ENGINE
-        v2.0 — OMEGA TIMELINE + iOS SPRING CORE"
+        v2.0 أ¢â‚¬â€‌ OMEGA TIMELINE + iOS SPRING CORE"
       headings:
         - "`src/ui/quantum_animation_engine.dart`"
         - What this file is
@@ -11310,7 +11310,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM ANIMATION ENGINE
-        v2.0 — OMEGA TIMELINE + iOS SPRING CORE"
+        v2.0 أ¢â‚¬â€‌ OMEGA TIMELINE + iOS SPRING CORE"
       headings:
         - "`src/ui/quantum_animation_engine.dart`"
         - What this file is
@@ -11371,7 +11371,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM ANIMATION ENGINE
-        v2.0 — OMEGA TIMELINE + iOS SPRING CORE"
+        v2.0 أ¢â‚¬â€‌ OMEGA TIMELINE + iOS SPRING CORE"
       headings:
         - "`src/ui/quantum_animation_engine.dart`"
         - What this file is
@@ -11432,7 +11432,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM ANIMATION ENGINE
-        v2.0 — OMEGA TIMELINE + iOS SPRING CORE"
+        v2.0 أ¢â‚¬â€‌ OMEGA TIMELINE + iOS SPRING CORE"
       headings:
         - "`src/ui/quantum_animation_engine.dart`"
         - What this file is
@@ -11493,7 +11493,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM ANIMATION ENGINE
-        v2.0 — OMEGA TIMELINE + iOS SPRING CORE"
+        v2.0 أ¢â‚¬â€‌ OMEGA TIMELINE + iOS SPRING CORE"
       headings:
         - "`src/ui/quantum_animation_engine.dart`"
         - What this file is
@@ -11554,7 +11554,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM ANIMATION ENGINE
-        v2.0 — OMEGA TIMELINE + iOS SPRING CORE"
+        v2.0 أ¢â‚¬â€‌ OMEGA TIMELINE + iOS SPRING CORE"
       headings:
         - "`src/ui/quantum_animation_engine.dart`"
         - What this file is
@@ -11615,7 +11615,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM ANIMATION ENGINE
-        v2.0 — OMEGA TIMELINE + iOS SPRING CORE"
+        v2.0 أ¢â‚¬â€‌ OMEGA TIMELINE + iOS SPRING CORE"
       headings:
         - "`src/ui/quantum_animation_engine.dart`"
         - What this file is
@@ -11674,7 +11674,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM ANIMATION ENGINE
-        v2.0 — OMEGA TIMELINE + iOS SPRING CORE"
+        v2.0 أ¢â‚¬â€‌ OMEGA TIMELINE + iOS SPRING CORE"
       headings:
         - "`src/ui/quantum_animation_engine.dart`"
         - What this file is
@@ -12973,7 +12973,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
-        v2.0 — PRODUCTION GRADE"
+        v2.0 أ¢â‚¬â€‌ PRODUCTION GRADE"
       headings:
         - "`src/ui/quantum_telemetry_engine.dart`"
         - What this file is
@@ -13033,7 +13033,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
-        v2.0 — PRODUCTION GRADE"
+        v2.0 أ¢â‚¬â€‌ PRODUCTION GRADE"
       headings:
         - "`src/ui/quantum_telemetry_engine.dart`"
         - What this file is
@@ -13092,7 +13092,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
-        v2.0 — PRODUCTION GRADE"
+        v2.0 أ¢â‚¬â€‌ PRODUCTION GRADE"
       headings:
         - "`src/ui/quantum_telemetry_engine.dart`"
         - What this file is
@@ -13151,7 +13151,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
-        v2.0 — PRODUCTION GRADE"
+        v2.0 أ¢â‚¬â€‌ PRODUCTION GRADE"
       headings:
         - "`src/ui/quantum_telemetry_engine.dart`"
         - What this file is
@@ -13210,7 +13210,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
-        v2.0 — PRODUCTION GRADE"
+        v2.0 أ¢â‚¬â€‌ PRODUCTION GRADE"
       headings:
         - "`src/ui/quantum_telemetry_engine.dart`"
         - What this file is
@@ -13269,7 +13269,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
-        v2.0 — PRODUCTION GRADE"
+        v2.0 أ¢â‚¬â€‌ PRODUCTION GRADE"
       headings:
         - "`src/ui/quantum_telemetry_engine.dart`"
         - What this file is
@@ -13330,7 +13330,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
-        v2.0 — PRODUCTION GRADE"
+        v2.0 أ¢â‚¬â€‌ PRODUCTION GRADE"
       headings:
         - "`src/ui/quantum_telemetry_engine.dart`"
         - What this file is
@@ -13391,7 +13391,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
-        v2.0 — PRODUCTION GRADE"
+        v2.0 أ¢â‚¬â€‌ PRODUCTION GRADE"
       headings:
         - "`src/ui/quantum_telemetry_engine.dart`"
         - What this file is
@@ -13452,7 +13452,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
-        v2.0 — PRODUCTION GRADE"
+        v2.0 أ¢â‚¬â€‌ PRODUCTION GRADE"
       headings:
         - "`src/ui/quantum_telemetry_engine.dart`"
         - What this file is
@@ -13515,7 +13515,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
-        v2.0 — PRODUCTION GRADE"
+        v2.0 أ¢â‚¬â€‌ PRODUCTION GRADE"
       headings:
         - "`src/ui/quantum_telemetry_engine.dart`"
         - What this file is
@@ -13578,7 +13578,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
-        v2.0 — PRODUCTION GRADE"
+        v2.0 أ¢â‚¬â€‌ PRODUCTION GRADE"
       headings:
         - "`src/ui/quantum_telemetry_engine.dart`"
         - What this file is
@@ -13639,7 +13639,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
-        v2.0 — PRODUCTION GRADE"
+        v2.0 أ¢â‚¬â€‌ PRODUCTION GRADE"
       headings:
         - "`src/ui/quantum_telemetry_engine.dart`"
         - What this file is
@@ -13699,7 +13699,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
-        v2.0 — PRODUCTION GRADE"
+        v2.0 أ¢â‚¬â€‌ PRODUCTION GRADE"
       headings:
         - "`src/ui/quantum_telemetry_engine.dart`"
         - What this file is
@@ -13758,7 +13758,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM TELEMETRY ENGINE
-        v2.0 — PRODUCTION GRADE"
+        v2.0 أ¢â‚¬â€‌ PRODUCTION GRADE"
       headings:
         - "`src/ui/quantum_telemetry_engine.dart`"
         - What this file is
@@ -13817,7 +13817,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE)
-        v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
+        v14.0 أ¢â‚¬â€‌ OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
       headings:
         - "`src/ui/quantum_theme_engine.dart`"
         - What this file is
@@ -13877,7 +13877,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE)
-        v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
+        v14.0 أ¢â‚¬â€‌ OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
       headings:
         - "`src/ui/quantum_theme_engine.dart`"
         - What this file is
@@ -13936,7 +13936,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE)
-        v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
+        v14.0 أ¢â‚¬â€‌ OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
       headings:
         - "`src/ui/quantum_theme_engine.dart`"
         - What this file is
@@ -13995,7 +13995,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE)
-        v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
+        v14.0 أ¢â‚¬â€‌ OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
       headings:
         - "`src/ui/quantum_theme_engine.dart`"
         - What this file is
@@ -14054,7 +14054,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE)
-        v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
+        v14.0 أ¢â‚¬â€‌ OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
       headings:
         - "`src/ui/quantum_theme_engine.dart`"
         - What this file is
@@ -14113,7 +14113,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE)
-        v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
+        v14.0 أ¢â‚¬â€‌ OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
       headings:
         - "`src/ui/quantum_theme_engine.dart`"
         - What this file is
@@ -14174,7 +14174,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE)
-        v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
+        v14.0 أ¢â‚¬â€‌ OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
       headings:
         - "`src/ui/quantum_theme_engine.dart`"
         - What this file is
@@ -14235,7 +14235,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE)
-        v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
+        v14.0 أ¢â‚¬â€‌ OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
       headings:
         - "`src/ui/quantum_theme_engine.dart`"
         - What this file is
@@ -14296,7 +14296,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE)
-        v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
+        v14.0 أ¢â‚¬â€‌ OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
       headings:
         - "`src/ui/quantum_theme_engine.dart`"
         - What this file is
@@ -14359,7 +14359,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE)
-        v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
+        v14.0 أ¢â‚¬â€‌ OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
       headings:
         - "`src/ui/quantum_theme_engine.dart`"
         - What this file is
@@ -14422,7 +14422,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE)
-        v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
+        v14.0 أ¢â‚¬â€‌ OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
       headings:
         - "`src/ui/quantum_theme_engine.dart`"
         - What this file is
@@ -14482,7 +14482,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE)
-        v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
+        v14.0 أ¢â‚¬â€‌ OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
       headings:
         - "`src/ui/quantum_theme_engine.dart`"
         - What this file is
@@ -14541,7 +14541,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE)
-        v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
+        v14.0 أ¢â‚¬â€‌ OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
       headings:
         - "`src/ui/quantum_theme_engine.dart`"
         - What this file is
@@ -14600,7 +14600,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM THEME ENGINE (QTE)
-        v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
+        v14.0 أ¢â‚¬â€‌ OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)"
       headings:
         - "`src/ui/quantum_theme_engine.dart`"
         - What this file is
@@ -15720,7 +15720,7 @@ scenarios:
       summary:
         "A UI-layer implementation file. It owns widget composition, layout,
         interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
-        behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+        behavior. Author-intent note: Quantum ecosystem أ¢â‚¬â€‌ only the barrel import is
         needed after decoupling."
       headings:
         - "`src/ui/quantum_overlays.dart`"
@@ -15780,7 +15780,7 @@ scenarios:
       summary:
         "A UI-layer implementation file. It owns widget composition, layout,
         interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
-        behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+        behavior. Author-intent note: Quantum ecosystem أ¢â‚¬â€‌ only the barrel import is
         needed after decoupling."
       headings:
         - "`src/ui/quantum_overlays.dart`"
@@ -15839,7 +15839,7 @@ scenarios:
       summary:
         "A UI-layer implementation file. It owns widget composition, layout,
         interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
-        behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+        behavior. Author-intent note: Quantum ecosystem أ¢â‚¬â€‌ only the barrel import is
         needed after decoupling."
       headings:
         - "`src/ui/quantum_overlays.dart`"
@@ -15898,7 +15898,7 @@ scenarios:
       summary:
         "A UI-layer implementation file. It owns widget composition, layout,
         interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
-        behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+        behavior. Author-intent note: Quantum ecosystem أ¢â‚¬â€‌ only the barrel import is
         needed after decoupling."
       headings:
         - "`src/ui/quantum_overlays.dart`"
@@ -15957,7 +15957,7 @@ scenarios:
       summary:
         "A UI-layer implementation file. It owns widget composition, layout,
         interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
-        behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+        behavior. Author-intent note: Quantum ecosystem أ¢â‚¬â€‌ only the barrel import is
         needed after decoupling."
       headings:
         - "`src/ui/quantum_overlays.dart`"
@@ -16016,7 +16016,7 @@ scenarios:
       summary:
         "A UI-layer implementation file. It owns widget composition, layout,
         interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
-        behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+        behavior. Author-intent note: Quantum ecosystem أ¢â‚¬â€‌ only the barrel import is
         needed after decoupling."
       headings:
         - "`src/ui/quantum_overlays.dart`"
@@ -16077,7 +16077,7 @@ scenarios:
       summary:
         "A UI-layer implementation file. It owns widget composition, layout,
         interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
-        behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+        behavior. Author-intent note: Quantum ecosystem أ¢â‚¬â€‌ only the barrel import is
         needed after decoupling."
       headings:
         - "`src/ui/quantum_overlays.dart`"
@@ -16138,7 +16138,7 @@ scenarios:
       summary:
         "A UI-layer implementation file. It owns widget composition, layout,
         interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
-        behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+        behavior. Author-intent note: Quantum ecosystem أ¢â‚¬â€‌ only the barrel import is
         needed after decoupling."
       headings:
         - "`src/ui/quantum_overlays.dart`"
@@ -16199,7 +16199,7 @@ scenarios:
       summary:
         "A UI-layer implementation file. It owns widget composition, layout,
         interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
-        behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+        behavior. Author-intent note: Quantum ecosystem أ¢â‚¬â€‌ only the barrel import is
         needed after decoupling."
       headings:
         - "`src/ui/quantum_overlays.dart`"
@@ -16258,7 +16258,7 @@ scenarios:
       summary:
         "A UI-layer implementation file. It owns widget composition, layout,
         interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
-        behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+        behavior. Author-intent note: Quantum ecosystem أ¢â‚¬â€‌ only the barrel import is
         needed after decoupling."
       headings:
         - "`src/ui/quantum_overlays.dart`"
@@ -16319,7 +16319,7 @@ scenarios:
       summary:
         "A UI-layer implementation file. It owns widget composition, layout,
         interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
-        behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+        behavior. Author-intent note: Quantum ecosystem أ¢â‚¬â€‌ only the barrel import is
         needed after decoupling."
       headings:
         - "`src/ui/quantum_overlays.dart`"
@@ -16379,7 +16379,7 @@ scenarios:
       summary:
         "A UI-layer implementation file. It owns widget composition, layout,
         interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
-        behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+        behavior. Author-intent note: Quantum ecosystem أ¢â‚¬â€‌ only the barrel import is
         needed after decoupling."
       headings:
         - "`src/ui/quantum_overlays.dart`"
@@ -16438,7 +16438,7 @@ scenarios:
       summary:
         "A UI-layer implementation file. It owns widget composition, layout,
         interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
-        behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+        behavior. Author-intent note: Quantum ecosystem أ¢â‚¬â€‌ only the barrel import is
         needed after decoupling."
       headings:
         - "`src/ui/quantum_overlays.dart`"
@@ -16497,7 +16497,7 @@ scenarios:
       summary:
         "A UI-layer implementation file. It owns widget composition, layout,
         interactions, theming, telemetry, overlays, hydration, or other Flutter-facing
-        behavior. Author-intent note: Quantum ecosystem — only the barrel import is
+        behavior. Author-intent note: Quantum ecosystem أ¢â‚¬â€‌ only the barrel import is
         needed after decoupling."
       headings:
         - "`src/ui/quantum_overlays.dart`"
@@ -19918,7 +19918,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0
-        — ENCRYPTED SERVER-DRIVEN UI"
+        أ¢â‚¬â€‌ ENCRYPTED SERVER-DRIVEN UI"
       headings:
         - "`src/runtime/quantum_sdui_engine.dart`"
         - What this file is
@@ -19978,7 +19978,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0
-        — ENCRYPTED SERVER-DRIVEN UI"
+        أ¢â‚¬â€‌ ENCRYPTED SERVER-DRIVEN UI"
       headings:
         - "`src/runtime/quantum_sdui_engine.dart`"
         - What this file is
@@ -20037,7 +20037,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0
-        — ENCRYPTED SERVER-DRIVEN UI"
+        أ¢â‚¬â€‌ ENCRYPTED SERVER-DRIVEN UI"
       headings:
         - "`src/runtime/quantum_sdui_engine.dart`"
         - What this file is
@@ -20096,7 +20096,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0
-        — ENCRYPTED SERVER-DRIVEN UI"
+        أ¢â‚¬â€‌ ENCRYPTED SERVER-DRIVEN UI"
       headings:
         - "`src/runtime/quantum_sdui_engine.dart`"
         - What this file is
@@ -20155,7 +20155,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0
-        — ENCRYPTED SERVER-DRIVEN UI"
+        أ¢â‚¬â€‌ ENCRYPTED SERVER-DRIVEN UI"
       headings:
         - "`src/runtime/quantum_sdui_engine.dart`"
         - What this file is
@@ -20214,7 +20214,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0
-        — ENCRYPTED SERVER-DRIVEN UI"
+        أ¢â‚¬â€‌ ENCRYPTED SERVER-DRIVEN UI"
       headings:
         - "`src/runtime/quantum_sdui_engine.dart`"
         - What this file is
@@ -20275,7 +20275,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0
-        — ENCRYPTED SERVER-DRIVEN UI"
+        أ¢â‚¬â€‌ ENCRYPTED SERVER-DRIVEN UI"
       headings:
         - "`src/runtime/quantum_sdui_engine.dart`"
         - What this file is
@@ -20336,7 +20336,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0
-        — ENCRYPTED SERVER-DRIVEN UI"
+        أ¢â‚¬â€‌ ENCRYPTED SERVER-DRIVEN UI"
       headings:
         - "`src/runtime/quantum_sdui_engine.dart`"
         - What this file is
@@ -20397,7 +20397,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0
-        — ENCRYPTED SERVER-DRIVEN UI"
+        أ¢â‚¬â€‌ ENCRYPTED SERVER-DRIVEN UI"
       headings:
         - "`src/runtime/quantum_sdui_engine.dart`"
         - What this file is
@@ -20460,7 +20460,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0
-        — ENCRYPTED SERVER-DRIVEN UI"
+        أ¢â‚¬â€‌ ENCRYPTED SERVER-DRIVEN UI"
       headings:
         - "`src/runtime/quantum_sdui_engine.dart`"
         - What this file is
@@ -20521,7 +20521,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0
-        — ENCRYPTED SERVER-DRIVEN UI"
+        أ¢â‚¬â€‌ ENCRYPTED SERVER-DRIVEN UI"
       headings:
         - "`src/runtime/quantum_sdui_engine.dart`"
         - What this file is
@@ -20580,7 +20580,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI ENGINE v1.0
-        — ENCRYPTED SERVER-DRIVEN UI"
+        أ¢â‚¬â€‌ ENCRYPTED SERVER-DRIVEN UI"
       headings:
         - "`src/runtime/quantum_sdui_engine.dart`"
         - What this file is
@@ -20638,7 +20638,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+        أ¢â‚¬â€‌ 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
       headings:
         - "`src/runtime/quantum_omni_registry.dart`"
         - What this file is
@@ -20697,7 +20697,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+        أ¢â‚¬â€‌ 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
       headings:
         - "`src/runtime/quantum_omni_registry.dart`"
         - What this file is
@@ -20755,7 +20755,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+        أ¢â‚¬â€‌ 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
       headings:
         - "`src/runtime/quantum_omni_registry.dart`"
         - What this file is
@@ -20813,7 +20813,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+        أ¢â‚¬â€‌ 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
       headings:
         - "`src/runtime/quantum_omni_registry.dart`"
         - What this file is
@@ -20871,7 +20871,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+        أ¢â‚¬â€‌ 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
       headings:
         - "`src/runtime/quantum_omni_registry.dart`"
         - What this file is
@@ -20929,7 +20929,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+        أ¢â‚¬â€‌ 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
       headings:
         - "`src/runtime/quantum_omni_registry.dart`"
         - What this file is
@@ -20989,7 +20989,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+        أ¢â‚¬â€‌ 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
       headings:
         - "`src/runtime/quantum_omni_registry.dart`"
         - What this file is
@@ -21049,7 +21049,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM OMNI REGISTRY v17.0
-        — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
+        أ¢â‚¬â€‌ 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)"
       headings:
         - "`src/runtime/quantum_omni_registry.dart`"
         - What this file is
@@ -21576,7 +21576,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI TYPE ENGINE
-        — schema export + TypeScript bundle generator"
+        أ¢â‚¬â€‌ schema export + TypeScript bundle generator"
       headings:
         - "`src/runtime/quantum_sdui_type_engine.dart`"
         - What this file is
@@ -21635,7 +21635,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI TYPE ENGINE
-        — schema export + TypeScript bundle generator"
+        أ¢â‚¬â€‌ schema export + TypeScript bundle generator"
       headings:
         - "`src/runtime/quantum_sdui_type_engine.dart`"
         - What this file is
@@ -21693,7 +21693,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI TYPE ENGINE
-        — schema export + TypeScript bundle generator"
+        أ¢â‚¬â€‌ schema export + TypeScript bundle generator"
       headings:
         - "`src/runtime/quantum_sdui_type_engine.dart`"
         - What this file is
@@ -21751,7 +21751,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI TYPE ENGINE
-        — schema export + TypeScript bundle generator"
+        أ¢â‚¬â€‌ schema export + TypeScript bundle generator"
       headings:
         - "`src/runtime/quantum_sdui_type_engine.dart`"
         - What this file is
@@ -21809,7 +21809,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI TYPE ENGINE
-        — schema export + TypeScript bundle generator"
+        أ¢â‚¬â€‌ schema export + TypeScript bundle generator"
       headings:
         - "`src/runtime/quantum_sdui_type_engine.dart`"
         - What this file is
@@ -21867,7 +21867,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI TYPE ENGINE
-        — schema export + TypeScript bundle generator"
+        أ¢â‚¬â€‌ schema export + TypeScript bundle generator"
       headings:
         - "`src/runtime/quantum_sdui_type_engine.dart`"
         - What this file is
@@ -21927,7 +21927,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI TYPE ENGINE
-        — schema export + TypeScript bundle generator"
+        أ¢â‚¬â€‌ schema export + TypeScript bundle generator"
       headings:
         - "`src/runtime/quantum_sdui_type_engine.dart`"
         - What this file is
@@ -21987,7 +21987,7 @@ scenarios:
         "A subsystem engine. Files with this role typically own state, lifecycle,
         rendering, decoding, or orchestration for one feature area and expose a higher-level
         API to the rest of the framework. Author-intent note: QUANTUM SDUI TYPE ENGINE
-        — schema export + TypeScript bundle generator"
+        أ¢â‚¬â€‌ schema export + TypeScript bundle generator"
       headings:
         - "`src/runtime/quantum_sdui_type_engine.dart`"
         - What this file is
@@ -24215,610 +24215,6 @@ scenarios:
       - ui
       - gesture
       - quantum sdui test engine io
-  - uuid: 1180e881-4f8d-5b23-8917-e8c986e60fee
-    file: lib/src/runtime/quantum_embodiment_examples.dart
-    docs_file: docs/src/runtime/quantum_embodiment_examples.dart.md
-    title:
-      "Quantum Embodiment Examples: public contract remains stable under valid
-      input"
-    slug: contract
-    category: ui
-    severity: critical
-    description:
-      Verify that quantum embodiment examples keeps its documented runtime
-      behavior while handling contract conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_examples.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_examples.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - normal
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A framework source file that participates in the Quantum runtime. Author-intent
-        note: QEE EXAMPLE SCENARIOS — quantum_embodiment_examples.dart"
-      headings:
-        - "`src/runtime/quantum_embodiment_examples.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - contract
-      - quantum embodiment examples
-  - uuid: 18f28c68-959a-505a-8689-cd45bdd9e1c1
-    file: lib/src/runtime/quantum_embodiment_examples.dart
-    docs_file: docs/src/runtime/quantum_embodiment_examples.dart.md
-    title: "Quantum Embodiment Examples: invalid or malformed input is rejected cleanly"
-    slug: invalid_input
-    category: ui
-    severity: critical
-    description:
-      Verify that quantum embodiment examples keeps its documented runtime
-      behavior while handling invalid input conditions without corruption, leakage,
-      or silent failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_examples.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_examples.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - rotated
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A framework source file that participates in the Quantum runtime. Author-intent
-        note: QEE EXAMPLE SCENARIOS — quantum_embodiment_examples.dart"
-      headings:
-        - "`src/runtime/quantum_embodiment_examples.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - invalid_input
-      - quantum embodiment examples
-  - uuid: 1c90bd75-1c0a-58fb-b3d2-a50fb0f5aa5f
-    file: lib/src/runtime/quantum_embodiment_examples.dart
-    docs_file: docs/src/runtime/quantum_embodiment_examples.dart.md
-    title: "Quantum Embodiment Examples: re-entrant calls do not corrupt internal state"
-    slug: reentrant
-    category: ui
-    severity: high
-    description:
-      Verify that quantum embodiment examples keeps its documented runtime
-      behavior while handling reentrant conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_examples.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_examples.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - normal
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A framework source file that participates in the Quantum runtime. Author-intent
-        note: QEE EXAMPLE SCENARIOS — quantum_embodiment_examples.dart"
-      headings:
-        - "`src/runtime/quantum_embodiment_examples.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - reentrant
-      - quantum embodiment examples
-  - uuid: b57bb516-f709-5536-a48a-3c12237232d9
-    file: lib/src/runtime/quantum_embodiment_examples.dart
-    docs_file: docs/src/runtime/quantum_embodiment_examples.dart.md
-    title: "Quantum Embodiment Examples: dispose/close/teardown releases resources deterministically"
-    slug: cleanup
-    category: ui
-    severity: high
-    description:
-      Verify that quantum embodiment examples keeps its documented runtime
-      behavior while handling cleanup conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_examples.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_examples.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - rotated
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A framework source file that participates in the Quantum runtime. Author-intent
-        note: QEE EXAMPLE SCENARIOS — quantum_embodiment_examples.dart"
-      headings:
-        - "`src/runtime/quantum_embodiment_examples.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - cleanup
-      - quantum embodiment examples
-  - uuid: 7841448d-1a2b-5702-bc4e-36709e44c103
-    file: lib/src/runtime/quantum_embodiment_examples.dart
-    docs_file: docs/src/runtime/quantum_embodiment_examples.dart.md
-    title:
-      "Quantum Embodiment Examples: hot-path behavior stays within the runtime
-      budget"
-    slug: performance
-    category: ui
-    severity: high
-    description:
-      Verify that quantum embodiment examples keeps its documented runtime
-      behavior while handling performance conditions without corruption, leakage, or
-      silent failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_examples.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_examples.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - normal
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A framework source file that participates in the Quantum runtime. Author-intent
-        note: QEE EXAMPLE SCENARIOS — quantum_embodiment_examples.dart"
-      headings:
-        - "`src/runtime/quantum_embodiment_examples.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - performance
-      - quantum embodiment examples
-  - uuid: bff270b5-317b-51ba-9440-b77fa66f5142
-    file: lib/src/runtime/quantum_embodiment_examples.dart
-    docs_file: docs/src/runtime/quantum_embodiment_examples.dart.md
-    title: "Quantum Embodiment Examples: memory usage stays bounded under repeated operations"
-    slug: memory
-    category: ui
-    severity: medium
-    description:
-      Verify that quantum embodiment examples keeps its documented runtime
-      behavior while handling memory conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_examples.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_examples.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - rotated
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A framework source file that participates in the Quantum runtime. Author-intent
-        note: QEE EXAMPLE SCENARIOS — quantum_embodiment_examples.dart"
-      headings:
-        - "`src/runtime/quantum_embodiment_examples.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - memory
-      - quantum embodiment examples
-  - uuid: 3d07663f-ed8a-5d2b-9526-02b032554714
-    file: lib/src/runtime/quantum_embodiment_examples.dart
-    docs_file: docs/src/runtime/quantum_embodiment_examples.dart.md
-    title:
-      "Quantum Embodiment Examples: the runtime surface still matches the documented
-      API and headings"
-    slug: docs_parity
-    category: ui
-    severity: medium
-    description:
-      Verify that quantum embodiment examples keeps its documented runtime
-      behavior while handling docs parity conditions without corruption, leakage, or
-      silent failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_examples.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_examples.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - normal
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A framework source file that participates in the Quantum runtime. Author-intent
-        note: QEE EXAMPLE SCENARIOS — quantum_embodiment_examples.dart"
-      headings:
-        - "`src/runtime/quantum_embodiment_examples.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - docs_parity
-      - quantum embodiment examples
-  - uuid: bc44c5c4-c6c2-56a1-9bc4-a5f1829c724c
-    file: lib/src/runtime/quantum_embodiment_examples.dart
-    docs_file: docs/src/runtime/quantum_embodiment_examples.dart.md
-    title:
-      "Quantum Embodiment Examples: layout remains correct under narrow, wide,
-      and constrained bounds"
-    slug: layout
-    category: ui
-    severity: medium
-    description:
-      Verify that quantum embodiment examples keeps its documented runtime
-      behavior while handling layout conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_examples.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_examples.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - rotated
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A framework source file that participates in the Quantum runtime. Author-intent
-        note: QEE EXAMPLE SCENARIOS — quantum_embodiment_examples.dart"
-      headings:
-        - "`src/runtime/quantum_embodiment_examples.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - layout
-      - quantum embodiment examples
-  - uuid: b26c7a47-f96a-5102-beed-d96426b5fad4
-    file: lib/src/runtime/quantum_embodiment_examples.dart
-    docs_file: docs/src/runtime/quantum_embodiment_examples.dart.md
-    title:
-      "Quantum Embodiment Examples: semantics and accessibility output remain stable
-      across rebuilds"
-    slug: semantics
-    category: ui
-    severity: medium
-    description:
-      Verify that quantum embodiment examples keeps its documented runtime
-      behavior while handling semantics conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_examples.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_examples.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - normal
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A framework source file that participates in the Quantum runtime. Author-intent
-        note: QEE EXAMPLE SCENARIOS — quantum_embodiment_examples.dart"
-      headings:
-        - "`src/runtime/quantum_embodiment_examples.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - semantics
-      - quantum embodiment examples
-  - uuid: 4efb846f-464d-5abd-99d2-3322a586c96b
-    file: lib/src/runtime/quantum_embodiment_examples.dart
-    docs_file: docs/src/runtime/quantum_embodiment_examples.dart.md
-    title:
-      "Quantum Embodiment Examples: gesture handling and hit testing stay correct
-      during interaction"
-    slug: gesture
-    category: ui
-    severity: medium
-    description:
-      Verify that quantum embodiment examples keeps its documented runtime
-      behavior while handling gesture conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_examples.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_examples.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - rotated
-        gestures:
-          - tap
-          - hover
-          - drag
-          - resize
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A framework source file that participates in the Quantum runtime. Author-intent
-        note: QEE EXAMPLE SCENARIOS — quantum_embodiment_examples.dart"
-      headings:
-        - "`src/runtime/quantum_embodiment_examples.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - gesture
-      - quantum embodiment examples
   - uuid: e4142ab1-2319-5493-822f-25267eb341a9
     file: lib/src/runtime/quantum_core_schema_registry.dart
     docs_file: docs/src/runtime/quantum_core_schema_registry.dart.md
@@ -24874,7 +24270,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY
-        — lazy file-backed schema catalog"
+        أ¢â‚¬â€‌ lazy file-backed schema catalog"
       headings:
         - "`src/runtime/quantum_core_schema_registry.dart`"
         - What this file is
@@ -24938,7 +24334,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY
-        — lazy file-backed schema catalog"
+        أ¢â‚¬â€‌ lazy file-backed schema catalog"
       headings:
         - "`src/runtime/quantum_core_schema_registry.dart`"
         - What this file is
@@ -25002,7 +24398,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY
-        — lazy file-backed schema catalog"
+        أ¢â‚¬â€‌ lazy file-backed schema catalog"
       headings:
         - "`src/runtime/quantum_core_schema_registry.dart`"
         - What this file is
@@ -25068,7 +24464,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY
-        — lazy file-backed schema catalog"
+        أ¢â‚¬â€‌ lazy file-backed schema catalog"
       headings:
         - "`src/runtime/quantum_core_schema_registry.dart`"
         - What this file is
@@ -25134,7 +24530,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY
-        — lazy file-backed schema catalog"
+        أ¢â‚¬â€‌ lazy file-backed schema catalog"
       headings:
         - "`src/runtime/quantum_core_schema_registry.dart`"
         - What this file is
@@ -25200,7 +24596,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY
-        — lazy file-backed schema catalog"
+        أ¢â‚¬â€‌ lazy file-backed schema catalog"
       headings:
         - "`src/runtime/quantum_core_schema_registry.dart`"
         - What this file is
@@ -25266,7 +24662,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY
-        — lazy file-backed schema catalog"
+        أ¢â‚¬â€‌ lazy file-backed schema catalog"
       headings:
         - "`src/runtime/quantum_core_schema_registry.dart`"
         - What this file is
@@ -25332,7 +24728,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY
-        — lazy file-backed schema catalog"
+        أ¢â‚¬â€‌ lazy file-backed schema catalog"
       headings:
         - "`src/runtime/quantum_core_schema_registry.dart`"
         - What this file is
@@ -25398,7 +24794,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY
-        — lazy file-backed schema catalog"
+        أ¢â‚¬â€‌ lazy file-backed schema catalog"
       headings:
         - "`src/runtime/quantum_core_schema_registry.dart`"
         - What this file is
@@ -25464,7 +24860,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY
-        — lazy file-backed schema catalog"
+        أ¢â‚¬â€‌ lazy file-backed schema catalog"
       headings:
         - "`src/runtime/quantum_core_schema_registry.dart`"
         - What this file is
@@ -25530,7 +24926,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY
-        — lazy file-backed schema catalog"
+        أ¢â‚¬â€‌ lazy file-backed schema catalog"
       headings:
         - "`src/runtime/quantum_core_schema_registry.dart`"
         - What this file is
@@ -25596,7 +24992,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY
-        — lazy file-backed schema catalog"
+        أ¢â‚¬â€‌ lazy file-backed schema catalog"
       headings:
         - "`src/runtime/quantum_core_schema_registry.dart`"
         - What this file is
@@ -25662,7 +25058,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY
-        — lazy file-backed schema catalog"
+        أ¢â‚¬â€‌ lazy file-backed schema catalog"
       headings:
         - "`src/runtime/quantum_core_schema_registry.dart`"
         - What this file is
@@ -25726,7 +25122,7 @@ scenarios:
         "A registry module. It stores keyed definitions or instances, exposes
         lookup and registration helpers, and centralizes a class of metadata that multiple
         runtime subsystems consume. Author-intent note: QUANTUM CORE SCHEMA REGISTRY
-        — lazy file-backed schema catalog"
+        أ¢â‚¬â€‌ lazy file-backed schema catalog"
       headings:
         - "`src/runtime/quantum_core_schema_registry.dart`"
         - What this file is
@@ -25737,874 +25133,6 @@ scenarios:
       - parser
       - large_doc
       - quantum core schema registry
-  - uuid: c9875e54-21b1-5e56-9a13-8208c4063167
-    file: lib/src/runtime/quantum_embodiment_engine.dart
-    docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
-    title: "Quantum Embodiment Engine: public contract remains stable under valid input"
-    slug: contract
-    category: ui
-    severity: critical
-    description:
-      Verify that quantum embodiment engine keeps its documented runtime
-      behavior while handling contract conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - normal
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A subsystem engine. Files with this role typically own state, lifecycle,
-        rendering, decoding, or orchestration for one feature area and expose a higher-level
-        API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
-        (QEE) v1.0 — RUNTIME INTERACTION ENGINE"
-      headings:
-        - "`src/runtime/quantum_embodiment_engine.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - contract
-      - quantum embodiment engine
-  - uuid: f6f9e705-2911-5806-aed1-000805da5cf7
-    file: lib/src/runtime/quantum_embodiment_engine.dart
-    docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
-    title: "Quantum Embodiment Engine: invalid or malformed input is rejected cleanly"
-    slug: invalid_input
-    category: ui
-    severity: critical
-    description:
-      Verify that quantum embodiment engine keeps its documented runtime
-      behavior while handling invalid input conditions without corruption, leakage,
-      or silent failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - rotated
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A subsystem engine. Files with this role typically own state, lifecycle,
-        rendering, decoding, or orchestration for one feature area and expose a higher-level
-        API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
-        (QEE) v1.0 — RUNTIME INTERACTION ENGINE"
-      headings:
-        - "`src/runtime/quantum_embodiment_engine.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - invalid_input
-      - quantum embodiment engine
-  - uuid: dfc80f50-00a9-55b6-b95f-ca338fa04c41
-    file: lib/src/runtime/quantum_embodiment_engine.dart
-    docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
-    title: "Quantum Embodiment Engine: re-entrant calls do not corrupt internal state"
-    slug: reentrant
-    category: ui
-    severity: high
-    description:
-      Verify that quantum embodiment engine keeps its documented runtime
-      behavior while handling reentrant conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - normal
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A subsystem engine. Files with this role typically own state, lifecycle,
-        rendering, decoding, or orchestration for one feature area and expose a higher-level
-        API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
-        (QEE) v1.0 — RUNTIME INTERACTION ENGINE"
-      headings:
-        - "`src/runtime/quantum_embodiment_engine.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - reentrant
-      - quantum embodiment engine
-  - uuid: 58d0d408-bf10-5993-990c-339ace53d558
-    file: lib/src/runtime/quantum_embodiment_engine.dart
-    docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
-    title: "Quantum Embodiment Engine: dispose/close/teardown releases resources deterministically"
-    slug: cleanup
-    category: ui
-    severity: high
-    description:
-      Verify that quantum embodiment engine keeps its documented runtime
-      behavior while handling cleanup conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - rotated
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A subsystem engine. Files with this role typically own state, lifecycle,
-        rendering, decoding, or orchestration for one feature area and expose a higher-level
-        API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
-        (QEE) v1.0 — RUNTIME INTERACTION ENGINE"
-      headings:
-        - "`src/runtime/quantum_embodiment_engine.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - cleanup
-      - quantum embodiment engine
-  - uuid: eb8f0c1f-8c06-58e5-80b4-d3c9925e2f3c
-    file: lib/src/runtime/quantum_embodiment_engine.dart
-    docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
-    title: "Quantum Embodiment Engine: hot-path behavior stays within the runtime budget"
-    slug: performance
-    category: ui
-    severity: high
-    description:
-      Verify that quantum embodiment engine keeps its documented runtime
-      behavior while handling performance conditions without corruption, leakage, or
-      silent failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - normal
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A subsystem engine. Files with this role typically own state, lifecycle,
-        rendering, decoding, or orchestration for one feature area and expose a higher-level
-        API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
-        (QEE) v1.0 — RUNTIME INTERACTION ENGINE"
-      headings:
-        - "`src/runtime/quantum_embodiment_engine.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - performance
-      - quantum embodiment engine
-  - uuid: 02ddea1d-5cd0-5fd0-8d16-8dc70514ee0d
-    file: lib/src/runtime/quantum_embodiment_engine.dart
-    docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
-    title: "Quantum Embodiment Engine: memory usage stays bounded under repeated operations"
-    slug: memory
-    category: ui
-    severity: medium
-    description:
-      Verify that quantum embodiment engine keeps its documented runtime
-      behavior while handling memory conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - rotated
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A subsystem engine. Files with this role typically own state, lifecycle,
-        rendering, decoding, or orchestration for one feature area and expose a higher-level
-        API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
-        (QEE) v1.0 — RUNTIME INTERACTION ENGINE"
-      headings:
-        - "`src/runtime/quantum_embodiment_engine.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - memory
-      - quantum embodiment engine
-  - uuid: f24a2725-efcd-5677-ad90-a271ed872672
-    file: lib/src/runtime/quantum_embodiment_engine.dart
-    docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
-    title:
-      "Quantum Embodiment Engine: the runtime surface still matches the documented
-      API and headings"
-    slug: docs_parity
-    category: ui
-    severity: medium
-    description:
-      Verify that quantum embodiment engine keeps its documented runtime
-      behavior while handling docs parity conditions without corruption, leakage, or
-      silent failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - normal
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A subsystem engine. Files with this role typically own state, lifecycle,
-        rendering, decoding, or orchestration for one feature area and expose a higher-level
-        API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
-        (QEE) v1.0 — RUNTIME INTERACTION ENGINE"
-      headings:
-        - "`src/runtime/quantum_embodiment_engine.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - docs_parity
-      - quantum embodiment engine
-  - uuid: b7e0fe0a-ca71-56fa-ae3a-f72c2797e75f
-    file: lib/src/runtime/quantum_embodiment_engine.dart
-    docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
-    title:
-      "Quantum Embodiment Engine: layout remains correct under narrow, wide, and
-      constrained bounds"
-    slug: layout
-    category: ui
-    severity: medium
-    description:
-      Verify that quantum embodiment engine keeps its documented runtime
-      behavior while handling layout conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - rotated
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A subsystem engine. Files with this role typically own state, lifecycle,
-        rendering, decoding, or orchestration for one feature area and expose a higher-level
-        API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
-        (QEE) v1.0 — RUNTIME INTERACTION ENGINE"
-      headings:
-        - "`src/runtime/quantum_embodiment_engine.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - layout
-      - quantum embodiment engine
-  - uuid: 6f2013af-7111-59a0-8d89-139ce74ae6c5
-    file: lib/src/runtime/quantum_embodiment_engine.dart
-    docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
-    title:
-      "Quantum Embodiment Engine: semantics and accessibility output remain stable
-      across rebuilds"
-    slug: semantics
-    category: ui
-    severity: medium
-    description:
-      Verify that quantum embodiment engine keeps its documented runtime
-      behavior while handling semantics conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - normal
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A subsystem engine. Files with this role typically own state, lifecycle,
-        rendering, decoding, or orchestration for one feature area and expose a higher-level
-        API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
-        (QEE) v1.0 — RUNTIME INTERACTION ENGINE"
-      headings:
-        - "`src/runtime/quantum_embodiment_engine.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - semantics
-      - quantum embodiment engine
-  - uuid: d961428a-100e-5380-92b9-21841f83ded2
-    file: lib/src/runtime/quantum_embodiment_engine.dart
-    docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
-    title:
-      "Quantum Embodiment Engine: gesture handling and hit testing stay correct
-      during interaction"
-    slug: gesture
-    category: ui
-    severity: medium
-    description:
-      Verify that quantum embodiment engine keeps its documented runtime
-      behavior while handling gesture conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - rotated
-        gestures:
-          - tap
-          - hover
-          - drag
-          - resize
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A subsystem engine. Files with this role typically own state, lifecycle,
-        rendering, decoding, or orchestration for one feature area and expose a higher-level
-        API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
-        (QEE) v1.0 — RUNTIME INTERACTION ENGINE"
-      headings:
-        - "`src/runtime/quantum_embodiment_engine.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - gesture
-      - quantum embodiment engine
-  - uuid: 9894d493-a43f-52af-960f-0ad2e63d3a6f
-    file: lib/src/runtime/quantum_embodiment_engine.dart
-    docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
-    title:
-      "Quantum Embodiment Engine: resize or drag interactions preserve geometry
-      and state"
-    slug: resize
-    category: ui
-    severity: medium
-    description:
-      Verify that quantum embodiment engine keeps its documented runtime
-      behavior while handling resize conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - normal
-        gestures:
-          - tap
-          - hover
-          - drag
-          - resize
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A subsystem engine. Files with this role typically own state, lifecycle,
-        rendering, decoding, or orchestration for one feature area and expose a higher-level
-        API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
-        (QEE) v1.0 — RUNTIME INTERACTION ENGINE"
-      headings:
-        - "`src/runtime/quantum_embodiment_engine.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - resize
-      - quantum embodiment engine
-  - uuid: 5e9ae881-fc5b-53bc-8363-adc24d1a7585
-    file: lib/src/runtime/quantum_embodiment_engine.dart
-    docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
-    title: "Quantum Embodiment Engine: public contract remains stable under valid input"
-    slug: contract
-    category: ui
-    severity: medium
-    description:
-      Verify that quantum embodiment engine keeps its documented runtime
-      behavior while handling contract conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - rotated
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A subsystem engine. Files with this role typically own state, lifecycle,
-        rendering, decoding, or orchestration for one feature area and expose a higher-level
-        API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
-        (QEE) v1.0 — RUNTIME INTERACTION ENGINE"
-      headings:
-        - "`src/runtime/quantum_embodiment_engine.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - contract
-      - quantum embodiment engine
-  - uuid: b663af55-42d9-564c-ad6b-7983bd4c9a4a
-    file: lib/src/runtime/quantum_embodiment_engine.dart
-    docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
-    title: "Quantum Embodiment Engine: invalid or malformed input is rejected cleanly"
-    slug: invalid_input
-    category: ui
-    severity: medium
-    description:
-      Verify that quantum embodiment engine keeps its documented runtime
-      behavior while handling invalid input conditions without corruption, leakage,
-      or silent failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - normal
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A subsystem engine. Files with this role typically own state, lifecycle,
-        rendering, decoding, or orchestration for one feature area and expose a higher-level
-        API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
-        (QEE) v1.0 — RUNTIME INTERACTION ENGINE"
-      headings:
-        - "`src/runtime/quantum_embodiment_engine.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - invalid_input
-      - quantum embodiment engine
-  - uuid: 94c45e8d-a6ee-54e8-9df2-1135ae7619b2
-    file: lib/src/runtime/quantum_embodiment_engine.dart
-    docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
-    title: "Quantum Embodiment Engine: re-entrant calls do not corrupt internal state"
-    slug: reentrant
-    category: ui
-    severity: medium
-    description:
-      Verify that quantum embodiment engine keeps its documented runtime
-      behavior while handling reentrant conditions without corruption, leakage, or silent
-      failure.
-    input:
-      preconditions:
-        - Load src/runtime/quantum_embodiment_engine.dart with its documented dependencies
-          available.
-        - Use the runtime surface described in docs/src/runtime/quantum_embodiment_engine.dart.md.
-      stimulus:
-        - Mount the widget or render object under multiple constraint sets.
-        - Trigger rebuilds, pointer interaction, and teardown in a single test flow.
-      data:
-        constraints:
-          - tight
-          - loose
-          - unbounded
-          - rotated
-        gestures:
-          - tap
-          - scroll
-    expected_output:
-      layout: No overflow, clipping regression, or unexpected relayout churn.
-      interaction: Hit-testing and gesture routing remain deterministic.
-      frame_budget: Frame timing stays within the defined budget on repeated rebuilds.
-    observability:
-      logs: No unhandled exceptions, uncaught async errors, or hidden retries.
-      metrics: Capture latency, allocations, rebuild count, and cleanup completion.
-      traces: Trace the call path through the documented public API and teardown hooks.
-    performance_budget:
-      max_ms: 50
-      stress_ms: 150
-    memory_budget:
-      max_growth_mb: 4
-      leak_check: true
-    cleanup:
-      - Dispose controllers, streams, painters, or isolates.
-      - Verify no retained listeners or stale caches remain.
-    docs_parity:
-      summary:
-        "A subsystem engine. Files with this role typically own state, lifecycle,
-        rendering, decoding, or orchestration for one feature area and expose a higher-level
-        API to the rest of the framework. Author-intent note: QUANTUM EMBODIMENT ENGINE
-        (QEE) v1.0 — RUNTIME INTERACTION ENGINE"
-      headings:
-        - "`src/runtime/quantum_embodiment_engine.dart`"
-        - What this file is
-        - Dependencies
-        - Top-level declarations
-        - Important members and helpers
-    tags:
-      - ui
-      - reentrant
-      - quantum embodiment engine
   - uuid: 308abfd1-727e-5f93-99d9-89cf06f91587
     file: lib/src/runtime/quantum_export_dom_web.dart
     docs_file: docs/src/runtime/quantum_export_dom_web.dart.md
@@ -26651,7 +25179,7 @@ scenarios:
       summary:
         "An export-oriented helper file. Its main role is to move data or widgets
         out of the framework in a structured way rather than implementing business logic
-        itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)"
+        itself. Author-intent note: QUANTUM EXPORT DOM HELPER أ¢â‚¬â€‌ web implementation (dart:html)"
       headings:
         - "`src/runtime/quantum_export_dom_web.dart`"
         - What this file is
@@ -26709,7 +25237,7 @@ scenarios:
       summary:
         "An export-oriented helper file. Its main role is to move data or widgets
         out of the framework in a structured way rather than implementing business logic
-        itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)"
+        itself. Author-intent note: QUANTUM EXPORT DOM HELPER أ¢â‚¬â€‌ web implementation (dart:html)"
       headings:
         - "`src/runtime/quantum_export_dom_web.dart`"
         - What this file is
@@ -26766,7 +25294,7 @@ scenarios:
       summary:
         "An export-oriented helper file. Its main role is to move data or widgets
         out of the framework in a structured way rather than implementing business logic
-        itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)"
+        itself. Author-intent note: QUANTUM EXPORT DOM HELPER أ¢â‚¬â€‌ web implementation (dart:html)"
       headings:
         - "`src/runtime/quantum_export_dom_web.dart`"
         - What this file is
@@ -26823,7 +25351,7 @@ scenarios:
       summary:
         "An export-oriented helper file. Its main role is to move data or widgets
         out of the framework in a structured way rather than implementing business logic
-        itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)"
+        itself. Author-intent note: QUANTUM EXPORT DOM HELPER أ¢â‚¬â€‌ web implementation (dart:html)"
       headings:
         - "`src/runtime/quantum_export_dom_web.dart`"
         - What this file is
@@ -26880,7 +25408,7 @@ scenarios:
       summary:
         "An export-oriented helper file. Its main role is to move data or widgets
         out of the framework in a structured way rather than implementing business logic
-        itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)"
+        itself. Author-intent note: QUANTUM EXPORT DOM HELPER أ¢â‚¬â€‌ web implementation (dart:html)"
       headings:
         - "`src/runtime/quantum_export_dom_web.dart`"
         - What this file is
@@ -26937,7 +25465,7 @@ scenarios:
       summary:
         "An export-oriented helper file. Its main role is to move data or widgets
         out of the framework in a structured way rather than implementing business logic
-        itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)"
+        itself. Author-intent note: QUANTUM EXPORT DOM HELPER أ¢â‚¬â€‌ web implementation (dart:html)"
       headings:
         - "`src/runtime/quantum_export_dom_web.dart`"
         - What this file is
@@ -26996,7 +25524,7 @@ scenarios:
       summary:
         "An export-oriented helper file. Its main role is to move data or widgets
         out of the framework in a structured way rather than implementing business logic
-        itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)"
+        itself. Author-intent note: QUANTUM EXPORT DOM HELPER أ¢â‚¬â€‌ web implementation (dart:html)"
       headings:
         - "`src/runtime/quantum_export_dom_web.dart`"
         - What this file is
@@ -27055,7 +25583,7 @@ scenarios:
       summary:
         "An export-oriented helper file. Its main role is to move data or widgets
         out of the framework in a structured way rather than implementing business logic
-        itself. Author-intent note: QUANTUM EXPORT DOM HELPER — web implementation (dart:html)"
+        itself. Author-intent note: QUANTUM EXPORT DOM HELPER أ¢â‚¬â€‌ web implementation (dart:html)"
       headings:
         - "`src/runtime/quantum_export_dom_web.dart`"
         - What this file is
@@ -30389,7 +28917,7 @@ scenarios:
         "A stub implementation used when the current platform does not support
         the hydration reader behavior. It intentionally stays minimal so unsupported
         builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER
-        — stub (non-web platforms)"
+        أ¢â‚¬â€‌ stub (non-web platforms)"
       headings:
         - "`src/runtime/quantum_export_dom_stub.dart`"
         - What this file is
@@ -30448,7 +28976,7 @@ scenarios:
         "A stub implementation used when the current platform does not support
         the hydration reader behavior. It intentionally stays minimal so unsupported
         builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER
-        — stub (non-web platforms)"
+        أ¢â‚¬â€‌ stub (non-web platforms)"
       headings:
         - "`src/runtime/quantum_export_dom_stub.dart`"
         - What this file is
@@ -30506,7 +29034,7 @@ scenarios:
         "A stub implementation used when the current platform does not support
         the hydration reader behavior. It intentionally stays minimal so unsupported
         builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER
-        — stub (non-web platforms)"
+        أ¢â‚¬â€‌ stub (non-web platforms)"
       headings:
         - "`src/runtime/quantum_export_dom_stub.dart`"
         - What this file is
@@ -30564,7 +29092,7 @@ scenarios:
         "A stub implementation used when the current platform does not support
         the hydration reader behavior. It intentionally stays minimal so unsupported
         builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER
-        — stub (non-web platforms)"
+        أ¢â‚¬â€‌ stub (non-web platforms)"
       headings:
         - "`src/runtime/quantum_export_dom_stub.dart`"
         - What this file is
@@ -30622,7 +29150,7 @@ scenarios:
         "A stub implementation used when the current platform does not support
         the hydration reader behavior. It intentionally stays minimal so unsupported
         builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER
-        — stub (non-web platforms)"
+        أ¢â‚¬â€‌ stub (non-web platforms)"
       headings:
         - "`src/runtime/quantum_export_dom_stub.dart`"
         - What this file is
@@ -30680,7 +29208,7 @@ scenarios:
         "A stub implementation used when the current platform does not support
         the hydration reader behavior. It intentionally stays minimal so unsupported
         builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER
-        — stub (non-web platforms)"
+        أ¢â‚¬â€‌ stub (non-web platforms)"
       headings:
         - "`src/runtime/quantum_export_dom_stub.dart`"
         - What this file is
@@ -30740,7 +29268,7 @@ scenarios:
         "A stub implementation used when the current platform does not support
         the hydration reader behavior. It intentionally stays minimal so unsupported
         builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER
-        — stub (non-web platforms)"
+        أ¢â‚¬â€‌ stub (non-web platforms)"
       headings:
         - "`src/runtime/quantum_export_dom_stub.dart`"
         - What this file is
@@ -30800,7 +29328,7 @@ scenarios:
         "A stub implementation used when the current platform does not support
         the hydration reader behavior. It intentionally stays minimal so unsupported
         builds still compile cleanly. Author-intent note: QUANTUM EXPORT DOM HELPER
-        — stub (non-web platforms)"
+        أ¢â‚¬â€‌ stub (non-web platforms)"
       headings:
         - "`src/runtime/quantum_export_dom_stub.dart`"
         - What this file is
@@ -32314,7 +30842,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -32372,7 +30900,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -32430,7 +30958,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -32488,7 +31016,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -32546,7 +31074,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -32604,7 +31132,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -32662,7 +31190,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -32720,7 +31248,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -32778,7 +31306,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -32838,7 +31366,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -32898,7 +31426,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -32956,7 +31484,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -33014,7 +31542,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -33072,7 +31600,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -33130,7 +31658,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -33188,7 +31716,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -33246,7 +31774,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -33304,7 +31832,7 @@ scenarios:
       summary:
         This is the framework VM and rendering runtime. It manages module registration,
         schema views, widget rendering, action dispatch, plugin metadata, caches, and
-        a large amount of the framework’s compile-time-to-runtime translation work.
+        a large amount of the frameworkأ¢â‚¬â„¢s compile-time-to-runtime translation work.
       headings:
         - "`src/runtime/quantum_vm.dart`"
         - What this file is
@@ -39277,7 +37805,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — TEXT ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ TEXT ENGINE"
       headings:
         - "`src/runtime/omni_cores/text_core.dart`"
         - What this file is
@@ -39334,7 +37862,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — TEXT ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ TEXT ENGINE"
       headings:
         - "`src/runtime/omni_cores/text_core.dart`"
         - What this file is
@@ -39391,7 +37919,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — TEXT ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ TEXT ENGINE"
       headings:
         - "`src/runtime/omni_cores/text_core.dart`"
         - What this file is
@@ -39448,7 +37976,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — TEXT ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ TEXT ENGINE"
       headings:
         - "`src/runtime/omni_cores/text_core.dart`"
         - What this file is
@@ -39505,7 +38033,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — TEXT ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ TEXT ENGINE"
       headings:
         - "`src/runtime/omni_cores/text_core.dart`"
         - What this file is
@@ -39562,7 +38090,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — TEXT ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ TEXT ENGINE"
       headings:
         - "`src/runtime/omni_cores/text_core.dart`"
         - What this file is
@@ -39619,7 +38147,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — TEXT ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ TEXT ENGINE"
       headings:
         - "`src/runtime/omni_cores/text_core.dart`"
         - What this file is
@@ -39676,7 +38204,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — TEXT ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ TEXT ENGINE"
       headings:
         - "`src/runtime/omni_cores/text_core.dart`"
         - What this file is
@@ -41367,7 +39895,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: STREAM CORE — Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
+        note: STREAM CORE أ¢â‚¬â€‌ Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
       headings:
         - "`src/runtime/omni_cores/stream_core.dart`"
         - What this file is
@@ -41426,7 +39954,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: STREAM CORE — Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
+        note: STREAM CORE أ¢â‚¬â€‌ Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
       headings:
         - "`src/runtime/omni_cores/stream_core.dart`"
         - What this file is
@@ -41485,7 +40013,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: STREAM CORE — Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
+        note: STREAM CORE أ¢â‚¬â€‌ Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
       headings:
         - "`src/runtime/omni_cores/stream_core.dart`"
         - What this file is
@@ -41544,7 +40072,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: STREAM CORE — Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
+        note: STREAM CORE أ¢â‚¬â€‌ Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
       headings:
         - "`src/runtime/omni_cores/stream_core.dart`"
         - What this file is
@@ -41603,7 +40131,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: STREAM CORE — Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
+        note: STREAM CORE أ¢â‚¬â€‌ Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
       headings:
         - "`src/runtime/omni_cores/stream_core.dart`"
         - What this file is
@@ -41662,7 +40190,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: STREAM CORE — Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
+        note: STREAM CORE أ¢â‚¬â€‌ Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
       headings:
         - "`src/runtime/omni_cores/stream_core.dart`"
         - What this file is
@@ -41721,7 +40249,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: STREAM CORE — Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
+        note: STREAM CORE أ¢â‚¬â€‌ Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
       headings:
         - "`src/runtime/omni_cores/stream_core.dart`"
         - What this file is
@@ -41782,7 +40310,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: STREAM CORE — Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
+        note: STREAM CORE أ¢â‚¬â€‌ Real-time streaming primitives (WebSocket, SSE, Ring, Ticker)"
       headings:
         - "`src/runtime/omni_cores/stream_core.dart`"
         - What this file is
@@ -42757,7 +41285,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — DECORATION ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ DECORATION ENGINE"
       headings:
         - "`src/runtime/omni_cores/decoration_core.dart`"
         - What this file is
@@ -42816,7 +41344,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — DECORATION ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ DECORATION ENGINE"
       headings:
         - "`src/runtime/omni_cores/decoration_core.dart`"
         - What this file is
@@ -42875,7 +41403,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — DECORATION ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ DECORATION ENGINE"
       headings:
         - "`src/runtime/omni_cores/decoration_core.dart`"
         - What this file is
@@ -42934,7 +41462,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — DECORATION ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ DECORATION ENGINE"
       headings:
         - "`src/runtime/omni_cores/decoration_core.dart`"
         - What this file is
@@ -42993,7 +41521,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — DECORATION ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ DECORATION ENGINE"
       headings:
         - "`src/runtime/omni_cores/decoration_core.dart`"
         - What this file is
@@ -43052,7 +41580,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — DECORATION ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ DECORATION ENGINE"
       headings:
         - "`src/runtime/omni_cores/decoration_core.dart`"
         - What this file is
@@ -43113,7 +41641,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — DECORATION ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ DECORATION ENGINE"
       headings:
         - "`src/runtime/omni_cores/decoration_core.dart`"
         - What this file is
@@ -43174,7 +41702,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — DECORATION ENGINE"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ DECORATION ENGINE"
       headings:
         - "`src/runtime/omni_cores/decoration_core.dart`"
         - What this file is
@@ -43681,7 +42209,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: COLLAB CORE — Real-time collaboration primitives"
+        note: COLLAB CORE أ¢â‚¬â€‌ Real-time collaboration primitives"
       headings:
         - "`src/runtime/omni_cores/collab_core.dart`"
         - What this file is
@@ -43740,7 +42268,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: COLLAB CORE — Real-time collaboration primitives"
+        note: COLLAB CORE أ¢â‚¬â€‌ Real-time collaboration primitives"
       headings:
         - "`src/runtime/omni_cores/collab_core.dart`"
         - What this file is
@@ -43799,7 +42327,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: COLLAB CORE — Real-time collaboration primitives"
+        note: COLLAB CORE أ¢â‚¬â€‌ Real-time collaboration primitives"
       headings:
         - "`src/runtime/omni_cores/collab_core.dart`"
         - What this file is
@@ -43858,7 +42386,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: COLLAB CORE — Real-time collaboration primitives"
+        note: COLLAB CORE أ¢â‚¬â€‌ Real-time collaboration primitives"
       headings:
         - "`src/runtime/omni_cores/collab_core.dart`"
         - What this file is
@@ -43917,7 +42445,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: COLLAB CORE — Real-time collaboration primitives"
+        note: COLLAB CORE أ¢â‚¬â€‌ Real-time collaboration primitives"
       headings:
         - "`src/runtime/omni_cores/collab_core.dart`"
         - What this file is
@@ -43976,7 +42504,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: COLLAB CORE — Real-time collaboration primitives"
+        note: COLLAB CORE أ¢â‚¬â€‌ Real-time collaboration primitives"
       headings:
         - "`src/runtime/omni_cores/collab_core.dart`"
         - What this file is
@@ -44035,7 +42563,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: COLLAB CORE — Real-time collaboration primitives"
+        note: COLLAB CORE أ¢â‚¬â€‌ Real-time collaboration primitives"
       headings:
         - "`src/runtime/omni_cores/collab_core.dart`"
         - What this file is
@@ -44096,7 +42624,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: COLLAB CORE — Real-time collaboration primitives"
+        note: COLLAB CORE أ¢â‚¬â€‌ Real-time collaboration primitives"
       headings:
         - "`src/runtime/omni_cores/collab_core.dart`"
         - What this file is
@@ -44739,7 +43267,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ MEDIA ENGINE (PURE RENDER, ZERO-GC)"
       headings:
         - "`src/runtime/omni_cores/media_core.dart`"
         - What this file is
@@ -44798,7 +43326,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ MEDIA ENGINE (PURE RENDER, ZERO-GC)"
       headings:
         - "`src/runtime/omni_cores/media_core.dart`"
         - What this file is
@@ -44857,7 +43385,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ MEDIA ENGINE (PURE RENDER, ZERO-GC)"
       headings:
         - "`src/runtime/omni_cores/media_core.dart`"
         - What this file is
@@ -44916,7 +43444,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ MEDIA ENGINE (PURE RENDER, ZERO-GC)"
       headings:
         - "`src/runtime/omni_cores/media_core.dart`"
         - What this file is
@@ -44975,7 +43503,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ MEDIA ENGINE (PURE RENDER, ZERO-GC)"
       headings:
         - "`src/runtime/omni_cores/media_core.dart`"
         - What this file is
@@ -45034,7 +43562,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ MEDIA ENGINE (PURE RENDER, ZERO-GC)"
       headings:
         - "`src/runtime/omni_cores/media_core.dart`"
         - What this file is
@@ -45093,7 +43621,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ MEDIA ENGINE (PURE RENDER, ZERO-GC)"
       headings:
         - "`src/runtime/omni_cores/media_core.dart`"
         - What this file is
@@ -45152,7 +43680,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ MEDIA ENGINE (PURE RENDER, ZERO-GC)"
       headings:
         - "`src/runtime/omni_cores/media_core.dart`"
         - What this file is
@@ -45210,7 +43738,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ BOX & LAYOUT FACTORY"
       headings:
         - "`src/runtime/omni_cores/box_core.dart`"
         - What this file is
@@ -45268,7 +43796,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ BOX & LAYOUT FACTORY"
       headings:
         - "`src/runtime/omni_cores/box_core.dart`"
         - What this file is
@@ -45326,7 +43854,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ BOX & LAYOUT FACTORY"
       headings:
         - "`src/runtime/omni_cores/box_core.dart`"
         - What this file is
@@ -45384,7 +43912,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ BOX & LAYOUT FACTORY"
       headings:
         - "`src/runtime/omni_cores/box_core.dart`"
         - What this file is
@@ -45442,7 +43970,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ BOX & LAYOUT FACTORY"
       headings:
         - "`src/runtime/omni_cores/box_core.dart`"
         - What this file is
@@ -45500,7 +44028,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ BOX & LAYOUT FACTORY"
       headings:
         - "`src/runtime/omni_cores/box_core.dart`"
         - What this file is
@@ -45558,7 +44086,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ BOX & LAYOUT FACTORY"
       headings:
         - "`src/runtime/omni_cores/box_core.dart`"
         - What this file is
@@ -45616,7 +44144,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ BOX & LAYOUT FACTORY"
       headings:
         - "`src/runtime/omni_cores/box_core.dart`"
         - What this file is
@@ -45674,7 +44202,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ BOX & LAYOUT FACTORY"
       headings:
         - "`src/runtime/omni_cores/box_core.dart`"
         - What this file is
@@ -45734,7 +44262,7 @@ scenarios:
       summary:
         "A core primitives file. These modules define low-level types, flags,
         value objects, or utility abstractions used throughout the framework. Author-intent
-        note: QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY"
+        note: QUANTUM OMNI REGISTRY أ¢â‚¬â€‌ BOX & LAYOUT FACTORY"
       headings:
         - "`src/runtime/omni_cores/box_core.dart`"
         - What this file is
@@ -49338,7 +47866,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog"
+        Author-intent note: QUANTUM BOOT SCHEMA أ¢â‚¬â€‌ schema-first, lazy-loaded file catalog"
       headings:
         - "`src/app/quantum_boot_schema.dart`"
         - What this file is
@@ -49400,7 +47928,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog"
+        Author-intent note: QUANTUM BOOT SCHEMA أ¢â‚¬â€‌ schema-first, lazy-loaded file catalog"
       headings:
         - "`src/app/quantum_boot_schema.dart`"
         - What this file is
@@ -49461,7 +47989,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog"
+        Author-intent note: QUANTUM BOOT SCHEMA أ¢â‚¬â€‌ schema-first, lazy-loaded file catalog"
       headings:
         - "`src/app/quantum_boot_schema.dart`"
         - What this file is
@@ -49522,7 +48050,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog"
+        Author-intent note: QUANTUM BOOT SCHEMA أ¢â‚¬â€‌ schema-first, lazy-loaded file catalog"
       headings:
         - "`src/app/quantum_boot_schema.dart`"
         - What this file is
@@ -49583,7 +48111,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog"
+        Author-intent note: QUANTUM BOOT SCHEMA أ¢â‚¬â€‌ schema-first, lazy-loaded file catalog"
       headings:
         - "`src/app/quantum_boot_schema.dart`"
         - What this file is
@@ -49644,7 +48172,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog"
+        Author-intent note: QUANTUM BOOT SCHEMA أ¢â‚¬â€‌ schema-first, lazy-loaded file catalog"
       headings:
         - "`src/app/quantum_boot_schema.dart`"
         - What this file is
@@ -49707,7 +48235,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog"
+        Author-intent note: QUANTUM BOOT SCHEMA أ¢â‚¬â€‌ schema-first, lazy-loaded file catalog"
       headings:
         - "`src/app/quantum_boot_schema.dart`"
         - What this file is
@@ -49770,7 +48298,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog"
+        Author-intent note: QUANTUM BOOT SCHEMA أ¢â‚¬â€‌ schema-first, lazy-loaded file catalog"
       headings:
         - "`src/app/quantum_boot_schema.dart`"
         - What this file is
@@ -49829,7 +48357,7 @@ scenarios:
         "A file-based routing subsystem. It discovers route assets, converts
         naming conventions into URL patterns, caches route metadata, and exposes runtime
         route injection and invalidation. Author-intent note: QUANTUM FILE ROUTER v1.0
-        — NEXT.JS-STYLE FILE-BASED ROUTING"
+        أ¢â‚¬â€‌ NEXT.JS-STYLE FILE-BASED ROUTING"
       headings:
         - "`src/app/quantum_file_router.dart`"
         - What this file is
@@ -49889,7 +48417,7 @@ scenarios:
         "A file-based routing subsystem. It discovers route assets, converts
         naming conventions into URL patterns, caches route metadata, and exposes runtime
         route injection and invalidation. Author-intent note: QUANTUM FILE ROUTER v1.0
-        — NEXT.JS-STYLE FILE-BASED ROUTING"
+        أ¢â‚¬â€‌ NEXT.JS-STYLE FILE-BASED ROUTING"
       headings:
         - "`src/app/quantum_file_router.dart`"
         - What this file is
@@ -49948,7 +48476,7 @@ scenarios:
         "A file-based routing subsystem. It discovers route assets, converts
         naming conventions into URL patterns, caches route metadata, and exposes runtime
         route injection and invalidation. Author-intent note: QUANTUM FILE ROUTER v1.0
-        — NEXT.JS-STYLE FILE-BASED ROUTING"
+        أ¢â‚¬â€‌ NEXT.JS-STYLE FILE-BASED ROUTING"
       headings:
         - "`src/app/quantum_file_router.dart`"
         - What this file is
@@ -50007,7 +48535,7 @@ scenarios:
         "A file-based routing subsystem. It discovers route assets, converts
         naming conventions into URL patterns, caches route metadata, and exposes runtime
         route injection and invalidation. Author-intent note: QUANTUM FILE ROUTER v1.0
-        — NEXT.JS-STYLE FILE-BASED ROUTING"
+        أ¢â‚¬â€‌ NEXT.JS-STYLE FILE-BASED ROUTING"
       headings:
         - "`src/app/quantum_file_router.dart`"
         - What this file is
@@ -50066,7 +48594,7 @@ scenarios:
         "A file-based routing subsystem. It discovers route assets, converts
         naming conventions into URL patterns, caches route metadata, and exposes runtime
         route injection and invalidation. Author-intent note: QUANTUM FILE ROUTER v1.0
-        — NEXT.JS-STYLE FILE-BASED ROUTING"
+        أ¢â‚¬â€‌ NEXT.JS-STYLE FILE-BASED ROUTING"
       headings:
         - "`src/app/quantum_file_router.dart`"
         - What this file is
@@ -50125,7 +48653,7 @@ scenarios:
         "A file-based routing subsystem. It discovers route assets, converts
         naming conventions into URL patterns, caches route metadata, and exposes runtime
         route injection and invalidation. Author-intent note: QUANTUM FILE ROUTER v1.0
-        — NEXT.JS-STYLE FILE-BASED ROUTING"
+        أ¢â‚¬â€‌ NEXT.JS-STYLE FILE-BASED ROUTING"
       headings:
         - "`src/app/quantum_file_router.dart`"
         - What this file is
@@ -50186,7 +48714,7 @@ scenarios:
         "A file-based routing subsystem. It discovers route assets, converts
         naming conventions into URL patterns, caches route metadata, and exposes runtime
         route injection and invalidation. Author-intent note: QUANTUM FILE ROUTER v1.0
-        — NEXT.JS-STYLE FILE-BASED ROUTING"
+        أ¢â‚¬â€‌ NEXT.JS-STYLE FILE-BASED ROUTING"
       headings:
         - "`src/app/quantum_file_router.dart`"
         - What this file is
@@ -50247,7 +48775,7 @@ scenarios:
         "A file-based routing subsystem. It discovers route assets, converts
         naming conventions into URL patterns, caches route metadata, and exposes runtime
         route injection and invalidation. Author-intent note: QUANTUM FILE ROUTER v1.0
-        — NEXT.JS-STYLE FILE-BASED ROUTING"
+        أ¢â‚¬â€‌ NEXT.JS-STYLE FILE-BASED ROUTING"
       headings:
         - "`src/app/quantum_file_router.dart`"
         - What this file is
@@ -50308,7 +48836,7 @@ scenarios:
         "A file-based routing subsystem. It discovers route assets, converts
         naming conventions into URL patterns, caches route metadata, and exposes runtime
         route injection and invalidation. Author-intent note: QUANTUM FILE ROUTER v1.0
-        — NEXT.JS-STYLE FILE-BASED ROUTING"
+        أ¢â‚¬â€‌ NEXT.JS-STYLE FILE-BASED ROUTING"
       headings:
         - "`src/app/quantum_file_router.dart`"
         - What this file is
@@ -50371,7 +48899,7 @@ scenarios:
         "A file-based routing subsystem. It discovers route assets, converts
         naming conventions into URL patterns, caches route metadata, and exposes runtime
         route injection and invalidation. Author-intent note: QUANTUM FILE ROUTER v1.0
-        — NEXT.JS-STYLE FILE-BASED ROUTING"
+        أ¢â‚¬â€‌ NEXT.JS-STYLE FILE-BASED ROUTING"
       headings:
         - "`src/app/quantum_file_router.dart`"
         - What this file is
@@ -52232,7 +50760,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER"
+        Author-intent note: QUANTUM APP ENTRY v1.0 أ¢â‚¬â€‌ SINGLE-FILE APP BOOTSTRAPPER"
       headings:
         - "`src/app/quantum_app_entry.dart`"
         - What this file is
@@ -52291,7 +50819,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER"
+        Author-intent note: QUANTUM APP ENTRY v1.0 أ¢â‚¬â€‌ SINGLE-FILE APP BOOTSTRAPPER"
       headings:
         - "`src/app/quantum_app_entry.dart`"
         - What this file is
@@ -52349,7 +50877,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER"
+        Author-intent note: QUANTUM APP ENTRY v1.0 أ¢â‚¬â€‌ SINGLE-FILE APP BOOTSTRAPPER"
       headings:
         - "`src/app/quantum_app_entry.dart`"
         - What this file is
@@ -52407,7 +50935,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER"
+        Author-intent note: QUANTUM APP ENTRY v1.0 أ¢â‚¬â€‌ SINGLE-FILE APP BOOTSTRAPPER"
       headings:
         - "`src/app/quantum_app_entry.dart`"
         - What this file is
@@ -52465,7 +50993,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER"
+        Author-intent note: QUANTUM APP ENTRY v1.0 أ¢â‚¬â€‌ SINGLE-FILE APP BOOTSTRAPPER"
       headings:
         - "`src/app/quantum_app_entry.dart`"
         - What this file is
@@ -52523,7 +51051,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER"
+        Author-intent note: QUANTUM APP ENTRY v1.0 أ¢â‚¬â€‌ SINGLE-FILE APP BOOTSTRAPPER"
       headings:
         - "`src/app/quantum_app_entry.dart`"
         - What this file is
@@ -52583,7 +51111,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER"
+        Author-intent note: QUANTUM APP ENTRY v1.0 أ¢â‚¬â€‌ SINGLE-FILE APP BOOTSTRAPPER"
       headings:
         - "`src/app/quantum_app_entry.dart`"
         - What this file is
@@ -52643,7 +51171,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER"
+        Author-intent note: QUANTUM APP ENTRY v1.0 أ¢â‚¬â€‌ SINGLE-FILE APP BOOTSTRAPPER"
       headings:
         - "`src/app/quantum_app_entry.dart`"
         - What this file is
@@ -52703,7 +51231,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER"
+        Author-intent note: QUANTUM APP ENTRY v1.0 أ¢â‚¬â€‌ SINGLE-FILE APP BOOTSTRAPPER"
       headings:
         - "`src/app/quantum_app_entry.dart`"
         - What this file is
@@ -52765,7 +51293,7 @@ scenarios:
       summary:
         "An app-level support module. These files usually connect boot-time config,
         shell behavior, HTTP transport, or file routing into the overall Flutter application.
-        Author-intent note: QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER"
+        Author-intent note: QUANTUM APP ENTRY v1.0 أ¢â‚¬â€‌ SINGLE-FILE APP BOOTSTRAPPER"
       headings:
         - "`src/app/quantum_app_entry.dart`"
         - What this file is

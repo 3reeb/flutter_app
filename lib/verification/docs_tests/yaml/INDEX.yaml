@@ -96,7 +96,6 @@ files:
 - docs_tests/yaml/by-file/src/runtime/quantum_data_state.yaml
 - docs_tests/yaml/by-file/src/runtime/quantum_design_system_manifest.yaml
 - docs_tests/yaml/by-file/src/runtime/quantum_domain_builder.yaml
-- docs_tests/yaml/by-file/src/runtime/quantum_embodiment_engine.yaml
 - docs_tests/yaml/by-file/src/runtime/quantum_embodiment_examples.yaml
 - docs_tests/yaml/by-file/src/runtime/quantum_export_dom_stub.yaml
 - docs_tests/yaml/by-file/src/runtime/quantum_export_dom_web.yaml

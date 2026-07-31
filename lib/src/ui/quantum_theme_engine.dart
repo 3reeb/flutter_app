@@ -8,6 +8,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 // Barrel import covers all quantum ecosystem dependencies (including QLE).
 import 'package:quantum_layout/quantum.dart';
@@ -160,6 +161,71 @@ abstract final class QContextBits {
   static const int lg = 1 << 4;
   static const int xl = 1 << 5;
   static const int rtl = 1 << 6;
+  static const int highContrast = 1 << 7;
+  static const int reduceMotion = 1 << 8;
+  static const int largeText = 1 << 9;
+  static const int accessibleNavigation = 1 << 10;
+}
+
+@immutable
+final class QAccessibilityPolicy {
+  final bool highContrast;
+  final bool reduceMotion;
+  final bool largeText;
+  final bool accessibleNavigation;
+  final double textScaleThreshold;
+
+  const QAccessibilityPolicy({
+    this.highContrast = false,
+    this.reduceMotion = false,
+    this.largeText = false,
+    this.accessibleNavigation = false,
+    this.textScaleThreshold = 1.15,
+  });
+
+  QAccessibilityPolicy copyWith({
+    bool? highContrast,
+    bool? reduceMotion,
+    bool? largeText,
+    bool? accessibleNavigation,
+    double? textScaleThreshold,
+  }) {
+    return QAccessibilityPolicy(
+      highContrast: highContrast ?? this.highContrast,
+      reduceMotion: reduceMotion ?? this.reduceMotion,
+      largeText: largeText ?? this.largeText,
+      accessibleNavigation: accessibleNavigation ?? this.accessibleNavigation,
+      textScaleThreshold: textScaleThreshold ?? this.textScaleThreshold,
+    );
+  }
+}
+
+@immutable
+final class QTypographyPolicy {
+  final String? fontFamily;
+  final double scale;
+  final double? minFontSize;
+  final double? maxFontSize;
+
+  const QTypographyPolicy({
+    this.fontFamily,
+    this.scale = 1.0,
+    this.minFontSize,
+    this.maxFontSize,
+  });
+}
+
+@immutable
+final class QMotionPolicy {
+  final bool reduceMotion;
+  final Duration preferredDuration;
+  final Curve curve;
+
+  const QMotionPolicy({
+    this.reduceMotion = false,
+    this.preferredDuration = const Duration(milliseconds: 300),
+    this.curve = Curves.easeOutCubic,
+  });
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -1272,6 +1338,10 @@ class QEngine {
   VoidCallback? _tickListener;
   bool _initialized = false;
 
+  QAccessibilityPolicy accessibility = const QAccessibilityPolicy();
+  QTypographyPolicy typography = const QTypographyPolicy();
+  QMotionPolicy motion = const QMotionPolicy();
+
   final QLSignal<int> tick = QLSignal(0);
   final QThemeGraph theme = QThemeGraph();
 
@@ -1347,13 +1417,27 @@ class QEngine {
     theme.load(dictionary);
   }
 
+  void loadAccessibilityPolicy(QAccessibilityPolicy policy) {
+    accessibility = policy;
+  }
+
+  void loadTypographyPolicy(QTypographyPolicy policy) {
+    typography = policy;
+  }
+
+  void loadMotionPolicy(QMotionPolicy policy) {
+    motion = policy;
+  }
+
   void animateTheme(
     VoidCallback targetMutations,
     TickerProvider vsync, {
     Duration duration = const Duration(milliseconds: 300),
+    bool reduceMotion = false,
   }) {
     final QSimdArena current = mem;
     final QSimdArena target = targetMem;
+    final bool instantMotion = reduceMotion || motion.reduceMotion;
 
     target.copyFrom(current);
     final QSimdArena? previousMem = _mem;
@@ -1370,6 +1454,12 @@ class QEngine {
     } finally {
       _mem = previousMem;
       _compiler = previousCompiler;
+    }
+
+    if (instantMotion || duration == Duration.zero) {
+      current.copyFrom(target);
+      tick.value++;
+      return;
     }
 
     _activeController?.dispose();
@@ -1411,6 +1501,15 @@ class Q extends StatefulWidget {
   final VoidCallback? onTap;
   final bool suppressParentData;
 
+  final String? semanticLabel;
+  final String? semanticHint;
+  final String? semanticValue;
+  final bool semanticsEnabled;
+  final bool focusable;
+  final bool autofocus;
+  final bool excludeSemantics;
+  final bool mergeSemantics;
+
   // 🚀 NEW: Hardware Signal Passthroughs
   final QLSignal<Matrix4>? transform3D;
   final QLSignal<double>? opacitySignal;
@@ -1425,6 +1524,14 @@ class Q extends StatefulWidget {
     this.children,
     this.onTap,
     this.suppressParentData = false,
+    this.semanticLabel,
+    this.semanticHint,
+    this.semanticValue,
+    this.semanticsEnabled = true,
+    this.focusable = false,
+    this.autofocus = false,
+    this.excludeSemantics = false,
+    this.mergeSemantics = false,
     this.transform3D,
     this.opacitySignal,
   });
@@ -1438,6 +1545,14 @@ class Q extends StatefulWidget {
     String? text,
     List<Widget>? children,
     VoidCallback? onTap,
+    String? semanticLabel,
+    String? semanticHint,
+    String? semanticValue,
+    bool semanticsEnabled = true,
+    bool focusable = false,
+    bool autofocus = false,
+    bool excludeSemantics = false,
+    bool mergeSemantics = false,
     bool suppressParentData = false,
   }) {
     final String mergedStyle = styles
@@ -1454,6 +1569,14 @@ class Q extends StatefulWidget {
       text: text,
       children: children,
       onTap: onTap,
+      semanticLabel: semanticLabel,
+      semanticHint: semanticHint,
+      semanticValue: semanticValue,
+      semanticsEnabled: semanticsEnabled,
+      focusable: focusable,
+      autofocus: autofocus,
+      excludeSemantics: excludeSemantics,
+      mergeSemantics: mergeSemantics,
       suppressParentData: suppressParentData,
     );
   }
@@ -1501,7 +1624,8 @@ class _QState extends State<Q> {
     else
       mask |= QContextBits.light;
 
-    final double width = MediaQuery.maybeOf(context)?.size.width ?? 0;
+    final MediaQueryData? mq = MediaQuery.maybeOf(context);
+    final double width = mq?.size.width ?? 0;
     if (width < 640) {
       mask |= QContextBits.sm;
     } else if (width < 1024) {
@@ -1514,6 +1638,28 @@ class _QState extends State<Q> {
 
     if (Directionality.maybeOf(context) == TextDirection.rtl)
       mask |= QContextBits.rtl;
+
+    if (mq != null) {
+      if (mq.highContrast) mask |= QContextBits.highContrast;
+      if (mq.accessibleNavigation) mask |= QContextBits.accessibleNavigation;
+      final double scale = mq.textScaler.scale(1.0);
+      if (scale >= QEngine.instance.accessibility.textScaleThreshold) {
+        mask |= QContextBits.largeText;
+      }
+    }
+
+    if (QEngine.instance.accessibility.highContrast) {
+      mask |= QContextBits.highContrast;
+    }
+    if (QEngine.instance.accessibility.reduceMotion) {
+      mask |= QContextBits.reduceMotion;
+    }
+    if (QEngine.instance.accessibility.largeText) {
+      mask |= QContextBits.largeText;
+    }
+    if (QEngine.instance.accessibility.accessibleNavigation) {
+      mask |= QContextBits.accessibleNavigation;
+    }
 
     return mask;
   }
@@ -1542,9 +1688,13 @@ class _QState extends State<Q> {
         sFlags == 0 &&
         widget.text != null &&
         widget.children == null &&
+        widget.onTap == null &&
+        !widget.focusable &&
+        !widget.autofocus &&
         widget.transform3D == null &&
         widget.opacitySignal == null) {
-      return _buildText(mem, compiled, tFlags, widget.text!);
+      return _wrapAccessibility(
+          _buildText(context, mem, compiled, tFlags, widget.text!), context);
     }
 
     // Builder function that applies the core DOM structure
@@ -1607,6 +1757,8 @@ class _QState extends State<Q> {
         }
       }
 
+      node = _wrapAccessibility(node, context);
+
       // Apply Grid Scope Extrusions natively
       final int iPtr = compiled.iPtr;
       if (!widget.suppressParentData &&
@@ -1644,8 +1796,8 @@ class _QState extends State<Q> {
     );
   }
 
-  Widget _buildText(
-      QSimdArena mem, QToken compiled, int tFlags, String textData) {
+  Widget _buildText(BuildContext context, QSimdArena mem, QToken compiled,
+      int tFlags, String textData) {
     final int fPtr = compiled.fPtr;
     final int cPtr = compiled.cPtr;
 
@@ -1654,7 +1806,18 @@ class _QState extends State<Q> {
         ? Color(mem.c32[cPtr + QC32.hoverText])
         : Color(mem.c32[cPtr + QC32.text]);
 
-    final double size = mem.f32[fPtr + QF32.fontSize];
+    final double baseSize = mem.f32[fPtr + QF32.fontSize];
+    final MediaQueryData? mq = MediaQuery.maybeOf(context);
+    final double textScale = mq?.textScaler.scale(1.0) ?? 1.0;
+    final QTypographyPolicy typography = QEngine.instance.typography;
+    final double size = (() {
+      final double scaled = baseSize > 0
+          ? baseSize * typography.scale * textScale
+          : 14.0 * typography.scale * textScale;
+      final double minSize = typography.minFontSize ?? 8.0;
+      final double maxSize = typography.maxFontSize ?? 256.0;
+      return scaled.clamp(minSize, maxSize).toDouble();
+    })();
 
     return Text(
       textData,
@@ -1668,9 +1831,11 @@ class _QState extends State<Q> {
       overflow: (tFlags & QTextFlags.textEllipsis) != 0
           ? TextOverflow.ellipsis
           : null,
+      textScaler: mq?.textScaler ?? TextScaler.noScaling,
       style: TextStyle(
         color: color.alpha == 0 ? null : color,
         fontSize: size > 0 ? size : 14.0,
+        fontFamily: typography.fontFamily,
         fontWeight: (tFlags & QTextFlags.fontBold) != 0
             ? FontWeight.bold
             : FontWeight.normal,
@@ -1690,6 +1855,64 @@ class _QState extends State<Q> {
     );
   }
 
+  Widget _wrapAccessibility(Widget node, BuildContext context) {
+    final bool needsSemantics = widget.semanticsEnabled &&
+        (widget.semanticLabel != null ||
+            widget.semanticHint != null ||
+            widget.semanticValue != null ||
+            widget.text != null ||
+            widget.onTap != null ||
+            widget.focusable ||
+            widget.autofocus);
+
+    Widget wrapped = node;
+    if (needsSemantics && !widget.excludeSemantics) {
+      wrapped = Semantics(
+        container: true,
+        label: widget.semanticLabel ?? widget.text,
+        hint: widget.semanticHint,
+        value: widget.semanticValue,
+        button: widget.onTap != null,
+        enabled: widget.onTap != null || widget.focusable,
+        child: wrapped,
+      );
+      if (widget.mergeSemantics) {
+        wrapped = MergeSemantics(child: wrapped);
+      }
+    } else if (widget.excludeSemantics) {
+      wrapped = ExcludeSemantics(child: wrapped);
+    }
+
+    if (widget.onTap != null || widget.focusable || widget.autofocus) {
+      wrapped = FocusableActionDetector(
+        autofocus: widget.autofocus,
+        mouseCursor:
+            widget.onTap != null ? SystemMouseCursors.click : MouseCursor.defer,
+        shortcuts: widget.onTap != null
+            ? <ShortcutActivator, Intent>{
+                const SingleActivator(LogicalKeyboardKey.enter):
+                    const ActivateIntent(),
+                const SingleActivator(LogicalKeyboardKey.space):
+                    const ActivateIntent(),
+              }
+            : null,
+        actions: widget.onTap != null
+            ? <Type, Action<Intent>>{
+                ActivateIntent: CallbackAction<ActivateIntent>(
+                  onInvoke: (intent) {
+                    widget.onTap?.call();
+                    return null;
+                  },
+                ),
+              }
+            : null,
+        child: wrapped,
+      );
+    }
+
+    return wrapped;
+  }
+
   Widget _buildChildren(
     QSimdArena mem,
     QToken compiled,
@@ -1699,7 +1922,7 @@ class _QState extends State<Q> {
   ) {
     final List<Widget> kids = [];
     if (widget.text != null)
-      kids.add(_buildText(mem, compiled, tFlags, widget.text!));
+      kids.add(_buildText(context, mem, compiled, tFlags, widget.text!));
     if (widget.children != null) kids.addAll(widget.children!);
 
     Widget tree = kids.isEmpty

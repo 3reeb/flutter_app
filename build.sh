@@ -17,11 +17,17 @@ git config --global --add safe.directory $FLUTTER_ROOT
 flutter config --no-analytics
 flutter config --enable-web
 
-# 5. Run pub get
+# 5. Build SDUI TypeScript Helpers
+echo "Installing Node dependencies..."
+npm install
+echo "Compiling SDUI TS configuration to JSON..."
+npm run build:sdui
+
+# 6. Run pub get
 echo "Running flutter pub get..."
 flutter pub get
 
-# 6. Build Web App
+# 7. Build Web App
 echo "Building Flutter web app..."
 flutter build web --release --no-tree-shake-icons
 echo "=== BUILD COMPLETE ==="

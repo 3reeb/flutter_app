@@ -460,8 +460,6 @@ files:
   test_count: 8
   category: ui
   line_count: 303
-- file: lib/src/runtime/quantum_embodiment_engine.dart
-  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
   scenario_count: 14
   test_count: 14
   category: ui

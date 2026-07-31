@@ -1,29 +1,29 @@
 // ════════════════════════════════════════════════════════════════════════════
-// QUANTUM FILE ROUTER v1.0 — NEXT.JS-STYLE FILE-BASED ROUTING
+// QUANTUM FILE ROUTER v2.0 — PAGE-AWARE / NESTED / LAYOUT-DRIVEN
 // quantum_file_router.dart
 //
-// FEATURES:
-// 1. Auto-discovers YAML/JSON pages from the Flutter asset manifest
-// 2. [param] → :param dynamic segment
-// 3. [...slug] → wildcard catch-all
-// 4. _layout.yaml → wraps all sibling routes in a layout
-// 5. _middleware.yaml → applies guards/middleware to all siblings
-// 6. _meta.yaml → default SEO/props for directory
-// 7. Per-file URL regex override via `urlPattern:` field
-// 8. Runtime route injection (addRoute / removeRoute)
-// 9. File-priority ordering: explicit ROUTES.yaml > file-based > default
-// 10. O(1) cache: resolved QLRoute list cached by asset manifest hash
+// Goals:
+//   • Next.js-style file routing, but page-aware and layout-aware
+//   • Nested pages via folder structure + route groups
+//   • Per-page route/layout overrides from page manifest
+//   • Lazy page config loading
+//   • Inherited _layout / _middleware / _meta support
+//   • Stable route caching by asset manifest hash
+//   • Minimal runtime work: parse once, compile page on demand
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../../quantum.dart';
-// ─────────────────────────────────────────────────────────────────────── §1 ─
-//  ROUTE ENTRY — Describes a discovered file-based route
-// ────────────────────────────────────────────────────────────────────────────
+
+// ─────────────────────────────────────────────────────────────────────────────
+// §1 — ROUTE ENTRY
+// ─────────────────────────────────────────────────────────────────────────────
 
 /// Internal record describing one discovered page file.
 @immutable
@@ -43,6 +43,9 @@ class QLFileRouteEntry {
   /// If set, overrides the radix-trie match with regex matching.
   final String? urlPatternOverride;
 
+  /// Page-level route override from page config, e.g. `/dashboard/home`.
+  final String? routePathOverride;
+
   /// Layout file asset path for this route (if any).
   final String? layoutAssetPath;
 
@@ -58,18 +61,42 @@ class QLFileRouteEntry {
     this.isCatchAll = false,
     this.paramNames = const [],
     this.urlPatternOverride,
+    this.routePathOverride,
     this.layoutAssetPath,
     this.inheritedMiddlewares = const [],
     this.inheritedMeta = const {},
   });
+
+  QLFileRouteEntry copyWith({
+    String? routePath,
+    bool? isCatchAll,
+    List<String>? paramNames,
+    String? urlPatternOverride,
+    String? routePathOverride,
+    String? layoutAssetPath,
+    List<Map<String, dynamic>>? inheritedMiddlewares,
+    Map<String, dynamic>? inheritedMeta,
+  }) {
+    return QLFileRouteEntry(
+      assetPath: assetPath,
+      routePath: routePath ?? this.routePath,
+      isCatchAll: isCatchAll ?? this.isCatchAll,
+      paramNames: paramNames ?? this.paramNames,
+      urlPatternOverride: urlPatternOverride ?? this.urlPatternOverride,
+      routePathOverride: routePathOverride ?? this.routePathOverride,
+      layoutAssetPath: layoutAssetPath ?? this.layoutAssetPath,
+      inheritedMiddlewares: inheritedMiddlewares ?? this.inheritedMiddlewares,
+      inheritedMeta: inheritedMeta ?? this.inheritedMeta,
+    );
+  }
 }
 
-// ─────────────────────────────────────────────────────────────────────── §2 ─
-//  FILE ROUTE PARSER — filename → route pattern
-// ────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// §2 — FILE ROUTE PARSER
+// ─────────────────────────────────────────────────────────────────────────────
 
 abstract final class QLFileRouteParser {
-  // Files that are framework config — NEVER treated as routes
+  // Files that are framework config — NEVER treated as routes.
   static const Set<String> _reservedUppercase = {
     'APP',
     'THEME',
@@ -93,61 +120,83 @@ abstract final class QLFileRouteParser {
     '_loading',
   };
 
-  /// Convert an asset path like `pages/users/[id]/posts/[postId].yaml`
-  /// into a route pattern `/users/:id/posts/:postId`.
+  static bool isSpecial(String filename) => _specialFiles.contains(filename);
+
+  static bool isPageFile(String assetPath, String pagesDir) {
+    final parsed = parse(assetPath, pagesDir);
+    return parsed != null;
+  }
+
+  /// Convert asset path like `pages/users/[id]/page.yaml`
+  /// into a route pattern `/users/:id`.
+  ///
+  /// Supported leaf files:
+  ///   • `index.yaml` / `page.yaml` → folder route
+  ///   • `[id].yaml` → `:id`
+  ///   • `[...slug].yaml` → `*`
+  /// Route groups like `(marketing)` are ignored in the route path.
   static QLFileRouteEntry? parse(String assetPath, String pagesDir) {
-    // Strip leading pagesDir
     String relative = assetPath;
     final prefix = pagesDir.endsWith('/') ? pagesDir : '$pagesDir/';
     if (!relative.startsWith(prefix)) return null;
     relative = relative.substring(prefix.length);
 
-    // Strip extension
     final lastDot = relative.lastIndexOf('.');
     final String noExt =
         lastDot != -1 ? relative.substring(0, lastDot) : relative;
 
-    // Split into segments
     final List<String> segments = noExt.split('/');
     if (segments.isEmpty) return null;
 
     final String filename = segments.last;
 
-    // Skip reserved uppercase config files
+    // Skip reserved uppercase config files.
     if (_reservedUppercase.contains(filename.toUpperCase()) &&
         filename == filename.toUpperCase()) {
       return null;
     }
 
-    // Skip special underscore files (layout, middleware, meta, etc.)
+    // Skip special underscore files.
     if (_specialFiles.contains(filename)) return null;
 
-    // Build route path
     final List<String> routeSegments = [];
     final List<String> paramNames = [];
     bool isCatchAll = false;
 
     for (int i = 0; i < segments.length; i++) {
-      final seg = segments[i];
+      final String seg = segments[i];
       final bool isLast = i == segments.length - 1;
 
+      // Ignore route groups like (marketing), (auth), etc.
+      if (seg.startsWith('(') && seg.endsWith(')')) continue;
+
       if (seg.startsWith('[...') && seg.endsWith(']')) {
-        // Catch-all: [...slug] → *
         final paramName = seg.substring(4, seg.length - 1);
         paramNames.add(paramName);
         isCatchAll = true;
         routeSegments.add('*');
-      } else if (seg.startsWith('[') && seg.endsWith(']')) {
-        // Dynamic: [id] → :id
+        continue;
+      }
+
+      if (seg.startsWith('[') && seg.endsWith(']')) {
         final paramName = seg.substring(1, seg.length - 1);
         paramNames.add(paramName);
         routeSegments.add(':$paramName');
-      } else if (isLast && (seg == 'index' || seg == 'INDEX')) {
-        // index.yaml → parent route (no extra segment)
-        // Already handled: routeSegments stays as parent path
-      } else {
-        routeSegments.add(seg);
+        continue;
       }
+
+      // index.yaml/page.yaml map to parent route
+      if (isLast &&
+          (seg == 'index' ||
+              seg == 'INDEX' ||
+              seg == 'page' ||
+              seg == 'PAGE' ||
+              seg == 'route' ||
+              seg == 'ROUTE')) {
+        continue;
+      }
+
+      routeSegments.add(seg);
     }
 
     final String routePath =
@@ -160,20 +209,26 @@ abstract final class QLFileRouteParser {
       paramNames: paramNames,
     );
   }
-
-  /// Check whether a path segment file is a special directory file.
-  static bool isSpecial(String filename) => _specialFiles.contains(filename);
-
-  /// Check whether an asset is a page file (not config, not special).
-  static bool isPageFile(String assetPath, String pagesDir) {
-    final parsed = parse(assetPath, pagesDir);
-    return parsed != null;
-  }
 }
 
-// ─────────────────────────────────────────────────────────────────────── §3 ─
-//  FILE ROUTER — scans asset manifest and builds QLRoute list
-// ────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// §3 — PAGE LOAD RECORD
+// ─────────────────────────────────────────────────────────────────────────────
+
+@immutable
+class _PageLoadRecord {
+  final Map<String, dynamic> raw;
+  final QLPageYamlConfig config;
+
+  const _PageLoadRecord({
+    required this.raw,
+    required this.config,
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// §4 — FILE ROUTER
+// ─────────────────────────────────────────────────────────────────────────────
 
 class QuantumFileRouter {
   static final QuantumFileRouter instance = QuantumFileRouter._();
@@ -184,8 +239,8 @@ class QuantumFileRouter {
   int _manifestHash = 0;
 
   // Lazy page config cache — loaded only when the route is used.
-  final Map<String, QLPageYamlConfig> _pageConfigCache = {};
-  final Map<String, Future<QLPageYamlConfig?>> _pageConfigInFlight = {};
+  final Map<String, _PageLoadRecord> _pageLoadCache = {};
+  final Map<String, Future<_PageLoadRecord?>> _pageLoadInFlight = {};
 
   // Runtime-injected routes (highest priority)
   final List<QLRoute> _runtimeRoutes = [];
@@ -253,7 +308,11 @@ class QuantumFileRouter {
     for (final assetPath in pageAssets) {
       final entry = QLFileRouteParser.parse(assetPath, pagesDir);
       if (entry == null) continue;
-      entries.add(_enrichEntry(entry, dirTree, pagesDir));
+
+      final loaded = await _loadPageLoadCached(assetPath);
+      final merged = _applyPageOverrides(entry, loaded?.raw, dirTree);
+      entries.add(merged);
+
       if ((++parsed & 0x3f) == 0) {
         await Future<void>.delayed(Duration.zero);
       }
@@ -264,7 +323,11 @@ class QuantumFileRouter {
     final List<QLRoute> fileRoutes = [];
     int built = 0;
     for (final entry in entries) {
-      final route = await _buildRoute(entry, loadingWidget: loadingWidget);
+      final route = await _buildRoute(
+        entry,
+        loadingWidget: loadingWidget,
+        notFoundWidget: notFoundWidget,
+      );
       if (route != null) fileRoutes.add(route);
       if ((++built & 0x1f) == 0) {
         await Future<void>.delayed(Duration.zero);
@@ -297,15 +360,15 @@ class QuantumFileRouter {
   void invalidateCache() {
     _cachedRoutes = null;
     _manifestHash = 0;
-    _pageConfigCache.clear();
-    _pageConfigInFlight.clear();
+    _pageLoadCache.clear();
+    _pageLoadInFlight.clear();
+    _regexCache.clear();
   }
 
   // ── Internal Helpers ───────────────────────────────────────────────────────
 
   Future<Map<String, dynamic>> _loadAssetManifest() async {
     try {
-      // 🚀 THE FIX: Flutter 3.16+ modern AssetManifest API
       final AssetManifest manifest =
           await AssetManifest.loadFromAssetBundle(rootBundle);
       final List<String> assets = manifest.listAssets();
@@ -316,7 +379,6 @@ class QuantumFileRouter {
       return map;
     } catch (_) {
       try {
-        // Fallback for older Flutter versions
         final String manifestStr =
             await rootBundle.loadString('AssetManifest.json');
         return Map<String, dynamic>.from(jsonDecode(manifestStr) as Map);
@@ -341,12 +403,14 @@ class QuantumFileRouter {
   }
 
   Future<_DirTree> _buildDirTree(
-      Map<String, dynamic> manifest, String pagesDir) async {
-    final tree = _DirTree();
+    Map<String, dynamic> manifest,
+    String pagesDir,
+  ) async {
+    final tree = _DirTree()..pagesDir = pagesDir;
 
-    // Find all _layout, _middleware, _meta files
     for (final path in manifest.keys) {
       if (!path.startsWith(pagesDir)) continue;
+
       final filename = path.split('/').last.split('.').first;
       final dir = path.substring(0, path.lastIndexOf('/'));
 
@@ -358,21 +422,25 @@ class QuantumFileRouter {
       } else if (filename == '_meta') {
         final raw = await QuantumYamlEngine.instance.load(path);
         tree.metas[dir] = raw;
+      } else if (filename == '_page' || filename == '_route') {
+        tree.pageManifests[dir] = path;
       }
     }
 
     return tree;
   }
 
-  QLFileRouteEntry _enrichEntry(
-      QLFileRouteEntry entry, _DirTree tree, String pagesDir) {
-    final String dir =
-        entry.assetPath.substring(0, entry.assetPath.lastIndexOf('/'));
+  QLFileRouteEntry _applyPageOverrides(
+    QLFileRouteEntry entry,
+    Map<String, dynamic>? raw,
+    _DirTree tree,
+  ) {
+    final dir = entry.assetPath.substring(0, entry.assetPath.lastIndexOf('/'));
 
-    // 🚀 FIX 1: Safely extract relative path regardless of trailing slashes
     String relativeDir = dir;
-    if (relativeDir.startsWith(pagesDir)) {
-      relativeDir = relativeDir.substring(pagesDir.length);
+    final String normalizedPagesDir = tree.pagesDir;
+    if (relativeDir.startsWith(normalizedPagesDir)) {
+      relativeDir = relativeDir.substring(normalizedPagesDir.length);
     }
     if (relativeDir.startsWith('/')) relativeDir = relativeDir.substring(1);
 
@@ -382,7 +450,7 @@ class QuantumFileRouter {
     final List<Map<String, dynamic>> middlewares = [];
     final Map<String, dynamic> meta = {};
 
-    String currentDir = pagesDir;
+    String currentDir = normalizedPagesDir;
     for (final part in ['', ...parts]) {
       if (part.isNotEmpty) currentDir = '$currentDir/$part';
 
@@ -402,56 +470,108 @@ class QuantumFileRouter {
       }
     }
 
+    final String? routeOverride = _extractRouteOverride(raw);
+    final String? layoutOverride = _extractLayoutOverride(raw);
+
     return QLFileRouteEntry(
       assetPath: entry.assetPath,
       routePath: entry.routePath,
       isCatchAll: entry.isCatchAll,
       paramNames: entry.paramNames,
-      urlPatternOverride: entry.urlPatternOverride,
-      layoutAssetPath: layoutAssetPath,
-      inheritedMiddlewares: middlewares,
-      inheritedMeta: meta,
+      urlPatternOverride:
+          _extractUrlPatternOverride(raw) ?? entry.urlPatternOverride,
+      routePathOverride: routeOverride,
+      layoutAssetPath:
+          layoutOverride ?? layoutAssetPath ?? entry.layoutAssetPath,
+      inheritedMiddlewares: [
+        ...entry.inheritedMiddlewares,
+        ...middlewares,
+      ],
+      inheritedMeta: {
+        ...entry.inheritedMeta,
+        ...meta,
+        if (raw != null && raw['meta'] is Map)
+          ...Map<String, dynamic>.from(raw['meta'] as Map),
+      },
     );
   }
 
+  String? _extractRouteOverride(Map<String, dynamic>? raw) {
+    if (raw == null) return null;
+    final dynamic value = raw['route'] ?? raw['path'] ?? raw['routePath'];
+    final String text = value?.toString().trim() ?? '';
+    if (text.isEmpty) return null;
+    return text;
+  }
+
+  String? _extractLayoutOverride(Map<String, dynamic>? raw) {
+    if (raw == null) return null;
+    final dynamic value =
+        raw['layout'] ?? raw['layoutPath'] ?? raw['layoutAssetPath'];
+    final String text = value?.toString().trim() ?? '';
+    if (text.isEmpty) return null;
+    return text;
+  }
+
+  String? _extractUrlPatternOverride(Map<String, dynamic>? raw) {
+    if (raw == null) return null;
+    final dynamic value = raw['urlPattern'] ?? raw['pattern'] ?? raw['regex'];
+    final String text = value?.toString().trim() ?? '';
+    if (text.isEmpty) return null;
+    return text;
+  }
+
   int _compareEntries(QLFileRouteEntry a, QLFileRouteEntry b) {
-    // Catch-all routes always last
     if (a.isCatchAll && !b.isCatchAll) return 1;
     if (!a.isCatchAll && b.isCatchAll) return -1;
-    // More specific (fewer params) first
+
     final aParams = a.paramNames.length;
     final bParams = b.paramNames.length;
     if (aParams != bParams) return aParams - bParams;
-    // Alphabetical
-    return a.routePath.compareTo(b.routePath);
+
+    return a.effectiveRoutePath.compareTo(b.effectiveRoutePath);
   }
 
   Future<QLRoute?> _buildRoute(
     QLFileRouteEntry entry, {
     Widget? loadingWidget,
+    Widget? notFoundWidget,
   }) async {
-    final String routePath = entry.routePath;
+    final _PageLoadRecord? pageLoad =
+        await _loadPageLoadCached(entry.assetPath);
+    final Map<String, dynamic> raw = pageLoad?.raw ?? const {};
+    final QLPageYamlConfig? pageConfig = pageLoad?.config;
+
+    final String routePath =
+        (entry.routePathOverride ?? entry.effectiveRoutePath).trim();
 
     final List<QLMiddleware> middlewares = [
       ...entry.inheritedMiddlewares.map(_mapToMiddleware),
       _LazyPagePolicyMiddleware(
         entry.assetPath,
-        loader: _loadPageConfigCached,
+        loader: _loadPageLoadCached,
       ),
     ];
 
     final QLSeoBuilder? seoBuilder = (info, props) {
-      final cached = _pageConfigCache[entry.assetPath];
       final Map<String, dynamic> inheritedMeta = entry.inheritedMeta;
-      final String title =
-          cached?.metaTitle ?? inheritedMeta['title']?.toString() ?? '';
-      final String description = cached?.metaDescription ??
-          inheritedMeta['description']?.toString() ??
-          '';
+      final String title = _coerceText(
+        raw['metaTitle'] ??
+            pageConfig?.metaTitle ??
+            inheritedMeta['title'] ??
+            '',
+      );
+      final String description = _coerceText(
+        raw['metaDescription'] ??
+            pageConfig?.metaDescription ??
+            inheritedMeta['description'] ??
+            '',
+      );
+
       if (title.isEmpty &&
           description.isEmpty &&
           inheritedMeta.isEmpty &&
-          cached == null) {
+          pageConfig == null) {
         return QLSeoConfig(
           title: '',
           description: '',
@@ -460,24 +580,39 @@ class QuantumFileRouter {
           customMeta: const {},
         );
       }
+
       return QLSeoConfig(
         title: _interpolateSeo(title, info, props),
         description: _interpolateSeo(description, info, props),
-        keywords: cached?.metaKeywords ?? inheritedMeta['keywords']?.toString(),
-        ogImage: cached?.metaOgImage ?? inheritedMeta['ogImage']?.toString(),
-        customMeta: {...cached?.customMeta ?? const {}},
+        keywords: _coerceText(
+          raw['metaKeywords'] ??
+              pageConfig?.metaKeywords ??
+              inheritedMeta['keywords'],
+        ),
+        ogImage: _coerceText(
+          raw['metaOgImage'] ??
+              pageConfig?.metaOgImage ??
+              inheritedMeta['ogImage'],
+        ),
+        customMeta: {
+          ..._mapStringDynamic(raw['meta'] ?? const {}),
+          ...(pageConfig?.customMeta ?? const {}),
+        },
       );
     };
 
     QLDataFetchCallback? serverPropsFn;
     serverPropsFn = (info) async {
-      final pageConfig = await _loadPageConfigCached(entry.assetPath);
+      final _PageLoadRecord? loaded =
+          await _loadPageLoadCached(entry.assetPath);
+      final pageConfigLocal = loaded?.config;
       final Map<String, dynamic> result = {};
-      final spConfig = pageConfig?.serverProps;
-      if (spConfig != null && spConfig.isNotEmpty) {
+      final spConfig =
+          loaded?.raw['serverProps'] ?? pageConfigLocal?.serverProps;
+      if (spConfig is Map && spConfig.isNotEmpty) {
         final action = spConfig['action']?.toString();
         if (action != null && action.isNotEmpty) {
-          result['__serverProps'] = spConfig;
+          result['__serverProps'] = Map<String, dynamic>.from(spConfig);
           result['__routeInfo'] = {
             'params': info.params,
             'query': info.queryParams,
@@ -491,43 +626,54 @@ class QuantumFileRouter {
           pageAssetPath: entry.assetPath,
           layoutAssetPath: entry.layoutAssetPath,
           routeInfo: info,
-          loadingWidget: loadingWidget,
+          loadingWidget: loadingWidget ?? notFoundWidget,
         );
 
     return QLRoute(
       path: routePath,
       builder: builder,
       middlewares: middlewares,
-      transition: QLTransitionType.slideRight,
-      transitionDuration: const Duration(milliseconds: 380),
+      transition: _parseTransition(
+        _coerceText(
+            raw['transition'] ?? pageConfig?.transition ?? 'slideRight'),
+      ),
+      transitionDuration: Duration(
+        milliseconds: _coerceInt(
+          raw['transitionDuration'] ?? pageConfig?.transitionDurationMs ?? 380,
+          fallback: 380,
+        ),
+      ),
       seo: seoBuilder,
       getServerSideProps: serverPropsFn,
     );
   }
 
-  Future<QLPageYamlConfig?> _loadPageConfigCached(String assetPath) async {
-    final cached = _pageConfigCache[assetPath];
+  Future<_PageLoadRecord?> _loadPageLoadCached(String assetPath) async {
+    final cached = _pageLoadCache[assetPath];
     if (cached != null) return cached;
-    final inflight = _pageConfigInFlight[assetPath];
+
+    final inflight = _pageLoadInFlight[assetPath];
     if (inflight != null) return inflight;
 
     final future = () async {
       try {
         final raw = await QuantumYamlEngine.instance.load(assetPath);
-        final pageConfig = QLPageYamlConfig.fromMap(raw);
-        _pageConfigCache[assetPath] = pageConfig;
-        return pageConfig;
-      } catch (e) {
-        debugPrint('[QuantumFileRouter] Failed to lazy-load $assetPath: $e');
+        final config = QLPageYamlConfig.fromMap(raw);
+        final record = _PageLoadRecord(raw: raw, config: config);
+        _pageLoadCache[assetPath] = record;
+        return record;
+      } catch (e, st) {
+        debugPrint(
+            '[QuantumFileRouter] Failed to lazy-load $assetPath: $e\n$st');
         return null;
       }
     }();
 
-    _pageConfigInFlight[assetPath] = future;
+    _pageLoadInFlight[assetPath] = future;
     try {
       return await future;
     } finally {
-      _pageConfigInFlight.remove(assetPath);
+      _pageLoadInFlight.remove(assetPath);
     }
   }
 
@@ -536,20 +682,35 @@ class QuantumFileRouter {
   }
 
   QLTransitionType _parseTransition(String name) {
-    return switch (name.toLowerCase()) {
-      'fade' => QLTransitionType.fade,
-      'scale' => QLTransitionType.scale,
-      'slideleft' || 'slide_left' => QLTransitionType.slideLeft,
-      'slideup' || 'slide_up' => QLTransitionType.slideUp,
-      'slidedown' || 'slide_down' => QLTransitionType.slideDown,
-      'flip3d' || 'flip' => QLTransitionType.flip3D,
-      'none' => QLTransitionType.none,
-      _ => QLTransitionType.slideRight,
-    };
+    switch (name.toLowerCase()) {
+      case 'fade':
+        return QLTransitionType.fade;
+      case 'scale':
+        return QLTransitionType.scale;
+      case 'slideleft':
+      case 'slide_left':
+        return QLTransitionType.slideLeft;
+      case 'slideup':
+      case 'slide_up':
+        return QLTransitionType.slideUp;
+      case 'slidedown':
+      case 'slide_down':
+        return QLTransitionType.slideDown;
+      case 'flip3d':
+      case 'flip':
+        return QLTransitionType.flip3D;
+      case 'none':
+        return QLTransitionType.none;
+      default:
+        return QLTransitionType.slideRight;
+    }
   }
 
   String _interpolateSeo(
-      String template, QLRouteInfo info, Map<String, dynamic> props) {
+    String template,
+    QLRouteInfo info,
+    Map<String, dynamic> props,
+  ) {
     if (!template.contains('{{')) return template;
     return template.replaceAllMapped(RegExp(r'\{\{([^}]+)\}\}'), (match) {
       final path = match.group(1)!.trim();
@@ -565,32 +726,58 @@ class QuantumFileRouter {
       return props[path]?.toString() ?? '';
     });
   }
+
+  Map<String, dynamic> _mapStringDynamic(dynamic value) {
+    if (value is Map) {
+      return Map<String, dynamic>.from(
+        value.map((k, v) => MapEntry(k.toString(), v)),
+      );
+    }
+    return const <String, dynamic>{};
+  }
+
+  String _coerceText(dynamic value) => value?.toString().trim() ?? '';
+
+  int _coerceInt(dynamic value, {required int fallback}) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    return int.tryParse(value?.toString() ?? '') ?? fallback;
+  }
 }
 
-// ─────────────────────────────────────────────────────────────────────── §4 ─
-//  DIRECTORY TREE HELPER
-// ────────────────────────────────────────────────────────────────────────────
+extension on QLFileRouteEntry {
+  String get effectiveRoutePath => routePath;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// §5 — DIRECTORY TREE HELPER
+// ─────────────────────────────────────────────────────────────────────────────
 
 class _DirTree {
   final Map<String, String> layouts = {};
   final Map<String, Map<String, dynamic>> middlewares = {};
   final Map<String, Map<String, dynamic>> metas = {};
+  final Map<String, String> pageManifests = {};
+  String pagesDir = 'pages';
 }
 
-// ─────────────────────────────────────────────────────────────────────── §5 ─
-//  LAZY PAGE POLICY MIDDLEWARE
-// ────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// §6 — LAZY PAGE POLICY MIDDLEWARE
+// ─────────────────────────────────────────────────────────────────────────────
 
 class _LazyPagePolicyMiddleware extends QLMiddleware {
   final String assetPath;
-  final Future<QLPageYamlConfig?> Function(String assetPath) loader;
+  final Future<_PageLoadRecord?> Function(String assetPath) loader;
 
   _LazyPagePolicyMiddleware(this.assetPath, {required this.loader});
 
   @override
   FutureOr<QLRouteInfo?> process(
-      QLRouteInfo info, BuildContext? context) async {
-    final pageConfig = await loader(assetPath);
+    QLRouteInfo info,
+    BuildContext? context,
+  ) async {
+    final loaded = await loader(assetPath);
+    final pageConfig = loaded?.config;
     if (pageConfig == null) return null;
 
     for (final guard in pageConfig.guards) {
@@ -625,15 +812,16 @@ class _LazyPagePolicyMiddleware extends QLMiddleware {
           return info.copyWith(props: extra);
         }
         return null;
+      case 'allow':
       default:
         return null;
     }
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────── §6 ─
-//  YAML MIDDLEWARE ADAPTER
-// ────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// §7 — YAML MIDDLEWARE ADAPTER
+// ─────────────────────────────────────────────────────────────────────────────
 
 class _YamlMiddleware extends QLMiddleware {
   final Map<String, dynamic> def;
@@ -641,27 +829,22 @@ class _YamlMiddleware extends QLMiddleware {
 
   @override
   FutureOr<QLRouteInfo?> process(
-      QLRouteInfo info, BuildContext? context) async {
-    // YAML middleware can declare:
-    //   type: redirect | guard | inject
-    //   condition: <store path or action>
-    //   redirect: <path>
-    //   inject: <Map to merge into props>
-    final String type = def['type']?.toString() ?? 'passthrough';
-
+    QLRouteInfo info,
+    BuildContext? context,
+  ) async {
+    final type = def['type']?.toString() ?? 'passthrough';
     switch (type) {
       case 'redirect':
+        final String to = def['to']?.toString() ?? '/';
         final String? cond = def['condition']?.toString();
-        if (cond != null) {
-          // Check condition against store
-          final val = QuantumVM.instance.store.get(cond);
-          if (val == null || val == false || val == '' || val == 0) {
-            final String to = def['to']?.toString() ?? '/';
-            return info.copyWith(path: to);
-          }
+        if (cond == null || cond.isEmpty) {
+          return info.copyWith(path: to);
+        }
+        final val = QuantumVM.instance.store.get(cond);
+        if (val == null || val == false || val == '' || val == 0) {
+          return info.copyWith(path: to);
         }
         return null;
-
       case 'inject':
         final Map<String, dynamic> extra = def['data'] is Map
             ? Map<String, dynamic>.from(def['data'] as Map)
@@ -670,16 +853,17 @@ class _YamlMiddleware extends QLMiddleware {
           return info.copyWith(props: extra);
         }
         return null;
-
+      case 'block':
+        return info.copyWith(path: def['to']?.toString() ?? '/');
       default:
         return null;
     }
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────── §6 ─
-//  FILE ROUTE VIEW WIDGET — renders a YAML page at runtime
-// ────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// §8 — FILE ROUTE VIEW
+// ─────────────────────────────────────────────────────────────────────────────
 
 class _QLFileRouteView extends StatefulWidget {
   final String pageAssetPath;
@@ -702,25 +886,22 @@ class _QLFileRouteViewState extends State<_QLFileRouteView> {
   QLBlueprint? _pageAst;
   QLBlueprint? _layoutAst;
   Map<String, dynamic>? _pageConfig;
+  Map<String, dynamic>? _rawPage;
   bool _error = false;
   String _errorMsg = '';
 
-  // 🚀 ADD THIS: Safe Hot Reload Hook
   @override
   void reassemble() {
     super.reassemble();
-    // 1. Kick the file out of Flutter's internal bundle cache
     rootBundle.evict(widget.pageAssetPath);
     if (widget.layoutAssetPath != null) {
       rootBundle.evict(widget.layoutAssetPath!);
     }
 
-    // 2. Clear Quantum's RAM so it reads the new YAML
     QuantumYamlEngine.instance.clearCaches();
     QuantumFileRouter.instance.invalidateCache();
     QuantumVM.instance.clearRuntimeCaches();
 
-    // 3. Re-draw safely
     _compile();
   }
 
@@ -734,19 +915,30 @@ class _QLFileRouteViewState extends State<_QLFileRouteView> {
   void didUpdateWidget(covariant _QLFileRouteView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.pageAssetPath != widget.pageAssetPath ||
-        oldWidget.routeInfo != widget.routeInfo) {
+        oldWidget.routeInfo != widget.routeInfo ||
+        oldWidget.layoutAssetPath != widget.layoutAssetPath) {
       _compile();
     }
   }
 
   Future<void> _compile() async {
     try {
-      // Load page YAML
-      final Map<String, dynamic> raw =
-          await QuantumYamlEngine.instance.load(widget.pageAssetPath);
-      final QLPageYamlConfig pageCfg = QLPageYamlConfig.fromMap(raw);
+      final _PageLoadRecord pageLoad =
+          (await QuantumFileRouter.instance._loadPageLoadCached(
+                widget.pageAssetPath,
+              )) ??
+              _PageLoadRecord(
+                raw:
+                    await QuantumYamlEngine.instance.load(widget.pageAssetPath),
+                config: QLPageYamlConfig.fromMap(
+                  await QuantumYamlEngine.instance.load(widget.pageAssetPath),
+                ),
+              );
 
-      // Register page-level macros, schemas, state
+      final Map<String, dynamic> raw = pageLoad.raw;
+      final QLPageYamlConfig pageCfg = pageLoad.config;
+      _rawPage = raw;
+
       if (pageCfg.macros.isNotEmpty) applyYamlMacros(pageCfg.macros);
       if (pageCfg.schemas.isNotEmpty) applyYamlSchemas(pageCfg.schemas);
       if (pageCfg.state.isNotEmpty) {
@@ -755,13 +947,13 @@ class _QLFileRouteViewState extends State<_QLFileRouteView> {
             .merge(pageCfg.state);
       }
 
-      // Register page-level pipelines
       if (pageCfg.pipelines.isNotEmpty) {
         await QuantumDataOrchestrator.bootstrap(
-            {'pipelines': pageCfg.pipelines}, context);
+          {'pipelines': pageCfg.pipelines},
+          context,
+        );
       }
 
-      // Build compile env
       final Map<String, dynamic> compileEnv = {
         ...raw['env'] is Map
             ? Map<String, dynamic>.from(raw['env'] as Map)
@@ -772,24 +964,32 @@ class _QLFileRouteViewState extends State<_QLFileRouteView> {
           'query': widget.routeInfo.queryParams,
           'props': widget.routeInfo.props,
         },
+        r'$page': {
+          'path': widget.pageAssetPath,
+          'layout': raw['layout'] ??
+              raw['layoutPath'] ??
+              widget.layoutAssetPath ??
+              '',
+        },
       };
 
-      // All macros (including page-local)
       final Map<String, dynamic> allMacros = {
         ...QLModuleRegistry.instance.macrosFor('default'),
         ...pageCfg.macros,
       };
 
-      // Compile page UI
       final dynamic uiNode = pageCfg.ui ?? raw['ui'] ?? raw;
       final QLBlueprint pageAst =
           await QLCompiler.compileAsync(uiNode, allMacros, compileEnv);
 
-      // Compile layout if present
       QLBlueprint? layoutAst;
-      if (widget.layoutAssetPath != null) {
+      final String? effectiveLayoutPath = _effectiveLayoutPath(raw);
+      final String? layoutAssetPath =
+          effectiveLayoutPath ?? widget.layoutAssetPath;
+
+      if (layoutAssetPath != null && layoutAssetPath.isNotEmpty) {
         final Map<String, dynamic> layoutRaw =
-            await QuantumYamlEngine.instance.load(widget.layoutAssetPath!);
+            await QuantumYamlEngine.instance.load(layoutAssetPath);
         final dynamic layoutUiNode =
             layoutRaw['ui'] ?? layoutRaw['view'] ?? layoutRaw;
         layoutAst =
@@ -802,17 +1002,28 @@ class _QLFileRouteViewState extends State<_QLFileRouteView> {
           _layoutAst = layoutAst;
           _pageConfig = raw;
           _error = false;
+          _errorMsg = '';
         });
       }
     } catch (e, st) {
       debugPrint(
-          '[QuantumFileRouter] Compile error for ${widget.pageAssetPath}: $e\n$st');
-      if (mounted)
+        '[QuantumFileRouter] Compile error for ${widget.pageAssetPath}: $e\n$st',
+      );
+      if (mounted) {
         setState(() {
           _error = true;
           _errorMsg = e.toString();
         });
+      }
     }
+  }
+
+  String? _effectiveLayoutPath(Map<String, dynamic> raw) {
+    final dynamic value =
+        raw['layout'] ?? raw['layoutPath'] ?? raw['layoutAssetPath'];
+    final String text = value?.toString().trim() ?? '';
+    if (text.isNotEmpty) return text;
+    return null;
   }
 
   @override
@@ -825,10 +1036,11 @@ class _QLFileRouteViewState extends State<_QLFileRouteView> {
                 child: Text(
                   'QuantumFileRouter Error:\n$_errorMsg',
                   style: const TextStyle(
-                      color: Colors.red,
-                      fontSize: 13,
-                      fontFamily: 'monospace',
-                      decoration: TextDecoration.none),
+                    color: Colors.red,
+                    fontSize: 13,
+                    fontFamily: 'monospace',
+                    decoration: TextDecoration.none,
+                  ),
                 ),
               ),
             )
@@ -839,9 +1051,10 @@ class _QLFileRouteViewState extends State<_QLFileRouteView> {
       return widget.loadingWidget ?? const SizedBox.shrink();
     }
 
+    final String moduleName = _pageConfig?['module']?.toString() ?? 'default';
+
     Widget pageWidget = QLDataScope(
-      moduleStore: QLStoreRegistry.instance
-          .get(_pageConfig?['module']?.toString() ?? 'default'),
+      moduleStore: QLStoreRegistry.instance.get(moduleName),
       localData: {
         r'$route': {
           'path': widget.routeInfo.path,
@@ -849,13 +1062,18 @@ class _QLFileRouteViewState extends State<_QLFileRouteView> {
           'query': widget.routeInfo.queryParams,
           'props': widget.routeInfo.props,
         },
+        r'$page': {
+          'path': widget.pageAssetPath,
+          'layout': _effectiveLayoutPath(_rawPage ?? const {}) ??
+              widget.layoutAssetPath ??
+              '',
+        },
       },
-      // 🚀 FIX 1: Wrap in Builder so the VM reads the localData we just created!
       child: Builder(
-          builder: (c) => QuantumVM.instance.renderWidget(c, _pageAst!)),
+        builder: (c) => QuantumVM.instance.renderWidget(c, _pageAst!),
+      ),
     );
 
-    // Wrap in layout if present
     if (_layoutAst != null) {
       pageWidget = QLDataScope(
         moduleStore: QLStoreRegistry.instance.get('default'),
@@ -864,11 +1082,12 @@ class _QLFileRouteViewState extends State<_QLFileRouteView> {
           r'$route': {
             'path': widget.routeInfo.path,
             'param': widget.routeInfo.params,
+            'query': widget.routeInfo.queryParams,
           },
         },
-        // 🚀 FIX 1: Wrap in Builder here too!
         child: Builder(
-            builder: (c) => QuantumVM.instance.renderWidget(c, _layoutAst!)),
+          builder: (c) => QuantumVM.instance.renderWidget(c, _layoutAst!),
+        ),
       );
     }
 

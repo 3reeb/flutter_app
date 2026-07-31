@@ -31,8 +31,7 @@
     "src/runtime/quantum_data_state.dart",
     "src/runtime/quantum_design_system_manifest.dart",
     "src/runtime/quantum_domain_builder.dart",
-    "src/runtime/quantum_embodiment_engine.dart",
-    "src/runtime/quantum_embodiment_examples.dart",
+
     "src/runtime/quantum_export_dom_stub.dart",
     "src/runtime/quantum_export_dom_web.dart",
     "src/runtime/quantum_export_web_bridge.dart",

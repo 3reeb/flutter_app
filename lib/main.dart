@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +6,8 @@ import 'package:quantum_layout/src/runtime/quantum_sdui_test_engine_io.dart';
 import 'package:flutter/rendering.dart';
 import 'package:quantum_layout/downloader.dart';
 import 'package:quantum_layout/quantum.dart';
+import 'src/showcase/media_showcase.dart';
+
 void main() {
   bootQuantumApp(
     QuantumAppConfig(
@@ -1105,6 +1107,14 @@ class _SduiStudioWidgetState extends State<SduiStudioWidget> {
                 label: 'Load Sample',
                 onPressed: _loadSample,
                 filled: false,
+              ),
+              _toolbarButton(
+                icon: Icons.perm_media_rounded,
+                label: 'Media Showcase',
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const MediaShowcaseScreen()));
+                },
+                filled: true,
               ),
             ],
           ),

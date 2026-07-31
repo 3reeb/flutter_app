@@ -27,6 +27,12 @@ class QuantumDesignSystemBundle {
   final Map<String, Map<String, dynamic>> stateMachines;
   final Map<String, Map<String, dynamic>> routes;
   final Map<String, Map<String, dynamic>> packs;
+  final Map<String, Map<String, dynamic>> accessibility;
+  final Map<String, Map<String, dynamic>> typography;
+  final Map<String, Map<String, dynamic>> motion;
+  final Map<String, Map<String, dynamic>> performance;
+  final Map<String, Map<String, dynamic>> platform;
+  final Map<String, Map<String, dynamic>> dataPolicy;
   final Map<String, dynamic> tokens;
   final Map<String, dynamic> metadata;
 
@@ -49,6 +55,12 @@ class QuantumDesignSystemBundle {
     this.stateMachines = const <String, Map<String, dynamic>>{},
     this.routes = const <String, Map<String, dynamic>>{},
     this.packs = const <String, Map<String, dynamic>>{},
+    this.accessibility = const <String, Map<String, dynamic>>{},
+    this.typography = const <String, Map<String, dynamic>>{},
+    this.motion = const <String, Map<String, dynamic>>{},
+    this.performance = const <String, Map<String, dynamic>>{},
+    this.platform = const <String, Map<String, dynamic>>{},
+    this.dataPolicy = const <String, Map<String, dynamic>>{},
     this.tokens = const <String, dynamic>{},
     this.metadata = const <String, dynamic>{},
   });
@@ -68,7 +80,13 @@ class QuantumDesignSystemBundle {
       workflows.length +
       stateMachines.length +
       routes.length +
-      packs.length;
+      packs.length +
+      accessibility.length +
+      typography.length +
+      motion.length +
+      performance.length +
+      platform.length +
+      dataPolicy.length;
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         'id': id,
@@ -89,6 +107,12 @@ class QuantumDesignSystemBundle {
         'stateMachines': stateMachines,
         'routes': routes,
         'packs': packs,
+        'accessibility': accessibility,
+        'typography': typography,
+        'motion': motion,
+        'performance': performance,
+        'platform': platform,
+        'dataPolicy': dataPolicy,
         'tokens': tokens,
         'metadata': metadata,
       };
@@ -121,6 +145,38 @@ abstract final class QuantumDesignSystemCompiler {
       'semanticTokens',
       'semantic_tokens',
     ]);
+    final Map<String, dynamic> accessibility = _sectionMap(root, const [
+      'accessibility',
+      'a11y',
+      'semantics',
+    ]);
+    final Map<String, dynamic> typography = _sectionMap(root, const [
+      'typography',
+      'typeScale',
+      'type',
+      'textStyle',
+    ]);
+    final Map<String, dynamic> motion = _sectionMap(root, const [
+      'motion',
+      'animation',
+      'transitions',
+    ]);
+    final Map<String, dynamic> performance = _sectionMap(root, const [
+      'performance',
+      'perf',
+      'scheduler',
+    ]);
+    final Map<String, dynamic> platform = _sectionMap(root, const [
+      'platform',
+      'platforms',
+      'device',
+    ]);
+    final Map<String, dynamic> dataPolicy = _sectionMap(root, const [
+      'dataPolicy',
+      'data_policy',
+      'reactivity',
+      'statePolicy',
+    ]);
 
     final _SectionCollector collector = _SectionCollector();
     collector.ingest(root);
@@ -129,6 +185,12 @@ abstract final class QuantumDesignSystemCompiler {
       'id': id,
       'root': root,
       'tokens': tokens,
+      'accessibility': accessibility,
+      'typography': typography,
+      'motion': motion,
+      'performance': performance,
+      'platform': platform,
+      'dataPolicy': dataPolicy,
       'collector': collector.toMap(),
       'metadata': metadata,
     });
@@ -152,6 +214,12 @@ abstract final class QuantumDesignSystemCompiler {
       stateMachines: collector.stateMachines,
       routes: collector.routes,
       packs: collector.packs,
+      accessibility: Map<String, Map<String, dynamic>>.unmodifiable(accessibility),
+      typography: Map<String, Map<String, dynamic>>.unmodifiable(typography),
+      motion: Map<String, Map<String, dynamic>>.unmodifiable(motion),
+      performance: Map<String, Map<String, dynamic>>.unmodifiable(performance),
+      platform: Map<String, Map<String, dynamic>>.unmodifiable(platform),
+      dataPolicy: Map<String, Map<String, dynamic>>.unmodifiable(dataPolicy),
       tokens: Map<String, dynamic>.unmodifiable(tokens),
       metadata: Map<String, dynamic>.unmodifiable(metadata),
     );

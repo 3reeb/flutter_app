@@ -940,8 +940,6 @@ files:
   - installDefaults
   - registerCore
   - registerAlias
-- file: lib/src/runtime/quantum_embodiment_engine.dart
-  docs_file: docs/src/runtime/quantum_embodiment_engine.dart.md
   line_count: 2365
   byte_count: 78347
   class_count: 20

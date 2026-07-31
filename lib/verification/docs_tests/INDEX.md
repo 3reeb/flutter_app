@@ -116,7 +116,6 @@ The full file map is generated automatically from the source tree. Every Dart fi
 - [`lib/src/runtime/quantum_data_state.dart`](by-file/lib/src/runtime/quantum_data_state.dart.md)
 - [`lib/src/runtime/quantum_design_system_manifest.dart`](by-file/lib/src/runtime/quantum_design_system_manifest.dart.md)
 - [`lib/src/runtime/quantum_domain_builder.dart`](by-file/lib/src/runtime/quantum_domain_builder.dart.md)
-- [`lib/src/runtime/quantum_embodiment_engine.dart`](by-file/lib/src/runtime/quantum_embodiment_engine.dart.md)
 - [`lib/src/runtime/quantum_embodiment_examples.dart`](by-file/lib/src/runtime/quantum_embodiment_examples.dart.md)
 - [`lib/src/runtime/quantum_export_dom_stub.dart`](by-file/lib/src/runtime/quantum_export_dom_stub.dart.md)
 - [`lib/src/runtime/quantum_export_dom_web.dart`](by-file/lib/src/runtime/quantum_export_dom_web.dart.md)

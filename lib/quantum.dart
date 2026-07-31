@@ -1,12 +1,12 @@
-// ════════════════════════════════════════════════════════════════════════════
-// QUANTUM FRAMEWORK — Single barrel export
+// â•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گ
+// QUANTUM FRAMEWORK â€” Single barrel export
 // quantum.dart
 //
 // Import this one file to access the entire Quantum framework:
 //
 //   import 'quantum.dart';
 //
-// ════════════════════════════════════════════════════════════════════════════
+// â•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گ
 
 library quantum;
 
@@ -42,8 +42,6 @@ export 'src/runtime/quantum_data_orchestrator.dart';
 export 'src/runtime/quantum_data_pipeline.dart';
 export 'src/runtime/quantum_data_state.dart';
 export 'src/runtime/quantum_domain_builder.dart';
-export 'src/runtime/quantum_embodiment_engine.dart';
-export 'src/runtime/quantum_embodiment_examples.dart';
 export 'src/runtime/quantum_omni_manifold.dart';
 export 'src/runtime/quantum_design_system_manifest.dart';
 export 'src/runtime/quantum_omni_registry.dart';
@@ -52,7 +50,7 @@ export 'src/runtime/quantum_core_schema_registry.dart';
 export 'src/runtime/quantum_sdui_engine.dart';
 export 'src/runtime/quantum_sdui_type_engine.dart';
 export 'src/runtime/quantum_permissions.dart';
-export 'src/runtime/quantum_vm.dart';
+export 'src/quantum_vm_core/quantum_vm.dart';
 export 'src/runtime/quantum_vm_init.dart';
 export 'src/runtime/quantum_template_engine.dart';
 export 'src/runtime/quantum_workspace_engine.dart';
