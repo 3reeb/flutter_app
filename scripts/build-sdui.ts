@@ -31,7 +31,6 @@ async function buildSdui() {
 
     // 2. Export Pages recursively
     if (config.app && config.app.pages) {
-      console.log('PAGES DUMP:', JSON.stringify(config.app.pages, null, 2));
       exportPageTree(config.app.pages, pagesDir, config.app.layouts, config.app.fragments);
     }
     
@@ -45,8 +44,8 @@ async function buildSdui() {
 // Function to recursively export pages
 function exportPageTree(pages, currentDir, layouts, fragments) {
   if (!Array.isArray(pages)) {
-    // If it's a wrapper, it might have .items or .children
-    pages = pages.items || pages.children || [];
+    // If it's a wrapper, it might have .routes, .items or .children
+    pages = pages.routes || pages.items || pages.children || [];
   }
 
   for (const page of pages) {
@@ -84,13 +83,19 @@ function exportPageTree(pages, currentDir, layouts, fragments) {
     fs.mkdirSync(targetFolder, { recursive: true });
 
     // Output Layout if defined and we haven't written it to this folder yet
-    if (page.layout && page.layout.$ref) {
-      const layoutId = page.layout.$ref;
+    if (page.layout && page.layout.name) {
+      const layoutId = page.layout.name;
       const layoutDef = layouts[layoutId];
       if (layoutDef) {
         const layoutFile = path.join(targetFolder, '_layout.json');
         if (!fs.existsSync(layoutFile)) {
-          fs.writeFileSync(layoutFile, JSON.stringify(layoutDef, null, 2));
+          const layoutObj = { ...layoutDef };
+          // Map TS layout template to Dart AST 'ui'
+          if (layoutObj.template) {
+            layoutObj.ui = layoutObj.template;
+            delete layoutObj.template;
+          }
+          fs.writeFileSync(layoutFile, JSON.stringify(layoutObj, null, 2));
           console.log(`  -> Generated Layout: ${path.relative(process.cwd(), layoutFile)}`);
         }
       }
@@ -99,15 +104,57 @@ function exportPageTree(pages, currentDir, layouts, fragments) {
     // Build the page object we will write
     const pageObj = { ...page };
     
-    // Resolve fragments
-    if (page.page && page.page.$ref) {
-      const fragmentId = page.page.$ref;
+    // 1. Resolve fragments and map to 'ui'
+    if (page.page && page.page.name) {
+      const fragmentId = page.page.name;
       const fragmentDef = fragments[fragmentId];
-      if (fragmentDef) {
-        pageObj.fragment = fragmentDef;
+      if (fragmentDef && fragmentDef.template) {
+        pageObj.ui = fragmentDef.template;
       }
     }
     
+    // 2. Map SEO/Meta to unified Dart 'meta'
+    const newMeta = {};
+    if (pageObj.seo) {
+      if (pageObj.seo.title) newMeta.title = pageObj.seo.title;
+      if (pageObj.seo.description) newMeta.description = pageObj.seo.description;
+      if (pageObj.seo.keywords) newMeta.keywords = pageObj.seo.keywords;
+      if (pageObj.seo.ogImage) newMeta.ogImage = pageObj.seo.ogImage;
+      delete pageObj.seo;
+    }
+    if (pageObj.meta) {
+      newMeta.custom = { ...pageObj.meta };
+    }
+    pageObj.meta = newMeta;
+
+    // 3. Map Guards to Dart 'redirect'
+    if (pageObj.guards && Array.isArray(pageObj.guards)) {
+      pageObj.guards = pageObj.guards.map(g => {
+        if (g.type === 'auth') {
+          return {
+            type: 'redirect',
+            condition: 'auth.isAuthenticated',
+            to: g.redirectTo || '/login'
+          };
+        }
+        if (g.type === 'role') {
+          return {
+            type: 'redirect',
+            condition: `auth.roles.includes('${g.role ? g.role[0] : ''}')`,
+            to: g.redirectTo || '/'
+          };
+        }
+        return g;
+      });
+    }
+
+    // 4. Cleanup properties Dart doesn't expect or that cause issues
+    delete pageObj.page;
+    delete pageObj.fragment;
+    delete pageObj.layout; // Let the folder inheritance handle the layout naturally
+    delete pageObj.children;
+    delete pageObj.nested;
+
     // Write page.json or [id].json
     const pageFile = path.join(targetFolder, filename);
     fs.writeFileSync(pageFile, JSON.stringify(pageObj, null, 2));

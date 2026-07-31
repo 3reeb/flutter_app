@@ -1,0 +1,103 @@
+{
+  "kind": "page",
+  "type": "route",
+  "name": "docs_catch_all",
+  "id": "docs_catch_all",
+  "path": "/docs/[...slug]",
+  "meta": {
+    "title": "Docs Page"
+  },
+  "routeId": "docs_catch_all",
+  "ui": {
+    "type": "box",
+    "props": {
+      "direction": "col",
+      "gap": 24
+    },
+    "children": [
+      {
+        "type": "box",
+        "_node": {
+          "type": "component:render",
+          "props": {
+            "__componentName": "page_header",
+            "title": "Article",
+            "subtitle": "Nested route content"
+          },
+          "children": [
+            {
+              "_node": {
+                "type": "box",
+                "props": {
+                  "direction": "row",
+                  "crossAlignment": "center",
+                  "mainAlignment": "space-between",
+                  "gap": 16,
+                  "padding": 0
+                },
+                "children": [
+                  {
+                    "_node": {
+                      "type": "box",
+                      "props": {
+                        "direction": "col",
+                        "gap": 8
+                      },
+                      "children": [
+                        {
+                          "_node": {
+                            "type": "text",
+                            "props": {
+                              "text": "Article",
+                              "variant": "heading"
+                            },
+                            "children": []
+                          }
+                        },
+                        {
+                          "_node": {
+                            "type": "text",
+                            "props": {
+                              "text": "Nested route content"
+                            },
+                            "children": []
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "__componentName": "page_header"
+        }
+      },
+      {
+        "type": "box",
+        "_node": {
+          "type": "template",
+          "props": {
+            "title": "Body",
+            "description": "This block renders the fetched article content.",
+            "compact": false,
+            "__templateName": "section"
+          },
+          "children": [],
+          "slots": {
+            "body": {
+              "_node": {
+                "type": "box",
+                "props": {
+                  "direction": "col",
+                  "gap": 16
+                },
+                "children": []
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

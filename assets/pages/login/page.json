@@ -1,0 +1,62 @@
+{
+  "kind": "page",
+  "type": "route",
+  "name": "login",
+  "id": "login",
+  "path": "/login",
+  "meta": {
+    "title": "Login | Quantum",
+    "description": "Authenticate to continue.",
+    "custom": {
+      "area": "auth"
+    }
+  },
+  "routeId": "login",
+  "ui": {
+    "type": "template",
+    "props": {
+      "eyebrow": "Introducing",
+      "title": "Build anything with one JSON graph",
+      "body": "Pages, layouts, fragments, guards, pipelines, and nested routes all compile into a fast Flutter render tree.",
+      "primaryLabel": "Start",
+      "secondaryLabel": "Docs",
+      "__templateName": "hero"
+    },
+    "slots": {
+      "actions": {
+        "type": "box",
+        "_node": {
+          "type": "box",
+          "props": {
+            "direction": "row",
+            "gap": 12
+          },
+          "children": [
+            {
+              "_node": {
+                "type": "action",
+                "props": {
+                  "text": "Get Started",
+                  "intent": "primary",
+                  "variant": "solid"
+                },
+                "children": []
+              }
+            },
+            {
+              "_node": {
+                "type": "action",
+                "props": {
+                  "text": "Read Docs",
+                  "intent": "ghost",
+                  "variant": "outline"
+                },
+                "children": []
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

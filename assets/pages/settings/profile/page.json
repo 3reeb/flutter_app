@@ -1,0 +1,98 @@
+{
+  "kind": "page",
+  "type": "route",
+  "name": "settings_profile",
+  "id": "settings_profile",
+  "path": "/settings/profile",
+  "guards": [
+    {
+      "type": "redirect",
+      "condition": "auth.isAuthenticated",
+      "to": "/login"
+    }
+  ],
+  "meta": {
+    "title": "Profile | Settings"
+  },
+  "routeId": "settings_profile",
+  "ui": {
+    "type": "box",
+    "props": {
+      "direction": "col",
+      "gap": 24
+    },
+    "children": [
+      {
+        "type": "box",
+        "_node": {
+          "type": "component:render",
+          "props": {
+            "__componentName": "page_header",
+            "title": "Settings",
+            "subtitle": "Profile, security, and preferences"
+          },
+          "children": [
+            {
+              "_node": {
+                "type": "box",
+                "props": {
+                  "direction": "row",
+                  "crossAlignment": "center",
+                  "mainAlignment": "space-between",
+                  "gap": 16,
+                  "padding": 0
+                },
+                "children": [
+                  {
+                    "_node": {
+                      "type": "box",
+                      "props": {
+                        "direction": "col",
+                        "gap": 8
+                      },
+                      "children": [
+                        {
+                          "_node": {
+                            "type": "text",
+                            "props": {
+                              "text": "Settings",
+                              "variant": "heading"
+                            },
+                            "children": []
+                          }
+                        },
+                        {
+                          "_node": {
+                            "type": "text",
+                            "props": {
+                              "text": "Profile, security, and preferences"
+                            },
+                            "children": []
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "__componentName": "page_header"
+        }
+      },
+      {
+        "type": "box",
+        "_node": {
+          "type": "template",
+          "props": {
+            "title": "Account",
+            "description": "Manage your account details.",
+            "compact": false,
+            "__templateName": "section"
+          },
+          "children": []
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "kind": "page",
+  "type": "route",
+  "name": "dashboard_report_detail",
+  "id": "dashboard_report_detail",
+  "path": "/dashboard/reports/[reportId]",
+  "guards": [
+    {
+      "type": "redirect",
+      "condition": "auth.isAuthenticated",
+      "to": "/login"
+    }
+  ],
+  "meta": {
+    "title": "Report Detail | Dashboard",
+    "description": "Route parameter driven deep page.",
+    "custom": {
+      "area": "app",
+      "section": "report_detail"
+    }
+  },
+  "routeId": "dashboard_report_detail",
+  "ui": {
+    "type": "box",
+    "props": {
+      "direction": "col",
+      "gap": 24
+    },
+    "children": [
+      {
+        "type": "box",
+        "_node": {
+          "type": "component:render",
+          "props": {
+            "__componentName": "page_header",
+            "title": "Article",
+            "subtitle": "Nested route content"
+          },
+          "children": [
+            {
+              "_node": {
+                "type": "box",
+                "props": {
+                  "direction": "row",
+                  "crossAlignment": "center",
+                  "mainAlignment": "space-between",
+                  "gap": 16,
+                  "padding": 0
+                },
+                "children": [
+                  {
+                    "_node": {
+                      "type": "box",
+                      "props": {
+                        "direction": "col",
+                        "gap": 8
+                      },
+                      "children": [
+                        {
+                          "_node": {
+                            "type": "text",
+                            "props": {
+                              "text": "Article",
+                              "variant": "heading"
+                            },
+                            "children": []
+                          }
+                        },
+                        {
+                          "_node": {
+                            "type": "text",
+                            "props": {
+                              "text": "Nested route content"
+                            },
+                            "children": []
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "__componentName": "page_header"
+        }
+      },
+      {
+        "type": "box",
+        "_node": {
+          "type": "template",
+          "props": {
+            "title": "Body",
+            "description": "This block renders the fetched article content.",
+            "compact": false,
+            "__templateName": "section"
+          },
+          "children": [],
+          "slots": {
+            "body": {
+              "_node": {
+                "type": "box",
+                "props": {
+                  "direction": "col",
+                  "gap": 16
+                },
+                "children": []
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

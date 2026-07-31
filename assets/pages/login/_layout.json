@@ -1,0 +1,32 @@
+{
+  "name": "auth_shell",
+  "mode": "shell",
+  "viewport": "responsive",
+  "scaffold": true,
+  "safeArea": "all",
+  "kind": "layout",
+  "type": "layout",
+  "ui": {
+    "type": "page_shell",
+    "props": {
+      "title": "Auth",
+      "compact": true,
+      "showSidebar": false,
+      "showFooter": false
+    },
+    "slots": {
+      "content": {
+        "type": "box",
+        "_node": {
+          "type": "box",
+          "props": {
+            "direction": "col",
+            "gap": 20,
+            "padding": 24
+          },
+          "children": []
+        }
+      }
+    }
+  }
+}
