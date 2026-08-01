@@ -17,15 +17,12 @@
     "slots": {
       "content": {
         "type": "box",
-        "_node": {
-          "type": "box",
-          "props": {
-            "direction": "col",
-            "gap": 20,
-            "padding": 24
-          },
-          "children": []
-        }
+        "props": {
+          "direction": "col",
+          "gap": 20,
+          "padding": 24
+        },
+        "children": []
       }
     }
   }

@@ -32,103 +32,44 @@
     "slots": {
       "header": {
         "type": "box",
-        "_node": {
-          "type": "box",
-          "props": {
-            "padding": 24
-          },
-          "children": [
-            {
-              "_node": {
-                "type": "component:render",
-                "props": {
-                  "__componentName": "page_header",
-                  "title": "Quantum",
-                  "subtitle": "The fastest SDUI runtime"
-                },
-                "children": [
-                  {
-                    "_node": {
-                      "type": "box",
-                      "props": {
-                        "direction": "row",
-                        "crossAlignment": "center",
-                        "mainAlignment": "space-between",
-                        "gap": 16,
-                        "padding": 0
-                      },
-                      "children": [
-                        {
-                          "_node": {
-                            "type": "box",
-                            "props": {
-                              "direction": "col",
-                              "gap": 8
-                            },
-                            "children": [
-                              {
-                                "_node": {
-                                  "type": "text",
-                                  "props": {
-                                    "text": "Quantum",
-                                    "variant": "heading"
-                                  },
-                                  "children": []
-                                }
-                              },
-                              {
-                                "_node": {
-                                  "type": "text",
-                                  "props": {
-                                    "text": "The fastest SDUI runtime"
-                                  },
-                                  "children": []
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  }
-                ],
-                "__componentName": "page_header"
-              }
-            }
-          ]
-        }
+        "props": {
+          "padding": 24
+        },
+        "children": [
+          {
+            "type": "component:use",
+            "props": {
+              "component": "page_header",
+              "title": "Quantum",
+              "subtitle": "The fastest SDUI runtime"
+            },
+            "children": []
+          }
+        ]
       },
       "content": {
         "type": "box",
-        "_node": {
-          "type": "box",
-          "props": {
-            "direction": "col",
-            "gap": 24,
-            "padding": 24
-          },
-          "children": []
-        }
+        "props": {
+          "direction": "col",
+          "gap": 24,
+          "padding": 24
+        },
+        "children": []
       },
       "footer": {
         "type": "box",
-        "_node": {
-          "type": "box",
-          "props": {
-            "padding": 24
-          },
-          "children": [
-            {
-              "_node": {
-                "type": "text",
-                "props": {
-                  "text": "© Quantum"
-                },
-                "children": []
-              }
-            }
-          ]
-        }
+        "props": {
+          "padding": 24
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "© Quantum"
+            },
+            "children": []
+          }
+        ]
       }
     }
   }

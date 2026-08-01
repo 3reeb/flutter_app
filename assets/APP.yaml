@@ -1,23 +1,10 @@
-# ════════════════════════════════════════════════════════════════════════════
-# APP.yaml — Master application config
-#
-# This single file bootstraps your entire Quantum app.
-# In main.dart: void main() => bootQuantumYamlApp('assets/APP.yaml');
-#
-# UPPERCASE files = framework standard config
-# Lowercase files in pages/ = auto-detected routes
-# ════════════════════════════════════════════════════════════════════════════
-
-# ── App Identity ──────────────────────────────────────────────────────────────
 app:
   name: QuantumApp
-  title: "Quantum | Powered by the Future"
+  title: Quantum | Powered by the Future
   locale: en
   version: 1.0.0
-
-# ── Theme (or use: $import: assets/THEME.yaml) ────────────────────────────────
 theme:
-  mode: light # light | dark | system
+  mode: light
   colors:
     primary: "#6366F1"
     secondary: "#8B5CF6"
@@ -32,7 +19,7 @@ theme:
     background: "#0F0F14"
     surface: "#1E1E2E"
   typography:
-    fontFamily: "Inter"
+    fontFamily: Inter
     baseFontSize: 16
     scaleRatio: 1.25
   breakpoints:
@@ -46,7 +33,7 @@ theme:
     md: 16
     lg: 24
     xl: 32
-    "2xl": 48
+    2xl: 48
   radii:
     sm: 4
     md: 8
@@ -54,115 +41,236 @@ theme:
     xl: 16
     full: 9999
   shadows:
-    sm: "0 1px 3px rgba(0,0,0,0.3)"
-    md: "0 4px 12px rgba(0,0,0,0.4)"
-    lg: "0 8px 24px rgba(0,0,0,0.5)"
-    glass: "0 8px 32px rgba(0,0,0,0.4)"
-
-# ── Router ─────────────────────────────────────────────────────────────────────
+    sm: 0 1px 3px rgba(0,0,0,0.3)
+    md: 0 4px 12px rgba(0,0,0,0.4)
+    lg: 0 8px 24px rgba(0,0,0,0.5)
+    glass: 0 8px 32px rgba(0,0,0,0.4)
 router:
   initialRoute: /
   pagesDir: assets/pages # File-based router root
-notFound:
-  pages/404.yaml
-  # Explicit route overrides (supplement/override file-based)
-  # routes:
-  #   - path: /about
-  #     page: assets/pages/about.yaml
-  #     transition: fade
-
-# ── VM Settings ────────────────────────────────────────────────────────────────
+  notFound: assets/pages/_error.json
 vm:
   workerThreads: 4
   simdArenaCapacity: 4096
-
-# ── Telemetry ──────────────────────────────────────────────────────────────────
 telemetry:
   enabled: true
-  frameMonitor: true # Show FPS overlay in debug mode
-
-# ── SDUI Encryption ────────────────────────────────────────────────────────────
-# sdui:
-#   replayGuardMaxAgeSeconds: 3600
-#   keys:
-#     - kid: prod-2025
-#       aesKey: "<base64-32-byte-aes-key>"
-#       sigKey: "<base64-32-byte-hmac-key>"
-#       active: true
-
-# ── Initial Global State ───────────────────────────────────────────────────────
+  frameMonitor: true
 state:
   user: null
   theme: dark
   notifications: []
-
-# ── Global Macros (available in ALL pages) ─────────────────────────────────────
 macros:
-  # A reusable glass card component
   GlassCard:
     defaultProps:
       padding: 24
       radius: 16
     ui:
       type: box:col
-      style: "glass p-{{props.padding}} radius-{{props.radius}} gap-16"
+      style: glass p-{{props.padding}} radius-{{props.radius}} gap-16
       children:
         - type: slot
           name: default
-
-  # A gradient button
   GradientBtn:
     defaultProps:
-      label: "Click Me"
+      label: Click Me
       disabled: false
     ui:
       type: box:row
-      style: "radius-8 p-12 p-r-24 p-l-24 bg-#6366F1"
+      style: radius-8 p-12 p-r-24 p-l-24 bg-#6366F1
       props:
         onTap: "{{props.onTap}}"
       children:
         - type: text
           props:
             text: "{{props.label}}"
-            style: "color-white weight-600 size-14"
-
-  # Section header
+            style: color-white weight-600 size-14
   SectionHeader:
     defaultProps:
       title: ""
       subtitle: ""
     ui:
       type: box:col
-      style: "gap-4"
+      style: gap-4
       children:
         - type: text:h2
           props:
             text: "{{props.title}}"
-            style: "color-white weight-700 size-28"
+            style: color-white weight-700 size-28
         - type: text
           props:
             text: "{{props.subtitle}}"
-            style: "color-muted size-16"
+            style: color-muted size-16
           $if: "{{props.subtitle}}"
-
-# ── Global Schemas ─────────────────────────────────────────────────────────────
+  page_header:
+    name: page_header
+    type: template
+    defaultProps:
+      title: ""
+      subtitle: ""
+    ui:
+      type: box:col
+      props:
+        gap: 6
+      children:
+        - type: text:h2
+          props:
+            text: "{{props.title}}"
+        - type: text
+          props:
+            text: "{{props.subtitle}}"
+            style: color-muted size-16
+          $if: "{{props.subtitle}}"
+  nav_rail:
+    name: nav_rail
+    type: template
+    defaultProps:
+      current: /
+      collapsed: false
+    ui:
+      type: box:col
+      props:
+        gap: 10
+        padding: 16
+      children:
+        - type: text
+          props:
+            text: Navigation
+            style: weight-700 size-14
+        - type: text
+          props:
+            text: "Current: {{props.current}}"
+            style: color-muted size-12
+        - type: box:col
+          props:
+            gap: 8
+          children:
+            - type: text
+              props:
+                text: Dashboard
+            - type: text
+              props:
+                text: Docs
+            - type: text
+              props:
+                text: Settings
+  hero:
+    name: hero
+    type: template
+    defaultProps:
+      eyebrow: ""
+      title: ""
+      body: ""
+      primaryLabel: ""
+      secondaryLabel: ""
+    slots:
+      - actions
+    ui:
+      type: box:col
+      props:
+        gap: 16
+      children:
+        - type: text
+          props:
+            text: "{{props.eyebrow}}"
+            style: color-muted size-12 weight-600
+          $if: "{{props.eyebrow}}"
+        - type: text:h1
+          props:
+            text: "{{props.title}}"
+        - type: text
+          props:
+            text: "{{props.body}}"
+            style: color-muted size-16
+          $if: "{{props.body}}"
+        - type: slot
+          name: actions
+  section:
+    name: section
+    type: template
+    defaultProps:
+      title: ""
+      description: ""
+      compact: false
+    slots:
+      - body
+    ui:
+      type: box:col
+      props:
+        gap: 12
+      children:
+        - type: box:col
+          props:
+            gap: 4
+          children:
+            - type: text:h2
+              props:
+                text: "{{props.title}}"
+              $if: "{{props.title}}"
+            - type: text
+              props:
+                text: "{{props.description}}"
+                style: color-muted size-14
+              $if: "{{props.description}}"
+        - type: slot
+          name: body
+  stat_card:
+    name: stat_card
+    type: template
+    defaultProps:
+      label: ""
+      value: ""
+      hint: ""
+    ui:
+      type: box:col
+      props:
+        gap: 4
+      children:
+        - type: text
+          props:
+            text: "{{props.label}}"
+            style: color-muted size-12
+          $if: "{{props.label}}"
+        - type: text:h2
+          props:
+            text: "{{props.value}}"
+          $if: "{{props.value}}"
+        - type: text
+          props:
+            text: "{{props.hint}}"
+            style: color-muted size-12
+          $if: "{{props.hint}}"
 schemas:
   User:
     fields:
-      id: { type: string, required: true }
-      name: { type: string, required: true }
-      email: { type: string, format: email }
-      avatar: { type: string }
-      role: { type: string, enum: [admin, user, guest] }
-
+      id:
+        type: string
+        required: true
+      name:
+        type: string
+        required: true
+      email:
+        type: string
+        format: email
+      avatar:
+        type: string
+      role:
+        type: string
+        enum:
+          - admin
+          - user
+          - guest
   Product:
     fields:
-      id: { type: string, required: true }
-      name: { type: string, required: true }
-      price: { type: number, min: 0 }
-      image: { type: string }
-      inStock: { type: boolean }
-# ── Domains (advanced: full QuantumDomain from YAML) ──────────────────────────
-# domains:
-#   - $import: assets/domains/auth.yaml
-#   - $import: assets/domains/commerce.yaml
+      id:
+        type: string
+        required: true
+      name:
+        type: string
+        required: true
+      price:
+        type: number
+        min: 0
+      image:
+        type: string
+      inStock:
+        type: boolean

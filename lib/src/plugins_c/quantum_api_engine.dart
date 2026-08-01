@@ -1699,9 +1699,12 @@ class VaultStreamClient {
             {'slug': slug, 'query': fetchQuery}, 'READ'),
       );
 
-      final result =
-          await driver.read(slug, fetchQuery, id: id, context: context).timeout(const Duration(seconds: 15), onTimeout: () {
-        return ApiResult.failure(VaultStreamException('timeout', 'Read operation timed out.'), driverUsed: driver.driverId);
+      final result = await driver
+          .read(slug, fetchQuery, id: id, context: context)
+          .timeout(const Duration(seconds: 15), onTimeout: () {
+        return ApiResult.failure(
+            VaultStreamException('timeout', 'Read operation timed out.'),
+            driverUsed: driver.driverId);
       });
       final end = _now();
       final resBytes = await _calculateBytes(result.data);
@@ -1842,9 +1845,12 @@ class VaultStreamClient {
       ApiResult<dynamic> result;
       int attempt = 0;
       while (true) {
-        result = await driver.write(slug, op, sanitizedBody,
-            id: id, context: context).timeout(const Duration(seconds: 15), onTimeout: () {
-          return ApiResult.failure(VaultStreamException('timeout', 'Write operation timed out.'), driverUsed: driver.driverId);
+        result = await driver
+            .write(slug, op, sanitizedBody, id: id, context: context)
+            .timeout(const Duration(seconds: 15), onTimeout: () {
+          return ApiResult.failure(
+              VaultStreamException('timeout', 'Write operation timed out.'),
+              driverUsed: driver.driverId);
         });
         if (result.isSuccess || attempt >= 3) break;
         if (result.error?.code == 'http_error' ||

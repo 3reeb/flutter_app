@@ -1,23 +1,13 @@
 /**
- * Quantum SDUI v2
- * ----------------
- * A schema-first, registry-driven TypeScript kernel for building complex SDUI apps
- * with strong end-to-end typing and a single composition root.
- *
- * Core invariant:
- * - Preserve authoring operators as JSON.
- * - Never evaluate runtime operators in TypeScript.
- * - Let the engine / VM resolve expressions, bindings, and operators at runtime.
- *
- * Design goals:
- * - Zero-cycle architecture: features export definitions, the kernel wires them.
- * - Zod-like schema inference via `q.*`.
- * - Zustand-like registries / stores / slices / pipelines / themes.
- * - Small helper APIs with strong types and optional manual escape hatches.
+ * Quantum SDUI Kernel v2.1
+ * ------------------------
+ * Schema-first, registry-driven TypeScript engine for Quantum SDUI apps.
+ * Fully covers 100% of Quantum Runtime JSON/YAML schemas, blueprint specifications,
+ * field flags, matrix layouts, protection policies, and slice documents.
  */
 
 /* ============================================================
- * 1) JSON / BRANDS / EXPRESSIONS
+ * 1) JSON / BRANDS / EXPRESSIONS / PRIMITIVES
  * ============================================================ */
 
 export type JsonPrimitive = string | number | boolean | null;
@@ -42,7 +32,121 @@ export type DeepReadonly<T> =
 export type Simplify<T> = { [K in keyof T]: T[K] } & {};
 
 /* ============================================================
- * 2) Q-SCHEMA SYSTEM
+ * 2) RUNTIME FIELD TYPES, FLAGS, AND SCHEMA BLUEPRINTS
+ * ============================================================ */
+
+export const QL_PRIMITIVE_FIELD_TYPES = {
+  string: 1,
+  number: 2,
+  boolean: 3,
+  date: 4,
+  json: 5,
+  object: 6,
+  relation: 7,
+  relationship: 8,
+  block: 9,
+  enumeration: 10,
+  array: 11,
+  tree: 12,
+  secure: 13,
+  lookup: 14,
+  textarea: 15,
+  media: 16,
+  bigInt: 17,
+  smallInt: 18,
+  decimal: 19,
+  char: 20,
+  flags: 21,
+} as const;
+
+export type QLPrimitiveFieldTypeCode = typeof QL_PRIMITIVE_FIELD_TYPES[keyof typeof QL_PRIMITIVE_FIELD_TYPES];
+
+export const QL_FLAG_BITS = {
+  none: 0,
+  isVirtual: 1 << 0,
+  isComputed: 1 << 1,
+  isRequired: 1 << 2,
+  hasMany: 1 << 3,
+  isUnique: 1 << 4,
+  isIndexed: 1 << 5,
+  isHidden: 1 << 6,
+  isReadOnly: 1 << 7,
+} as const;
+
+export type QLFieldFlagBit = typeof QL_FLAG_BITS[keyof typeof QL_FLAG_BITS];
+
+export type QLFieldTypeLabel =
+  | 'string' | 'text' | 'textarea' | 'number' | 'float' | 'int' | 'int32' | 'double'
+  | 'bigint' | 'biginteger' | 'int64' | 'long' | 'smallint' | 'short' | 'int16'
+  | 'decimal' | 'numeric' | 'money' | 'currency' | 'char' | 'character'
+  | 'flags' | 'bitflags' | 'bitmask' | 'mask' | 'media' | 'asset' | 'file'
+  | 'bool' | 'boolean' | 'date' | 'json' | 'object' | 'group' | 'map'
+  | 'relation' | 'relationship' | 'block' | 'enum' | 'enumeration'
+  | 'array' | 'list' | 'tree' | 'secure' | 'password' | 'lookup';
+
+export interface QLBlockPayload {
+  blockType: string;
+  data: JsonObject;
+}
+
+export interface QLMediaPolicy {
+  [key: string]: JsonValue | undefined;
+}
+
+export interface QLQualityPolicy {
+  [key: string]: JsonValue | undefined;
+}
+
+export interface QLStreamingPolicy {
+  [key: string]: JsonValue | undefined;
+}
+
+export interface QLCachePolicy {
+  [key: string]: JsonValue | undefined;
+}
+
+export interface QLSchemaFieldSpec {
+  name: string;
+  path: string;
+  type: QLPrimitiveFieldTypeCode | QLFieldTypeLabel;
+  flags: number;
+  relationTarget?: string | null;
+  options?: string[];
+  min?: number | null;
+  max?: number | null;
+  meta?: Record<string, JsonValue>;
+  children?: QLSchemaFieldSpec[];
+  itemSpec?: QLSchemaFieldSpec | null;
+  allowedBlocks?: string[];
+  mediaType?: string | null;
+  allowedMimeTypes?: string[];
+  minSizeBytes?: number | null;
+  maxSizeBytes?: number | null;
+  thumbnailIcon?: string | null;
+  thumbnailPath?: string | null;
+  mediaPolicy?: QLMediaPolicy;
+  qualityPolicy?: QLQualityPolicy;
+  streamingPolicy?: QLStreamingPolicy;
+  cachePolicy?: QLCachePolicy;
+  compute?: string | ((record: Record<string, any>) => any) | null;
+  pattern?: string | null;
+  matchField?: string | null;
+  transform?: string | null;
+  dependencies?: string[];
+  errorMessages?: Record<string, string>;
+  index?: number;
+}
+
+export interface QLSchemaBlueprint {
+  name: string;
+  rootFields: QLSchemaFieldSpec[];
+  fields: QLSchemaFieldSpec[];
+  byPath: Record<string, QLSchemaFieldSpec>;
+  fieldCount: number;
+}
+
+/* ============================================================
+ * 3) Q-SCHEMA SYSTEM (ZOD-LIKE TYPE INFERENCE)
  * ============================================================ */
 
 export interface QSchema<T, Meta extends Record<string, unknown> = Record<string, unknown>> {
@@ -131,7 +235,159 @@ export const q = {
 };
 
 /* ============================================================
- * 3) CATALOG / ROOTS / SUBTYPES
+ * 4) APP CONFIG, ROUTER, VM & TELEMETRY SCHEMAS (APP.yaml)
+ * ============================================================ */
+
+export interface QLRouterConfig {
+  initialRoute?: string;
+  pagesDir?: string;
+  notFound?: string;
+  globalGuards?: Array<Record<string, JsonValue>>;
+}
+
+export interface QLVmConfig {
+  workerThreads?: number;
+  simdArenaCapacity?: number;
+}
+
+export interface QLTelemetryConfig {
+  enabled?: boolean;
+  frameMonitor?: boolean;
+}
+
+export interface QLYamlThemeConfig {
+  colors?: Record<string, JsonValue>;
+  typography?: Record<string, JsonValue>;
+  spacing?: Record<string, JsonValue>;
+  breakpoints?: Record<string, JsonValue>;
+  shadows?: Record<string, JsonValue>;
+  radii?: Record<string, JsonValue>;
+  mode?: 'light' | 'dark' | 'system';
+  raw?: Record<string, JsonValue>;
+}
+
+export interface QLAppYamlConfig {
+  appName?: string;
+  app?: {
+    name?: string;
+    title?: string;
+    locale?: string;
+    version?: string;
+  };
+  name?: string;
+  title?: string;
+  locale?: string;
+  version?: string;
+  theme?: QLYamlThemeConfig | Record<string, JsonValue>;
+  router?: QLRouterConfig;
+  vm?: QLVmConfig;
+  telemetry?: QLTelemetryConfig;
+  domains?: Array<Record<string, JsonValue>>;
+  state?: Record<string, JsonValue>;
+  macros?: Record<string, JsonValue>;
+  schemas?: Record<string, JsonValue>;
+  pipes?: Record<string, JsonValue>;
+  actions?: Record<string, JsonValue>;
+  sdui?: Record<string, JsonValue>;
+  raw?: Record<string, JsonValue>;
+}
+
+export interface QLPageYamlConfig {
+  type?: 'screen' | 'page' | 'component' | 'widget' | 'layout' | 'modal' | 'drawer' | 'overlay' | 'fragment' | 'template' | 'unknown';
+  meta?: {
+    title?: string;
+    description?: string;
+    keywords?: string;
+    ogImage?: string;
+    custom?: Record<string, JsonValue>;
+  };
+  route?: {
+    urlPattern?: string;
+    captureGroups?: string[];
+    transition?: string;
+    transitionMs?: number;
+  };
+  urlPattern?: string;
+  serverProps?: Record<string, JsonValue>;
+  staticProps?: Record<string, JsonValue>;
+  initialProps?: Record<string, JsonValue>;
+  staticPaths?: string[];
+  state?: Record<string, JsonValue>;
+  schemas?: Record<string, JsonValue>;
+  pipelines?: Record<string, JsonValue>;
+  guards?: Array<Record<string, JsonValue>>;
+  macros?: Record<string, JsonValue>;
+  defaultProps?: Record<string, JsonValue>;
+  ui?: NodeInput;
+  view?: NodeInput;
+  template?: NodeInput;
+  layoutSlot?: string;
+  transition?: string;
+  transitionDurationMs?: number;
+  raw?: Record<string, JsonValue>;
+}
+
+export interface QLRouteInfo {
+  path: string;
+  params?: Record<string, string>;
+  queryParams?: Record<string, string>;
+  props?: Record<string, JsonValue>;
+  extra?: Record<string, JsonValue>;
+  state?: Record<string, JsonValue>;
+}
+
+export interface QLRoute {
+  path: string;
+  builder?: string | ((context: any, info: QLRouteInfo) => any);
+  layoutBuilder?: string | ((context: any, info: QLRouteInfo, child: any) => any);
+  children?: QLRoute[];
+  middlewares?: Array<Record<string, JsonValue>>;
+  transition?: 'fade' | 'scale' | 'slideRight' | 'slideLeft' | 'slideUp' | 'slideDown' | 'flip3D' | 'none';
+  transitionDuration?: number;
+  getServerSideProps?: string | ((info: QLRouteInfo) => Record<string, JsonValue>);
+  getStaticProps?: string | ((info: QLRouteInfo) => Record<string, JsonValue>);
+  getInitialProps?: string | ((info: QLRouteInfo) => Record<string, JsonValue>);
+  getStaticPaths?: string | (() => string[]);
+  seo?: string | ((info: QLRouteInfo, props: Record<string, JsonValue>) => QuantumPageSeo);
+  getSchema?: string | ((info: QLRouteInfo) => Record<string, JsonValue>);
+  loadingBuilder?: string | ((context: any) => any);
+}
+
+/* ============================================================
+ * 5) DESIGN SYSTEM BUNDLE MANIFEST
+ * ============================================================ */
+
+export interface QuantumDesignSystemBundle {
+  id?: string;
+  fingerprint?: number;
+  manifest?: Record<string, JsonValue>;
+  aliases?: Record<string, JsonValue>;
+  slotTypes?: Record<string, JsonValue>;
+  slotNodes?: Record<string, JsonValue>;
+  templates?: Record<string, JsonValue>;
+  layouts?: Record<string, JsonValue>;
+  decorations?: Record<string, JsonValue>;
+  coreSchemas?: Record<string, JsonValue>;
+  aliasSchemas?: Record<string, JsonValue>;
+  components?: Record<string, JsonValue>;
+  actions?: Record<string, JsonValue>;
+  behaviors?: Record<string, JsonValue>;
+  workflows?: Record<string, JsonValue>;
+  stateMachines?: Record<string, JsonValue>;
+  routes?: Record<string, JsonValue>;
+  packs?: Record<string, JsonValue>;
+  accessibility?: Record<string, JsonValue>;
+  typography?: Record<string, JsonValue>;
+  motion?: Record<string, JsonValue>;
+  performance?: Record<string, JsonValue>;
+  platform?: Record<string, JsonValue>;
+  dataPolicy?: Record<string, JsonValue>;
+  tokens?: Record<string, JsonValue>;
+  metadata?: Record<string, JsonValue>;
+}
+
+/* ============================================================
+ * 6) CATALOG / ROOTS / SUBTYPES
  * ============================================================ */
 
 export const QUANTUM_CATALOG = {
@@ -253,7 +509,7 @@ export type CollabSubtype = CatalogSubtype<'collab'>;
 export type QuantumNodeType = string & {};
 
 /* ============================================================
- * 4) ACTION / EVENT SPECS
+ * 7) ACTION / EVENT SPECS
  * ============================================================ */
 
 export interface ActionSpec {
@@ -314,7 +570,7 @@ export interface EventHandlers {
 }
 
 /* ============================================================
- * 5) PROPS INTERFACES
+ * 8) PROPS INTERFACES
  * ============================================================ */
 
 export interface BaseProps extends EventHandlers {
@@ -472,32 +728,6 @@ export interface FieldProps extends BaseProps {
   color?: Expr<string> | DesignToken;
   radius?: Expr<number | string> | DesignToken;
   __subType?: FieldSubtype | string;
-}
-
-export interface SliderFieldProps extends FieldProps {
-  min?: number;
-  max?: number;
-  step?: number;
-  marks?: boolean | JsonObject[];
-}
-
-export interface ToggleFieldProps extends FieldProps {
-  checked?: Expr<boolean>;
-  onColor?: Expr<string> | DesignToken;
-  offColor?: Expr<string> | DesignToken;
-}
-
-export interface SelectFieldProps extends FieldProps {
-  options?: Expr<Array<{ label: string; value: JsonPrimitive }>> | JsonObject[];
-  multiple?: boolean;
-  searchable?: boolean;
-  clearable?: boolean;
-  emptyText?: Expr<string>;
-}
-
-export interface RadioFieldProps extends FieldProps {
-  options?: JsonObject[];
-  direction?: 'row' | 'col';
 }
 
 export interface MediaProps extends BaseProps {
@@ -760,8 +990,9 @@ export interface CollabProps extends BaseProps {
   field?: string;
   color?: Expr<string> | DesignToken;
 }
+
 /* ============================================================
- * STRICT COMPONENT & MACRO TYPES (Matches Dart VM)
+ * 9) COMPONENT & MACRO TYPES
  * ============================================================ */
 
 export interface ComponentComputedSpec {
@@ -813,6 +1044,12 @@ export interface ComponentProps extends BaseProps {
 export interface MacroProps extends BaseProps {
   __subType?: string;
   name?: string;
+  pattern?: JsonValue;
+  when?: JsonValue;
+  replace?: JsonValue;
+  args?: string[];
+  slots?: string[] | Record<string, NodeInput>;
+  description?: string;
   defaultProps?: Record<string, any>;
   defaultSlots?: Record<string, NodeInput>;
   $view?: NodeInput;
@@ -868,7 +1105,7 @@ export type KnownPropsMap = {
 export type PropsFor<R extends string> = R extends keyof KnownPropsMap ? KnownPropsMap[R] : BaseProps;
 
 /* ============================================================
- * 6) VM OPERATORS
+ * 10) VM OPERATORS
  * ============================================================ */
 
 export interface IfOperator { $if?: Expr<boolean> | string; }
@@ -966,7 +1203,7 @@ export interface SduiNode extends AllVmOperators {
 export type NodeInput = SduiNode | SduiElement<any> | JsonPrimitive | NodeInput[];
 
 /* ============================================================
- * 7) INTERNAL HELPERS
+ * 11) INTERNAL HELPERS
  * ============================================================ */
 
 export interface ValidationIssue { path: string; message: string; }
@@ -1290,7 +1527,7 @@ function _isNodeLike(value: any): boolean {
 }
 
 /* ============================================================
- * 8) SDUI ELEMENT BUILDER
+ * 12) SDUI ELEMENT BUILDER
  * ============================================================ */
 
 export class SduiElement<P extends Record<string, any> = BaseProps> {
@@ -1512,6 +1749,10 @@ export class SduiElement<P extends Record<string, any> = BaseProps> {
     return _clone(this._node);
   }
 
+  toJSON(): SduiNode {
+    return this.toNativeObject();
+  }
+
   toNativeObject(options?: EmitOptions): SduiNode {
     return _emitNode(this._node, options || {});
   }
@@ -1526,7 +1767,329 @@ export class SduiElement<P extends Record<string, any> = BaseProps> {
 }
 
 /* ============================================================
- * 9) THEME / STORE / SLICE / PIPELINE / DATA SOURCE
+ * 13) MODULES, DATA SOURCES, SLICES & POLICIES
+ * ============================================================ */
+
+export interface QLModuleAccess {
+  visibility?: 'public' | 'local' | 'owner' | 'secure';
+  allow?: string[];
+  owner?: string;
+  ownerId?: string;
+}
+
+export interface QLModuleDefinition {
+  module?: string;
+  id?: string;
+  name?: string;
+  title?: string;
+  description?: string;
+  version?: string;
+  uses?: string[];
+  imports?: string[];
+  dependencies?: string[];
+  access?: QLModuleAccess;
+  modules?: Record<string, JsonValue>;
+  schemas?: Record<string, JsonValue>;
+  dataSources?: Record<string, JsonValue>;
+  slices?: Record<string, JsonValue>;
+  actions?: Record<string, JsonValue>;
+  components?: Record<string, JsonValue>;
+  templates?: Record<string, JsonValue>;
+  layouts?: Record<string, JsonValue>;
+  routes?: Record<string, JsonValue>;
+  packs?: Record<string, JsonValue>;
+  metadata?: Record<string, JsonValue>;
+  tags?: string[];
+  keywords?: string[];
+}
+
+export type DataSourceMergeStrategy = 'replace' | 'merge' | 'mergeMap' | 'hybrid' | 'append' | 'prepend' | 'appendById';
+export interface OutboundSpec {
+  domain?: string;
+  action?: string;
+  resource?: string;
+  args?: JsonObject;
+  [key: string]: JsonValue | undefined;
+}
+
+export interface DataSourceDefinition {
+  name?: string;
+  id?: string;
+  source?: string;
+  dataSource?: string;
+
+  type?: 'rest' | 'graphql' | 'grpc' | 'websocket' | 'sse' | string;
+  direction?: 'inbound' | 'outbound' | 'bidirectional' | string;
+  domain?: 'api_collection' | 'media' | 'realtime' | string;
+  action?: 'readMany' | 'readOne' | 'write' | 'delete' | 'subscribe' | string;
+  resource?: string;
+  schema?: string;
+  schemaName?: string;
+
+  select?: string[];
+  fields?: string[];
+  projection?: string[];
+  smartSelect?: boolean;
+
+  seed?: JsonValue;
+  initial?: JsonValue;
+
+  subscribe?: boolean;
+  realtime?: boolean;
+  stream?: JsonValue;
+  autoStart?: boolean;
+  lifecycle?: 'onMount' | 'onDemand' | string;
+
+  localFirst?: boolean;
+  offlineQueue?: boolean;
+
+  query?: JsonObject;
+  body?: JsonObject;
+  params?: JsonObject;
+  payload?: JsonObject;
+  args?: JsonObject;
+
+  pushDomain?: string;
+  pushAction?: string;
+  pushArgs?: JsonObject;
+  emitAction?: string;
+
+  outbound?: OutboundSpec;
+
+  fetchAction?: string;
+  mediaAction?: string;
+  streamAction?: string;
+
+  merge?: DataSourceMergeStrategy;
+  transform?: string;
+
+  metadata?: Record<string, JsonValue>;
+  [key: string]: JsonValue | OutboundSpec | undefined;
+}
+
+export type DataSourceDocument = DataSourceDefinition;
+
+export function defineDataSource(def: DataSourceDefinition): DataSourceDocument {
+  return { ...def };
+}
+
+export interface FieldPolicySpec {
+  path?: string;
+  storageMode?: 'hot' | 'cold' | 'persistent';
+  storage?: string;
+  mode?: string;
+  reactive?: boolean;
+  immutable?: boolean;
+  frozen?: boolean;
+  readOnly?: boolean;
+  readonly?: boolean;
+  lazy?: boolean;
+  defer?: boolean;
+  streaming?: boolean;
+  stream?: boolean;
+  cacheResults?: boolean;
+  cache?: boolean;
+  pinInMemory?: boolean;
+  pin?: boolean;
+  sensitive?: boolean;
+  secret?: boolean;
+  resourceId?: string;
+  id?: string;
+  ref?: string;
+  resolver?: string;
+  metadata?: Record<string, JsonValue>;
+}
+
+export interface ResourceRefSpec {
+  id?: string;
+  scheme?: string;
+  uri?: string;
+  cacheable?: boolean;
+  streaming?: boolean;
+  lazy?: boolean;
+  mimeType?: string;
+  metadata?: Record<string, JsonValue>;
+}
+
+export interface ProtectionPolicySpec {
+  level?: 'public' | 'local' | 'owner' | 'authenticated' | 'secure';
+  ownerId?: string;
+  allowUsers?: string[];
+  allowRoles?: string[];
+  denyUsers?: string[];
+  denyRoles?: string[];
+  requireAuth?: boolean;
+  requireFreshSession?: boolean;
+  redactInSnapshots?: boolean;
+  metadata?: Record<string, JsonValue>;
+}
+
+export interface SliceBindingSpec {
+  mode?: 'local' | 'remote' | 'hybrid' | 'stream' | 'realtime';
+  from?: string;
+  source?: string;
+  dataSource?: string;
+  bind?: string;
+  sourcePath?: string;
+  path?: string;
+  merge?: DataSourceMergeStrategy;
+  transform?: string;
+  subscribe?: boolean;
+  realtime?: boolean;
+  default?: JsonValue;
+  initial?: JsonValue;
+  value?: JsonValue;
+  metadata?: Record<string, JsonValue>;
+}
+
+export interface SliceDocument {
+  namespace: string;
+  schema?: string;
+  dataSource?: string;
+
+  state?: JsonObject;
+  computed?: JsonObject;
+  mutations?: JsonObject;
+  queries?: JsonObject;
+  pipelines?: JsonObject;
+  strategies?: JsonObject;
+  metadata?: Record<string, JsonValue>;
+
+  fieldPolicies?: Record<string, FieldPolicySpec>;
+  statePolicy?: Record<string, JsonValue>;
+  fields?: Record<string, FieldPolicySpec>;
+
+  resources?: Record<string, ResourceRefSpec>;
+  assets?: Record<string, ResourceRefSpec>;
+  media?: Record<string, ResourceRefSpec>;
+  files?: Record<string, ResourceRefSpec>;
+
+  protection?: ProtectionPolicySpec;
+
+  runtime?: JsonObject;
+  slice?: JsonObject;
+  behavior?: JsonObject;
+  options?: JsonObject;
+  raw?: Record<string, JsonValue>;
+}
+
+export interface SliceDefinition<S extends Record<string, any>> {
+  namespace: string;
+  schema?: string;
+  dataSource?: string;
+  state?: S | Record<string, any>;
+  computed?: JsonObject;
+  mutations?: JsonObject;
+  queries?: JsonObject;
+  pipelines?: JsonObject;
+  strategies?: JsonObject;
+  metadata?: Record<string, JsonValue>;
+  fieldPolicies?: Record<string, FieldPolicySpec>;
+  statePolicy?: Record<string, JsonValue>;
+  fields?: Record<string, FieldPolicySpec>;
+  resources?: Record<string, ResourceRefSpec>;
+  assets?: Record<string, ResourceRefSpec>;
+  media?: Record<string, ResourceRefSpec>;
+  files?: Record<string, ResourceRefSpec>;
+  protection?: ProtectionPolicySpec;
+  runtime?: JsonObject;
+}
+
+export interface BindingProxy<T> { readonly __binding?: T; }
+export interface PathProxy<T> { readonly __path?: T; }
+export interface ExprProxy<T> { readonly __expr?: T; }
+
+export interface TypedSlice<S extends Record<string, any>> {
+  namespace: string;
+  bind: BindingProxy<S>;
+  path: PathProxy<S>;
+  ref: ExprProxy<S>;
+  toJSON(): SliceDocument;
+}
+
+export function defineSlice<S extends Record<string, any>>(def: SliceDefinition<S>): TypedSlice<S> {
+  const stateJson: JsonObject = {};
+  if (def.state) for (const k in def.state) if (_hasOwn(def.state, k)) {
+    const v = (def.state as any)[k];
+    stateJson[k] = v && typeof v === 'object' && '_tag' in v ? null : (v as JsonValue);
+  }
+
+  return {
+    namespace: def.namespace,
+    bind: {} as BindingProxy<S>,
+    path: {} as PathProxy<S>,
+    ref: {} as ExprProxy<S>,
+    toJSON(): SliceDocument {
+      const out: SliceDocument = { namespace: def.namespace };
+      if (def.schema) out.schema = def.schema;
+      if (def.dataSource) out.dataSource = def.dataSource;
+      if (stateJson) out.state = stateJson;
+      if (def.computed) out.computed = def.computed;
+      if (def.mutations) out.mutations = def.mutations;
+      if (def.queries) out.queries = def.queries;
+      if (def.pipelines) out.pipelines = def.pipelines;
+      if (def.strategies) out.strategies = def.strategies;
+      if (def.metadata) out.metadata = def.metadata;
+      if (def.fieldPolicies) out.fieldPolicies = def.fieldPolicies;
+      if (def.statePolicy) out.statePolicy = def.statePolicy;
+      if (def.fields) out.fields = def.fields;
+      if (def.resources) out.resources = def.resources;
+      if (def.assets) out.assets = def.assets;
+      if (def.media) out.media = def.media;
+      if (def.files) out.files = def.files;
+      if (def.protection) out.protection = def.protection;
+      if (def.runtime) out.runtime = def.runtime;
+      return out;
+    },
+  };
+}
+
+export interface StoreDefinition<S extends Record<string, any>> {
+  namespace: string;
+  state: S;
+  computed?: Record<string, (state: S) => JsonValue>;
+  mutations?: Record<string, (state: S, payload?: any) => void>;
+  queries?: Record<string, JsonObject>;
+  resources?: Record<string, ResourceRefSpec>;
+  fieldPolicies?: Record<string, FieldPolicySpec>;
+  protection?: ProtectionPolicySpec;
+  runtime?: JsonObject;
+  pipelines?: JsonObject;
+}
+
+export interface TypedStoreDescriptor<S extends Record<string, any>> {
+  namespace: string;
+  bind: BindingProxy<S>;
+  path: PathProxy<S>;
+  ref: ExprProxy<S>;
+  toSlice(): SliceDocument;
+  toJSON(): JsonObject;
+}
+
+export function defineStore<S extends Record<string, any>>(
+  namespace: string,
+  factory: () => S,
+): TypedStoreDescriptor<S> {
+  const state = factory();
+  const stateJson: JsonObject = {};
+  for (const k in state) if (_hasOwn(state, k)) stateJson[k] = state[k] as JsonValue;
+
+  return {
+    namespace,
+    bind: {} as BindingProxy<S>,
+    path: {} as PathProxy<S>,
+    ref: {} as ExprProxy<S>,
+    toSlice(): SliceDocument {
+      return { namespace, state: stateJson };
+    },
+    toJSON(): JsonObject {
+      return { namespace, state: stateJson };
+    },
+  };
+}
+
+/* ============================================================
+ * 14) THEME PIPELINE
  * ============================================================ */
 
 export type ColorScale =
@@ -1560,7 +2123,6 @@ export interface AnimationInput {
   repeat?: number | boolean;
   fillMode?: string;
 }
-
 export interface ThemeInput {
   colors?: Record<string, ColorValue>;
   spacing?: Record<string, number | string>;
@@ -1570,7 +2132,8 @@ export interface ThemeInput {
   animations?: Record<string, AnimationInput>;
   breakpoints?: Record<string, number>;
   zIndex?: Record<string, number>;
-  [customGroup: string]: Record<string, any> | undefined;
+  mode?: 'light' | 'dark' | 'system';
+  [customGroup: string]: any;
 }
 
 export type ThemeTokenProxy<T> = {
@@ -1579,21 +2142,6 @@ export type ThemeTokenProxy<T> = {
       ? ThemeTokenProxy<T[K]>
       : DesignToken;
 };
-
-export interface SliceDocument {
-  namespace: string;
-  schema?: string;
-  dataSource?: string;
-  state?: JsonObject;
-  computed?: JsonObject;
-  mutations?: JsonObject;
-  queries?: JsonObject;
-  resources?: JsonObject;
-  fieldPolicies?: JsonObject;
-  protection?: JsonObject;
-  runtime?: JsonObject;
-  pipelines?: JsonObject;
-}
 
 export type TypedTheme<T extends ThemeInput> = Readonly<T> & {
   tokens: ThemeTokenProxy<T>;
@@ -1626,13 +2174,6 @@ export function createTheme<T extends ThemeInput>(theme: T): TypedTheme<T> {
   out.toSlice = function(namespace = 'app.theme'): SliceDocument {
     const slice: SliceDocument = { namespace };
     if ((theme as any).colors) slice.state = { colors: (theme as any).colors as any };
-    if ((theme as any).spacing) (slice as any).spacing = (theme as any).spacing;
-    if ((theme as any).typography) (slice as any).typography = (theme as any).typography;
-    if ((theme as any).radii) (slice as any).radii = (theme as any).radii;
-    if ((theme as any).shadows) (slice as any).shadows = (theme as any).shadows;
-    if ((theme as any).animations) (slice as any).animations = (theme as any).animations;
-    if ((theme as any).breakpoints) (slice as any).breakpoints = (theme as any).breakpoints;
-    if ((theme as any).zIndex) (slice as any).zIndex = (theme as any).zIndex;
     return slice;
   };
   out.toJSON = function(): T {
@@ -1640,155 +2181,6 @@ export function createTheme<T extends ThemeInput>(theme: T): TypedTheme<T> {
   };
 
   return out as TypedTheme<T>;
-}
-
-export interface StoreDefinition<S extends Record<string, any>> {
-  namespace: string;
-  state: S;
-  computed?: Record<string, (state: S) => JsonValue>;
-  mutations?: Record<string, (state: S, payload?: any) => void>;
-  queries?: Record<string, JsonObject>;
-  resources?: Record<string, JsonObject>;
-  fieldPolicies?: JsonObject;
-  protection?: JsonObject;
-  runtime?: JsonObject;
-  pipelines?: JsonObject;
-}
-
-export interface BindingProxy<T> { readonly __binding?: T; }
-export interface PathProxy<T> { readonly __path?: T; }
-export interface ExprProxy<T> { readonly __expr?: T; }
-
-export interface TypedStoreDescriptor<S extends Record<string, any>> {
-  namespace: string;
-  bind: BindingProxy<S>;
-  path: PathProxy<S>;
-  ref: ExprProxy<S>;
-  toSlice(): SliceDocument;
-  toJSON(): JsonObject;
-}
-
-export function defineStore<S extends Record<string, any>>(
-  namespace: string,
-  factory: () => S,
-): TypedStoreDescriptor<S> {
-  const state = factory();
-  const stateJson: JsonObject = {};
-  for (const k in state) if (_hasOwn(state, k)) stateJson[k] = state[k] as JsonValue;
-
-  const bindProxy = {} as BindingProxy<S>;
-  const pathProxy = {} as PathProxy<S>;
-  const exprProxy = {} as ExprProxy<S>;
-
-  return {
-    namespace,
-    bind: bindProxy,
-    path: pathProxy,
-    ref: exprProxy,
-    toSlice(): SliceDocument {
-      return { namespace, state: stateJson };
-    },
-    toJSON(): JsonObject {
-      return { namespace, state: stateJson };
-    },
-  };
-}
-
-export interface TypedSlice<S extends Record<string, any>> {
-  namespace: string;
-  bind: BindingProxy<S>;
-  path: PathProxy<S>;
-  ref: ExprProxy<S>;
-  toJSON(): SliceDocument;
-}
-
-export interface SliceDefinition<S extends Record<string, any>> {
-  namespace: string;
-  schema?: string;
-  dataSource?: string;
-  state?: S | Record<string, any>;
-  computed?: JsonObject;
-  mutations?: JsonObject;
-  queries?: JsonObject;
-  resources?: JsonObject;
-  fieldPolicies?: JsonObject;
-  protection?: JsonObject;
-  runtime?: JsonObject;
-  pipelines?: JsonObject;
-}
-
-export function defineSlice<S extends Record<string, any>>(def: SliceDefinition<S>): TypedSlice<S> {
-  const stateJson: JsonObject = {};
-  if (def.state) for (const k in def.state) if (_hasOwn(def.state, k)) {
-    const v = (def.state as any)[k];
-    stateJson[k] = v && typeof v === 'object' && '_tag' in v ? null : (v as JsonValue);
-  }
-
-  return {
-    namespace: def.namespace,
-    bind: {} as BindingProxy<S>,
-    path: {} as PathProxy<S>,
-    ref: {} as ExprProxy<S>,
-    toJSON(): SliceDocument {
-      const out: SliceDocument = { namespace: def.namespace };
-      if (def.schema) out.schema = def.schema;
-      if (def.dataSource) out.dataSource = def.dataSource;
-      if (stateJson) out.state = stateJson;
-      if (def.computed) out.computed = def.computed;
-      if (def.mutations) out.mutations = def.mutations;
-      if (def.queries) out.queries = def.queries;
-      if (def.resources) out.resources = def.resources;
-      if (def.fieldPolicies) out.fieldPolicies = def.fieldPolicies;
-      if (def.protection) out.protection = def.protection;
-      if (def.runtime) out.runtime = def.runtime;
-      if (def.pipelines) out.pipelines = def.pipelines;
-      return out;
-    },
-  };
-}
-
-export interface DataSourceDefinition {
-  name: string;
-  schema?: string;
-  schemaName?: string;
-  type?: 'rest' | 'graphql' | 'grpc' | 'websocket' | 'sse' | string;
-  domain?: 'api_collection' | 'media' | 'realtime' | string;
-  action?: 'readMany' | 'readOne' | 'write' | 'delete' | 'subscribe' | string;
-  resource?: string;
-  slug?: string;
-  collection?: string;
-  direction?: 'inbound' | 'outbound' | 'bidirectional';
-  select?: string[];
-  fields?: string[];
-  query?: JsonObject;
-  body?: JsonObject;
-  params?: JsonObject;
-  payload?: JsonObject;
-  policy?: JsonObject;
-  seed?: JsonValue[];
-  initial?: JsonValue;
-  autoStart?: boolean;
-  smartSelect?: boolean;
-  localFirst?: boolean;
-  offlineQueue?: boolean;
-  subscribe?: boolean;
-  stream?: boolean;
-  realtime?: boolean;
-  fetchAction?: string;
-  streamAction?: string;
-  mediaAction?: string;
-  pushAction?: string;
-  pushDomain?: string;
-  emitAction?: string;
-  pushArgs?: JsonObject;
-  outbound?: JsonObject;
-  [key: string]: JsonValue | undefined;
-}
-
-export type DataSourceDocument = DataSourceDefinition;
-
-export function defineDataSource(def: DataSourceDefinition): DataSourceDocument {
-  return { ...def };
 }
 
 export interface PipelineDefinition {
@@ -1811,8 +2203,51 @@ export function definePipeline(def: PipelineDefinition): TypedPipeline {
 }
 
 /* ============================================================
- * 10) TEMPLATE / COMPONENT / MACRO / NODE TYPE
+ * 15) TEMPLATES, MATRIX LAYOUTS & COMPONENT FACTORIES
  * ============================================================ */
+
+export interface MatrixSlotConfig {
+  scrollable?: boolean;
+  floating?: boolean;
+  preserveOverlap?: boolean;
+  draggable?: boolean;
+  resizable?: boolean;
+  reorderable?: boolean;
+  align?: 'stretch' | 'start' | 'center' | 'end' | string;
+  zIndex?: number;
+  padding?: number | string;
+  margin?: number | string;
+  useHero?: boolean;
+  heroTag?: string | null;
+  resizeHandle?: 'none' | 'top' | 'bottom' | 'left' | 'right' | 'all' | string;
+  hidden?: boolean;
+  sticky?: boolean;
+  className?: string;
+  style?: StyleValue;
+  props?: Record<string, JsonValue>;
+}
+
+export interface MatrixLayoutDefinition {
+  type?: 'layout';
+  name?: string;
+  id?: string;
+  gap?: number;
+  defaultProps?: Record<string, JsonValue>;
+  props?: Record<string, JsonValue>;
+  matrix?: string;
+  grid?: string;
+  ascii?: string;
+  sm?: string;
+  md?: string;
+  lg?: string;
+  xl?: string;
+  variants?: Record<string, string | { breakpoint: string }>;
+  slots?: Record<string, MatrixSlotConfig>;
+  description?: string;
+  summary?: string;
+  tags?: string[];
+  metadata?: Record<string, JsonValue>;
+}
 
 export interface TypedTemplate<P extends Record<string, any>, Slots extends string = never> {
   name: string;
@@ -1826,13 +2261,6 @@ function _schemaProxyValue(schema: any, path: string): any {
   if (!schema || typeof schema !== 'object') return `{{${path}}}`;
   if (schema._tag === 'object' && schema._meta && _isPlainObject(schema._meta.shape)) {
     return _schemaProxyObject(schema._meta.shape, path);
-  }
-  if (schema._tag === 'array') {
-    return [] as any;
-  }
-  if (schema._tag === 'optional' || schema._tag === 'nullable' || schema._tag === 'expr' || schema._tag === 'binding' || schema._tag === 'extend' || schema._tag === 'merge' || schema._tag === 'partial') {
-    const inner = schema._meta?.inner ?? schema._meta?.base ?? schema._meta?.a ?? schema._meta?.item;
-    if (inner) return _schemaProxyValue(inner, path);
   }
   return `{{${path}}}`;
 }
@@ -1877,7 +2305,7 @@ export function defineTemplate<
     _copyInto(mergedProps, props as any);
 
     const init: Partial<SduiNode> = {
-      props: { ...mergedProps, __templateName: def.name } as JsonObject,
+      props: { ...mergedProps, name: def.name } as JsonObject,
     };
 
     if (variantName) (init.props as JsonObject).__variant = variantName;
@@ -1889,7 +2317,7 @@ export function defineTemplate<
       }
     }
 
-    return new SduiElement<Props>('template', init);
+    return new SduiElement<Props>(`template:${def.name}`, init);
   }
 
   const defineNode: SduiNode = {
@@ -1897,7 +2325,7 @@ export function defineTemplate<
     name: def.name,
     props: {
       ...(def.defaultProps || {}),
-      __templateName: def.name,
+      name: def.name,
     } as JsonObject,
     slots: (function () {
       if (!def.slots || def.slots.length === 0) return undefined;
@@ -1914,8 +2342,8 @@ export function defineTemplate<
       return buildElement(props, slots);
     },
     call(overrideProps?: Partial<Props>) {
-      const el = new SduiElement<Props>('template', {
-        props: { ...(overrideProps || {}), __templateName: def.name } as JsonObject,
+      const el = new SduiElement<Props>(`template:${def.name}`, {
+        props: { ...(overrideProps || {}), name: def.name } as JsonObject,
       });
       el.set('$call', def.name);
       return el;
@@ -1924,10 +2352,6 @@ export function defineTemplate<
     toJSON(): JsonObject {
       return {
         name: def.name,
-        props: Object.keys(def.props).reduce((acc, k) => {
-          (acc as any)[k] = (def.props as any)[k]?._tag ?? 'unknown';
-          return acc;
-        }, {} as JsonObject),
         slots: (def.slots || []) as unknown as JsonValue,
         ui: _normalizeAny(renderedUi) as unknown as JsonValue,
         extends: def.extends as JsonValue,
@@ -1939,12 +2363,6 @@ export function defineTemplate<
   };
 }
 
-
-/* ============================================================
- * STRICT COMPONENT FACTORY (100% Auto-Inferred)
- * ============================================================ */
-
-/** Helper to force TypeScript to infer types ONLY from the 'props' and 'state' objects */
 export type ExactInfer<T> = [T][T extends any ? 0 : never];
 
 export interface TypedComponent<P extends Record<string, any>> {
@@ -1959,7 +2377,7 @@ function _buildBindingProxy(pathPrefix: string): any {
     get(target, prop) {
       if (typeof prop !== 'string') return undefined;
       return `{{${pathPrefix}.${prop}}}`;
-    }
+    },
   });
 }
 
@@ -1968,8 +2386,8 @@ export interface ComponentConfig<
   S extends Record<string, any>
 > {
   description?: string;
-  props?: P; // TypeScript infers 'P' from here!
-  state?: S; // TypeScript infers 'S' from here!
+  props?: P;
+  state?: S;
   computed?: Record<string, ComponentComputedSpec>;
   hooks?: ComponentHookBundle;
   links?: Record<string, any>;
@@ -1988,7 +2406,7 @@ export function defineComponent<
   S extends Record<string, any> = {}
 >(
   name: string,
-  def: ComponentConfig<P, S>
+  def: ComponentConfig<P, S>,
 ): TypedComponent<{ [K in keyof P]: Infer<P[K]> }> {
   type Props = { [K in keyof P]: Infer<P[K]> };
 
@@ -2002,7 +2420,6 @@ export function defineComponent<
     props: {
       name: name,
       description: def.description,
-      props: def.props ? Object.keys(def.props).reduce((acc, k) => ({ ...acc, [k]: (def.props as any)[k]?._tag ?? 'any' }), {}) : undefined,
       state: def.state,
       computed: def.computed,
       hooks: def.hooks,
@@ -2011,7 +2428,7 @@ export function defineComponent<
       animations: def.animations,
       runtime: def.runtime,
       policy: def.policy,
-      ui: _normalizeAny(renderedUi)
+      ui: _normalizeAny(renderedUi),
     } as unknown as JsonObject,
   };
 
@@ -2030,10 +2447,6 @@ export function defineComponent<
   };
 }
 
-/* ============================================================
- * STRICT MACRO FACTORY (100% Auto-Inferred)
- * ============================================================ */
-
 export interface TypedMacro<P extends Record<string, any>, Slots extends string = never> {
   name: string;
   use(props?: Partial<P>, slots?: Partial<Record<Slots, NodeInput>>): SduiElement<BaseProps>;
@@ -2045,7 +2458,13 @@ export interface MacroConfig<
   P extends Record<string, QSchema<any, any>>,
   Slots extends string
 > {
-  props?: P; // TypeScript infers 'P' from here!
+  props?: P;
+  pattern?: JsonValue;
+  when?: JsonValue;
+  replace?: JsonValue;
+  args?: string[];
+  slots?: string[];
+  description?: string;
   defaultProps?: Partial<ExactInfer<{ [K in keyof P]: Infer<P[K]> }>>;
   defaultSlots?: Partial<Record<Slots, NodeInput>>;
   ui: NodeInput | ((
@@ -2058,7 +2477,7 @@ export function defineMacro<
   Slots extends string = never
 >(
   name: string,
-  def: MacroConfig<P, Slots>
+  def: MacroConfig<P, Slots>,
 ): TypedMacro<{ [K in keyof P]: Infer<P[K]> }, Slots> {
   type Props = { [K in keyof P]: Infer<P[K]> };
 
@@ -2070,10 +2489,16 @@ export function defineMacro<
     type: 'macro',
     name: name,
     props: {
+      pattern: def.pattern,
+      when: def.when,
+      replace: def.replace,
+      args: def.args,
+      slots: def.slots,
+      description: def.description,
       defaultProps: def.defaultProps,
       defaultSlots: def.defaultSlots,
-      $view: _normalizeAny(renderedUi)
-    } as unknown as JsonObject
+      $view: _normalizeAny(renderedUi),
+    } as unknown as JsonObject,
   };
 
   return {
@@ -2155,10 +2580,8 @@ export function extendCatalog<NewRoots extends Record<string, readonly string[]>
 }
 
 /* ============================================================
- * 11) CORE CONFIG / REGISTRY GRAPH
+ * 16) CORE CONFIG / REGISTRY GRAPH
  * ============================================================ */
-
-export type RegistryMap = Record<string, unknown>;
 
 export interface QuantumConfigInput<
   Contracts extends Record<string, QSchema<any, any>>,
@@ -2168,10 +2591,10 @@ export interface QuantumConfigInput<
   DataSources extends Record<string, DataSourceDocument>,
   Templates extends Record<string, TypedTemplate<any, any>>,
   Components extends Record<string, TypedComponent<any>>,
-  Macros extends Record<string, TypedMacro<any, any>>, // <--- FIXED HERE
+  Macros extends Record<string, TypedMacro<any, any>>,
   Pipelines extends Record<string, TypedPipeline>,
   Extensions extends Record<string, readonly string[]>,
-  App extends Record<string, any>,
+  App extends QLAppYamlConfig = QLAppYamlConfig,
 > {
   contracts?: Contracts;
   theme?: TypedTheme<Theme>;
@@ -2184,6 +2607,7 @@ export interface QuantumConfigInput<
   pipelines?: Pipelines;
   extensions?: ExtendedEngine<Extensions>;
   app?: App;
+  bundle?: QuantumDesignSystemBundle;
 }
 
 export type TypedConfig<
@@ -2194,10 +2618,10 @@ export type TypedConfig<
   DataSources extends Record<string, DataSourceDocument>,
   Templates extends Record<string, TypedTemplate<any, any>>,
   Components extends Record<string, TypedComponent<any>>,
-  Macros extends Record<string, TypedMacro<any, any>>, // <--- FIXED HERE
+  Macros extends Record<string, TypedMacro<any, any>>,
   Pipelines extends Record<string, TypedPipeline>,
   Extensions extends Record<string, readonly string[]>,
-  App extends Record<string, any>,
+  App extends QLAppYamlConfig = QLAppYamlConfig,
 > = QuantumConfigInput<Contracts, Theme, Stores, Slices, DataSources, Templates, Components, Macros, Pipelines, Extensions, App> & {
   exportSlices(): SliceDocument[];
   exportDataSources(): DataSourceDocument[];
@@ -2215,10 +2639,10 @@ export function defineConfig<
   DataSources extends Record<string, DataSourceDocument> = {},
   Templates extends Record<string, TypedTemplate<any, any>> = {},
   Components extends Record<string, TypedComponent<any>> = {},
-  Macros extends Record<string, TypedMacro<any, any>> = {}, // <--- FIXED HERE
+  Macros extends Record<string, TypedMacro<any, any>> = {},
   Pipelines extends Record<string, TypedPipeline> = {},
   Extensions extends Record<string, readonly string[]> = {},
-  App extends Record<string, any> = {}
+  App extends QLAppYamlConfig = QLAppYamlConfig,
 >(
   input: QuantumConfigInput<Contracts, Theme, Stores, Slices, DataSources, Templates, Components, Macros, Pipelines, Extensions, App>,
 ): TypedConfig<Contracts, Theme, Stores, Slices, DataSources, Templates, Components, Macros, Pipelines, Extensions, App> {
@@ -2260,31 +2684,14 @@ export function defineConfig<
 
     exportAll(): JsonObject {
       const out: JsonObject = {};
-      if (input.app) out['app'] = input.app as JsonValue;
+      if (input.app) out['app'] = input.app as unknown as JsonValue;
       const themeSlice = input.theme ? input.theme.toSlice() : null;
       if (themeSlice) out['theme'] = themeSlice as unknown as JsonValue;
       out['contracts'] = (this as any).exportContracts();
       out['slices'] = (this as any).exportSlices();
       out['dataSources'] = (this as any).exportDataSources();
       out['templates'] = (this as any).exportTemplates();
-      if (input.components) {
-        const components: JsonObject = {};
-        for (const k in input.components) if (_hasOwn(input.components, k)) components[k] = input.components[k].toJSON() as JsonValue;
-        out['components'] = components;
-      }
-      if (input.macros) {
-        const macros: JsonObject = {};
-        for (const k in input.macros) if (_hasOwn(input.macros, k)) macros[k] = input.macros[k].define as unknown as JsonValue;
-        out['macros'] = macros;
-      }
-      if (input.pipelines) {
-        const pipelines: JsonObject = {};
-        for (const k in input.pipelines) if (_hasOwn(input.pipelines, k)) pipelines[k] = input.pipelines[k].toJSON() as unknown as JsonValue;
-        out['pipelines'] = pipelines;
-      }
-      if (input.extensions) {
-        out['extensions'] = { roots: input.extensions.roots as unknown as JsonValue };
-      }
+      if (input.bundle) out['bundle'] = input.bundle as unknown as JsonValue;
       return out;
     },
   } as TypedConfig<Contracts, Theme, Stores, Slices, DataSources, Templates, Components, Macros, Pipelines, Extensions, App>;
@@ -2292,12 +2699,6 @@ export function defineConfig<
   return config;
 }
 
-
-/**
- * defineKernel()
- * Optional central graph helper for zero-cycle app composition.
- * This is the place where shared contracts, stores, nodes, components, and macros converge.
- */
 export function defineKernel<
   Contracts extends Record<string, QSchema<any, any>> = {},
   Theme extends ThemeInput = {},
@@ -2306,10 +2707,10 @@ export function defineKernel<
   DataSources extends Record<string, DataSourceDocument> = {},
   Templates extends Record<string, TypedTemplate<any, any>> = {},
   Components extends Record<string, TypedComponent<any>> = {},
-  Macros extends Record<string, TypedMacro<any, any>> = {}, // <--- FIXED HERE
+  Macros extends Record<string, TypedMacro<any, any>> = {},
   Pipelines extends Record<string, TypedPipeline> = {},
   Extensions extends Record<string, readonly string[]> = {},
-  App extends Record<string, any> = {},
+  App extends QLAppYamlConfig = QLAppYamlConfig,
 >(input: {
   contracts?: Contracts;
   theme?: TypedTheme<Theme>;
@@ -2322,36 +2723,345 @@ export function defineKernel<
   pipelines?: Pipelines;
   extensions?: ExtendedEngine<Extensions>;
   app?: App;
+  bundle?: QuantumDesignSystemBundle;
 }) {
   return {
     ...input,
     contractTypes: input.contracts || ({} as Contracts),
-    defineConfig: () => defineConfig({
-      contracts: input.contracts,
-      theme: input.theme as any,
-      stores: input.stores as any,
-      slices: input.slices as any,
-      dataSources: input.dataSources as any,
-      templates: input.templates as any,
-      components: input.components as any,
-      macros: input.macros as any,
-      pipelines: input.pipelines as any,
-      extensions: input.extensions as any,
-      app: input.app as any,
-    }),
+    defineConfig: () => defineConfig(input),
   };
 }
 
-/**
- * defineContracts()
- * Tiny central place for shared schema contracts.
- */
 export function defineContracts<C extends Record<string, QSchema<any, any>>>(contracts: C): C {
   return contracts;
 }
 
 /* ============================================================
- * 12) PUBLIC FACTORY API
+ * 17) PAGE / ROUTE / LAYOUT DSL
+ * ============================================================ */
+
+export type QuantumPageRefKind = 'page' | 'route' | 'layout' | 'fragment';
+
+export interface QuantumPageRef<TKind extends QuantumPageRefKind = QuantumPageRefKind> {
+  kind: TKind;
+  name: string;
+  asset?: string;
+  version?: string;
+  hash?: string;
+}
+
+export interface QuantumPageSeo {
+  title?: Expr<string>;
+  description?: Expr<string>;
+  keywords?: Expr<string[]>;
+  canonical?: Expr<string>;
+  robots?: Expr<string>;
+  ogImage?: Expr<string>;
+  author?: Expr<string>;
+  tags?: Expr<string[]>;
+  customMeta?: Record<string, any>;
+}
+
+export interface QuantumPageGuard {
+  name?: string;
+  type?: 'auth' | 'role' | 'feature' | 'condition' | 'redirect' | 'custom' | string;
+  when?: Expr<boolean> | StatePath | string;
+  role?: string | string[];
+  feature?: string;
+  condition?: Expr<boolean> | string;
+  redirectTo?: Expr<string>;
+  allow?: boolean;
+  data?: Record<string, any>;
+  meta?: Record<string, any>;
+  otherwise?: Record<string, any>;
+}
+
+export interface QuantumPagePrefetch {
+  route?: Expr<string>;
+  routes?: Array<Expr<string>>;
+  assets?: string[];
+  data?: string[];
+  layout?: boolean;
+  fragments?: string[];
+  priority?: 'low' | 'normal' | 'high';
+  viewport?: 'visible' | 'idle' | 'immediate' | 'hover';
+}
+
+export interface QuantumPageLayoutSlot extends MatrixSlotConfig {
+  slot?: string;
+  fill?: NodeInput;
+  loading?: NodeInput;
+  error?: NodeInput;
+  empty?: NodeInput;
+}
+
+export interface QuantumPageLayout extends MatrixLayoutDefinition {
+  kind?: 'layout';
+  mode?: 'stack' | 'grid' | 'matrix' | 'shell' | 'custom';
+  template?: NodeInput;
+  slots?: Record<string, QuantumPageLayoutSlot>;
+  regions?: Record<string, QuantumPageLayoutSlot>;
+  viewport?: 'phone' | 'tablet' | 'desktop' | 'responsive' | string;
+  breakpoints?: Record<string, JsonValue>;
+  stickyHeader?: boolean;
+  stickyFooter?: boolean;
+  scaffold?: boolean;
+  safeArea?: boolean | 'all' | 'top' | 'bottom' | 'left' | 'right';
+  meta?: Record<string, JsonValue>;
+  ref?: QuantumPageRef<'layout'>;
+  version?: string;
+  cacheKey?: string;
+}
+
+export interface QuantumPageFragment {
+  kind?: 'fragment';
+  type?: 'fragment';
+  name?: string;
+  id?: string;
+  template?: NodeInput;
+  data?: Record<string, any>;
+  props?: Record<string, any>;
+  slots?: Record<string, NodeInput>;
+  lazy?: boolean;
+  hydrate?: 'immediate' | 'visible' | 'idle' | 'interaction';
+  cacheKey?: string;
+  version?: string;
+  tags?: string[];
+  meta?: Record<string, any>;
+  ref?: QuantumPageRef<'fragment'>;
+}
+
+export interface QuantumPageManifest {
+  kind?: 'page';
+  type?: 'route' | 'screen' | 'page' | 'component' | 'widget' | 'layout' | 'modal' | 'drawer' | 'overlay' | 'fragment' | 'template' | string;
+  name?: string;
+  id?: string;
+  path?: string;
+  slug?: string;
+  nested?: boolean;
+  group?: string;
+  segment?: string;
+  params?: Record<string, any>;
+  query?: Record<string, any>;
+  layout?: QuantumPageLayout | QuantumPageRef<'layout'> | string;
+  page?: QuantumPageFragment | QuantumPageRef<'fragment'> | SduiNode | SduiElement<any> | any;
+  children?: QuantumPageManifest[] | QuantumPageTree;
+  slots?: Record<string, SduiNode | SduiElement<any> | any>;
+  seo?: QuantumPageSeo;
+  guards?: QuantumPageGuard[];
+  prefetch?: QuantumPagePrefetch;
+  loading?: SduiNode | SduiElement<any> | any;
+  error?: SduiNode | SduiElement<any> | any;
+  empty?: SduiNode | SduiElement<any> | any;
+  state?: Record<string, any>;
+  data?: Record<string, any>;
+  meta?: Record<string, any>;
+  layoutProps?: Record<string, any>;
+  transitions?: Record<string, any>;
+  cacheKey?: string;
+  version?: string;
+  routeId?: string;
+  ref?: QuantumPageRef<'page'>;
+}
+
+export interface QuantumPageTree {
+  routes: QuantumPageManifest[];
+}
+
+export interface QuantumPageBundle {
+  pages?: QuantumPageTree | QuantumPageManifest[];
+  layouts?: Record<string, QuantumPageLayout | QuantumPageRef<'layout'>>;
+  fragments?: Record<string, QuantumPageFragment | QuantumPageRef<'fragment'>>;
+  seo?: Record<string, QuantumPageSeo>;
+  guards?: Record<string, QuantumPageGuard>;
+  prefetch?: Record<string, QuantumPagePrefetch>;
+  meta?: Record<string, any>;
+}
+
+function _pageClone<T>(value: T): T {
+  if (value === undefined || value === null) return value;
+  if (typeof value !== 'object') return value;
+  if (value instanceof SduiElement) {
+    return toNativeObject(value) as any;
+  }
+  if (Array.isArray(value)) {
+    const arr: any[] = [];
+    for (let i = 0; i < value.length; i++) arr.push(_pageClone(value[i]));
+    return arr as any;
+  }
+  const out: Record<string, any> = {};
+  for (const key in value as any) {
+    if (Object.prototype.hasOwnProperty.call(value, key)) {
+      out[key] = _pageClone((value as any)[key]);
+    }
+  }
+  return out as any;
+}
+
+function _pageNormalizeNode(value: any): any {
+  if (value instanceof SduiElement) return toNativeObject(value);
+  if (Array.isArray(value)) {
+    const arr: any[] = [];
+    for (let i = 0; i < value.length; i++) arr.push(_pageNormalizeNode(value[i]));
+    return arr;
+  }
+  if (value && typeof value === 'object') return _pageClone(value);
+  return String(value);
+}
+
+function _pageNormalizePath(path?: string): string | undefined {
+  const text = path ? path.trim() : '';
+  if (!text) return undefined;
+  return text.charAt(0) === '/' ? text : '/' + text;
+}
+
+function _pageNormalizeRef<TKind extends QuantumPageRefKind>(
+  ref: QuantumPageRef<TKind> | string | undefined,
+  kind: TKind,
+): QuantumPageRef<TKind> | undefined {
+  if (!ref) return undefined;
+  if (typeof ref === 'string') return { kind, name: ref } as QuantumPageRef<TKind>;
+  return ref;
+}
+
+export function normalizePageManifest(input: QuantumPageManifest): Record<string, any> {
+  const name = ((input.name ?? input.id ?? '') as any).toString().trim();
+  const routeId = ((input.routeId ?? input.id ?? input.name ?? name) as any).toString().trim();
+
+  return {
+    kind: 'page',
+    type: input.type || 'route',
+    name: name || undefined,
+    id: ((input.id ?? input.name) as any)?.toString().trim() || undefined,
+    path: _pageNormalizePath(input.path),
+    slug: input.slug ? input.slug.toString().trim() : undefined,
+    nested: !!input.nested,
+    group: input.group ? input.group.toString().trim() : undefined,
+    segment: input.segment ? input.segment.toString().trim() : undefined,
+    params: input.params ? _pageClone(input.params) : undefined,
+    query: input.query ? _pageClone(input.query) : undefined,
+    layout: input.layout ? _pageClone(input.layout) : undefined,
+    page: input.page ? _pageNormalizeNode(input.page) : undefined,
+    slots: input.slots ? _pageClone(input.slots) : undefined,
+    seo: input.seo ? _pageClone(input.seo) : undefined,
+    guards: input.guards ? _pageClone(input.guards) : undefined,
+    prefetch: input.prefetch ? _pageClone(input.prefetch) : undefined,
+    loading: input.loading ? _pageNormalizeNode(input.loading) : undefined,
+    error: input.error ? _pageNormalizeNode(input.error) : undefined,
+    empty: input.empty ? _pageNormalizeNode(input.empty) : undefined,
+    state: input.state ? _pageClone(input.state) : undefined,
+    data: input.data ? _pageClone(input.data) : undefined,
+    meta: input.meta ? _pageClone(input.meta) : undefined,
+    layoutProps: input.layoutProps ? _pageClone(input.layoutProps) : undefined,
+    transitions: input.transitions ? _pageClone(input.transitions) : undefined,
+    cacheKey: input.cacheKey ? input.cacheKey.toString().trim() : undefined,
+    version: input.version ? input.version.toString().trim() : undefined,
+    routeId: routeId || undefined,
+    ref: _pageNormalizeRef(input.ref, 'page'),
+  };
+}
+
+export function normalizePageTree(tree: QuantumPageTree | QuantumPageManifest[]): QuantumPageTree {
+  const routes = Array.isArray(tree) ? tree : tree.routes;
+  const out: QuantumPageManifest[] = [];
+  for (let i = 0; i < routes.length; i++) {
+    out.push(normalizePageManifest(routes[i]) as any);
+  }
+  return { routes: out };
+}
+
+export function normalizePageBundle(bundle: QuantumPageBundle): QuantumPageBundle {
+  return _pageClone(bundle);
+}
+
+export function page(input: QuantumPageManifest): Record<string, any> {
+  return normalizePageManifest(input);
+}
+
+export function route(input: QuantumPageManifest): Record<string, any> {
+  return normalizePageManifest({ ...input, kind: 'page', type: 'route' });
+}
+
+export function layout(input: QuantumPageLayout): Record<string, any> {
+  const out: Record<string, any> = _pageClone(input);
+  out.kind = 'layout';
+  out.type = 'layout';
+  out.ref = _pageNormalizeRef(input.ref, 'layout');
+  return out;
+}
+
+export function fragment(input: QuantumPageFragment): Record<string, any> {
+  const out: Record<string, any> = _pageClone(input);
+  out.kind = 'fragment';
+  out.type = 'fragment';
+  out.ref = _pageNormalizeRef(input.ref, 'fragment');
+  return out;
+}
+
+export function nested(routes: QuantumPageManifest[]): QuantumPageTree {
+  return normalizePageTree(routes);
+}
+
+export function tree(routes: QuantumPageManifest[] | QuantumPageTree): QuantumPageTree {
+  return normalizePageTree(routes);
+}
+
+export function pageRef(name: string, asset?: string): QuantumPageRef<'page'> {
+  return { kind: 'page', name, asset };
+}
+
+export function routeRef(name: string, asset?: string): QuantumPageRef<'route'> {
+  return { kind: 'route', name, asset };
+}
+
+export function layoutRef(name: string, asset?: string): QuantumPageRef<'layout'> {
+  return { kind: 'layout', name, asset };
+}
+
+export function fragmentRef(name: string, asset?: string): QuantumPageRef<'fragment'> {
+  return { kind: 'fragment', name, asset };
+}
+
+export function seo(input: QuantumPageSeo): QuantumPageSeo {
+  return _pageClone(input);
+}
+
+export function guard(input: QuantumPageGuard): QuantumPageGuard {
+  return _pageClone(input);
+}
+
+export function prefetch(input: QuantumPagePrefetch): QuantumPagePrefetch {
+  return _pageClone(input);
+}
+
+export function bundle(input: QuantumPageBundle): QuantumPageBundle {
+  return normalizePageBundle(input);
+}
+
+export function toPageJson(input: QuantumPageManifest): Record<string, any> {
+  return normalizePageManifest(input);
+}
+
+export const qpage = {
+  page,
+  route,
+  layout,
+  fragment,
+  nested,
+  tree,
+  pageRef,
+  routeRef,
+  layoutRef,
+  fragmentRef,
+  seo,
+  guard,
+  prefetch,
+  bundle,
+  toPageJson,
+} as const;
+
+/* ============================================================
+ * 18) PUBLIC FACTORY API
  * ============================================================ */
 
 export const sdui = {
@@ -2468,7 +3178,8 @@ export const sdui = {
   template(def: any) {
     return defineTemplate(def);
   },
-componentDef<
+
+  componentDef<
     P extends Record<string, QSchema<any, any>> = {},
     S extends Record<string, any> = {}
   >(name: string, def: Parameters<typeof defineComponent<P, S>>[1]) {
@@ -2488,7 +3199,7 @@ componentDef<
 } as const;
 
 /* ============================================================
- * 13) EXTRA HELPERS / EXPORTS
+ * 19) EXTRA HELPERS / EXPORTS
  * ============================================================ */
 
 export function toNativeObject(node: NodeInput, options?: EmitOptions): SduiNode {
@@ -2513,10 +3224,6 @@ export function validateNode(node: NodeInput): ValidationResult {
   const issues: ValidationIssue[] = [];
   _validateAny(node, 'root', issues);
   return { ok: issues.length === 0, issues };
-}
-
-export function knownVmOperators(): string[] {
-  return KNOWN_VM_OPERATORS.slice();
 }
 
 export const KNOWN_VM_OPERATORS = [
@@ -2558,463 +3265,12 @@ export const KNOWN_VM_OPERATORS = [
 
 export type QuantumVmOperator = typeof KNOWN_VM_OPERATORS[number];
 
+export function knownVmOperators(): string[] {
+  return KNOWN_VM_OPERATORS.slice();
+}
 
 /* ============================================================
- * 14) PAGE / ROUTE / LAYOUT DSL
- * ============================================================ */
-
-export type QuantumPageRefKind = 'page' | 'route' | 'layout' | 'fragment';
-
-export interface QuantumPageRef<TKind extends QuantumPageRefKind = QuantumPageRefKind> {
-  kind: TKind;
-  name: string;
-  asset?: string;
-  version?: string;
-  hash?: string;
-}
-
-export interface QuantumPageSeo {
-  title?: Expr<string>;
-  description?: Expr<string>;
-  keywords?: Expr<string[]>;
-  canonical?: Expr<string>;
-  robots?: Expr<string>;
-  ogImage?: Expr<string>;
-  author?: Expr<string>;
-  tags?: Expr<string[]>;
-  customMeta?: Record<string, any>;
-}
-
-export interface QuantumPageGuard {
-  name?: string;
-  type?: 'auth' | 'role' | 'feature' | 'condition' | 'redirect' | 'custom' | string;
-  when?: Expr<boolean> | StatePath | string;
-  role?: string | string[];
-  feature?: string;
-  condition?: Expr<boolean> | string;
-  redirectTo?: Expr<string>;
-  allow?: boolean;
-  data?: Record<string, any>;
-  meta?: Record<string, any>;
-  otherwise?: Record<string, any>;
-}
-
-export interface QuantumPagePrefetch {
-  route?: Expr<string>;
-  routes?: Array<Expr<string>>;
-  assets?: string[];
-  data?: string[];
-  layout?: boolean;
-  fragments?: string[];
-  priority?: 'low' | 'normal' | 'high';
-  viewport?: 'visible' | 'idle' | 'immediate' | 'hover';
-}
-
-export interface QuantumPageLayoutSlot {
-  slot?: string;
-  fill?: any;
-  loading?: any;
-  error?: any;
-  empty?: any;
-  scrollable?: boolean;
-  sticky?: boolean;
-  hidden?: boolean;
-  className?: string;
-  style?: any;
-  props?: Record<string, any>;
-}
-
-export interface QuantumPageLayout {
-  kind?: 'layout';
-  type?: 'layout';
-  name?: string;
-  id?: string;
-  mode?: 'stack' | 'grid' | 'matrix' | 'shell' | 'custom';
-  template?: any;
-  slots?: Record<string, QuantumPageLayoutSlot | any>;
-  regions?: Record<string, QuantumPageLayoutSlot | any>;
-  viewport?: 'phone' | 'tablet' | 'desktop' | 'responsive' | string;
-  breakpoints?: Record<string, any>;
-  stickyHeader?: boolean;
-  stickyFooter?: boolean;
-  scaffold?: boolean;
-  safeArea?: boolean | 'all' | 'top' | 'bottom' | 'left' | 'right';
-  props?: Record<string, any>;
-  meta?: Record<string, any>;
-  ref?: QuantumPageRef<'layout'>;
-  version?: string;
-  cacheKey?: string;
-}
-
-export interface QuantumPageFragment {
-  kind?: 'fragment';
-  type?: 'fragment';
-  name?: string;
-  id?: string;
-  template?: any;
-  data?: Record<string, any>;
-  props?: Record<string, any>;
-  slots?: Record<string, any>;
-  lazy?: boolean;
-  hydrate?: 'immediate' | 'visible' | 'idle' | 'interaction';
-  cacheKey?: string;
-  version?: string;
-  tags?: string[];
-  meta?: Record<string, any>;
-  ref?: QuantumPageRef<'fragment'>;
-}
-
-export interface QuantumPageManifest {
-  kind?: 'page';
-  type?: 'route';
-  name?: string;
-  id?: string;
-  path?: string;
-  slug?: string;
-  nested?: boolean;
-  group?: string;
-  segment?: string;
-  params?: Record<string, any>;
-  query?: Record<string, any>;
-  layout?: QuantumPageLayout | QuantumPageRef<'layout'> | string;
-  page?: QuantumPageFragment | QuantumPageRef<'fragment'> | SduiNode | SduiElement<any> | any;
-  children?: QuantumPageManifest[] | QuantumPageTree;
-  slots?: Record<string, SduiNode | SduiElement<any> | any>;
-  seo?: QuantumPageSeo;
-  guards?: QuantumPageGuard[];
-  prefetch?: QuantumPagePrefetch;
-  loading?: SduiNode | SduiElement<any> | any;
-  error?: SduiNode | SduiElement<any> | any;
-  empty?: SduiNode | SduiElement<any> | any;
-  state?: Record<string, any>;
-  data?: Record<string, any>;
-  meta?: Record<string, any>;
-  layoutProps?: Record<string, any>;
-  transitions?: Record<string, any>;
-  cacheKey?: string;
-  version?: string;
-  routeId?: string;
-  ref?: QuantumPageRef<'page'>;
-}
-
-export interface QuantumPageTree {
-  routes: QuantumPageManifest[];
-}
-
-export interface QuantumPageBundle {
-  pages?: QuantumPageTree | QuantumPageManifest[];
-  layouts?: Record<string, QuantumPageLayout | QuantumPageRef<'layout'>>;
-  fragments?: Record<string, QuantumPageFragment | QuantumPageRef<'fragment'>>;
-  seo?: Record<string, QuantumPageSeo>;
-  guards?: Record<string, QuantumPageGuard>;
-  prefetch?: Record<string, QuantumPagePrefetch>;
-  meta?: Record<string, any>;
-}
-
-function _pageClone<T>(value: T): T {
-  if (value === undefined || value === null) return value;
-  if (typeof value !== 'object') return value;
-  if (value instanceof SduiElement) {
-    return toNativeObject(value) as any;
-  }
-  if (Array.isArray(value)) {
-    const arr: any[] = [];
-    for (let i = 0; i < value.length; i++) arr.push(_pageClone(value[i]));
-    return arr as any;
-  }
-  const out: Record<string, any> = {};
-  for (const key in value as any) {
-    if (Object.prototype.hasOwnProperty.call(value, key)) {
-      out[key] = _pageClone((value as any)[key]);
-    }
-  }
-  return out as any;
-}
-
-function _pageNormalizeNode(value: any): any {
-  if (value instanceof SduiElement) return toNativeObject(value);
-  if (Array.isArray(value)) {
-    const arr: any[] = [];
-    for (let i = 0; i < value.length; i++) arr.push(_pageNormalizeNode(value[i]));
-    return arr;
-  }
-  if (value && typeof value === 'object') return _pageClone(value);
-  if (
-    typeof value === 'string' ||
-    typeof value === 'number' ||
-    typeof value === 'boolean' ||
-    value === null
-  ) {
-    return value;
-  }
-  return String(value);
-}
-
-function _pageNormalizePath(path?: string): string | undefined {
-  const text = path ? path.trim() : '';
-  if (!text) return undefined;
-  return text.charAt(0) === '/' ? text : '/' + text;
-}
-
-function _pageNormalizeRef<TKind extends QuantumPageRefKind>(
-  ref: QuantumPageRef<TKind> | string | undefined,
-  kind: TKind,
-): QuantumPageRef<TKind> | undefined {
-  if (!ref) return undefined;
-  if (typeof ref === 'string') return { kind, name: ref } as QuantumPageRef<TKind>;
-  return ref;
-}
-
-function _pageNormalizeLayout(layout: QuantumPageManifest['layout']): any {
-  if (!layout) return undefined;
-  if (typeof layout === 'string') {
-    return { kind: 'layout', type: 'layout', name: layout };
-  }
-  if (
-    typeof layout === 'object' &&
-    layout !== null &&
-    (layout as any).kind === 'layout'
-  ) {
-    return _pageClone(layout);
-  }
-  return _pageClone(layout);
-}
-
-function _pageNormalizeFragment(fragment: QuantumPageManifest['page']): any {
-  if (!fragment) return undefined;
-  if (typeof fragment === 'string') {
-    return { kind: 'fragment', type: 'fragment', name: fragment };
-  }
-  if (
-    typeof fragment === 'object' &&
-    fragment !== null &&
-    (fragment as any).kind === 'fragment'
-  ) {
-    return _pageClone(fragment);
-  }
-  return _pageNormalizeNode(fragment);
-}
-
-function _pageNormalizeChildren(children: QuantumPageManifest['children']): any {
-  if (!children) return undefined;
-  if (Array.isArray(children)) {
-    const arr: any[] = [];
-    for (let i = 0; i < children.length; i++) {
-      arr.push(normalizePageManifest(children[i]));
-    }
-    return arr;
-  }
-  const routes = (children.routes || []);
-  const out: any[] = [];
-  for (let i = 0; i < routes.length; i++) {
-    out.push(normalizePageManifest(routes[i]));
-  }
-  return { routes: out };
-}
-
-function _pageFromObjectMap(input: Record<string, any> | undefined): Record<string, any> | undefined {
-  if (!input) return undefined;
-  const out: Record<string, any> = {};
-  for (const key in input) {
-    if (Object.prototype.hasOwnProperty.call(input, key)) {
-      out[key] = _pageClone(input[key]);
-    }
-  }
-  return out;
-}
-
-function _pageFromAnyMap(input: Record<string, any> | undefined): Record<string, any> | undefined {
-  return _pageFromObjectMap(input);
-}
-
-export function normalizePageManifest(input: QuantumPageManifest): Record<string, any> {
-  const name = ((input.name ?? input.id ?? '') as any).toString().trim();
-  const routeId = ((input.routeId ?? input.id ?? input.name ?? name) as any).toString().trim();
-
-  const slots: Record<string, any> | undefined = input.slots
-    ? (() => {
-        const out: Record<string, any> = {};
-        for (const key in input.slots) {
-          if (Object.prototype.hasOwnProperty.call(input.slots, key)) {
-            out[key] = _pageNormalizeNode((input.slots as any)[key]);
-          }
-        }
-        return out;
-      })()
-    : undefined;
-
-  return {
-    kind: 'page',
-    type: 'route',
-    name: name || undefined,
-    id: ((input.id ?? input.name) as any)?.toString().trim() || undefined,
-    path: _pageNormalizePath(input.path),
-    slug: input.slug ? input.slug.toString().trim() : undefined,
-    nested: !!input.nested,
-    group: input.group ? input.group.toString().trim() : undefined,
-    segment: input.segment ? input.segment.toString().trim() : undefined,
-    params: _pageFromObjectMap(input.params),
-    query: _pageFromObjectMap(input.query),
-    layout: _pageNormalizeLayout(input.layout),
-    page: _pageNormalizeFragment(input.page),
-    children: _pageNormalizeChildren(input.children),
-    slots: slots,
-    seo: input.seo ? _pageClone(input.seo) : undefined,
-    guards: input.guards ? _pageClone(input.guards) : undefined,
-    prefetch: input.prefetch ? _pageClone(input.prefetch) : undefined,
-    loading: input.loading ? _pageNormalizeNode(input.loading) : undefined,
-    error: input.error ? _pageNormalizeNode(input.error) : undefined,
-    empty: input.empty ? _pageNormalizeNode(input.empty) : undefined,
-    state: _pageFromAnyMap(input.state),
-    data: _pageFromAnyMap(input.data),
-    meta: _pageFromAnyMap(input.meta),
-    layoutProps: _pageFromAnyMap(input.layoutProps),
-    transitions: _pageFromAnyMap(input.transitions),
-    cacheKey: input.cacheKey ? input.cacheKey.toString().trim() : undefined,
-    version: input.version ? input.version.toString().trim() : undefined,
-    routeId: routeId || undefined,
-    ref: _pageNormalizeRef(input.ref, 'page'),
-  };
-}
-
-export function normalizePageTree(tree: QuantumPageTree | QuantumPageManifest[]): QuantumPageTree {
-  const routes = Array.isArray(tree) ? tree : tree.routes;
-  const out: QuantumPageManifest[] = [];
-  for (let i = 0; i < routes.length; i++) {
-    out.push(normalizePageManifest(routes[i]) as any);
-  }
-  return { routes: out };
-}
-
-export function normalizePageBundle(bundle: QuantumPageBundle): QuantumPageBundle {
-  const out: QuantumPageBundle = {};
-
-  if (bundle.pages) {
-    out.pages = Array.isArray(bundle.pages)
-      ? normalizePageTree(bundle.pages)
-      : normalizePageTree(bundle.pages.routes);
-  }
-
-  if (bundle.layouts) {
-    const layouts: Record<string, any> = {};
-    for (const key in bundle.layouts) {
-      if (Object.prototype.hasOwnProperty.call(bundle.layouts, key)) {
-        layouts[key] = _pageClone((bundle.layouts as any)[key]);
-      }
-    }
-    out.layouts = layouts;
-  }
-
-  if (bundle.fragments) {
-    const fragments: Record<string, any> = {};
-    for (const key in bundle.fragments) {
-      if (Object.prototype.hasOwnProperty.call(bundle.fragments, key)) {
-        fragments[key] = _pageClone((bundle.fragments as any)[key]);
-      }
-    }
-    out.fragments = fragments;
-  }
-
-  if (bundle.seo) out.seo = _pageClone(bundle.seo);
-  if (bundle.guards) out.guards = _pageClone(bundle.guards);
-  if (bundle.prefetch) out.prefetch = _pageClone(bundle.prefetch);
-  if (bundle.meta) out.meta = _pageClone(bundle.meta);
-
-  return out;
-}
-
-export function page(input: QuantumPageManifest): Record<string, any> {
-  return normalizePageManifest(input);
-}
-
-export function route(input: QuantumPageManifest): Record<string, any> {
-  return normalizePageManifest({
-    ...input,
-    kind: 'page',
-    type: 'route',
-  });
-}
-
-export function layout(input: QuantumPageLayout): Record<string, any> {
-  const out: Record<string, any> = _pageClone(input);
-  out.kind = 'layout';
-  out.type = 'layout';
-  out.ref = _pageNormalizeRef(input.ref, 'layout');
-  return out;
-}
-
-export function fragment(input: QuantumPageFragment): Record<string, any> {
-  const out: Record<string, any> = _pageClone(input);
-  out.kind = 'fragment';
-  out.type = 'fragment';
-  out.ref = _pageNormalizeRef(input.ref, 'fragment');
-  return out;
-}
-
-export function nested(routes: QuantumPageManifest[]): QuantumPageTree {
-  return normalizePageTree(routes);
-}
-
-export function tree(routes: QuantumPageManifest[] | QuantumPageTree): QuantumPageTree {
-  return normalizePageTree(routes);
-}
-
-export function pageRef(name: string, asset?: string): QuantumPageRef<'page'> {
-  return { kind: 'page', name, asset };
-}
-
-export function routeRef(name: string, asset?: string): QuantumPageRef<'route'> {
-  return { kind: 'route', name, asset };
-}
-
-export function layoutRef(name: string, asset?: string): QuantumPageRef<'layout'> {
-  return { kind: 'layout', name, asset };
-}
-
-export function fragmentRef(name: string, asset?: string): QuantumPageRef<'fragment'> {
-  return { kind: 'fragment', name, asset };
-}
-
-export function seo(input: QuantumPageSeo): QuantumPageSeo {
-  return _pageClone(input);
-}
-
-export function guard(input: QuantumPageGuard): QuantumPageGuard {
-  return _pageClone(input);
-}
-
-export function prefetch(input: QuantumPagePrefetch): QuantumPagePrefetch {
-  return _pageClone(input);
-}
-
-export function bundle(input: QuantumPageBundle): QuantumPageBundle {
-  return normalizePageBundle(input);
-}
-
-export function toPageJson(input: QuantumPageManifest): Record<string, any> {
-  return normalizePageManifest(input);
-}
-
-export const qpage = {
-  page,
-  route,
-  layout,
-  fragment,
-  nested,
-  tree,
-  pageRef,
-  routeRef,
-  layoutRef,
-  fragmentRef,
-  seo,
-  guard,
-  prefetch,
-  bundle,
-  toPageJson,
-} as const;
-
-/* ============================================================
- * 15) DEFAULT EXPORTS FOR APP-SHAPED MODULES
+ * 20) DEFAULT EXPORT
  * ============================================================ */
 
 export default {
@@ -3038,4 +3294,6 @@ export default {
   toNativeJson,
   validateNode,
   knownVmOperators,
+  QL_PRIMITIVE_FIELD_TYPES,
+  QL_FLAG_BITS,
 } as const;

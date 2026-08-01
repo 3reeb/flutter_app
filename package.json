@@ -4,7 +4,7 @@
   "description": "Flutter Web application preview wrapper",
   "main": "server.js",
   "scripts": {
-    "build:sdui": "tsx scripts/build-sdui.ts",
+    "build:sdui": "tsx lib/interop/typescript/build-sdui.ts",
     "dev": "concurrently \"tsx --watch scripts/build-sdui.ts\" \"node server.js\"",
     "build": "bash ./build.sh"
   },

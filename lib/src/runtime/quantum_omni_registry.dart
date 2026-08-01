@@ -383,6 +383,10 @@ void registerOmniComponents(QuantumVM vm) {
       tags: const ['core', 'template']);
   vm.define('layout', _buildLayout,
       description: 'Layout composition core', tags: const ['core', 'layout']);
+  vm.define('page_shell', _buildPageShell,
+      description: 'Page shell rendering', tags: const ['core', 'layout']);
+  vm.define('page_section', _buildPageSection,
+      description: 'Page section layout', tags: const ['core', 'layout']);
   vm.define('decoration', _buildDecoration,
       description: 'Decorative styling and semantic adornment core',
       tags: const ['core', 'decoration']);

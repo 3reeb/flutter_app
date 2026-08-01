@@ -33,75 +33,23 @@
     },
     "children": [
       {
-        "type": "box",
-        "_node": {
-          "type": "component:render",
-          "props": {
-            "__componentName": "page_header",
-            "title": "Documentation",
-            "subtitle": "A nested, route-driven knowledge surface"
-          },
-          "children": [
-            {
-              "_node": {
-                "type": "box",
-                "props": {
-                  "direction": "row",
-                  "crossAlignment": "center",
-                  "mainAlignment": "space-between",
-                  "gap": 16,
-                  "padding": 0
-                },
-                "children": [
-                  {
-                    "_node": {
-                      "type": "box",
-                      "props": {
-                        "direction": "col",
-                        "gap": 8
-                      },
-                      "children": [
-                        {
-                          "_node": {
-                            "type": "text",
-                            "props": {
-                              "text": "Documentation",
-                              "variant": "heading"
-                            },
-                            "children": []
-                          }
-                        },
-                        {
-                          "_node": {
-                            "type": "text",
-                            "props": {
-                              "text": "A nested, route-driven knowledge surface"
-                            },
-                            "children": []
-                          }
-                        }
-                      ]
-                    }
-                  }
-                ]
-              }
-            }
-          ],
-          "__componentName": "page_header"
-        }
+        "type": "component:use",
+        "props": {
+          "component": "page_header",
+          "title": "Documentation",
+          "subtitle": "A nested, route-driven knowledge surface"
+        },
+        "children": []
       },
       {
-        "type": "box",
-        "_node": {
-          "type": "template",
-          "props": {
-            "title": "Start here",
-            "description": "Explore nested docs pages with layout inheritance.",
-            "compact": false,
-            "__templateName": "section"
-          },
-          "children": []
-        }
+        "type": "template:section",
+        "props": {
+          "title": "Start here",
+          "description": "Explore nested docs pages with layout inheritance.",
+          "compact": false,
+          "name": "section"
+        },
+        "children": []
       }
     ]
   }

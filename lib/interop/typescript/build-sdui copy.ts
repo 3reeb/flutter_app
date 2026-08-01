@@ -1,5 +1,5 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import fs from 'fs';
+import path from 'path';
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
@@ -54,56 +54,12 @@ function normalizeForOutput<T>(value: T): T {
   return out as T;
 }
 
-
-/**
- * Templates must carry a subtype for the runtime template builder.
- * The Dart runtime resolves the subtype from either:
- *  - props.__subType
- *  - the colon suffix in `type`
- */
-function patchTemplateSubtypes<T>(value: T, fallbackSubtype?: string): T {
-  if (value === null || value === undefined) return value;
-  if (Array.isArray(value)) {
-    return value.map((item) => patchTemplateSubtypes(item, fallbackSubtype)) as unknown as T;
-  }
-  if (typeof value !== 'object') return value;
-
-  const obj = value as Record<string, unknown>;
-
-  if (obj.type === 'template') {
-    const props = (obj.props && typeof obj.props === 'object' && !Array.isArray(obj.props))
-      ? (obj.props as Record<string, unknown>)
-      : (obj.props = {} as Record<string, unknown>) as Record<string, unknown>;
-
-    const explicitSubtype =
-      typeof props.__subType === 'string' && props.__subType.trim()
-        ? props.__subType.trim()
-        : '';
-    const inheritedSubtype =
-      typeof props.name === 'string' && props.name.trim()
-        ? props.name.trim()
-        : (fallbackSubtype ?? '').trim();
-    const subtype = explicitSubtype || inheritedSubtype;
-
-    if (subtype) props.__subType = subtype;
-  }
-
-  for (const [k, v] of Object.entries(obj)) {
-    if (v !== undefined) obj[k] = patchTemplateSubtypes(v as any, fallbackSubtype) as unknown as T;
-  }
-  return value;
-}
-
-function serializeRenderableNode<T>(value: T, fallbackSubtype?: string): T {
-  return patchTemplateSubtypes(normalizeForOutput(value), fallbackSubtype);
-}
-
 // ── Main ───────────────────────────────────────────────────────────────────────
 
 // This dynamically imports the config and writes it to a file router structure
 async function buildSdui() {
   try {
-    const configModule = await import('./quantum.config');
+    const configModule = await import('../lib/interop/typescript/quantum.config');
     const config = configModule.default || (configModule as any).kernel?.defineConfig() || configModule;
 
     const baseAssetsDir = path.resolve(process.cwd(), 'assets');
@@ -197,7 +153,7 @@ function exportPageTree(pages: any, currentDir: string, layouts: any, fragments:
           const layoutObj: any = { ...layoutDef };
           // Map TS layout 'template' to Dart AST 'ui'
           if (layoutObj.template) {
-            layoutObj.ui = serializeRenderableNode(layoutObj.template, layoutId);
+            layoutObj.ui = normalizeForOutput(layoutObj.template);
             delete layoutObj.template;
           }
           fs.writeFileSync(layoutFile, JSON.stringify(normalizeForOutput(layoutObj), null, 2));

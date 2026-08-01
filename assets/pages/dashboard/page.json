@@ -51,122 +51,62 @@
     },
     "children": [
       {
-        "type": "box",
-        "_node": {
-          "type": "component:render",
-          "props": {
-            "__componentName": "page_header",
-            "title": "Dashboard",
-            "subtitle": "Live metrics, activity, and drill-down pages"
-          },
-          "children": [
-            {
-              "_node": {
-                "type": "box",
-                "props": {
-                  "direction": "row",
-                  "crossAlignment": "center",
-                  "mainAlignment": "space-between",
-                  "gap": 16,
-                  "padding": 0
-                },
-                "children": [
-                  {
-                    "_node": {
-                      "type": "box",
-                      "props": {
-                        "direction": "col",
-                        "gap": 8
-                      },
-                      "children": [
-                        {
-                          "_node": {
-                            "type": "text",
-                            "props": {
-                              "text": "Dashboard",
-                              "variant": "heading"
-                            },
-                            "children": []
-                          }
-                        },
-                        {
-                          "_node": {
-                            "type": "text",
-                            "props": {
-                              "text": "Live metrics, activity, and drill-down pages"
-                            },
-                            "children": []
-                          }
-                        }
-                      ]
-                    }
-                  }
-                ]
-              }
-            }
-          ],
-          "__componentName": "page_header"
-        }
+        "type": "component:use",
+        "props": {
+          "component": "page_header",
+          "title": "Dashboard",
+          "subtitle": "Live metrics, activity, and drill-down pages"
+        },
+        "children": []
       },
       {
-        "type": "box",
-        "_node": {
-          "type": "template",
-          "props": {
-            "title": "Overview",
-            "description": "Everything that matters at a glance.",
-            "compact": false,
-            "__templateName": "section"
-          },
-          "children": [],
-          "slots": {
-            "body": {
-              "_node": {
-                "type": "box",
+        "type": "template:section",
+        "props": {
+          "title": "Overview",
+          "description": "Everything that matters at a glance.",
+          "compact": false,
+          "name": "section"
+        },
+        "children": [],
+        "slots": {
+          "body": {
+            "type": "box",
+            "props": {
+              "direction": "row",
+              "gap": 16
+            },
+            "children": [
+              {
+                "type": "template:stat_card",
                 "props": {
-                  "direction": "row",
-                  "gap": 16
+                  "label": "Users Online",
+                  "value": "18.2K",
+                  "hint": "peak 1h",
+                  "name": "stat_card"
                 },
-                "children": [
-                  {
-                    "_node": {
-                      "type": "template",
-                      "props": {
-                        "label": "Users Online",
-                        "value": "18.2K",
-                        "hint": "peak 1h",
-                        "__templateName": "stat_card"
-                      },
-                      "children": []
-                    }
-                  },
-                  {
-                    "_node": {
-                      "type": "template",
-                      "props": {
-                        "label": "Requests / Min",
-                        "value": "240K",
-                        "hint": "rolling average",
-                        "__templateName": "stat_card"
-                      },
-                      "children": []
-                    }
-                  },
-                  {
-                    "_node": {
-                      "type": "template",
-                      "props": {
-                        "label": "Error Rate",
-                        "value": "0.04%",
-                        "hint": "healthy",
-                        "__templateName": "stat_card"
-                      },
-                      "children": []
-                    }
-                  }
-                ]
+                "children": []
+              },
+              {
+                "type": "template:stat_card",
+                "props": {
+                  "label": "Requests / Min",
+                  "value": "240K",
+                  "hint": "rolling average",
+                  "name": "stat_card"
+                },
+                "children": []
+              },
+              {
+                "type": "template:stat_card",
+                "props": {
+                  "label": "Error Rate",
+                  "value": "0.04%",
+                  "hint": "healthy",
+                  "name": "stat_card"
+                },
+                "children": []
               }
-            }
+            ]
           }
         }
       }

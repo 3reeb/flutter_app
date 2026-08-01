@@ -595,7 +595,9 @@ class QuantumFileRouter {
               inheritedMeta['ogImage'],
         ),
         customMeta: {
-          ..._mapStringDynamic(raw['meta'] ?? const {}),
+          if (raw['meta'] is Map && raw['meta']['custom'] is Map)
+            for (final kv in (raw['meta']['custom'] as Map).entries)
+              kv.key.toString(): _coerceMetaValue(kv.value),
           ...(pageConfig?.customMeta ?? const {}),
         },
       );
@@ -737,6 +739,21 @@ class QuantumFileRouter {
   }
 
   String _coerceText(dynamic value) => value?.toString().trim() ?? '';
+
+  /// Safely converts any JSON value to a [String] for use in flat meta maps.
+  /// Primitives are stringified directly; Maps and Lists are JSON-encoded so
+  /// the DDC runtime never sees a `Map` where a `String` is expected.
+  String _coerceMetaValue(dynamic value) {
+    if (value == null) return '';
+    if (value is String) return value;
+    if (value is bool || value is num) return value.toString();
+    // Maps, Lists, and any other complex types → JSON-encode
+    try {
+      return jsonEncode(value);
+    } catch (_) {
+      return value.toString();
+    }
+  }
 
   int _coerceInt(dynamic value, {required int fallback}) {
     if (value is int) return value;

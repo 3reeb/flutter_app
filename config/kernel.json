@@ -1103,7 +1103,7 @@
         "lazy": false,
         "hydrate": "immediate",
         "template": {
-          "type": "template:hero",
+          "type": "template",
           "props": {
             "eyebrow": "Introducing",
             "title": "Build anything with one JSON graph",
@@ -1165,7 +1165,7 @@
           },
           "children": [
             {
-              "type": "template:stat_card",
+              "type": "template",
               "props": {
                 "label": "Users Online",
                 "value": "12.4K",
@@ -1175,7 +1175,7 @@
               "children": []
             },
             {
-              "type": "template:stat_card",
+              "type": "template",
               "props": {
                 "label": "RPM",
                 "value": "1.2M",
@@ -1185,7 +1185,7 @@
               "children": []
             },
             {
-              "type": "template:stat_card",
+              "type": "template",
               "props": {
                 "label": "Error Rate",
                 "value": "0.08%",
@@ -1220,7 +1220,7 @@
               "children": []
             },
             {
-              "type": "template:section",
+              "type": "template",
               "props": {
                 "title": "Overview",
                 "description": "Everything that matters at a glance.",
@@ -1237,7 +1237,7 @@
                   },
                   "children": [
                     {
-                      "type": "template:stat_card",
+                      "type": "template",
                       "props": {
                         "label": "Users Online",
                         "value": "18.2K",
@@ -1247,7 +1247,7 @@
                       "children": []
                     },
                     {
-                      "type": "template:stat_card",
+                      "type": "template",
                       "props": {
                         "label": "Requests / Min",
                         "value": "240K",
@@ -1257,7 +1257,7 @@
                       "children": []
                     },
                     {
-                      "type": "template:stat_card",
+                      "type": "template",
                       "props": {
                         "label": "Error Rate",
                         "value": "0.04%",
@@ -1296,7 +1296,7 @@
               "children": []
             },
             {
-              "type": "template:section",
+              "type": "template",
               "props": {
                 "title": "Body",
                 "description": "This block renders the fetched article content.",
@@ -1341,7 +1341,7 @@
               "children": []
             },
             {
-              "type": "template:section",
+              "type": "template",
               "props": {
                 "title": "Account",
                 "description": "Manage your account details.",
@@ -1376,7 +1376,7 @@
               "children": []
             },
             {
-              "type": "template:section",
+              "type": "template",
               "props": {
                 "title": "Start here",
                 "description": "Explore nested docs pages with layout inheritance.",
@@ -1806,7 +1806,7 @@
           "lazy": false,
           "hydrate": "immediate",
           "template": {
-            "type": "template:hero",
+            "type": "template",
             "props": {
               "eyebrow": "Introducing",
               "title": "Build anything with one JSON graph",
@@ -1868,7 +1868,7 @@
             },
             "children": [
               {
-                "type": "template:stat_card",
+                "type": "template",
                 "props": {
                   "label": "Users Online",
                   "value": "12.4K",
@@ -1878,7 +1878,7 @@
                 "children": []
               },
               {
-                "type": "template:stat_card",
+                "type": "template",
                 "props": {
                   "label": "RPM",
                   "value": "1.2M",
@@ -1888,7 +1888,7 @@
                 "children": []
               },
               {
-                "type": "template:stat_card",
+                "type": "template",
                 "props": {
                   "label": "Error Rate",
                   "value": "0.08%",
@@ -1923,7 +1923,7 @@
                 "children": []
               },
               {
-                "type": "template:section",
+                "type": "template",
                 "props": {
                   "title": "Overview",
                   "description": "Everything that matters at a glance.",
@@ -1940,7 +1940,7 @@
                     },
                     "children": [
                       {
-                        "type": "template:stat_card",
+                        "type": "template",
                         "props": {
                           "label": "Users Online",
                           "value": "18.2K",
@@ -1950,7 +1950,7 @@
                         "children": []
                       },
                       {
-                        "type": "template:stat_card",
+                        "type": "template",
                         "props": {
                           "label": "Requests / Min",
                           "value": "240K",
@@ -1960,7 +1960,7 @@
                         "children": []
                       },
                       {
-                        "type": "template:stat_card",
+                        "type": "template",
                         "props": {
                           "label": "Error Rate",
                           "value": "0.04%",
@@ -1999,7 +1999,7 @@
                 "children": []
               },
               {
-                "type": "template:section",
+                "type": "template",
                 "props": {
                   "title": "Body",
                   "description": "This block renders the fetched article content.",
@@ -2044,7 +2044,7 @@
                 "children": []
               },
               {
-                "type": "template:section",
+                "type": "template",
                 "props": {
                   "title": "Account",
                   "description": "Manage your account details.",
@@ -2079,7 +2079,7 @@
                 "children": []
               },
               {
-                "type": "template:section",
+                "type": "template",
                 "props": {
                   "title": "Start here",
                   "description": "Explore nested docs pages with layout inheritance.",

@@ -237,7 +237,7 @@ const authSlice = defineSlice({
     me: { source: 'auth.me' },
   },
   resources: {
-    session: { source: 'auth.me', cache: true },
+    session: { uri: 'auth.me', cacheable: true }, // <-- Fixed here
   },
   runtime: {
     persist: true,

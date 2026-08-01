@@ -2,6 +2,133 @@ part of '../quantum_omni_registry.dart';
 
 // Moved from quantum_omni_registry.dart: _buildLayout
 
+Widget _buildPageShell(QLContext rawCtx) {
+  final ctx = _AliasContext(rawCtx);
+
+  final headerNode = ctx.node.slots['header'];
+  final contentNode = ctx.node.slots['content'];
+  final footerNode = ctx.node.slots['footer'];
+  final sidebarNode = ctx.node.slots['sidebar'];
+
+  final Widget header = headerNode != null
+      ? QuantumVM.instance.renderWidget(ctx.flutterContext, headerNode)
+      : const SizedBox.shrink();
+
+  final Widget footer = footerNode != null
+      ? QuantumVM.instance.renderWidget(ctx.flutterContext, footerNode)
+      : const SizedBox.shrink();
+
+  final Widget sidebar = sidebarNode != null
+      ? QuantumVM.instance.renderWidget(ctx.flutterContext, sidebarNode)
+      : const SizedBox.shrink();
+
+  final Widget page = ctx.env[r'$page'] as Widget? ?? const SizedBox.shrink();
+
+  Widget content = page;
+  if (contentNode != null) {
+    final String baseStyle = contentNode.style ?? '';
+
+    final String justify = QLDataBinder.resolveAOT(contentNode.props['justify'],
+                ctx.flutterContext, ctx.env, ctx.store)
+            ?.toString() ??
+        '';
+    final String items = QLDataBinder.resolveAOT(contentNode.props['items'],
+                ctx.flutterContext, ctx.env, ctx.store)
+            ?.toString() ??
+        '';
+    final bool clip = QLDataBinder.resolveAOT(contentNode.props['clip'],
+            ctx.flutterContext, ctx.env, ctx.store) ==
+        true;
+    final dynamic gapProp = QLDataBinder.resolveAOT(
+        contentNode.props['gap'], ctx.flutterContext, ctx.env, ctx.store);
+    final num gap = gapProp is num
+        ? gapProp
+        : (num.tryParse(gapProp?.toString() ?? '') ?? 0);
+    final String direction =
+        contentNode.props['direction']?.toString() ?? 'col';
+
+    String combinedStyle = baseStyle;
+    if (direction == 'row')
+      combinedStyle = 'row $combinedStyle';
+    else
+      combinedStyle = 'col $combinedStyle';
+
+    if (justify.isNotEmpty) combinedStyle = '$combinedStyle justify-$justify';
+    if (items.isNotEmpty) combinedStyle = '$combinedStyle items-$items';
+    if (clip) combinedStyle = '$combinedStyle overflow-hidden';
+
+    final dynamic padProp = contentNode.props['padding'];
+    final double padding = padProp is num
+        ? padProp.toDouble()
+        : double.tryParse(padProp?.toString() ?? '') ?? 0.0;
+
+    content = Padding(
+      padding: EdgeInsets.all(padding),
+      child: Q('$combinedStyle min-h-0',
+          gap: gap > 0 ? gap : null,
+          children: [Expanded(child: page)],
+          suppressParentData: true),
+    );
+  }
+
+  return Scaffold(
+    backgroundColor: Colors.transparent,
+    body: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (headerNode != null) header,
+        Expanded(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (sidebarNode != null) sidebar,
+              Expanded(child: content),
+            ],
+          ),
+        ),
+        if (footerNode != null) footer,
+      ],
+    ),
+  );
+}
+
+Widget _buildPageSection(QLContext rawCtx) {
+  final ctx = _AliasContext(rawCtx);
+
+  final headerNode = ctx.node.slots['header'];
+  final bodyNode = ctx.node.slots['body'];
+  final footerNode = ctx.node.slots['footer'];
+
+  final Widget header = headerNode != null
+      ? QuantumVM.instance.renderWidget(ctx.flutterContext, headerNode)
+      : const SizedBox.shrink();
+
+  final Widget body = bodyNode != null
+      ? QuantumVM.instance.renderWidget(ctx.flutterContext, bodyNode)
+      : const SizedBox.shrink();
+
+  final Widget footer = footerNode != null
+      ? QuantumVM.instance.renderWidget(ctx.flutterContext, footerNode)
+      : const SizedBox.shrink();
+
+  final dynamic paddedProp = ctx.node.props['padded'];
+  final bool isPadded = paddedProp == true || paddedProp == 'true';
+  final double padding = isPadded ? 24.0 : 0.0;
+
+  return Container(
+    padding: EdgeInsets.all(padding),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (headerNode != null) header,
+        if (bodyNode != null) body,
+        if (footerNode != null) footer,
+      ],
+    ),
+  );
+}
+
 Widget _buildLayout(QLContext rawCtx) {
   final ctx = _AliasContext(rawCtx);
   final String layoutId = ctx.resolvedSubType(
@@ -720,7 +847,7 @@ footer footer footer footer | auto
 
   vm.defineAlias('workspace_layout', 'layout:workspace');
   vm.defineAlias('page_layout', 'layout:page');
-  vm.defineAlias('app_layout', 'layout:app_shell');
+  vm.defineAlias('app_shell', 'layout:app_shell');
   vm.defineAlias('shell_layout', 'layout:app_shell');
   vm.defineAlias('split_layout', 'layout:split_shell');
   vm.defineAlias('feed_layout', 'layout:feed_shell');
