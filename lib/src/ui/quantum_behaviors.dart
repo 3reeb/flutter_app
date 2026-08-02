@@ -105,7 +105,9 @@ class _QLMultiSplitState extends State<QLMultiSplit> {
       initial.setAll(0, widget.initialFractions!);
     } else {
       final double eq = 1.0 / _count;
-      for (int i = 0; i < _count; i++) initial[i] = eq;
+      for (int i = 0; i < _count; i++) {
+        initial[i] = eq;
+      }
     }
     _fractions = QLSignal<Float64List>(initial);
   }
@@ -173,8 +175,9 @@ class _QLMultiSplitState extends State<QLMultiSplit> {
       final double availableSpace =
           maxSpace - (widget.dividerThickness * (_count - 1));
 
-      if (availableSpace <= 0 || availableSpace.isInfinite)
+      if (availableSpace <= 0 || availableSpace.isInfinite) {
         return const SizedBox.shrink();
+      }
 
       final List<Widget> layoutChildren = [];
 
@@ -348,10 +351,11 @@ class _QLMorphSurfaceState extends State<QLMorphSurface> {
       }
 
       if (widget.lockAspectRatio) {
-        if (dw.abs() > dh.abs())
+        if (dw.abs() > dh.abs()) {
           nh = nw / _aspectRatio;
-        else
+        } else {
           nw = nh * _aspectRatio;
+        }
       }
 
       geo[0] = nw.clamp(20.0, double.infinity);
@@ -522,10 +526,12 @@ class _QLSpatialCanvasState extends State<QLSpatialCanvas>
       final double currentScale = _matrixTemp.storage[0];
       double newScale = d.scale;
 
-      if (currentScale * newScale < widget.minScale)
+      if (currentScale * newScale < widget.minScale) {
         newScale = widget.minScale / currentScale;
-      if (currentScale * newScale > widget.maxScale)
+      }
+      if (currentScale * newScale > widget.maxScale) {
         newScale = widget.maxScale / currentScale;
+      }
 
       final double flx = d.localFocalPoint.dx;
       final double fly = d.localFocalPoint.dy;
@@ -619,9 +625,9 @@ class _QLFluidBoardState extends State<QLFluidBoard> {
     final double y = globalPos.dy;
 
     double speed = 0;
-    if (y < 100)
+    if (y < 100) {
       speed = -15.0; // Near top edge
-    else if (y > screenH - 100) speed = 15.0; // Near bottom edge
+    } else if (y > screenH - 100) speed = 15.0; // Near bottom edge
 
     if (speed != 0) {
       _autoScrollTimer ??=

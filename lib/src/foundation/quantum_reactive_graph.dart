@@ -66,10 +66,7 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'dart:async';
-import 'dart:typed_data';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'quantum_primitives.dart';
 import '../ui/quantum_animation_engine.dart';
 // ─────────────────────────────────────────────────────────────────────── §1 ─

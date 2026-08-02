@@ -192,7 +192,7 @@ class _QLDefaultFallback extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF1A0000),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFFF3333).withOpacity(0.4)),
+        border: Border.all(color: const Color(0xFFFF3333).withValues(alpha: 0.4)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -229,10 +229,10 @@ class _QLDefaultFallback extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFF3333).withOpacity(0.15),
+                  color: const Color(0xFFFF3333).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(4),
                   border: Border.all(
-                      color: const Color(0xFFFF3333).withOpacity(0.3)),
+                      color: const Color(0xFFFF3333).withValues(alpha: 0.3)),
                 ),
                 child: Text(
                   'Retry (${errorState.retryCount}/${errorState.maxRetries})',
@@ -495,7 +495,7 @@ mixin QLErrorBoundaryReporter<T extends StatefulWidget> on State<T> {
   void _route(Object error, StackTrace? stackTrace, String? context) {
     if (!mounted) return;
     QLErrorBoundaryScope.maybeOf(context as BuildContext? ?? this.context)
-        ?.report(error, stackTrace: stackTrace, context: context as String?);
+        ?.report(error, stackTrace: stackTrace, context: context);
   }
 }
 

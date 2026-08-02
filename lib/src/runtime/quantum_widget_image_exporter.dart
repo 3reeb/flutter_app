@@ -82,7 +82,7 @@ class QuantumExportResult {
 
   @override
   String toString() =>
-      'QuantumExportResult(${pixelWidth}×$pixelHeight, '
+      'QuantumExportResult($pixelWidth×$pixelHeight, '
       '${pngBytes.length} bytes, ${elapsed.inMilliseconds}ms)';
 }
 

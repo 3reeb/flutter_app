@@ -44,9 +44,7 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import '../../quantum.dart'; // For QLDataStore
 
 // ─────────────────────────────────────────────────────────────────────── §1 ─
@@ -93,7 +91,7 @@ class QLAsyncSnapshot<T> {
         retryCount = 0;
 
   const QLAsyncSnapshot.error(Object this.error,
-      [StackTrace? this.stackTrace, this.retryCount = 0])
+      [this.stackTrace, this.retryCount = 0])
       : status = QLAsyncStatus.error,
         data = null;
 

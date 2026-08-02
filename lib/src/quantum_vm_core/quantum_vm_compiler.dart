@@ -129,8 +129,9 @@ abstract class QLPipes {
       list.sort((a, b) {
         final aVal = (a as Map)[key];
         final bVal = (b as Map)[key];
-        if (aVal is num && bVal is num)
+        if (aVal is num && bVal is num) {
           return isDesc ? bVal.compareTo(aVal) : aVal.compareTo(bVal);
+        }
         return isDesc
             ? bVal.toString().compareTo(aVal.toString())
             : aVal.toString().compareTo(bVal.toString());
@@ -333,10 +334,11 @@ abstract class QLPipes {
       if (args.isEmpty || val == null) return val;
       dynamic cur = val;
       for (final k in args[0].split('.')) {
-        if (cur is Map)
+        if (cur is Map) {
           cur = cur[k];
-        else
+        } else {
           return null;
+        }
       }
       return cur;
     },
@@ -541,10 +543,11 @@ abstract final class QLCompiler {
         final item = raw[i];
         if (item is Map && i == 1) {
           item.forEach((k, v) {
-            if (k == r'$slots' && v is Map)
+            if (k == r'$slots' && v is Map) {
               slots.addAll(Map<String, dynamic>.from(v));
-            else
+            } else {
               props[k] = v;
+            }
           });
         } else if (item is String) {
           if (i == 1 && props.isEmpty && children.isEmpty) {
@@ -718,8 +721,9 @@ abstract final class QLCompiler {
       Map<String, dynamic> compileEnv,
       int depth,
       String parentPath) {
-    if (depth > _maxAstDepth)
+    if (depth > _maxAstDepth) {
       throw const QuantumSecurityException('SDUI AST Overflow Guard.');
+    }
 
     final Map<String, dynamic> node = _normalizeNode(rawNode);
     final Map<String, dynamic> currentEnv = {...compileEnv, ...?node['env']};
@@ -1088,14 +1092,16 @@ abstract final class QLCompiler {
         (node['props'] as Map).containsKey(r'$spread')) {
       final spreadPath = node[r'$spread'] ?? node['props'][r'$spread'];
       final spreadData = _injectCompileTimeStructurally(spreadPath, currentEnv);
-      if (spreadData is Map)
+      if (spreadData is Map) {
         safeProps.addAll(spreadData.cast<String, dynamic>());
+      }
       (node['props'] as Map).remove(r'$spread');
     }
 
-    if (node['text'] != null)
+    if (node['text'] != null) {
       safeProps['text'] =
           _injectCompileTimeStructurally(node['text'], currentEnv);
+    }
 
     (node['props'] as Map).forEach((k, v) {
       safeProps[k.toString()] = _injectCompileTimeStructurally(v, currentEnv);
@@ -1246,9 +1252,10 @@ abstract final class QLCompiler {
     exposedSlots.addAll(macroSlots.callerSlots);
     if (exposedSlots.isNotEmpty) slotted['slots'] = exposedSlots;
 
-    if (callerNode['style'] != null)
+    if (callerNode['style'] != null) {
       slotted['style'] =
           '${slotted['style'] ?? ''} ${callerNode['style']}'.trim();
+    }
 
     _macroExpansionCache.put(cacheKey, _deepCopy(slotted));
     return slotted;
@@ -1440,8 +1447,9 @@ abstract final class QLCompiler {
           safeMap[k.toString()] = _injectCompileTimeStructurally(v, env));
       return safeMap;
     }
-    if (target is List)
+    if (target is List) {
       return target.map((v) => _injectCompileTimeStructurally(v, env)).toList();
+    }
     return target;
   }
 
@@ -1457,15 +1465,16 @@ abstract final class QLCompiler {
     int startIndex = 0;
     if (strides.isNotEmpty &&
         (strides.first == 'state' || strides.first == r'$state')) {
-      if (!env.containsKey('state') && !env.containsKey(r'$state'))
+      if (!env.containsKey('state') && !env.containsKey(r'$state')) {
         startIndex = 1;
+      }
     }
 
     for (int i = startIndex; i < strides.length && current != null; i++) {
       final s = strides[i];
-      if (current is Map && current.containsKey(s.toString()))
+      if (current is Map && current.containsKey(s.toString())) {
         current = current[s.toString()];
-      else if (current is List && s is int && s >= 0 && s < current.length)
+      } else if (current is List && s is int && s >= 0 && s < current.length)
         current = current[s];
       else {
         current = null;
@@ -1506,9 +1515,9 @@ abstract final class QLCompiler {
         _tokenizeNodeProperties(v, depth + 1);
       } else if (v is List) {
         for (var i = 0; i < v.length; i++) {
-          if (v[i] is Map)
+          if (v[i] is Map) {
             _tokenizeNodeProperties(v[i] as Map, depth + 1);
-          else if (v[i] is String && (v[i] as String).contains('{{')) {
+          } else if (v[i] is String && (v[i] as String).contains('{{')) {
             final parsed = parseTokensAndDeps(v[i] as String);
             v[i] = {
               "_isTokenized": true,
@@ -1535,9 +1544,9 @@ abstract final class QLCompiler {
         i += 2;
         int start = i, braces = 2;
         while (i < input.length && braces > 0) {
-          if (input[i] == '}')
+          if (input[i] == '}') {
             braces--;
-          else if (input[i] == '{') braces++;
+          } else if (input[i] == '{') braces++;
           i++;
         }
         final tokenContent = input.substring(start, i - 2).trim();
@@ -1545,9 +1554,9 @@ abstract final class QLCompiler {
         final path = pipeParts.first;
 
         String normalizedPath = path;
-        if (path.startsWith('state.'))
+        if (path.startsWith('state.')) {
           normalizedPath = path.substring(6);
-        else if (path.startsWith(r'$state.'))
+        } else if (path.startsWith(r'$state.'))
           normalizedPath = path.substring(7);
         deps.add(normalizedPath);
 
@@ -1559,9 +1568,9 @@ abstract final class QLCompiler {
           if (argsRaw != null && argsRaw.isNotEmpty) {
             int a = 0, j = 0, b = 0;
             while (j < argsRaw.length) {
-              if (argsRaw[j] == '{')
+              if (argsRaw[j] == '{') {
                 b++;
-              else if (argsRaw[j] == '}')
+              } else if (argsRaw[j] == '}')
                 b--;
               else if (argsRaw[j] == ',' && b == 0) {
                 args.add(argsRaw
@@ -1582,10 +1591,12 @@ abstract final class QLCompiler {
               if (arg.startsWith('{{') && arg.endsWith('}}')) {
                 String argPath =
                     arg.substring(2, arg.length - 2).split('|').first.trim();
-                if (argPath.startsWith('state.'))
+                if (argPath.startsWith('state.')) {
                   argPath = argPath.substring(6);
-                if (argPath.startsWith(r'$state.'))
+                }
+                if (argPath.startsWith(r'$state.')) {
                   argPath = argPath.substring(7);
+                }
                 deps.add(argPath);
               }
             }
@@ -1733,9 +1744,9 @@ abstract final class QLPathResolver {
       current = env[root];
       for (int i = 1; i < strides.length && current != null; i++) {
         final key = strides[i];
-        if (current is Map && key is String)
+        if (current is Map && key is String) {
           current = current[key];
-        else if (current is List && key is int)
+        } else if (current is List && key is int)
           current = current[key];
         else {
           current = null;

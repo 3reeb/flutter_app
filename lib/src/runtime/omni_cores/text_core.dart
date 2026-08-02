@@ -34,9 +34,9 @@ Widget _buildText(QLContext rawCtx) {
   final String subType = ctx.resolvedSubType(fallback: 'p');
 
   String styleStr = '';
-  if (subType == 'h1')
+  if (subType == 'h1') {
     styleStr = 'text-3xl font-bold';
-  else if (subType == 'h2')
+  } else if (subType == 'h2')
     styleStr = 'text-2xl font-bold';
   else if (subType == 'h3')
     styleStr = 'text-xl font-bold';

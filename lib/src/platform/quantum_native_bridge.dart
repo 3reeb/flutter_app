@@ -46,10 +46,8 @@
 
 import 'dart:async';
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import '../foundation/quantum_async.dart';
-import '../foundation/quantum_primitives.dart';
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  TYPED CODEC (The Dynamic-to-Typed Firewall)
 // ────────────────────────────────────────────────────────────────────────────
@@ -75,7 +73,7 @@ class QLVoidCodec extends QLChannelCodec<void, void> {
   @override
   dynamic encode(void args) => null;
   @override
-  void decode(dynamic data) => null;
+  void decode(dynamic data) {}
 }
 
 /// A passthrough codec for String channels.
@@ -102,8 +100,9 @@ class QLMapCodec<TResult>
   @override
   TResult decode(dynamic data) {
     if (data == null) throw const QLBridgeDecodeException('Null response from platform');
-    if (data is! Map)
+    if (data is! Map) {
       throw QLBridgeDecodeException('Expected Map, got ${data.runtimeType}');
+    }
     return _fromMap(Map<String, dynamic>.from(data));
   }
 }

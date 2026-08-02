@@ -21,7 +21,6 @@
  * ============================================================================
  */
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 Future<String> downloadText(
   String text,

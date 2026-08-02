@@ -22,17 +22,9 @@
  * inheritance chains (extendsAlias) without circular dependency crashes.
  * ============================================================================
  */
-import 'dart:collection';
-import 'dart:typed_data';
-import 'dart:math' as math;
-import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/gestures.dart';
 import 'package:quantum_layout/quantum.dart';
 // Moved from quantum_omni_registry.dart: template feature
 
@@ -766,9 +758,7 @@ class QPresetContext {
         'col w-full',
         children: activeSlots.map((s) {
           final override = nativeSlotOverrides?[s];
-          return override != null
-              ? override // FIX: Use override directly. Prevents double-box wrapping!
-              : buildSlot(s);
+          return override ?? buildSlot(s);
         }).toList(growable: false),
       );
     }

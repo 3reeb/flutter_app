@@ -69,10 +69,11 @@ Widget _buildPageShell(QLContext rawCtx) {
         contentNode.props['direction']?.toString() ?? 'col';
 
     String combinedStyle = baseStyle;
-    if (direction == 'row')
+    if (direction == 'row') {
       combinedStyle = 'row $combinedStyle';
-    else
+    } else {
       combinedStyle = 'col $combinedStyle';
+    }
 
     if (justify.isNotEmpty) combinedStyle = '$combinedStyle justify-$justify';
     if (items.isNotEmpty) combinedStyle = '$combinedStyle items-$items';
@@ -87,8 +88,8 @@ Widget _buildPageShell(QLContext rawCtx) {
       padding: EdgeInsets.all(padding),
       child: Q('$combinedStyle min-h-0',
           gap: gap > 0 ? gap : null,
-          children: [Expanded(child: page)],
-          suppressParentData: true),
+          suppressParentData: true,
+          children: [Expanded(child: page)]),
     );
   }
 
@@ -1049,8 +1050,9 @@ Widget _buildDecorationRichText(QLContext rawCtx) {
       final parts = text.split(match);
       for (int i = 0; i < parts.length; i++) {
         final chunk = parts[i];
-        if (chunk.isNotEmpty)
+        if (chunk.isNotEmpty) {
           spans.add(TextSpan(text: chunk, style: baseStyle));
+        }
         if (i < parts.length - 1) {
           if (selectedChild is Map) {
             final blueprint = QLBlueprint.fromJson(

@@ -45,9 +45,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../quantum.dart';
-import '../quantum_vm_core/qee/qee.dart'
-    show QFileRouterBridge, QLFileRouteEntryLite, QNodeRegistry;
-import '../quantum_vm_core/qee/qee_registry.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // §1 — ROUTE ENTRY
@@ -586,7 +583,7 @@ class QuantumFileRouter {
       ),
     ];
 
-    final QLSeoBuilder? seoBuilder = (info, props) {
+    QLSeoConfig seoBuilder(QLRouteInfo info, Map<String, dynamic> props) {
       final Map<String, dynamic> inheritedMeta = entry.inheritedMeta;
       final String title = _coerceText(
         raw['metaTitle'] ??
@@ -605,12 +602,12 @@ class QuantumFileRouter {
           description.isEmpty &&
           inheritedMeta.isEmpty &&
           pageConfig == null) {
-        return QLSeoConfig(
+        return const QLSeoConfig(
           title: '',
           description: '',
           keywords: null,
           ogImage: null,
-          customMeta: const {},
+          customMeta: {},
         );
       }
 
@@ -634,7 +631,7 @@ class QuantumFileRouter {
           ...(pageConfig?.customMeta ?? const {}),
         },
       );
-    };
+    }
 
     QLDataFetchCallback? serverPropsFn;
     serverPropsFn = (info) async {
@@ -657,7 +654,7 @@ class QuantumFileRouter {
       return result;
     };
 
-    final QLWidgetBuilder builder = (context, info) => _QLFileRouteView(
+    Widget builder(BuildContext context, QLRouteInfo info) => _QLFileRouteView(
           pageAssetPath: entry.assetPath,
           layoutAssetPath: entry.layoutAssetPath,
           routeInfo: info,

@@ -1345,7 +1345,7 @@ class _QPresetInstanceNodeState extends State<_QPresetInstanceNode> {
   @override
   void initState() {
     super.initState();
-    _instanceId = 'tpl_${hashCode}';
+    _instanceId = 'tpl_$hashCode';
 
     if (widget.def.initialState.isNotEmpty) {
       widget.def.initialState.forEach((key, value) {

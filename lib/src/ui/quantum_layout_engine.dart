@@ -30,13 +30,11 @@
 // - builder-backed virtualized grid for large datasets
 // ════════════════════════════════════════════════════════════════════════════
 
-import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 // Foundation dependencies (Assumed to exist in your ecosystem)
 import '../foundation/quantum_core.dart';
 import '../foundation/quantum_primitives.dart';
@@ -503,7 +501,9 @@ class RenderQuantumGrid extends RenderBox
           if (idx >= _bitmask.length) {
             final oldLen = _bitmask.length;
             var nextSize = oldLen == 0 ? 64 : oldLen * 2;
-            while (nextSize <= idx) nextSize *= 2;
+            while (nextSize <= idx) {
+              nextSize *= 2;
+            }
             final newMask = Uint32List(nextSize);
             for (int i = 0; i < oldLen; i++) {
               newMask[i] = _bitmask[i];
@@ -524,13 +524,17 @@ class RenderQuantumGrid extends RenderBox
 
     if (_cWidths.length < reqCols) {
       var s = _cWidths.isEmpty ? 16 : _cWidths.length * 2;
-      while (s < reqCols) s *= 2;
+      while (s < reqCols) {
+        s *= 2;
+      }
       _cWidths = Float64List(s);
       _cOffsets = Float64List(s + 1);
     }
     if (_rHeights.length < reqRows) {
       var s = _rHeights.isEmpty ? 16 : _rHeights.length * 2;
-      while (s < reqRows) s *= 2;
+      while (s < reqRows) {
+        s *= 2;
+      }
       _rHeights = Float64List(s);
       _rOffsets = Float64List(s + 1);
     }
@@ -727,8 +731,9 @@ class RenderQuantumGrid extends RenderBox
       final pd = child.parentData as QuantumParentData;
       final cSpan = isRow ? math.min(pd.cSpan, _maxCols) : pd.cSpan;
       if (pd.cStart > 0) estMaxCol = math.max(estMaxCol, pd.cStart + cSpan - 1);
-      if (pd.rStart > 0)
+      if (pd.rStart > 0) {
         estMaxRow = math.max(estMaxRow, pd.rStart + pd.rSpan - 1);
+      }
     }
 
     _maxCols = math.max(1, estMaxCol);
@@ -1025,7 +1030,9 @@ class RenderQuantumGrid extends RenderBox
   void _buildZIndexOrder(List<RenderBox> children) {
     if (_paintOrder.length < _childCount) {
       var s = _paintOrder.isEmpty ? 16 : _paintOrder.length * 2;
-      while (s < _childCount) s *= 2;
+      while (s < _childCount) {
+        s *= 2;
+      }
       _paintOrder = Int32List(s);
     }
     for (int i = 0; i < _childCount; i++) {
@@ -1371,9 +1378,9 @@ class _QuantumMorphSurfaceState extends State<QuantumMorphSurface> {
                   _h = _snap(newH);
                 });
               },
-              child: MouseRegion(
+              child: const MouseRegion(
                 cursor: SystemMouseCursors.resizeDownRight,
-                child: const SizedBox(
+                child: SizedBox(
                   width: 20,
                   height: 20,
                   child:

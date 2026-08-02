@@ -38,15 +38,11 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'dart:ui' as ui;
-import 'dart:math' as math;
-import 'dart:typed_data';
 import 'dart:collection';
 import 'dart:async';
-import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/gestures.dart';
 import '../../quantum.dart';
 // ════════════════════════════════════════════════════════════════════════════
@@ -108,7 +104,9 @@ abstract final class QLArena {
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < 4; j++) {
         double sum = 0.0;
-        for (int k = 0; k < 4; k++) sum += a[k * 4 + i] * b[j * 4 + k];
+        for (int k = 0; k < 4; k++) {
+          sum += a[k * 4 + i] * b[j * 4 + k];
+        }
         out[j * 4 + i] = sum;
       }
     }
@@ -188,6 +186,7 @@ class QLSignal<T> extends QLSignalBase<T> implements ValueListenable<T> {
     );
   }
 
+  @override
   void dispose() {
     if (_disposed) return;
     _disposed = true;
@@ -252,7 +251,7 @@ class QLComputed<T> extends QLSignalBase<T> implements QLReactiveContext {
       ..clear()
       ..addAll(nextDeps);
 
-    final bool changed = !_initialized || !_equals(_cached as T, next);
+    final bool changed = !_initialized || !_equals(_cached, next);
     _cached = next;
     _initialized = true;
     _dirty = false;
@@ -341,15 +340,19 @@ class QLIntegratorRK4 {
   /// Used for UI springs, 3D Game object movement, or fluid dynamics.
   void step(double dt, QLDerivativeFunc evaluate) {
     evaluate(state, _k1);
-    for (int i = 0; i < dimensions; i++)
+    for (int i = 0; i < dimensions; i++) {
       _temp[i] = state[i] + 0.5 * dt * _k1[i];
+    }
 
     evaluate(_temp, _k2);
-    for (int i = 0; i < dimensions; i++)
+    for (int i = 0; i < dimensions; i++) {
       _temp[i] = state[i] + 0.5 * dt * _k2[i];
+    }
 
     evaluate(_temp, _k3);
-    for (int i = 0; i < dimensions; i++) _temp[i] = state[i] + dt * _k3[i];
+    for (int i = 0; i < dimensions; i++) {
+      _temp[i] = state[i] + dt * _k3[i];
+    }
 
     evaluate(_temp, _k4);
     for (int i = 0; i < dimensions; i++) {
@@ -576,7 +579,9 @@ class QLSoAEngine {
   }
 
   void executeSystem(void Function(int entity) systemLogic) {
-    for (int i = 0; i < activeCount; i++) systemLogic(i);
+    for (int i = 0; i < activeCount; i++) {
+      systemLogic(i);
+    }
   }
 }
 // ════════════════════════════════════════════════════════════════════════════
@@ -1032,7 +1037,9 @@ class QLTableLayoutController {
       : offsetsX = Float64List(columns),
         widths = Float64List(columns),
         activeOrder = Int32List(columns) {
-    for (int i = 0; i < columns; i++) activeOrder[i] = i;
+    for (int i = 0; i < columns; i++) {
+      activeOrder[i] = i;
+    }
   }
 
   void updateColumn(int index, double x, double w) {

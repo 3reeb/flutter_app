@@ -190,8 +190,9 @@ Widget _buildMedia(QLContext rawCtx) {
       return QLAnimatedWidget<dynamic>(
         signal: sig,
         builder: (context, image, child) {
-          if (image == null || image is! ui.Image)
+          if (image == null || image is! ui.Image) {
             return const SizedBox.shrink();
+          }
           return RawImage(
             image: image,
             fit: ctx.string('fit') == 'contain' ? BoxFit.contain : BoxFit.cover,
@@ -259,8 +260,8 @@ class _QLAudioPlayerNode extends StatefulWidget {
 
 class _QLAudioPlayerNodeState extends State<_QLAudioPlayerNode> {
   bool _playing = false;
-  double _position = 0.0;
-  double _duration = 1.0;
+  final double _position = 0.0;
+  final double _duration = 1.0;
 
   @override
   Widget build(BuildContext context) {

@@ -48,14 +48,15 @@ Widget _buildAction(QLContext rawCtx) {
     disabled: disabled,
   );
 
-  void _safeCall(Function? fn) {
+  void safeCall(Function? fn) {
     if (fn == null) return;
     try {
       final res = fn();
-      if (res is Future)
+      if (res is Future) {
         res.catchError((e) {
           debugPrint('Async Action Error: $e');
         });
+      }
     } catch (e) {
       debugPrint('Action Error: $e');
     }
@@ -66,13 +67,13 @@ Widget _buildAction(QLContext rawCtx) {
     return _QLRawGestureNode(
       onPan: ctx.action('onPan') == null
           ? null
-          : () => _safeCall(ctx.action('onPan')),
+          : () => safeCall(ctx.action('onPan')),
       onScale: ctx.action('onScale') == null
           ? null
-          : () => _safeCall(ctx.action('onScale')),
+          : () => safeCall(ctx.action('onScale')),
       onTap: ctx.action('onTap') == null
           ? null
-          : () => _safeCall(ctx.action('onTap')),
+          : () => safeCall(ctx.action('onTap')),
       child: Q('col min-w-0 min-h-0', children: ctx.children),
     );
   }
@@ -101,7 +102,7 @@ Widget _buildAction(QLContext rawCtx) {
           _injectRawPointer(ctx, e, bindX, bindY, bindPressure),
       onPointerUp: (e) {
         _injectRawPointer(ctx, e, bindX, bindY, bindPressure);
-        _safeCall(ctx.action('onRelease'));
+        safeCall(ctx.action('onRelease'));
       },
       child: Q('col min-w-0 min-h-0', children: ctx.children),
     );
@@ -113,17 +114,18 @@ Widget _buildAction(QLContext rawCtx) {
     return Focus(
       onFocusChange: (focused) {
         if (bindState.isNotEmpty) ctx.store.set(bindState, focused);
-        if (focused)
-          _safeCall(ctx.action('onFocus'));
-        else
-          _safeCall(ctx.action('onBlur'));
+        if (focused) {
+          safeCall(ctx.action('onFocus'));
+        } else {
+          safeCall(ctx.action('onBlur'));
+        }
       },
       onKeyEvent: (node, event) {
         if (event is KeyDownEvent) {
-          _safeCall(ctx.action('onKeyPress',
+          safeCall(ctx.action('onKeyPress',
               localPayload: {'key': event.logicalKey.keyLabel}));
           if (event.logicalKey == LogicalKeyboardKey.enter) {
-            _safeCall(ctx.action('onEnter'));
+            safeCall(ctx.action('onEnter'));
             return KeyEventResult.handled;
           }
         }
@@ -142,7 +144,7 @@ Widget _buildAction(QLContext rawCtx) {
       : () {
           final String url = ctx.string('href');
           if (url.isNotEmpty) {
-            _safeCall(ctx.action('onNavigate', localPayload: {'href': url}));
+            safeCall(ctx.action('onNavigate', localPayload: {'href': url}));
           }
           if (groupSignal != null && ctx.string('value').isNotEmpty) {
             groupSignal.value = ctx.string('value');
@@ -150,10 +152,11 @@ Widget _buildAction(QLContext rawCtx) {
                     ?.localData['groupBindPath']
                     ?.toString() ??
                 '';
-            if (bindPath.isNotEmpty)
+            if (bindPath.isNotEmpty) {
               ctx.store.set(bindPath, ctx.string('value'));
+            }
           }
-          _safeCall(clickAction);
+          safeCall(clickAction);
         };
 
   // 🚀 FLATTENED BUTTON/HOVER LOGIC: Delegate entirely to Q Engine.
@@ -198,18 +201,21 @@ Widget _buildAction(QLContext rawCtx) {
 
 void _injectRawPointer(QLContext ctx, PointerEvent e, String bindX,
     String bindY, String bindPressure) {
-  if (bindX.isNotEmpty)
+  if (bindX.isNotEmpty) {
     ctx.store.signal(bindX)
       ..setSilent(e.localPosition.dx)
       ..forceNotify();
-  if (bindY.isNotEmpty)
+  }
+  if (bindY.isNotEmpty) {
     ctx.store.signal(bindY)
       ..setSilent(e.localPosition.dy)
       ..forceNotify();
-  if (bindPressure.isNotEmpty)
+  }
+  if (bindPressure.isNotEmpty) {
     ctx.store.signal(bindPressure)
       ..setSilent(e.pressure)
       ..forceNotify();
+  }
 }
 
 // ── 3. RAW GESTURE NODE ──
@@ -233,10 +239,11 @@ class _QLRawGestureNode extends StatelessWidget {
               // 🚀 FIX: Only accept the gesture if it passes a threshold, allowing scroll to win otherwise
               instance.dragStartBehavior = DragStartBehavior.start;
               instance.onUpdate = (ScaleUpdateDetails d) {
-                if (d.scale == 1.0)
+                if (d.scale == 1.0) {
                   onPan?.call();
-                else
+                } else {
                   onScale?.call();
+                }
               };
             },
           ),
@@ -274,8 +281,9 @@ class _QLViewportNodeState extends State<_QLViewportNode> {
         () => ScaleGestureRecognizer(),
         (instance) {
           instance.onUpdate = (details) {
-            if (widget.matrixSignal.value is! Matrix4)
+            if (widget.matrixSignal.value is! Matrix4) {
               widget.matrixSignal.setSilent(Matrix4.identity());
+            }
             final Matrix4 m = widget.matrixSignal.value;
             final s = m.storage;
 

@@ -28,9 +28,6 @@ import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
-import 'quantum_data_state.dart';
-import '../foundation/quantum_primitives.dart';
-import '../foundation/quantum_core.dart';
 import 'package:quantum_layout/quantum.dart';
 enum QLPipelineMode { collection, single }
 
@@ -630,7 +627,7 @@ class QLDataPipeline {
     // Fallback: if the delegate returned a richer payload than the selected
     // projection path covers, patch the first record directly so partial
     // hydration cannot strand a field in a null state.
-    if (result.isNotEmpty && result.first is Map) {
+    if (result.isNotEmpty) {
       final first = Map<String, dynamic>.from(result.first as Map);
       final pkPath = _getPathForIndex(_primaryKeyIdx);
       final pkValue = first[pkPath] ?? first['id'];

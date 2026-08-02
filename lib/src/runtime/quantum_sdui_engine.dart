@@ -48,9 +48,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'quantum_permissions.dart';
 import 'package:quantum_layout/quantum.dart';
-import '../foundation/quantum_yaml_engine.dart';
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  EXCEPTIONS
 // ────────────────────────────────────────────────────────────────────────────
@@ -381,7 +379,9 @@ abstract final class _AesGcm {
       final block = Uint8List(16);
       final len = (ct.length - i) < 16 ? (ct.length - i) : 16;
       block.setRange(0, len, ct, i);
-      for (int j = 0; j < 16; j++) tag[j] ^= block[j];
+      for (int j = 0; j < 16; j++) {
+        tag[j] ^= block[j];
+      }
       _gfMul128(tag, h);
       i += 16;
     }
@@ -397,13 +397,17 @@ abstract final class _AesGcm {
     lenBlock[13] = (ctBits >> 16) & 0xFF;
     lenBlock[14] = (ctBits >> 8) & 0xFF;
     lenBlock[15] = ctBits & 0xFF;
-    for (int j = 0; j < 16; j++) tag[j] ^= lenBlock[j];
+    for (int j = 0; j < 16; j++) {
+      tag[j] ^= lenBlock[j];
+    }
     _gfMul128(tag, h);
 
     // Final EK0 XOR
     final ctr0 = Uint8List(16)..setRange(0, 12, nonce)..[15] = 1;
     final ek0 = aes.encryptBlock(ctr0);
-    for (int j = 0; j < 16; j++) tag[j] ^= ek0[j];
+    for (int j = 0; j < 16; j++) {
+      tag[j] ^= ek0[j];
+    }
 
     return tag;
   }
@@ -414,10 +418,14 @@ abstract final class _AesGcm {
     final Uint8List z = Uint8List(16);
     for (int i = 0; i < 128; i++) {
       if ((x[i >> 3] >> (7 - (i & 7))) & 1 == 1) {
-        for (int j = 0; j < 16; j++) z[j] ^= v[j];
+        for (int j = 0; j < 16; j++) {
+          z[j] ^= v[j];
+        }
       }
       final bool lsb = (v[15] & 1) == 1;
-      for (int j = 15; j > 0; j--) v[j] = ((v[j] >> 1) | ((v[j - 1] & 1) << 7)).toUnsigned(8);
+      for (int j = 15; j > 0; j--) {
+        v[j] = ((v[j] >> 1) | ((v[j - 1] & 1) << 7)).toUnsigned(8);
+      }
       v[0] = (v[0] >> 1).toUnsigned(8);
       if (lsb) v[0] ^= 0xE1;
     }
@@ -434,7 +442,9 @@ abstract final class _AesGcm {
   static bool _constantTimeEquals(Uint8List a, Uint8List b) {
     if (a.length != b.length) return false;
     int diff = 0;
-    for (int i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
+    for (int i = 0; i < a.length; i++) {
+      diff |= a[i] ^ b[i];
+    }
     return diff == 0;
   }
 }
@@ -515,7 +525,9 @@ class _AesEngine {
   static Uint8List _stateToBytes(List<List<int>> s) {
     final out = Uint8List(16);
     for (int r = 0; r < 4; r++) {
-      for (int c = 0; c < 4; c++) out[r + 4 * c] = s[r][c];
+      for (int c = 0; c < 4; c++) {
+        out[r + 4 * c] = s[r][c];
+      }
     }
     return out;
   }
@@ -532,13 +544,17 @@ class _AesEngine {
 
   void _subBytes(List<List<int>> s) {
     for (int r = 0; r < 4; r++)
-      for (int c = 0; c < 4; c++) s[r][c] = _sbox[s[r][c]];
+      for (int c = 0; c < 4; c++) {
+        s[r][c] = _sbox[s[r][c]];
+      }
   }
 
   void _shiftRows(List<List<int>> s) {
     for (int r = 1; r < 4; r++) {
       final row = List<int>.from(s[r]);
-      for (int c = 0; c < 4; c++) s[r][c] = row[(c + r) % 4];
+      for (int c = 0; c < 4; c++) {
+        s[r][c] = row[(c + r) % 4];
+      }
     }
   }
 
@@ -823,7 +839,9 @@ class QuantumSduiEngine {
   static bool _constantTimeEquals(Uint8List a, Uint8List b) {
     if (a.length != b.length) return false;
     int diff = 0;
-    for (int i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
+    for (int i = 0; i < a.length; i++) {
+      diff |= a[i] ^ b[i];
+    }
     return diff == 0;
   }
 }

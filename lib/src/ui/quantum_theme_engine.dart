@@ -336,7 +336,7 @@ final class QThemeDictionary {
             aliases[key] = v;
           }
         } else if (v is Map) {
-          final Map<String, dynamic> vm = Map<String, dynamic>.from(v as Map);
+          final Map<String, dynamic> vm = Map<String, dynamic>.from(v);
           final Object? color = vm['color'];
           final Object? number = vm['number'];
           final Object? text = vm['text'];
@@ -565,7 +565,9 @@ abstract final class QMorpher {
 
     if (t > 0.5) {
       final int lenI = start.i32.length;
-      for (int i = 0; i < lenI; i++) out.i32[i] = end.i32[i];
+      for (int i = 0; i < lenI; i++) {
+        out.i32[i] = end.i32[i];
+      }
 
       final int lenFlags = start.layoutFlags.length;
       for (int i = 0; i < lenFlags; i++) {
@@ -1046,9 +1048,9 @@ class QCompiler {
     }
 
     if (token.startsWith('justify-')) {
-      if (token == 'justify-center')
+      if (token == 'justify-center') {
         _arena.layoutFlags[id] |= QLayoutFlags.justifyCenter;
-      else if (token == 'justify-between')
+      } else if (token == 'justify-between')
         _arena.layoutFlags[id] |= QLayoutFlags.justifyBetween;
       else if (token == 'justify-end')
         _arena.layoutFlags[id] |= QLayoutFlags.justifyEnd;
@@ -1059,9 +1061,9 @@ class QCompiler {
       return;
     }
     if (token.startsWith('items-')) {
-      if (token == 'items-center')
+      if (token == 'items-center') {
         _arena.layoutFlags[id] |= QLayoutFlags.itemsCenter;
-      else if (token == 'items-end')
+      } else if (token == 'items-end')
         _arena.layoutFlags[id] |= QLayoutFlags.itemsEnd;
       else if (token == 'items-stretch')
         _arena.layoutFlags[id] |= QLayoutFlags.itemsStretch;
@@ -1135,15 +1137,16 @@ class QCompiler {
       if (token.startsWith('bg-[url(')) {
         _arena.renderFlags[id] |= QRenderFlags.hasImage;
         final String url = token.substring(8, len - 2);
-        if (url.isNotEmpty && !url.contains('{{'))
+        if (url.isNotEmpty && !url.contains('{{')) {
           _arena.i32[iPtr + QI32.imageId] =
               _arena.registerObject(NetworkImage(url));
+        }
       } else if (token.startsWith('bg-gradient-to-')) {
         _arena.renderFlags[id] |= QRenderFlags.hasGradient;
         final String dir = token.substring(15);
-        if (dir.startsWith('r'))
+        if (dir.startsWith('r')) {
           _arena.renderFlags[id] |= QRenderFlags.gradToRight;
-        else if (dir.startsWith('b'))
+        } else if (dir.startsWith('b'))
           _arena.renderFlags[id] |= QRenderFlags.gradToBR;
         else
           _arena.renderFlags[id] |= QRenderFlags.gradToBottom;
@@ -1163,9 +1166,9 @@ class QCompiler {
     if (token.startsWith('text-')) {
       _arena.textFlags[id] |= QTextFlags.isText;
       final String tail = token.substring(5);
-      if (tail == '3xl')
+      if (tail == '3xl') {
         _arena.f32[fPtr + QF32.fontSize] = 30.0;
-      else if (tail == '2xl')
+      } else if (tail == '2xl')
         _arena.f32[fPtr + QF32.fontSize] = 24.0;
       else if (tail == 'xl')
         _arena.f32[fPtr + QF32.fontSize] = 20.0;
@@ -1224,9 +1227,9 @@ class QCompiler {
       _arena.f32[fPtr + QF32.shadowBlur] = 16.0;
       if (len > 6 && token.codeUnitAt(6) == 45) {
         final String variant = token.substring(7);
-        if (variant == 'sm')
+        if (variant == 'sm') {
           _arena.f32[fPtr + QF32.shadowBlur] = 4.0;
-        else if (variant == 'lg')
+        } else if (variant == 'lg')
           _arena.f32[fPtr + QF32.shadowBlur] = 24.0;
         else if (variant == 'glow') {
           _arena.f32[fPtr + QF32.shadowBlur] = 32.0;
@@ -1250,9 +1253,9 @@ class QCompiler {
       double r = 8.0;
       if (len > 8) {
         final int rc = token.codeUnitAt(8);
-        if (rc == 102)
+        if (rc == 102) {
           r = 9999.0;
-        else if (rc == 108)
+        } else if (rc == 108)
           r = 16.0;
         else if (rc == 115)
           r = 4.0;
@@ -1262,8 +1265,9 @@ class QCompiler {
           r = QLParserUtils.parseDecimal(token, 8, len, 1.0);
       }
       _arena.f32[fPtr + QF32.radius] = r;
-      if (token.startsWith('rounded-full'))
+      if (token.startsWith('rounded-full')) {
         _arena.renderFlags[id] |= QRenderFlags.hasRoundedClip;
+      }
       return;
     }
 
@@ -1318,9 +1322,10 @@ class QCompiler {
     if (token == 'focus') _arena.stateFlags[id] |= QStateFlags.focusable;
     if (token == 'pressed') _arena.stateFlags[id] |= QStateFlags.pressed;
     if (token == 'disabled') _arena.stateFlags[id] |= QStateFlags.disabled;
-    if (token == 'interactive')
+    if (token == 'interactive') {
       _arena.stateFlags[id] |=
           (QStateFlags.hoverable | QStateFlags.hasInteractiveScale);
+    }
   }
 
   int _parseColorish(String value) {
@@ -1586,7 +1591,6 @@ class Q extends StatefulWidget {
       margin: margin,
       gap: gap,
       text: text,
-      children: children,
       onTap: onTap,
       semanticLabel: semanticLabel,
       semanticHint: semanticHint,
@@ -1597,6 +1601,7 @@ class Q extends StatefulWidget {
       excludeSemantics: excludeSemantics,
       mergeSemantics: mergeSemantics,
       suppressParentData: suppressParentData,
+      children: children,
     );
   }
 
@@ -1638,10 +1643,11 @@ class _QState extends State<Q> {
   int _contextMaskFromBuild(BuildContext context) {
     int mask = 0;
     final Brightness brightness = Theme.of(context).brightness;
-    if (brightness == Brightness.dark)
+    if (brightness == Brightness.dark) {
       mask |= QContextBits.dark;
-    else
+    } else {
       mask |= QContextBits.light;
+    }
 
     final MediaQueryData? mq = MediaQuery.maybeOf(context);
     final double width = mq?.size.width ?? 0;
@@ -1655,8 +1661,9 @@ class _QState extends State<Q> {
       mask |= QContextBits.xl;
     }
 
-    if (Directionality.maybeOf(context) == TextDirection.rtl)
+    if (Directionality.maybeOf(context) == TextDirection.rtl) {
       mask |= QContextBits.rtl;
+    }
 
     if (mq != null) {
       if (mq.highContrast) mask |= QContextBits.highContrast;
@@ -1940,8 +1947,9 @@ class _QState extends State<Q> {
     BuildContext context, // 🚀 ADDED CONTEXT
   ) {
     final List<Widget> kids = [];
-    if (widget.text != null)
+    if (widget.text != null) {
       kids.add(_buildText(context, mem, compiled, tFlags, widget.text!));
+    }
     if (widget.children != null) kids.addAll(widget.children!);
 
     Widget tree = kids.isEmpty
@@ -1954,9 +1962,9 @@ class _QState extends State<Q> {
       final bool isCol = (lFlags & QLayoutFlags.flexCol) != 0;
 
       MainAxisAlignment mainAlign = MainAxisAlignment.start;
-      if ((lFlags & QLayoutFlags.justifyCenter) != 0)
+      if ((lFlags & QLayoutFlags.justifyCenter) != 0) {
         mainAlign = MainAxisAlignment.center;
-      else if ((lFlags & QLayoutFlags.justifyBetween) != 0)
+      } else if ((lFlags & QLayoutFlags.justifyBetween) != 0)
         mainAlign = MainAxisAlignment.spaceBetween;
       else if ((lFlags & QLayoutFlags.justifyEnd) != 0)
         mainAlign = MainAxisAlignment.end;
@@ -1966,9 +1974,9 @@ class _QState extends State<Q> {
         mainAlign = MainAxisAlignment.spaceEvenly;
 
       CrossAxisAlignment crossAlign = CrossAxisAlignment.start;
-      if ((lFlags & QLayoutFlags.itemsCenter) != 0)
+      if ((lFlags & QLayoutFlags.itemsCenter) != 0) {
         crossAlign = CrossAxisAlignment.center;
-      else if ((lFlags & QLayoutFlags.itemsEnd) != 0)
+      } else if ((lFlags & QLayoutFlags.itemsEnd) != 0)
         crossAlign = CrossAxisAlignment.end;
       else if ((lFlags & QLayoutFlags.itemsStretch) != 0)
         crossAlign = CrossAxisAlignment.stretch;
@@ -1980,9 +1988,9 @@ class _QState extends State<Q> {
       if ((lFlags & QLayoutFlags.wrap) != 0) {
         // ... (Keep existing wrap logic) ...
         WrapAlignment wrapAlign = WrapAlignment.start;
-        if ((lFlags & QLayoutFlags.justifyCenter) != 0)
+        if ((lFlags & QLayoutFlags.justifyCenter) != 0) {
           wrapAlign = WrapAlignment.center;
-        else if ((lFlags & QLayoutFlags.justifyBetween) != 0)
+        } else if ((lFlags & QLayoutFlags.justifyBetween) != 0)
           wrapAlign = WrapAlignment.spaceBetween;
         else if ((lFlags & QLayoutFlags.justifyEnd) != 0)
           wrapAlign = WrapAlignment.end;
@@ -2086,10 +2094,12 @@ class _QState extends State<Q> {
         tree = QuantumFlexible(fit: FlexFit.tight, child: tree);
       }
 
-      if ((lFlags & QLayoutFlags.absolute) != 0)
+      if ((lFlags & QLayoutFlags.absolute) != 0) {
         tree = Positioned(child: tree); // Expand bounds manually later
-      if ((lFlags & QLayoutFlags.fill) != 0)
+      }
+      if ((lFlags & QLayoutFlags.fill) != 0) {
         tree = Positioned.fill(child: tree);
+      }
     }
 
     // NATIVE CSS INHERITANCE

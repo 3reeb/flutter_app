@@ -153,9 +153,10 @@ class Quantum {
   }
 
   static AppSdk get _engine {
-    if (!isInitialized)
+    if (!isInitialized) {
       throw Exception(
           'Quantum Shell offline. Call Quantum.initialize() first.');
+    }
     return _sdk!;
   }
 
@@ -218,8 +219,9 @@ class Quantum {
       switch (domain) {
         // --- 1. CORE API & DATABASE (Collections) ---
         case 'api_collection':
-          if (resource == null)
+          if (resource == null) {
             throw Exception('Collection action missing "resource" name.');
+          }
           final col = db.collection(resource);
 
           switch (action) {
@@ -272,8 +274,9 @@ class Quantum {
 
         // --- 2. CORE API & DATABASE (Globals) ---
         case 'api_global':
-          if (resource == null)
+          if (resource == null) {
             throw Exception('Global action missing "resource" name.');
+          }
           final glob = db.global(resource);
           switch (action) {
             case 'get':
@@ -489,8 +492,9 @@ class Quantum {
         // --- 1. LIVE DATABASE SUBSCRIPTIONS ---
         case 'api_collection':
           if (action == 'subscribe') {
-            if (resource == null)
+            if (resource == null) {
               throw Exception('Collection stream missing "resource" name.');
+            }
             yield* db
                 .collection(resource)
                 .watchList(query: _buildQueryMap(args))
@@ -823,8 +827,9 @@ class _OmniAuthFacade {
 
   Future<Map<String, dynamic>> refreshSession() async {
     final current = await _store.getSession();
-    if (current?.refreshToken == null)
+    if (current?.refreshToken == null) {
       throw Exception('No refresh token available');
+    }
     final res = await _sdk.root.request<Map<String, dynamic>>(
       method: 'POST',
       path: '/auth/refresh',
@@ -940,7 +945,7 @@ class _OmniRealtimeFacade {
 
     // Assumes simple JSON payload encapsulation over binary RPC for generic requests
     final bytes = await ComputeCore.encodeJsonAsync(payload);
-    final requestBytes = Uint8List.fromList((bytes as String).codeUnits);
+    final requestBytes = Uint8List.fromList((bytes).codeUnits);
 
     final responseBytes = await _sdk.rpc!.invoke<Uint8List, Uint8List>(
       method,

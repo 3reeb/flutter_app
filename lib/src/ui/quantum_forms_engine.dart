@@ -26,7 +26,6 @@ library quantum_runtime;
 
 import 'dart:async';
 import 'dart:collection';
-import '../foundation/quantum_core.dart';
 import 'package:quantum_layout/quantum.dart';
 
 typedef QLDataMiddleware<T> = T Function(T incoming, T current);
@@ -226,11 +225,15 @@ abstract class QLDataNode<T> implements QLDisposable {
     if (_disposed ||
         hasState(QLNodeState.hardwareLocked) ||
         hasState(QLNodeState.readOnly) ||
-        hasState(QLNodeState.disabled)) return;
+        hasState(QLNodeState.disabled)) {
+      return;
+    }
 
     var processed = newValue;
     if (!hasState(QLNodeState.sleeping) && middlewares.isNotEmpty) {
-      for (final mw in middlewares) processed = mw(processed, data.value);
+      for (final mw in middlewares) {
+        processed = mw(processed, data.value);
+      }
     }
 
     if (data.value == processed) return;
@@ -269,11 +272,15 @@ abstract class QLDataNode<T> implements QLDisposable {
     if (_disposed ||
         hasState(QLNodeState.hardwareLocked) ||
         hasState(QLNodeState.readOnly) ||
-        hasState(QLNodeState.disabled)) return;
+        hasState(QLNodeState.disabled)) {
+      return;
+    }
 
     var processed = newValue;
     if (applyMiddleware && fastMiddlewares.isNotEmpty) {
-      for (final mw in fastMiddlewares) processed = mw(processed, data.value);
+      for (final mw in fastMiddlewares) {
+        processed = mw(processed, data.value);
+      }
     }
 
     if (data.value == processed) return;
@@ -337,10 +344,11 @@ abstract class QLDataNode<T> implements QLDisposable {
         final value = pending;
         if (value == null || _disposed) return;
         removeState(QLNodeState.hardwareLocked);
-        if (validateOnStream)
+        if (validateOnStream) {
           mutate(value as T);
-        else
+        } else {
           mutateFast(value as T);
+        }
         addState(QLNodeState.hardwareLocked);
       });
     },
@@ -437,8 +445,9 @@ abstract class QLDataNode<T> implements QLDisposable {
         if (err != null) asyncErrs.add(err);
       }
 
-      if (!_disposed && nonce == _asyncNonce)
+      if (!_disposed && nonce == _asyncNonce) {
         _setErrors(asyncErrs, notifyGraph: true);
+      }
     } finally {
       if (!_disposed) removeState(QLNodeState.validating);
     }
@@ -461,13 +470,15 @@ abstract class QLDataNode<T> implements QLDisposable {
     errors.setSilent(List<QLNodeError>.unmodifiable(newErrors));
     errors.forceNotify();
 
-    if (hasErrorNow)
+    if (hasErrorNow) {
       addState(QLNodeState.hasError);
-    else
+    } else {
       removeState(QLNodeState.hasError);
+    }
 
-    if (notifyGraph && hadError != hasErrorNow)
+    if (notifyGraph && hadError != hasErrorNow) {
       graph.reportNodeValidity(path, !hasErrorNow);
+    }
   }
 
   void clearErrors() => _setErrors(const [], notifyGraph: true);
@@ -486,8 +497,9 @@ abstract class QLDataNode<T> implements QLDisposable {
     _disposed = true;
     globalNodes.remove(path);
     _remoteValidationDebouncer?.cancel();
-    if (_isStoreBound)
-      _boundStore?.signal(_boundPath!)?.removeListener(_onRemoteStoreUpdate);
+    if (_isStoreBound) {
+      _boundStore?.signal(_boundPath!).removeListener(_onRemoteStoreUpdate);
+    }
     _streamSub?.cancel();
     _asyncNonce++;
     data.dispose();
@@ -764,7 +776,9 @@ class QLGraphController {
       current[last.toString()] = value;
     } else if (current is List) {
       final idx = last is int ? last : int.tryParse(last.toString()) ?? 0;
-      while (current.length <= idx) current.add(null);
+      while (current.length <= idx) {
+        current.add(null);
+      }
       current[idx] = value;
     }
   }
@@ -873,32 +887,23 @@ abstract class QLFieldController<T> extends QLDataNode<T> {
   QLFormController get form => graph as QLFormController;
 
   QLFieldController({
-    required String path,
+    required super.path,
     required QLFormController form,
-    required T initialValue,
-    QLSleepPolicy sleepPolicy = QLSleepPolicy.manual,
+    required super.initialValue,
+    super.sleepPolicy,
     this.transform,
-    List<QLValidator<T>> syncValidators = const [],
-    List<QLAsyncValidator<T>> asyncValidators = const [],
-    List<QLDataMiddleware<T>> middlewares = const [],
-    List<QLFastMiddleware<T>> fastMiddlewares = const [],
-    List<String> dependencies = const [],
+    super.syncValidators,
+    super.asyncValidators,
+    super.middlewares,
+    super.fastMiddlewares,
+    super.dependencies,
     Map<String, dynamic> initialMeta = const {},
-    int initialState = QLNodeState.idle,
+    super.initialState,
   }) : super(
-          path: path,
           graph: form,
-          initialValue: initialValue,
-          sleepPolicy: sleepPolicy,
-          syncValidators: syncValidators,
-          asyncValidators: asyncValidators,
-          middlewares: middlewares,
-          fastMiddlewares: fastMiddlewares,
-          dependencies: dependencies,
           initialMeta: form.isVirtualBuildScope
               ? {...initialMeta, '_ql_hidden': true}
               : initialMeta,
-          initialState: initialState,
         );
 
   String? get errorText =>
@@ -1174,7 +1179,7 @@ class QLFlagsController extends QLFieldController<int> {
   QLFlagsController({
     required super.path,
     required super.form,
-    int initialValue = 0,
+    super.initialValue = 0,
     super.sleepPolicy,
     super.transform,
     super.syncValidators,
@@ -1183,7 +1188,7 @@ class QLFlagsController extends QLFieldController<int> {
     super.fastMiddlewares,
     super.dependencies,
     super.initialMeta,
-  }) : super(initialValue: initialValue);
+  });
 
   void enableFlag(int flag) => mutate(data.value | flag);
   void disableFlag(int flag) => mutate(data.value & ~flag);
@@ -1367,30 +1372,20 @@ class QLEnumController<T> extends QLFieldController<T> {
   final List<T> allowedValues;
 
   QLEnumController({
-    required String path,
-    required QLFormController form,
+    required super.path,
+    required super.form,
     required T initialValue,
     required this.allowedValues,
-    QLSleepPolicy sleepPolicy = QLSleepPolicy.manual,
-    QLValueTransform<T>? transform,
-    List<QLValidator<T>> syncValidators = const [],
-    List<QLAsyncValidator<T>> asyncValidators = const [],
-    List<QLDataMiddleware<T>> middlewares = const [],
-    List<QLFastMiddleware<T>> fastMiddlewares = const [],
-    List<String> dependencies = const [],
-    Map<String, dynamic> initialMeta = const {},
+    super.sleepPolicy,
+    super.transform,
+    super.syncValidators,
+    super.asyncValidators,
+    super.middlewares,
+    super.fastMiddlewares,
+    super.dependencies,
+    super.initialMeta,
   }) : super(
-          path: path,
-          form: form,
           initialValue: _normalizeEnumInitial(initialValue, allowedValues),
-          sleepPolicy: sleepPolicy,
-          transform: transform,
-          syncValidators: syncValidators,
-          asyncValidators: asyncValidators,
-          middlewares: middlewares,
-          fastMiddlewares: fastMiddlewares,
-          dependencies: dependencies,
-          initialMeta: initialMeta,
         );
 
   @override
@@ -1500,20 +1495,15 @@ class QLGroupController extends QLFieldController<Map<String, dynamic>> {
     required String path,
     required QLFormController form,
     required this.schema,
-    QLSleepPolicy sleepPolicy = QLSleepPolicy.manual,
-    List<QLValidator<Map<String, dynamic>>> syncValidators = const [],
-    List<QLAsyncValidator<Map<String, dynamic>>> asyncValidators = const [],
-    List<String> dependencies = const [],
-    Map<String, dynamic> initialMeta = const {},
+    super.sleepPolicy,
+    super.syncValidators = const [],
+    super.asyncValidators = const [],
+    super.dependencies,
+    super.initialMeta,
   }) : super(
           path: path,
           form: form,
           initialValue: const {},
-          sleepPolicy: sleepPolicy,
-          syncValidators: syncValidators,
-          asyncValidators: asyncValidators,
-          dependencies: dependencies,
-          initialMeta: initialMeta,
         ) {
     for (final builder in schema) {
       builder(path, form);
@@ -1564,18 +1554,18 @@ class QLBlockArrayController extends QLFieldController<List<QLBlockInstance>> {
   final List<QLBlockInstance> _initialBlocks;
 
   QLBlockArrayController({
-    required String path,
-    required QLFormController form,
+    required super.path,
+    required super.form,
     required this.blockSchemas,
     List<QLBlockInstance> initialBlocks = const [],
     dynamic Function(int)? idGenerator,
-    QLSleepPolicy sleepPolicy = QLSleepPolicy.manual,
-    List<QLValidator<List<QLBlockInstance>>> syncValidators = const [],
-    List<QLAsyncValidator<List<QLBlockInstance>>> asyncValidators = const [],
-    List<QLDataMiddleware<List<QLBlockInstance>>> middlewares = const [],
-    List<QLFastMiddleware<List<QLBlockInstance>>> fastMiddlewares = const [],
-    List<String> dependencies = const [],
-    Map<String, dynamic> initialMeta = const {},
+    super.sleepPolicy,
+    super.syncValidators = const [],
+    super.asyncValidators = const [],
+    super.middlewares = const [],
+    super.fastMiddlewares = const [],
+    super.dependencies,
+    super.initialMeta,
   })  : _blocks = List<QLBlockInstance>.from(initialBlocks, growable: true),
         _initialBlocks =
             List<QLBlockInstance>.from(initialBlocks, growable: false),
@@ -1583,16 +1573,7 @@ class QLBlockArrayController extends QLFieldController<List<QLBlockInstance>> {
             ((i) =>
                 'blk_${DateTime.now().microsecondsSinceEpoch}_${_globalBlockIdCounter++}'),
         super(
-          path: path,
-          form: form,
           initialValue: List<QLBlockInstance>.unmodifiable(initialBlocks),
-          sleepPolicy: sleepPolicy,
-          syncValidators: syncValidators,
-          asyncValidators: asyncValidators,
-          middlewares: middlewares,
-          fastMiddlewares: fastMiddlewares,
-          dependencies: dependencies,
-          initialMeta: initialMeta,
         ) {
     data.setSilent(List<QLBlockInstance>.unmodifiable(_blocks));
     data.forceNotify();
@@ -1755,31 +1736,21 @@ class QLScalarArrayController<T> extends QLFieldController<List<T>> {
   late final UnmodifiableListView<T> _view;
 
   QLScalarArrayController({
-    required String path,
-    required QLFormController form,
+    required super.path,
+    required super.form,
     List<T> initialItems = const [],
-    QLSleepPolicy sleepPolicy = QLSleepPolicy.manual,
-    QLValueTransform<List<T>>? transform,
-    List<QLValidator<List<T>>> syncValidators = const [],
-    List<QLAsyncValidator<List<T>>> asyncValidators = const [],
-    List<QLDataMiddleware<List<T>>> middlewares = const [],
-    List<QLFastMiddleware<List<T>>> fastMiddlewares = const [],
-    List<String> dependencies = const [],
-    Map<String, dynamic> initialMeta = const {},
+    super.sleepPolicy,
+    super.transform,
+    super.syncValidators = const [],
+    super.asyncValidators = const [],
+    super.middlewares = const [],
+    super.fastMiddlewares = const [],
+    super.dependencies,
+    super.initialMeta,
   })  : _items = List<T>.from(initialItems, growable: true),
         _initialItems = List<T>.from(initialItems, growable: false),
         super(
-          path: path,
-          form: form,
           initialValue: UnmodifiableListView<T>(List<T>.from(initialItems)),
-          sleepPolicy: sleepPolicy,
-          transform: transform,
-          syncValidators: syncValidators,
-          asyncValidators: asyncValidators,
-          middlewares: middlewares,
-          fastMiddlewares: fastMiddlewares,
-          dependencies: dependencies,
-          initialMeta: initialMeta,
         ) {
     _view = UnmodifiableListView<T>(_items);
     data.setSilent(_view);
@@ -1951,30 +1922,20 @@ class QLEnumArrayController<T> extends QLScalarArrayController<T> {
   final List<T> allowedValues;
 
   QLEnumArrayController({
-    required String path,
-    required QLFormController form,
+    required super.path,
+    required super.form,
     required this.allowedValues,
     List<T> initialItems = const [],
-    QLSleepPolicy sleepPolicy = QLSleepPolicy.manual,
-    QLValueTransform<List<T>>? transform,
-    List<QLValidator<List<T>>> syncValidators = const [],
-    List<QLAsyncValidator<List<T>>> asyncValidators = const [],
-    List<QLDataMiddleware<List<T>>> middlewares = const [],
-    List<QLFastMiddleware<List<T>>> fastMiddlewares = const [],
-    List<String> dependencies = const [],
-    Map<String, dynamic> initialMeta = const {},
+    super.sleepPolicy,
+    super.transform,
+    super.syncValidators,
+    super.asyncValidators,
+    super.middlewares,
+    super.fastMiddlewares,
+    super.dependencies,
+    super.initialMeta,
   }) : super(
-          path: path,
-          form: form,
           initialItems: _sanitizeEnumItems(initialItems, allowedValues),
-          sleepPolicy: sleepPolicy,
-          transform: transform,
-          syncValidators: syncValidators,
-          asyncValidators: asyncValidators,
-          middlewares: middlewares,
-          fastMiddlewares: fastMiddlewares,
-          dependencies: dependencies,
-          initialMeta: initialMeta,
         );
 
   @override
@@ -2021,37 +1982,28 @@ class QLTreeController<T>
   late final QLSignal<Map<dynamic, List<dynamic>>> childrenGraph;
 
   QLTreeController({
-    required String path,
-    required QLFormController form,
+    required super.path,
+    required super.form,
     required this.nodeSchemas,
     List<QLTreeNode<T>> initialNodes = const [],
-    QLSleepPolicy sleepPolicy = QLSleepPolicy.manual,
-    List<QLValidator<Map<dynamic, QLTreeNode<T>>>> syncValidators = const [],
-    List<QLAsyncValidator<Map<dynamic, QLTreeNode<T>>>> asyncValidators =
+    super.sleepPolicy,
+    super.syncValidators = const [],
+    super.asyncValidators =
         const [],
-    List<QLDataMiddleware<Map<dynamic, QLTreeNode<T>>>> middlewares = const [],
-    List<QLFastMiddleware<Map<dynamic, QLTreeNode<T>>>> fastMiddlewares =
+    super.middlewares = const [],
+    super.fastMiddlewares =
         const [],
-    List<String> dependencies = const [],
-    Map<String, dynamic> initialMeta = const {},
+    super.dependencies,
+    super.initialMeta,
   })  : _nodes = <dynamic, QLTreeNode<T>>{
           for (final n in initialNodes) n.id: n
         },
         _children = <dynamic, List<dynamic>>{},
         _initialNodes = List<QLTreeNode<T>>.from(initialNodes, growable: false),
         super(
-          path: path,
-          form: form,
           initialValue: Map<dynamic, QLTreeNode<T>>.unmodifiable({
             for (final n in initialNodes) n.id: n,
           }),
-          sleepPolicy: sleepPolicy,
-          syncValidators: syncValidators,
-          asyncValidators: asyncValidators,
-          middlewares: middlewares,
-          fastMiddlewares: fastMiddlewares,
-          dependencies: dependencies,
-          initialMeta: initialMeta,
         ) {
     for (final node in initialNodes) {
       _children.putIfAbsent(node.parentId, () => <dynamic>[]).add(node.id);

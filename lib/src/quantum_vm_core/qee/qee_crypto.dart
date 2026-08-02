@@ -50,7 +50,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
@@ -321,7 +320,7 @@ class _AES256ECB {
     }
 
     // Final round (no MixColumns)
-    final base = _rounds * 4;
+    const base = _rounds * 4;
     final out = Uint8List(16);
     out[0]  = _sbox[(s0 >> 24) & 0xFF] ^ ((_roundKeys[base] >> 24) & 0xFF);
     out[1]  = _sbox[(s1 >> 16) & 0xFF] ^ ((_roundKeys[base] >> 16) & 0xFF);
@@ -370,7 +369,9 @@ class _GHASH {
       final block = Uint8List(16);
       final len = (data.length - offset).clamp(0, 16);
       block.setAll(0, data.sublist(offset, offset + len));
-      for (int i = 0; i < 16; i++) _y[i] ^= block[i];
+      for (int i = 0; i < 16; i++) {
+        _y[i] ^= block[i];
+      }
       _gfMul(_y, _h, _y);
       offset += 16;
     }
@@ -383,7 +384,9 @@ class _GHASH {
     bd.setInt64(0, aadLen * 8, Endian.big);
     // Ciphertext length in bits (big-endian 64-bit)
     bd.setInt64(8, ciphertextLen * 8, Endian.big);
-    for (int i = 0; i < 16; i++) _y[i] ^= lenBlock[i];
+    for (int i = 0; i < 16; i++) {
+      _y[i] ^= lenBlock[i];
+    }
     _gfMul(_y, _h, _y);
   }
 
@@ -395,7 +398,9 @@ class _GHASH {
     final v = Uint8List.fromList(y);
     for (int i = 0; i < 128; i++) {
       if ((x[i >> 3] & (0x80 >> (i & 7))) != 0) {
-        for (int j = 0; j < 16; j++) z[j] ^= v[j];
+        for (int j = 0; j < 16; j++) {
+          z[j] ^= v[j];
+        }
       }
       final lsb = (v[15] & 1) != 0;
       // Right shift v by 1 bit
@@ -648,7 +653,9 @@ class _DecryptPayload {
 Uint8List _encryptInIsolate(_EncryptPayload payload) {
   final random = Random.secure();
   final nonce = Uint8List(_nonceLength);
-  for (int i = 0; i < _nonceLength; i++) nonce[i] = random.nextInt(256);
+  for (int i = 0; i < _nonceLength; i++) {
+    nonce[i] = random.nextInt(256);
+  }
 
   final encrypted = _PureDartAES256GCM.instance.encryptRaw(payload.key, nonce, payload.plaintext);
   final out = Uint8List(_nonceLength + encrypted.length);

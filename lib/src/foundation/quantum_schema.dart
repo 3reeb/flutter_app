@@ -25,7 +25,6 @@
 // quantum_schema.dart
 library quantum_schema;
 
-import 'dart:collection';
 import 'dart:typed_data';
 import '../../quantum.dart';
 
@@ -185,8 +184,8 @@ class QLSchemaBlueprint {
     final field = fieldPath.replaceAll('[]', '');
     final select = selectPath.replaceAll('[]', '');
     if (field == select) return true;
-    if (field.startsWith(select + '.')) return true;
-    if (select.startsWith(field + '.')) return true;
+    if (field.startsWith('$select.')) return true;
+    if (select.startsWith('$field.')) return true;
     return false;
   }
 
@@ -322,8 +321,9 @@ class QLSchemaBlueprint {
       if (spec.isVirtual) continue;
       if (spec.isComputed) continue;
 
-      if (spec.path.contains('[]'))
+      if (spec.path.contains('[]')) {
         continue; // Array items are handled by the array spec natively
+      }
 
       final raw = _readAt(json, QLPathUtils.resolve(spec.path));
       if (raw == null) continue;
@@ -335,8 +335,9 @@ class QLSchemaBlueprint {
       }
 
       final parsed = _parseFieldValue(spec, raw);
-      if (parsed == null && raw != null)
+      if (parsed == null && raw != null) {
         continue; // Drop garbage types completely
+      }
       if (parsed == null && spec.isRequired) continue;
       _writeAt(out, QLPathUtils.resolve(spec.path), parsed);
     }
@@ -1011,7 +1012,7 @@ abstract final class QLSchemaCompiler {
     QLSchemaFieldSpec? itemSpec;
     if (type == QLFieldType.array && asMap['items'] != null) {
       itemSpec = _compileField(
-        '${name}[]',
+        '$name[]',
         asMap['items'],
         '$path[]',
         [...ancestry, name],

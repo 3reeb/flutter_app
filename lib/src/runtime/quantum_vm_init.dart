@@ -34,17 +34,6 @@
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 // Ecosystem Integrations
-import '../ui/quantum_theme_engine.dart';
-import '../ui/quantum_components.dart';
-import '../ui/quantum_behaviors.dart';
-import '../ui/quantum_navigation_engine.dart';
-import 'quantum_data_orchestrator.dart';
-import 'quantum_data_state.dart';
-import 'quantum_omni_registry.dart';
-import 'quantum_core_schema_registry.dart';
-import 'quantum_sdui_type_engine.dart';
-import '../quantum_vm_core/quantum_vm.dart';
-import 'quantum_data_pipeline.dart';
 import 'package:quantum_layout/quantum.dart';
 
 class _BuiltInActionPlugin extends QLActionPlugin {
@@ -346,7 +335,7 @@ void initQuantumBuiltIns(QuantumVM vm) {
     final rId = payload['recordId']?.toString();
     final deltaRaw = payload['delta'];
     final delta =
-        deltaRaw is Map ? Map<String, dynamic>.from(deltaRaw as Map) : null;
+        deltaRaw is Map ? Map<String, dynamic>.from(deltaRaw) : null;
     if (pId != null && rId != null && delta != null) {
       QLPipelineRegistry.instance.get(pId).patch(rId, delta);
     }
@@ -520,8 +509,9 @@ void initQuantumBuiltIns(QuantumVM vm) {
 // ─── 🚀 FEATURE 1: Q_REPEATER (Universal Iterator) ───
   vm.define('q_repeater', (ctx) {
     final String pId = ctx.string('pipeline');
-    if (!QLPipelineRegistry.instance.exists(pId))
+    if (!QLPipelineRegistry.instance.exists(pId)) {
       return const SizedBox.shrink();
+    }
 
     final pipeline = QLPipelineRegistry.instance.get(pId);
 
@@ -606,8 +596,9 @@ void initQuantumBuiltIns(QuantumVM vm) {
   // ─── 🚀 FEATURE 3: SPATIAL PROJECTION (Isolate Calendar Math) ───
   vm.define('q_spatial_projection', (ctx) {
     final String pId = ctx.string('pipeline');
-    if (!QLPipelineRegistry.instance.exists(pId))
+    if (!QLPipelineRegistry.instance.exists(pId)) {
       return const SizedBox.shrink();
+    }
 
     final pipeline = QLPipelineRegistry.instance.get(pId);
     final Map projectionRules = ctx.map('projection');
@@ -623,8 +614,9 @@ void initQuantumBuiltIns(QuantumVM vm) {
         animation: Listenable.merge([pipeline.visibleIndices, taskSignal.data]),
         builder: (context, _) {
           final Float64List? bounds = taskSignal.data.value;
-          if (bounds == null)
+          if (bounds == null) {
             return const Center(child: CircularProgressIndicator());
+          }
 
           return Stack(
               children: List.generate(pipeline.visibleCount, (i) {

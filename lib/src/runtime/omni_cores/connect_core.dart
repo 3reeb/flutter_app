@@ -140,7 +140,7 @@ class QLBehaviorRegistry {
     register('long_press_menu', (ctx, child) => child);
     register('focus_trap', (ctx, child) => FocusScope(child: child));
     register('glassmorphism', (ctx, child) => ClipRect(child: BackdropFilter(filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12), child: Container(color: const Color(0x1AFFFFFF), child: child))));
-    register('skeleton', (ctx, child) => _QLSkeletonWidget(width: double.infinity, height: double.infinity, borderRadius: 8.0));
+    register('skeleton', (ctx, child) => const _QLSkeletonWidget(width: double.infinity, height: double.infinity, borderRadius: 8.0));
     register('aria_live', (ctx, child) => Semantics(liveRegion: true, child: child));
   }
 }

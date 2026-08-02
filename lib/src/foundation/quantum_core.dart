@@ -278,7 +278,7 @@ abstract final class QParser {
   static const int _maxCacheSize = 2048;
 
   static final Map<String, List<QSize>> _cache =
-      LinkedHashMap<String, List<QSize>>();
+      <String, List<QSize>>{};
 
   static List<QSize> parse(String template) {
     final trimmed = template.trim();
@@ -343,8 +343,9 @@ abstract final class QParser {
     if (t.startsWith('minmax(') && last == 0x29) {
       final inner = t.substring(7, len - 1);
       final parts = _splitArgs(inner);
-      if (parts.length == 2)
+      if (parts.length == 2) {
         return QMinMax(_evalToken(parts[0]), _evalToken(parts[1]));
+      }
       return const QAuto();
     }
 
@@ -395,7 +396,9 @@ abstract final class QParser {
     final result = <QSize>[];
     for (final t in tracks) {
       if (t is QRepeat) {
-        for (int i = 0; i < t.count; i++) result.addAll(t.tracks);
+        for (int i = 0; i < t.count; i++) {
+          result.addAll(t.tracks);
+        }
       } else {
         result.add(t);
       }
@@ -483,9 +486,9 @@ abstract final class QLParserUtils {
       for (int i = hexStart; i < hexEnd; i++) {
         int c = src.codeUnitAt(i);
         hex <<= 4;
-        if (c >= 48 && c <= 57)
+        if (c >= 48 && c <= 57) {
           hex |= (c - 48);
-        else if (c >= 65 && c <= 70)
+        } else if (c >= 65 && c <= 70)
           hex |= (c - 55);
         else if (c >= 97 && c <= 102) hex |= (c - 87);
       }
@@ -530,9 +533,9 @@ abstract final class QLParserUtils {
       for (int i = startOffset; i < e; i++) {
         int c = src.codeUnitAt(i);
         hex <<= 4;
-        if (c >= 48 && c <= 57)
+        if (c >= 48 && c <= 57) {
           hex |= (c - 48);
-        else if (c >= 65 && c <= 70)
+        } else if (c >= 65 && c <= 70)
           hex |= (c - 55);
         else if (c >= 97 && c <= 102) hex |= (c - 87);
       }
@@ -554,9 +557,9 @@ abstract final class QLParserUtils {
     final String colorName = src.substring(s, colorEnd);
 
     int baseColor = 0xFF888888;
-    if (colorName.startsWith('transparent'))
+    if (colorName.startsWith('transparent')) {
       baseColor = 0x00000000;
-    else if (colorName.startsWith('white'))
+    } else if (colorName.startsWith('white'))
       baseColor = 0xFFFFFFFF;
     else if (colorName.startsWith('black'))
       baseColor = 0xFF000000;

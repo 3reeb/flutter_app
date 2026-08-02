@@ -496,7 +496,9 @@ class TelemetrySnapshot {
   /// Count events grouped by kind.
   Map<TelemetryKind, int> countByKind() {
     final out = <TelemetryKind, int>{};
-    for (final r in records) out[r.kind] = (out[r.kind] ?? 0) + 1;
+    for (final r in records) {
+      out[r.kind] = (out[r.kind] ?? 0) + 1;
+    }
     return out;
   }
 

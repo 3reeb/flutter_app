@@ -56,10 +56,11 @@ Widget _buildField(QLContext rawCtx) {
         (form) => QLTextController(
             path: bindPath.isNotEmpty ? bindPath : id, form: form));
 
-    if (disabled)
+    if (disabled) {
       ctrl.disable();
-    else
+    } else {
       ctrl.enable();
+    }
     ctrl.setReadOnly(readOnly);
 
     // Resolve specific input configurations
@@ -68,9 +69,9 @@ Widget _buildField(QLContext rawCtx) {
     int minLines = 1;
     int maxLines = 1;
 
-    if (subType == 'email')
+    if (subType == 'email') {
       kbType = TextInputType.emailAddress;
-    else if (subType == 'tel')
+    } else if (subType == 'tel')
       kbType = TextInputType.phone;
     else if (subType == 'url')
       kbType = TextInputType.url;
@@ -234,10 +235,11 @@ Widget _buildField(QLContext rawCtx) {
             form: form,
             initialValue: ctx.boolean('initialValue')));
 
-    if (disabled)
+    if (disabled) {
       ctrl.disable();
-    else
+    } else {
       ctrl.enable();
+    }
     ctrl.setReadOnly(readOnly);
 
     return QLRawToggle(
@@ -245,7 +247,7 @@ Widget _buildField(QLContext rawCtx) {
       builder: (context, state, value, t) {
         final Color activeColor =
             Color(QThemeGraph().color('brand-primary', fallback: 0xFF3B82F6));
-        final Color inactiveColor = const Color(0xFFCBD5E1); // slate-300
+        const Color inactiveColor = Color(0xFFCBD5E1); // slate-300
 
         // ── APPLE-STYLE SWITCH ──
         if (subType == 'toggle') {
@@ -386,8 +388,9 @@ Widget _buildField(QLContext rawCtx) {
             double safePercent = 0.0;
             try {
               safePercent = state.percent;
-              if (safePercent.isNaN || safePercent.isInfinite)
+              if (safePercent.isNaN || safePercent.isInfinite) {
                 safePercent = 0.0;
+              }
             } catch (e) {
               safePercent = 0.0;
             }
@@ -473,10 +476,11 @@ Widget _buildField(QLContext rawCtx) {
           path: bindPath.isNotEmpty ? bindPath : id, form: form),
     );
 
-    if (disabled)
+    if (disabled) {
       ctrl.disable();
-    else
+    } else {
       ctrl.enable();
+    }
     ctrl.setReadOnly(readOnly);
 
     return QLRawMedia(
@@ -711,12 +715,14 @@ QLBlueprint _cloneNodeWithPrefix(QLBlueprint node, String pathPrefix,
       }
     }
     if (map['children'] is List) {
-      for (final child in map['children'])
+      for (final child in map['children']) {
         if (child is Map) updateBinds(child as Map<String, dynamic>);
+      }
     }
     if (map['slots'] is Map) {
-      for (final child in (map['slots'] as Map).values)
+      for (final child in (map['slots'] as Map).values) {
         if (child is Map) updateBinds(child as Map<String, dynamic>);
+      }
     }
   }
 

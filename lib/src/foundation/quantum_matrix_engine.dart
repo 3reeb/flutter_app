@@ -42,14 +42,11 @@
 
 import 'dart:collection';
 import 'dart:math' as math;
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/foundation.dart';
 import '../../quantum.dart';
-import 'quantum_primitives.dart';
-import '../ui/quantum_layout_engine.dart';
 // ──────────────────────────────────────────────────────────────────────────────
 // Public configuration
 // ──────────────────────────────────────────────────────────────────────────────
@@ -516,13 +513,15 @@ abstract final class QMatrixLayoutRegistry {
   }
 
   static Map<String, dynamic> _schemaForValue(dynamic value) {
-    if (value == null)
+    if (value == null) {
       return const <String, dynamic>{'type': 'dynamic', 'nullable': true};
+    }
     if (value is bool) return const <String, dynamic>{'type': 'bool'};
     if (value is int) return const <String, dynamic>{'type': 'int'};
     if (value is double) return const <String, dynamic>{'type': 'double'};
-    if (value is String)
+    if (value is String) {
       return <String, dynamic>{'type': 'String', 'example': value};
+    }
     if (value is List) {
       return <String, dynamic>{
         'type': 'List<dynamic>',
@@ -1835,11 +1834,11 @@ Widget buildQuantumMatrixWidget({
       current = _MatrixInteractiveShell(
         slotName: slotName,
         controller: controller,
-        child: current,
         draggable: slot.draggable,
         resizable: slot.resizable,
         reorderable: slot.reorderable,
         resizeHandle: slot.resizeHandle,
+        child: current,
       );
     }
 
@@ -2192,6 +2191,7 @@ class _QuantumMatrixPlugin extends QLPlugin implements QLWidgetCapability {
   @override
   final String type;
   final QMatrixLayoutDef layoutDef;
+  @override
   final Map<String, dynamic> defaultProps = const {};
   final Map<String, _CompiledMatrixData> _runtimeCache =
       <String, _CompiledMatrixData>{};
@@ -2334,9 +2334,7 @@ class _MatrixInteractiveShellState extends State<_MatrixInteractiveShell> {
     if (widget.draggable || widget.reorderable || widget.resizable) {
       child = Stack(
         fit: StackFit.passthrough,
-        children: <Widget>[]
-          ..add(
-            Positioned.fill(
+        children: <Widget>[Positioned.fill(
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onPanStart: widget.draggable || widget.reorderable
@@ -2349,21 +2347,17 @@ class _MatrixInteractiveShellState extends State<_MatrixInteractiveShell> {
                     widget.draggable || widget.reorderable ? _onDragEnd : null,
                 child: const SizedBox.expand(),
               ),
-            ),
-          )
-          ..add(child)
-          ..addAll(
-            widget.resizable && widget.resizeHandle != QMatrixResizeHandle.none
-                ? <Widget>[
+            ), child, if (widget.resizable && widget.resizeHandle != QMatrixResizeHandle.none) ...<Widget>[
                     _ResizeHandles(
                       onStart: _onResizeStart,
                       onUpdate: _onResizeUpdate,
                       onEnd: _onResizeEnd,
                       handle: widget.resizeHandle,
                     ),
-                  ]
-                : const <Widget>[],
-          ),
+                  ]]
+          
+          
+          ,
       );
     }
 

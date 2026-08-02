@@ -43,7 +43,6 @@ import 'package:collection/collection.dart';
 import 'package:quantum_layout/quantum.dart';
 import 'quantum_vm_catalog.dart';
 import './qee/qee_registry.dart';
-import './qee/qee_node_types.dart';
 
 part 'quantum_vm_compiler.dart';
 part 'quantum_vm_registry.dart';
@@ -1583,8 +1582,9 @@ class QuantumVM {
   }
 
   static List<String> _asStringList(dynamic raw) {
-    if (raw is List)
+    if (raw is List) {
       return raw.map((e) => e.toString()).toList(growable: false);
+    }
     if (raw is Set) return raw.map((e) => e.toString()).toList(growable: false);
     if (raw is String && raw.isNotEmpty) return [raw];
     return const [];
@@ -1658,7 +1658,9 @@ class QuantumVM {
     _actions.clear();
     _registryEntries.clear();
     _slotDefaults.clear();
-    _debouncers.values.forEach((t) => t.cancel());
+    for (var t in _debouncers.values) {
+      t.cancel();
+    }
     _debouncers.clear();
     _middlewares = [];
     QLSliceRegistry.actionRegistrar = null;
@@ -1955,7 +1957,7 @@ class QuantumVM {
     final QLPlugin? plugin = _plugins[renderType];
     final _QLComponentDefinition? nativeComponent =
         _componentDefinitionsByName[renderType];
-    final QuantumComponentBuilder? componentBuilder = null;
+    const QuantumComponentBuilder? componentBuilder = null;
 
     const Set<String> nativeTypes = {
       'row',
@@ -2060,8 +2062,8 @@ class QuantumVM {
           gap: gap > 0 ? gap : null,
           text: nodeText,
           onTap: tapHandler,
-          children: children.isEmpty ? null : children,
           suppressParentData: true,
+          children: children.isEmpty ? null : children,
         );
       } else if (renderType == 'grid_item') {
         Widget inner = children.firstOrNull ?? const SizedBox.shrink();
@@ -2087,13 +2089,16 @@ class QuantumVM {
         content = const SizedBox.shrink();
       } else {
         String combinedStyle = resolvedStyle;
-        if (renderType == 'row' || renderType == '->')
+        if (renderType == 'row' || renderType == '->') {
           combinedStyle = 'row $combinedStyle';
-        if (renderType == 'col' || renderType == 'column' || renderType == 'v')
+        }
+        if (renderType == 'col' || renderType == 'column' || renderType == 'v') {
           combinedStyle = 'col $combinedStyle';
+        }
         if (renderType == 'wrap') combinedStyle = 'wrap $combinedStyle';
-        if (renderType == 'center')
+        if (renderType == 'center') {
           combinedStyle = 'flex-center $combinedStyle';
+        }
 
         final String justify =
             QLDataBinder.resolveAOT(node.props['justify'], ctx, env, store)
@@ -2112,8 +2117,9 @@ class QuantumVM {
             ? gapProp
             : (num.tryParse(gapProp?.toString() ?? '') ?? 0);
 
-        if (justify.isNotEmpty)
+        if (justify.isNotEmpty) {
           combinedStyle = '$combinedStyle justify-$justify';
+        }
         if (items.isNotEmpty) combinedStyle = '$combinedStyle items-$items';
         if (clip) combinedStyle = '$combinedStyle overflow-hidden';
 
@@ -2121,8 +2127,8 @@ class QuantumVM {
             text: nodeText,
             gap: gap > 0 ? gap : null,
             onTap: tapHandler,
-            children: children.isEmpty ? null : children,
-            suppressParentData: true);
+            suppressParentData: true,
+            children: children.isEmpty ? null : children);
       }
     }
 
@@ -2430,10 +2436,12 @@ class QLContext {
     if (T == bool) {
       if (resolved is bool) return resolved as T;
       final lower = str.toLowerCase();
-      if (lower == 'true' || lower == '1' || lower == 'yes' || lower == 'on')
+      if (lower == 'true' || lower == '1' || lower == 'yes' || lower == 'on') {
         return true as T;
-      if (lower == 'false' || lower == '0' || lower == 'no' || lower == 'off')
+      }
+      if (lower == 'false' || lower == '0' || lower == 'no' || lower == 'off') {
         return false as T;
+      }
       return null;
     }
     if (T == Color) {
@@ -2504,11 +2512,16 @@ class _QLAutoReactiveNodeState extends State<_QLAutoReactiveNode> {
 
   void _extractDeps(dynamic value, Set<String> deps) {
     if (value is Map) {
-      if (value['_isTokenized'] == true)
+      if (value['_isTokenized'] == true) {
         deps.addAll((value['deps'] as List).cast<String>());
-      for (final v in value.values) _extractDeps(v, deps);
+      }
+      for (final v in value.values) {
+        _extractDeps(v, deps);
+      }
     } else if (value is List) {
-      for (final v in value) _extractDeps(v, deps);
+      for (final v in value) {
+        _extractDeps(v, deps);
+      }
     }
   }
 
@@ -2610,11 +2623,16 @@ class _QLReactiveNodeBoundaryState extends State<_QLReactiveNodeBoundary> {
 
   void _extractDeps(dynamic value, Set<String> deps) {
     if (value is Map) {
-      if (value['_isTokenized'] == true)
+      if (value['_isTokenized'] == true) {
         deps.addAll((value['deps'] as List).cast<String>());
-      for (final v in value.values) _extractDeps(v, deps);
+      }
+      for (final v in value.values) {
+        _extractDeps(v, deps);
+      }
     } else if (value is List) {
-      for (final v in value) _extractDeps(v, deps);
+      for (final v in value) {
+        _extractDeps(v, deps);
+      }
     }
   }
 
@@ -2797,7 +2815,9 @@ bool _nodeIsReactive(dynamic target) {
     if (target.containsKey(r'$bind') ||
         target.containsKey('bind') ||
         target.containsKey(r'$if') ||
-        target.containsKey(r'$repeat')) return true;
+        target.containsKey(r'$repeat')) {
+      return true;
+    }
     for (final v in target.values) {
       if (_nodeIsReactive(v)) return true;
     }
@@ -3142,8 +3162,9 @@ class _QLSmartViewState extends State<QLSmartView> {
       // above via onCompileError / QLErrorBoundaryScope either way.
       return widget.loadingWidget ?? const SizedBox.shrink();
     }
-    if (_compiledAST == null)
+    if (_compiledAST == null) {
       return widget.loadingWidget ?? const SizedBox.shrink();
+    }
 
     final Map<String, dynamic> rootData = {};
     if (widget.routeInfo != null) {

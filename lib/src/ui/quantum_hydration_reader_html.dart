@@ -15,8 +15,6 @@
  * Logic currently commented out; returns null by default.
  * ============================================================================
  */
-import 'dart:convert';
-import 'dart:html' as html;
 
 Map<String, dynamic>? quantumReadDomProps() {
   // final dynamic raw = html.window['__QUANTUM_PROPS__'];

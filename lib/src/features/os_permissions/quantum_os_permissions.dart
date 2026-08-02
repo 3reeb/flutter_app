@@ -26,7 +26,6 @@
 library permission_engine;
 
 import 'dart:async';
-import 'dart:collection';
 
 enum PermissionCapability {
   camera,

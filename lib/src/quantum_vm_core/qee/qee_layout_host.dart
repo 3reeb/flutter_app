@@ -186,7 +186,9 @@ class _QPropScopeState extends State<QPropScope> {
   @override
   void dispose() {
     widget.contextNotifier.removeListener(_contextListener);
-    for (final n in _propNotifiers.values) n.dispose();
+    for (final n in _propNotifiers.values) {
+      n.dispose();
+    }
     super.dispose();
   }
 
@@ -620,7 +622,6 @@ class _QResolvedConfigScope extends InheritedWidget {
   final Map<String, dynamic> config;
 
   const _QResolvedConfigScope({
-    super.key,
     required this.config,
     required super.child,
   });

@@ -23,7 +23,6 @@
  */
 import 'dart:async';
 import 'dart:collection';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quantum_layout/quantum.dart';
@@ -50,7 +49,7 @@ final class QLRuntimeSupport {
   }
 
   static QLJsonMap mapOf(dynamic value, {Map<String, dynamic>? fallback}) {
-    if (value is Map) return Map<String, dynamic>.from(value as Map);
+    if (value is Map) return Map<String, dynamic>.from(value);
     return fallback ?? <String, dynamic>{};
   }
 
@@ -1069,8 +1068,9 @@ String _qlCanonicalStatePath(Object path) =>
     QLRuntimeSupport.canonicalPath(path);
 
 Map<String, dynamic> _qlMapOf(dynamic value) {
-  if (value is Map)
+  if (value is Map) {
     return Map<String, dynamic>.from(value.cast<String, dynamic>());
+  }
   return <String, dynamic>{};
 }
 
@@ -1442,17 +1442,17 @@ class QLSliceProtection {
   factory QLSliceProtection.from(dynamic raw) {
     if (raw is! Map) return const QLSliceProtection();
     final map = Map<String, dynamic>.from(raw.cast<String, dynamic>());
-    Set<String> _stringSet(dynamic value) => value is Iterable
+    Set<String> stringSet(dynamic value) => value is Iterable
         ? value.map((e) => e.toString()).where((v) => v.isNotEmpty).toSet()
         : const <String>{};
     return QLSliceProtection(
       level:
           map['level']?.toString() ?? map['visibility']?.toString() ?? 'public',
       ownerId: map['ownerId']?.toString() ?? map['owner']?.toString(),
-      allowUsers: _stringSet(map['allowUsers'] ?? map['users']),
-      allowRoles: _stringSet(map['allowRoles'] ?? map['roles']),
-      denyUsers: _stringSet(map['denyUsers']),
-      denyRoles: _stringSet(map['denyRoles']),
+      allowUsers: stringSet(map['allowUsers'] ?? map['users']),
+      allowRoles: stringSet(map['allowRoles'] ?? map['roles']),
+      denyUsers: stringSet(map['denyUsers']),
+      denyRoles: stringSet(map['denyRoles']),
       requireAuth: map['requireAuth'] == true || map['authRequired'] == true,
       requireFreshSession:
           map['requireFreshSession'] == true || map['freshSession'] == true,
@@ -2164,7 +2164,7 @@ dynamic _dispatchLocalOperation(
   switch (operation) {
     case 'read':
     case 'get':
-      return path == null ? store.getAll() : store.read(path);
+      return store.read(path);
     case 'query':
     case 'readMany':
       return store.query(path,
@@ -2176,87 +2176,61 @@ dynamic _dispatchLocalOperation(
                   (payload['select'] as Iterable).map((e) => e.toString()))
               : null);
     case 'create':
-      if (path != null) {
-        return store.create(path, value);
-      }
+      return store.create(path, value);
       return value;
     case 'update':
     case 'patch':
-      if (path != null) {
-        return store.update(path, value);
-      }
+      return store.update(path, value);
       return value;
     case 'upsert':
-      if (path != null) {
-        return store.upsert(path, value);
-      }
+      return store.upsert(path, value);
       return value;
     case 'delete':
     case 'remove':
-      if (path != null) {
-        return store.delete(path);
-      }
+      return store.delete(path);
       return null;
     case 'push':
     case 'append':
-      if (path != null) {
-        return store.push(path, value);
-      }
+      return store.push(path, value);
       return value;
     case 'pop':
-      if (path != null) {
-        return store.pop(path,
-            index: (payload['index'] as num?)?.toInt() ?? -1);
-      }
+      return store.pop(path,
+          index: (payload['index'] as num?)?.toInt() ?? -1);
       return null;
     case 'move':
-      if (path != null) {
-        return store.move(
-          path,
-          (payload['from'] as num?)?.toInt() ?? 0,
-          (payload['to'] as num?)?.toInt() ?? 0,
-        );
-      }
+      return store.move(
+        path,
+        (payload['from'] as num?)?.toInt() ?? 0,
+        (payload['to'] as num?)?.toInt() ?? 0,
+      );
       return null;
     case 'reorder':
-      if (path != null) {
-        final order = (payload['order'] as List? ?? const [])
-            .map((e) => e is num ? e.toInt() : int.tryParse('$e') ?? 0)
-            .toList(growable: false);
-        return store.reorder(path, order);
-      }
+      final order = (payload['order'] as List? ?? const [])
+          .map((e) => e is num ? e.toInt() : int.tryParse('$e') ?? 0)
+          .toList(growable: false);
+      return store.reorder(path, order);
       return null;
     case 'increment':
-      if (path != null) {
-        return store.increment(path, (payload['amount'] as num?) ?? 1);
-      }
+      return store.increment(path, (payload['amount'] as num?) ?? 1);
       return value;
     case 'decrement':
-      if (path != null) {
-        return store.decrement(path, (payload['amount'] as num?) ?? 1);
-      }
+      return store.decrement(path, (payload['amount'] as num?) ?? 1);
       return value;
     case 'aggregate':
-      if (path != null) {
-        return store.aggregate(
-          path,
-          op: payload['aggregate']?.toString() ??
-              payload['op']?.toString() ??
-              'count',
-          field: payload['field']?.toString(),
-        );
-      }
+      return store.aggregate(
+        path,
+        op: payload['aggregate']?.toString() ??
+            payload['op']?.toString() ??
+            'count',
+        field: payload['field']?.toString(),
+      );
       return null;
     case 'publish':
-      if (path != null) {
-        return store.publish(path, value);
-      }
+      return store.publish(path, value);
       return value;
     case 'subscribe':
     case 'listen':
-      if (path != null) {
-        return store.subscribe(path);
-      }
+      return store.subscribe(path);
       return Stream<dynamic>.value(null);
     default:
       return value ?? store.read(path ?? '');
@@ -2517,7 +2491,7 @@ class QLDataSourceHandle {
         }
       }
       _enterError(
-          error, stackTrace is StackTrace ? stackTrace : StackTrace.current);
+          error, stackTrace);
       rethrow;
     }
   }
@@ -3015,12 +2989,12 @@ class QLDataSourceRegistry {
 
     sync();
 
-    final cancel = () {
+    Null cancel() {
       if (!active) return;
       active = false;
       handle.signal.data.removeListener(onData);
       handle.signal.loading.removeListener(onLoading);
-    };
+    }
     _namespaceTeardowns
         .putIfAbsent(namespace, () => <VoidCallback>[])
         .add(cancel);
@@ -3111,11 +3085,11 @@ class QLStoreSlice {
     String namespace,
     Map<String, dynamic> raw,
   ) {
-    Map<String, dynamic> _map(dynamic value) => value is Map
+    Map<String, dynamic> map(dynamic value) => value is Map
         ? Map<String, dynamic>.from(value)
         : const <String, dynamic>{};
 
-    Map<String, QLSliceFieldPolicy> _fieldPolicies(dynamic value) {
+    Map<String, QLSliceFieldPolicy> fieldPolicies(dynamic value) {
       if (value is! Map) return const <String, QLSliceFieldPolicy>{};
       return value.map(
         (key, val) => MapEntry(
@@ -3125,7 +3099,7 @@ class QLStoreSlice {
       );
     }
 
-    Map<String, QLSliceResourceRef> _resources(dynamic value) {
+    Map<String, QLSliceResourceRef> resources(dynamic value) {
       if (value is! Map) return const <String, QLSliceResourceRef>{};
       return value.map(
         (key, val) => MapEntry(
@@ -3136,33 +3110,33 @@ class QLStoreSlice {
     }
 
     final runtime = <String, dynamic>{
-      ..._map(raw['runtime']),
-      ..._map(raw['slice']),
-      ..._map(raw['behavior']),
-      ..._map(raw['options']),
+      ...map(raw['runtime']),
+      ...map(raw['slice']),
+      ...map(raw['behavior']),
+      ...map(raw['options']),
     };
 
     return QLStoreSlice(
       namespace: namespace,
       schema: raw['schema']?.toString(),
       dataSource: raw['dataSource']?.toString(),
-      state: _map(raw['state']),
-      computed: _map(raw['computed']),
-      mutations: _map(raw['mutations']),
-      queries: _map(raw['queries']),
-      pipelines: _map(raw['pipelines']),
-      strategies: _map(raw['strategies']),
-      metadata: _map(raw['metadata']),
+      state: map(raw['state']),
+      computed: map(raw['computed']),
+      mutations: map(raw['mutations']),
+      queries: map(raw['queries']),
+      pipelines: map(raw['pipelines']),
+      strategies: map(raw['strategies']),
+      metadata: map(raw['metadata']),
       fieldPolicies: <String, QLSliceFieldPolicy>{
-        ..._fieldPolicies(raw['fieldPolicies']),
-        ..._fieldPolicies(raw['statePolicy']),
-        ..._fieldPolicies(raw['fields']),
+        ...fieldPolicies(raw['fieldPolicies']),
+        ...fieldPolicies(raw['statePolicy']),
+        ...fieldPolicies(raw['fields']),
       },
       resources: <String, QLSliceResourceRef>{
-        ..._resources(raw['resources']),
-        ..._resources(raw['assets']),
-        ..._resources(raw['media']),
-        ..._resources(raw['files']),
+        ...resources(raw['resources']),
+        ...resources(raw['assets']),
+        ...resources(raw['media']),
+        ...resources(raw['files']),
       },
       protection: QLSliceProtection.from(
         raw['protection'] ?? raw['access'] ?? raw['security'],
@@ -3522,7 +3496,7 @@ class _SliceMutationPlugin extends QLActionPlugin {
       Map<String, dynamic> payload, QLDataStore _, BuildContext ctx) async {
     final mergedPayload = <String, dynamic>{
       if (_spec is Map)
-        ...Map<String, dynamic>.from((_spec as Map).cast<String, dynamic>()),
+        ...Map<String, dynamic>.from((_spec).cast<String, dynamic>()),
       ...payload,
     };
     final strategy = mergedPayload['strategy']?.toString() ??
@@ -3534,7 +3508,7 @@ class _SliceMutationPlugin extends QLActionPlugin {
       final steps = mergedPayload['steps'] is List
           ? List<dynamic>.from(mergedPayload['steps'] as List)
           : _spec is List
-              ? List<dynamic>.from(_spec as List)
+              ? List<dynamic>.from(_spec)
               : <dynamic>[
                   if (mergedPayload['action'] != null) mergedPayload['action'],
                 ];
@@ -3581,7 +3555,7 @@ class _SliceQueryPlugin extends QLActionPlugin {
 
     final mergedPayload = <String, dynamic>{
       if (_spec is Map)
-        ...Map<String, dynamic>.from((_spec as Map).cast<String, dynamic>()),
+        ...Map<String, dynamic>.from((_spec).cast<String, dynamic>()),
       ...payload,
     };
     final strategy = mergedPayload['strategy']?.toString() ??
@@ -3597,7 +3571,7 @@ class _SliceQueryPlugin extends QLActionPlugin {
         final steps = mergedPayload['steps'] is List
             ? List<dynamic>.from(mergedPayload['steps'] as List)
             : _spec is List
-                ? List<dynamic>.from(_spec as List)
+                ? List<dynamic>.from(_spec)
                 : <dynamic>[
                     if (mergedPayload['action'] != null)
                       mergedPayload['action'],
@@ -3796,20 +3770,29 @@ bool _qlMatchesWhere(dynamic item, Map<String, dynamic> where) {
     final actual = _qlReadPathValue(map, key);
     if (expected is Map) {
       final inner = Map<String, dynamic>.from(expected.cast<String, dynamic>());
-      if (inner.containsKey('equals') && actual != inner['equals'])
+      if (inner.containsKey('equals') && actual != inner['equals']) {
         return false;
+      }
       if (inner.containsKey('contains') &&
           !actual.toString().contains(inner['contains'].toString())) {
         return false;
       }
       if (inner.containsKey('gt') &&
-          !(actual is num && actual > (inner['gt'] as num))) return false;
+          !(actual is num && actual > (inner['gt'] as num))) {
+        return false;
+      }
       if (inner.containsKey('gte') &&
-          !(actual is num && actual >= (inner['gte'] as num))) return false;
+          !(actual is num && actual >= (inner['gte'] as num))) {
+        return false;
+      }
       if (inner.containsKey('lt') &&
-          !(actual is num && actual < (inner['lt'] as num))) return false;
+          !(actual is num && actual < (inner['lt'] as num))) {
+        return false;
+      }
       if (inner.containsKey('lte') &&
-          !(actual is num && actual <= (inner['lte'] as num))) return false;
+          !(actual is num && actual <= (inner['lte'] as num))) {
+        return false;
+      }
       continue;
     }
     if (actual != expected) return false;

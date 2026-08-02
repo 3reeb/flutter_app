@@ -23,10 +23,8 @@
  * ============================================================================
  */
 import 'dart:collection';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../quantum.dart';
-import 'quantum_reactive_graph.dart';
 
 typedef QLAtomEquals<T> = bool Function(T a, T b);
 typedef QLAtomDecoder<T> = T Function(dynamic value);
@@ -88,10 +86,6 @@ class QLStateAtom<T> extends QLSignal<T> {
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }
 
 /// A derived atom that keeps the same zero-boilerplate API shape as a state

@@ -22,7 +22,6 @@
  * canvas point drawing, and binary search for hover interactions to maintain 60/120fps.
  * ============================================================================
  */
-import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
@@ -226,9 +225,9 @@ class _QLUniversalChartState extends State<QLUniversalChart>
         bestIdx = mid;
       }
 
-      if (_buffer.x[mid] < targetX)
+      if (_buffer.x[mid] < targetX) {
         low = mid + 1;
-      else if (_buffer.x[mid] > targetX)
+      } else if (_buffer.x[mid] > targetX)
         high = mid - 1;
       else
         break;
@@ -276,7 +275,7 @@ class _QLUniversalChartState extends State<QLUniversalChart>
                 size: size,
                 isComplex: false,
                 willChange: false,
-                painter: _QLGridPainter(color: widget.color.withOpacity(0.1)),
+                painter: _QLGridPainter(color: widget.color.withValues(alpha: 0.1)),
               ),
             ),
 
@@ -310,8 +309,9 @@ class _QLUniversalChartState extends State<QLUniversalChart>
                   final int? idx = _hoverIndex.value;
                   final Offset? pos = _hoverPos.value;
 
-                  if (idx == null || pos == null)
+                  if (idx == null || pos == null) {
                     return const SizedBox.expand();
+                  }
 
                   return Stack(
                     clipBehavior: Clip.none,
@@ -387,7 +387,7 @@ class _QLCrosshairPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final Paint pLine = Paint()
-      ..color = color.withOpacity(0.5)
+      ..color = color.withValues(alpha: 0.5)
       ..strokeWidth = 1.0;
     final Paint pDot = Paint()
       ..color = color
@@ -431,7 +431,7 @@ class _QLDataPainter extends CustomPainter {
       final TextPainter tp = TextPainter(
         text: TextSpan(
             text: 'No chart data',
-            style: TextStyle(color: color.withOpacity(0.5), fontSize: 14)),
+            style: TextStyle(color: color.withValues(alpha: 0.5), fontSize: 14)),
         textAlign: TextAlign.center,
         textDirection: TextDirection.ltr,
       )..layout(minWidth: size.width, maxWidth: size.width);
@@ -484,8 +484,8 @@ class _QLDataPainter extends CustomPainter {
       path.close();
 
       final Paint areaPaint = Paint()
-        ..shader = ui.Gradient.linear(Offset(0, 0), Offset(0, h),
-            [color.withOpacity(0.5), color.withOpacity(0.0)]);
+        ..shader = ui.Gradient.linear(const Offset(0, 0), Offset(0, h),
+            [color.withValues(alpha: 0.5), color.withValues(alpha: 0.0)]);
       canvas.drawPath(path, areaPaint);
 
       // Draw top line
@@ -551,7 +551,7 @@ class _QLDataPainter extends CustomPainter {
             ? math.max(4.0, buffer.size[i] * 10 * morphT)
             : 4.0;
         canvas.drawCircle(
-            Offset(cx, cy), radius, fillPaint..color = color.withOpacity(0.6));
+            Offset(cx, cy), radius, fillPaint..color = color.withValues(alpha: 0.6));
         canvas.drawCircle(
             Offset(cx, cy), radius, strokePaint..strokeWidth = 1.0);
       }
@@ -597,7 +597,9 @@ class _QLDataPainter extends CustomPainter {
       final double radius = math.min(w, h) / 2 * 0.9 * morphT;
 
       double total = 0;
-      for (int i = 0; i < buffer.length; i++) total += buffer.y[i].abs();
+      for (int i = 0; i < buffer.length; i++) {
+        total += buffer.y[i].abs();
+      }
 
       double startAngle = -math.pi / 2;
       final Rect bounds =
@@ -632,7 +634,7 @@ class _QLDataPainter extends CustomPainter {
 
       // Draw background track
       final Paint bgPaint = Paint()
-        ..color = color.withOpacity(0.2)
+        ..color = color.withValues(alpha: 0.2)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 20
         ..strokeCap = StrokeCap.round;
@@ -658,7 +660,7 @@ class _QLDataPainter extends CustomPainter {
 
       // Draw spiderweb
       final Paint webPaint = Paint()
-        ..color = color.withOpacity(0.2)
+        ..color = color.withValues(alpha: 0.2)
         ..style = PaintingStyle.stroke;
       for (int r = 1; r <= 4; r++) {
         final Path webPath = Path();
@@ -667,10 +669,11 @@ class _QLDataPainter extends CustomPainter {
           final double a = i * angleStep - (math.pi / 2);
           final Offset pt =
               Offset(cx + math.cos(a) * tr, cy + math.sin(a) * tr);
-          if (i == 0)
+          if (i == 0) {
             webPath.moveTo(pt.dx, pt.dy);
-          else
+          } else {
             webPath.lineTo(pt.dx, pt.dy);
+          }
 
           if (r == 4) {
             // Draw axis lines
@@ -690,13 +693,14 @@ class _QLDataPainter extends CustomPainter {
             (buffer.y[i] / buffer.maxY).clamp(0.0, 1.0) * morphT;
         final double r = maxRadius * normVal;
         final Offset pt = Offset(cx + math.cos(a) * r, cy + math.sin(a) * r);
-        if (i == 0)
+        if (i == 0) {
           dataPath.moveTo(pt.dx, pt.dy);
-        else
+        } else {
           dataPath.lineTo(pt.dx, pt.dy);
+        }
       }
       dataPath.close();
-      canvas.drawPath(dataPath, fillPaint..color = color.withOpacity(0.4));
+      canvas.drawPath(dataPath, fillPaint..color = color.withValues(alpha: 0.4));
       canvas.drawPath(dataPath, strokePaint..strokeWidth = 2.0);
     }
 
@@ -704,7 +708,9 @@ class _QLDataPainter extends CustomPainter {
     else if (type == QLChartType.treemap) {
       // Simplified Squarified Treemap Heuristic (Fast slice-and-dice for VM bounds)
       double totalVal = 0;
-      for (int i = 0; i < buffer.length; i++) totalVal += buffer.y[i].abs();
+      for (int i = 0; i < buffer.length; i++) {
+        totalVal += buffer.y[i].abs();
+      }
 
       double currentX = 0;
       double currentY = 0;
@@ -788,7 +794,7 @@ class _QLDataPainter extends CustomPainter {
           linkPath,
           strokePaint
             ..strokeWidth = 20.0
-            ..color = color.withOpacity(0.2));
+            ..color = color.withValues(alpha: 0.2));
     }
   }
 
@@ -813,8 +819,9 @@ Widget buildChart(QLContext ctx, QLChartType type) {
     lineWidth: ctx.number('lineWidth', fallback: 2.0),
     tooltipBuilder: (context, index, pos, dataPoint) {
       final Widget? tooltipSlot = ctx.slot('tooltip');
-      if (tooltipSlot == null || index == null || pos == null)
+      if (tooltipSlot == null || index == null || pos == null) {
         return const SizedBox.shrink();
+      }
 
       // Expose hovered data to the custom tooltip slot
       return Positioned(

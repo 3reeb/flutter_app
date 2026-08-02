@@ -47,7 +47,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import '../foundation/quantum_yaml_engine.dart';
 import 'package:quantum_layout/src/runtime/api/network_shell.dart';
 import 'package:quantum_layout/src/runtime/api/network.dart';
@@ -1252,7 +1251,7 @@ void _deepOverlay(
         value is Map &&
         current is Map &&
         _isMapLike(current)) {
-      final next = <String, dynamic>{..._normalizeMap(current as Map)};
+      final next = <String, dynamic>{..._normalizeMap(current)};
       _deepOverlay(
         next,
         _normalizeMap(value),
@@ -1313,8 +1312,9 @@ Map<String, dynamic> _normalizeMap(Map value) {
 
 dynamic _normalizeDynamic(dynamic value) {
   if (value is Map) return _normalizeMap(value);
-  if (value is List)
+  if (value is List) {
     return value.map(_normalizeDynamic).toList(growable: false);
+  }
   return value;
 }
 

@@ -314,12 +314,15 @@ class QuantumPermissionEngine {
 
     if (rule is String) {
       final trimmed = rule.trim();
-      if (trimmed.isEmpty)
+      if (trimmed.isEmpty) {
         return const QuantumPermissionDecision.allow('empty rule');
-      if (trimmed == 'true')
+      }
+      if (trimmed == 'true') {
         return const QuantumPermissionDecision.allow('literal true');
-      if (trimmed == 'false')
+      }
+      if (trimmed == 'false') {
         return const QuantumPermissionDecision.deny('literal false');
+      }
       final resolved = QuantumPermissionRegistry.instance
           .resolve(trimmed.startsWith('@') ? trimmed.substring(1) : trimmed);
       if (resolved != null) return evaluate(resolved, context, meta: meta);
@@ -465,35 +468,45 @@ class QuantumPermissionEngine {
     QuantumPermissionContext context, {
     Map<String, dynamic> meta = const <String, dynamic>{},
   }) {
-    if (atom.isEmpty)
+    if (atom.isEmpty) {
       return const QuantumPermissionDecision.allow('empty atom');
+    }
 
     if (atom.containsKey('role')) return _evaluateRole(atom['role'], context);
     if (atom.containsKey('roles')) return _evaluateRole(atom['roles'], context);
-    if (atom.containsKey('permission'))
+    if (atom.containsKey('permission')) {
       return _evaluatePermission(atom['permission'], context);
-    if (atom.containsKey('permissions'))
+    }
+    if (atom.containsKey('permissions')) {
       return _evaluatePermission(atom['permissions'], context);
-    if (atom.containsKey('feature'))
+    }
+    if (atom.containsKey('feature')) {
       return _evaluateFeature(atom['feature'], context);
-    if (atom.containsKey('features'))
+    }
+    if (atom.containsKey('features')) {
       return _evaluateFeature(atom['features'], context);
-    if (atom.containsKey('subscription'))
+    }
+    if (atom.containsKey('subscription')) {
       return _evaluateSubscription(atom['subscription'], context);
-    if (atom.containsKey('subscriptions'))
+    }
+    if (atom.containsKey('subscriptions')) {
       return _evaluateSubscription(atom['subscriptions'], context);
-    if (atom.containsKey('claim') || atom.containsKey('claims'))
+    }
+    if (atom.containsKey('claim') || atom.containsKey('claims')) {
       return _evaluateClaim(atom['claim'] ?? atom['claims'], context);
+    }
     if (atom.containsKey('data') ||
         atom.containsKey('field') ||
-        atom.containsKey('fields'))
+        atom.containsKey('fields')) {
       return _evaluateData(
           atom['data'] ?? atom['field'] ?? atom['fields'], context);
-    if (atom.containsKey('op') || atom.containsKey('operation'))
+    }
+    if (atom.containsKey('op') || atom.containsKey('operation')) {
       return _evaluateOperation(atom['op'] ?? atom['operation'], context);
+    }
     if (atom.containsKey('resource') ||
         atom.containsKey('scope') ||
-        atom.containsKey('schema'))
+        atom.containsKey('schema')) {
       return _evaluateScope(
           atom.containsKey('resource')
               ? 'resource'
@@ -502,15 +515,19 @@ class QuantumPermissionEngine {
                   : 'schema',
           atom['resource'] ?? atom['scope'] ?? atom['schema'],
           context);
+    }
     if (atom.containsKey('time') ||
         atom.containsKey('clock') ||
-        atom.containsKey('schedule'))
+        atom.containsKey('schedule')) {
       return _evaluateTime(
           atom['time'] ?? atom['clock'] ?? atom['schedule'], context);
-    if (atom.containsKey('custom'))
+    }
+    if (atom.containsKey('custom')) {
       return _evaluateCustom(atom['custom'], context, meta: meta);
-    if (atom.containsKey('rule'))
+    }
+    if (atom.containsKey('rule')) {
       return evaluate(atom['rule'], context, meta: meta);
+    }
 
     return _evaluateEquality(atom, context);
   }
@@ -518,8 +535,9 @@ class QuantumPermissionEngine {
   QuantumPermissionDecision _evaluateRole(
       dynamic raw, QuantumPermissionContext context) {
     final values = _toStringList(raw);
-    if (values.isEmpty)
+    if (values.isEmpty) {
       return const QuantumPermissionDecision.allow('no role constraint');
+    }
     final hits = values.where(context.hasRole).toList(growable: false);
     if (hits.isNotEmpty) {
       return QuantumPermissionDecision.allow(
@@ -535,8 +553,9 @@ class QuantumPermissionEngine {
   QuantumPermissionDecision _evaluatePermission(
       dynamic raw, QuantumPermissionContext context) {
     final values = _toStringList(raw);
-    if (values.isEmpty)
+    if (values.isEmpty) {
       return const QuantumPermissionDecision.allow('no permission constraint');
+    }
     final hits = values.where(context.hasPermission).toList(growable: false);
     if (hits.isNotEmpty) {
       return QuantumPermissionDecision.allow(
@@ -552,8 +571,9 @@ class QuantumPermissionEngine {
   QuantumPermissionDecision _evaluateFeature(
       dynamic raw, QuantumPermissionContext context) {
     final values = _toStringList(raw);
-    if (values.isEmpty)
+    if (values.isEmpty) {
       return const QuantumPermissionDecision.allow('no feature constraint');
+    }
     final hits = values.where(context.hasFeature).toList(growable: false);
     if (hits.isNotEmpty) {
       return QuantumPermissionDecision.allow(
@@ -569,9 +589,10 @@ class QuantumPermissionEngine {
   QuantumPermissionDecision _evaluateSubscription(
       dynamic raw, QuantumPermissionContext context) {
     final values = _toStringList(raw);
-    if (values.isEmpty)
+    if (values.isEmpty) {
       return const QuantumPermissionDecision.allow(
           'no subscription constraint');
+    }
     final hits = values.where(context.hasSubscription).toList(growable: false);
     if (hits.isNotEmpty) {
       return QuantumPermissionDecision.allow(
@@ -642,8 +663,9 @@ class QuantumPermissionEngine {
   QuantumPermissionDecision _evaluateOperation(
       dynamic raw, QuantumPermissionContext context) {
     final values = _toStringList(raw);
-    if (values.isEmpty)
+    if (values.isEmpty) {
       return const QuantumPermissionDecision.allow('no operation constraint');
+    }
     final hits =
         values.where((value) => context.opIs(value)).toList(growable: false);
     if (hits.isNotEmpty) {
@@ -657,8 +679,9 @@ class QuantumPermissionEngine {
   QuantumPermissionDecision _evaluateScope(
       String kind, dynamic raw, QuantumPermissionContext context) {
     final values = _toStringList(raw);
-    if (values.isEmpty)
+    if (values.isEmpty) {
       return const QuantumPermissionDecision.allow('no scope constraint');
+    }
     final matched = values.where(context.scopeIs).toList(growable: false);
     if (matched.isNotEmpty) {
       return QuantumPermissionDecision.allow(
@@ -673,12 +696,14 @@ class QuantumPermissionEngine {
 
   QuantumPermissionDecision _evaluateTime(
       dynamic raw, QuantumPermissionContext context) {
-    if (raw == null)
+    if (raw == null) {
       return const QuantumPermissionDecision.allow('no time constraint');
-    if (raw is bool)
+    }
+    if (raw is bool) {
       return raw
           ? const QuantumPermissionDecision.allow('time true')
           : const QuantumPermissionDecision.deny('time false');
+    }
     if (raw is Map) {
       final map = Map<String, dynamic>.from(raw);
       final start = _parseDateTime(map['from'] ?? map['start']);
@@ -1910,7 +1935,7 @@ class QuantumPermissionNativeSource implements QuantumPermissionSource {
       );
       if (raw is Map) {
         return QuantumPermissionSnapshot.fromJson(
-            Map<String, dynamic>.from(raw as Map));
+            Map<String, dynamic>.from(raw));
       }
       if (raw is bool) {
         return raw
@@ -1971,7 +1996,7 @@ class QuantumPermissionCenter {
       <String, QuantumPermissionDescriptor>{};
   final Map<String, String> _aliases = <String, String>{};
   final Map<String, QuantumPermissionSnapshot> _snapshots =
-      LinkedHashMap<String, QuantumPermissionSnapshot>();
+      <String, QuantumPermissionSnapshot>{};
   final Map<String, DateTime> _lastSync = <String, DateTime>{};
   final Map<String, StreamController<QuantumPermissionSnapshot>> _watchers =
       <String, StreamController<QuantumPermissionSnapshot>>{};

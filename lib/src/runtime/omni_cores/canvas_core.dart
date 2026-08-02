@@ -232,22 +232,22 @@ class _QLProceduralCanvasNodeState extends State<_QLProceduralCanvasNode> {
         _iData[i * 2 + 1] = 0xFF000000;
       }
 
-      double _n(dynamic v) {
+      double n(dynamic v) {
         if (v is num) return v.toDouble();
         return double.tryParse(v?.toString() ?? '') ?? 0.0;
       }
 
       if (type == 'rect' && cmd.length >= 5) {
         _iData[i * 2] = 1;
-        _fData[i * 4 + 0] = _n(cmd[1]);
-        _fData[i * 4 + 1] = _n(cmd[2]);
-        _fData[i * 4 + 2] = _n(cmd[3]);
-        _fData[i * 4 + 3] = _n(cmd[4]);
+        _fData[i * 4 + 0] = n(cmd[1]);
+        _fData[i * 4 + 1] = n(cmd[2]);
+        _fData[i * 4 + 2] = n(cmd[3]);
+        _fData[i * 4 + 3] = n(cmd[4]);
       } else if (type == 'circle' && cmd.length >= 4) {
         _iData[i * 2] = 2;
-        _fData[i * 4 + 0] = _n(cmd[1]);
-        _fData[i * 4 + 1] = _n(cmd[2]);
-        _fData[i * 4 + 2] = _n(cmd[3]);
+        _fData[i * 4 + 0] = n(cmd[1]);
+        _fData[i * 4 + 1] = n(cmd[2]);
+        _fData[i * 4 + 2] = n(cmd[3]);
       } else {
         _iData[i * 2] = 0; // No-op for invalid/unknown commands
       }

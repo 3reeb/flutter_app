@@ -37,9 +37,7 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'dart:math' as math;
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:quantum_layout/quantum.dart';
 import 'internal/quantum_focus_sync.dart';
@@ -198,10 +196,11 @@ class _QLRawTextInputState extends State<QLRawTextInput> {
 
     // 1. Sync Flutter Focus Node -> Quantum Engine
     _focusNode.addListener(() {
-      if (_focusNode.hasFocus)
+      if (_focusNode.hasFocus) {
         widget.controller.focus();
-      else
+      } else {
         widget.controller.blur();
+      }
     });
 
     // 2. Sync Quantum Engine -> Flutter Focus Node
@@ -370,10 +369,11 @@ class _QLRawToggleState extends State<QLRawToggle>
   }
 
   void _onDataChanged() {
-    if (widget.controller.data.value)
+    if (widget.controller.data.value) {
       _animCtrl.forward();
-    else
+    } else {
       _animCtrl.reverse();
+    }
   }
 
   void _toggle() {
@@ -503,15 +503,17 @@ class _QLRawOptionState<T> extends State<QLRawOption<T>>
   }
 
   void _onEngineFlagsChanged() {
-    if (widget.controller.isFocused && _isSelected && !_focusNode.hasFocus)
+    if (widget.controller.isFocused && _isSelected && !_focusNode.hasFocus) {
       _focusNode.requestFocus();
+    }
   }
 
   void _onDataChanged() {
-    if (_isSelected)
+    if (_isSelected) {
       _animCtrl.forward();
-    else
+    } else {
       _animCtrl.reverse();
+    }
   }
 
   void _select() {
@@ -639,7 +641,9 @@ class _QLRawSliderState extends State<QLRawSlider> {
   void _handleInteraction(Offset localPosition) {
     if (widget.controller.isDisabled ||
         widget.controller.isReadonly ||
-        _trackExtent == 0.0) return;
+        _trackExtent == 0.0) {
+      return;
+    }
 
     // Support horizontal and vertical drag calculation
     final double rawPos = widget.direction == Axis.horizontal

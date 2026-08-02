@@ -175,7 +175,7 @@ Widget _buildData(QLContext rawCtx) {
     final String channel = ctx.string('channel');
     final String asKey = ctx.string('as', fallback: 'event');
     return QLDataScope(
-        localData: {...ctx.env, asKey: {}},
+        localData: {...ctx.env, asKey: const {}},
         child: Q('col w-full',
             children: ctx.children)); // Uses QLChannelHub internally
   }
@@ -238,8 +238,9 @@ Widget _buildData(QLContext rawCtx) {
 
   // STANDARD DATA LOGIC
   final String pId = ctx.string('pipeline');
-  if (!QLPipelineRegistry.instance.exists(pId))
+  if (!QLPipelineRegistry.instance.exists(pId)) {
     return const Center(child: Text('Pipeline not found'));
+  }
   final pipeline = QLPipelineRegistry.instance.get(pId);
 
   final String searchBind = ctx.string('searchBind', fallback: 'searchQuery');
@@ -247,8 +248,9 @@ Widget _buildData(QLContext rawCtx) {
     final QLSignal<dynamic> storeSearch = ctx.store.signal(searchBind);
     storeSearch.addListener(() {
       final String query = storeSearch.value?.toString() ?? '';
-      if (pipeline.searchQuery.value != query)
+      if (pipeline.searchQuery.value != query) {
         pipeline.searchQuery.value = query;
+      }
     });
   }
 
@@ -258,14 +260,16 @@ Widget _buildData(QLContext rawCtx) {
   Widget content = AnimatedBuilder(
       animation: pipeline.visibleIndices,
       builder: (context, _) {
-        if (pipeline.visibleCount == 0)
+        if (pipeline.visibleCount == 0) {
           return ctx.slot('empty') ?? const SizedBox.shrink();
-        if (itemTemplate == null)
+        }
+        if (itemTemplate == null) {
           return const Center(
               child: Text('Missing "item" slot template',
                   style: TextStyle(color: Colors.red)));
+        }
 
-        Map<String, dynamic> _getMapData(int i) {
+        Map<String, dynamic> getMapData(int i) {
           final realIdx = pipeline.visibleIndices.value[i];
           return pipeline.getAsMap(realIdx);
         }
@@ -279,7 +283,7 @@ Widget _buildData(QLContext rawCtx) {
             children: List.generate(
                 pipeline.visibleCount,
                 (i) => QLDataScope(
-                    localData: {'item': _getMapData(i), 'index': i},
+                    localData: {'item': getMapData(i), 'index': i},
                     child: Builder(
                         builder: (innerCtx) => QuantumVM.instance
                             .renderWidget(innerCtx, itemTemplate)))),
@@ -291,7 +295,7 @@ Widget _buildData(QLContext rawCtx) {
                 child: QLViewport<Widget>.builder(
               itemCount: pipeline.visibleCount,
               builder: (c, i) => QLDataScope(
-                  localData: {'item': _getMapData(i), 'index': i},
+                  localData: {'item': getMapData(i), 'index': i},
                   child: Builder(
                       builder: (innerCtx) => QuantumVM.instance
                           .renderWidget(innerCtx, itemTemplate))),
@@ -307,7 +311,7 @@ Widget _buildData(QLContext rawCtx) {
             isMasonry: subType == 'masonry',
             onEndReached: () => ctx.action('onEndReached')?.call(),
             builder: (c, i) => QLDataScope(
-                localData: {'item': _getMapData(i), 'index': i},
+                localData: {'item': getMapData(i), 'index': i},
                 child: Builder(
                     builder: (innerCtx) => QuantumVM.instance
                         .renderWidget(innerCtx, itemTemplate))),

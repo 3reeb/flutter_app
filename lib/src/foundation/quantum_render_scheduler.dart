@@ -86,9 +86,6 @@
 //    any subsystem, flushes them in priority order within frame budget.
 // ════════════════════════════════════════════════════════════════════════════
 
-import 'dart:async';
-import 'dart:collection';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
@@ -185,7 +182,7 @@ class QLRenderScheduler {
   // We use SplayTreeMap keyed by enqueue time for FIFO within same priority.
   final List<Map<String, QLRenderWorkItem>> _buckets = List.generate(
     QLRenderPriority.values.length,
-    (_) => LinkedHashMap<String, QLRenderWorkItem>(),
+    (_) => <String, QLRenderWorkItem>{},
     growable: false,
   );
 
@@ -472,7 +469,7 @@ class QLFrameMonitor extends StatefulWidget {
 
 class _QLFrameMonitorState extends State<QLFrameMonitor>
     with WidgetsBindingObserver {
-  Duration _lastBuildTime = Duration.zero;
+  final Duration _lastBuildTime = Duration.zero;
   int _frameCount = 0;
   double _fps = 0;
   DateTime _lastFpsUpdate = DateTime.now();

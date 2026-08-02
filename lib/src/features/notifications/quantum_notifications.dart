@@ -198,10 +198,12 @@ List<QuantumNotificationAction> _mergeActions(
   List<QuantumNotificationAction> base,
   List<QuantumNotificationAction> overlay,
 ) {
-  if (base.isEmpty)
+  if (base.isEmpty) {
     return List<QuantumNotificationAction>.unmodifiable(overlay);
-  if (overlay.isEmpty)
+  }
+  if (overlay.isEmpty) {
     return List<QuantumNotificationAction>.unmodifiable(base);
+  }
 
   final byId = <String, QuantumNotificationAction>{};
   for (final action in base) {

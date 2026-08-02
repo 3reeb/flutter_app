@@ -36,7 +36,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../foundation/quantum_yaml_engine.dart';
-import 'quantum_core_file_registry.dart';
 @immutable
 class QLCorePropSpec {
   final String name;
@@ -120,10 +119,11 @@ class QLCoreSchemaDescriptor {
 
   Map<String, dynamic> _mergeMaps(
       Map<String, dynamic> a, Map<String, dynamic> b) {
-    if (a.isEmpty)
+    if (a.isEmpty) {
       return b.isEmpty
           ? const <String, dynamic>{}
           : Map<String, dynamic>.from(b);
+    }
     if (b.isEmpty) return Map<String, dynamic>.from(a);
     final out = Map<String, dynamic>.from(a);
     out.addAll(b);
@@ -540,12 +540,16 @@ final class QuantumCoreSchemaRegistry {
         n == 'statekey' ||
         n == 'namespace' ||
         n == 'contract' ||
-        n == 'fallback') return 'String';
+        n == 'fallback') {
+      return 'String';
+    }
     if (n == 'props' ||
         n == 'state' ||
         n == 'metadata' ||
         n == 'raw' ||
-        n == 'config') return 'Map<String, dynamic>';
+        n == 'config') {
+      return 'Map<String, dynamic>';
+    }
     if (n == 'children' ||
         n == 'items' ||
         n == 'entries' ||
@@ -561,7 +565,9 @@ final class QuantumCoreSchemaRegistry {
         n == 'avatars' ||
         n == 'rolenames' ||
         n == 'slots' ||
-        n == 'commands') return 'List';
+        n == 'commands') {
+      return 'List';
+    }
     if (n == 'padding' ||
         n == 'margin' ||
         n == 'gap' ||
@@ -585,7 +591,9 @@ final class QuantumCoreSchemaRegistry {
         n == 'progress' ||
         n == 'speed' ||
         n == 'blurintensity' ||
-        n == 'cornerradius') return 'double';
+        n == 'cornerradius') {
+      return 'double';
+    }
     if (n.endsWith('ms') || n == 'interval') return 'int';
     if (n == 'disabled' ||
         n == 'readonly' ||
@@ -612,20 +620,26 @@ final class QuantumCoreSchemaRegistry {
         n == 'mergestyle' ||
         n == 'selected' ||
         n == 'active' ||
-        n == 'hidden') return 'bool';
+        n == 'hidden') {
+      return 'bool';
+    }
     if (n.contains('color') ||
         n.contains('fill') ||
         n.contains('stroke') ||
-        n.contains('bg')) return 'Color';
+        n.contains('bg')) {
+      return 'Color';
+    }
     return 'dynamic';
   }
 
   String _propDescription(String name) {
     if (name == '__subType') return 'Internal subtype discriminator.';
-    if (name.startsWith('on'))
+    if (name.startsWith('on')) {
       return 'Event callback for ${name.substring(2)}.';
-    if (name.contains('bind'))
+    }
+    if (name.contains('bind')) {
       return 'Runtime binding key for lazy state lookup.';
+    }
     return '$name value.';
   }
 

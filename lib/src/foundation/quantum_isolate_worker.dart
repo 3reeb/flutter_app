@@ -473,7 +473,7 @@ extension QLAsyncWorkerExt<T> on QLAsyncSignal<T> {
       if (val != null) {
         final inner = w.submit(task, val);
         inner.data.addListener(() {
-          final TOutput? result = inner.data.value as TOutput?;
+          final TOutput? result = inner.data.value;
           if (result != null) {
             output.load(() async => result);
           }

@@ -166,10 +166,11 @@ Widget _buildSystem(QLContext rawCtx) {
     final QLBlueprint? template =
         ctx.node.slots['item'] ?? ctx.node.children.firstOrNull;
 
-    if (template == null)
+    if (template == null) {
       return const Center(
           child: Text('Repeater missing template',
               style: TextStyle(color: Colors.red)));
+    }
 
     return Q(
       'col w-full',
@@ -229,9 +230,9 @@ Widget _buildSystem(QLContext rawCtx) {
   // ── system:haptic — Haptic Feedback trigger ───────────────────────────────
   if (subType == 'haptic') {
     final String feedbackType = ctx.string('type', fallback: 'selection');
-    if (feedbackType == 'light')
+    if (feedbackType == 'light') {
       HapticFeedback.lightImpact();
-    else if (feedbackType == 'medium')
+    } else if (feedbackType == 'medium')
       HapticFeedback.mediumImpact();
     else if (feedbackType == 'heavy')
       HapticFeedback.heavyImpact();
@@ -245,8 +246,9 @@ Widget _buildSystem(QLContext rawCtx) {
   // ── system:clipboard — System Clipboard access ────────────────────────────
   if (subType == 'clipboard') {
     final String textToCopy = ctx.string('copy');
-    if (textToCopy.isNotEmpty)
+    if (textToCopy.isNotEmpty) {
       Clipboard.setData(ClipboardData(text: textToCopy));
+    }
     return QLDataScope(
       localData: {
         ...ctx.env,
@@ -341,17 +343,19 @@ class _QLSystemAsyncNodeState extends State<_QLSystemAsyncNode> {
       await QuantumVM.instance.triggerActions([
         {'action': widget.action, ...widget.params}
       ], context, env: widget.env);
-      if (mounted)
+      if (mounted) {
         setState(() {
           _loading = false;
           _data = true;
         });
+      }
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         setState(() {
           _loading = false;
           _error = e;
         });
+      }
     }
   }
 
@@ -412,7 +416,7 @@ class _QLLifecycleNode extends StatefulWidget {
   // ignore: unused_element_parameter
   final VoidCallback? onMount, onUnmount;
   final Widget child;
-  const _QLLifecycleNode({this.onMount, this.onUnmount, required this.child});
+  const _QLLifecycleNode({required this.child}) : onUnmount = null, onMount = null;
   @override
   State<_QLLifecycleNode> createState() => _QLLifecycleNodeState();
 }
@@ -421,8 +425,9 @@ class _QLLifecycleNodeState extends State<_QLLifecycleNode> {
   @override
   void initState() {
     super.initState();
-    if (widget.onMount != null)
+    if (widget.onMount != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) => widget.onMount!());
+    }
   }
 
   @override
@@ -628,7 +633,6 @@ class _QLStoreProviderNode extends StatefulWidget {
   final QLContext ctx;
 
   const _QLStoreProviderNode({
-    super.key,
     required this.initialState,
     required this.ctx,
   });
@@ -643,7 +647,7 @@ class _QLStoreProviderNodeState extends State<_QLStoreProviderNode> {
   @override
   void initState() {
     super.initState();
-    _store = QLDataStore(namespace: 'scoped_store_${hashCode}');
+    _store = QLDataStore(namespace: 'scoped_store_$hashCode');
     for (final entry in widget.initialState.entries) {
       _store.set(entry.key, entry.value);
     }

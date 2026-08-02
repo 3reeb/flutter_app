@@ -103,7 +103,9 @@ abstract final class QLLerps {
     final sa = a.storage;
     final sb = b.storage;
     final so = out.storage;
-    for (int i = 0; i < 16; i++) so[i] = sa[i] + (sb[i] - sa[i]) * t;
+    for (int i = 0; i < 16; i++) {
+      so[i] = sa[i] + (sb[i] - sa[i]) * t;
+    }
     return out;
   }
 
@@ -297,7 +299,9 @@ class QLTimeline {
   void _ensureCap(int req) {
     if (req <= _cap) return;
     int nc = _cap;
-    while (nc < req) nc *= 2;
+    while (nc < req) {
+      nc *= 2;
+    }
     _startMs    = _g64(_startMs,    nc);
     _durationMs = _g64(_durationMs, nc);
     _rawT       = _g64(_rawT,       nc);
@@ -307,19 +311,27 @@ class QLTimeline {
     _types      = _gi32(_types,     nc);
 
     final l = List<Float32List?>.filled(nc, null);
-    for (int i = 0; i < _count; i++) l[i] = _luts[i];
+    for (int i = 0; i < _count; i++) {
+      l[i] = _luts[i];
+    }
     _luts = l;
 
     final s = List<QLSignalBase>.filled(nc, QLSignal<double>(0.0));
-    for (int i = 0; i < _count; i++) s[i] = _signals[i];
+    for (int i = 0; i < _count; i++) {
+      s[i] = _signals[i];
+    }
     _signals = s;
 
     final e = List<void Function(double)>.filled(nc, _noopEval);
-    for (int i = 0; i < _count; i++) e[i] = _evaluators[i];
+    for (int i = 0; i < _count; i++) {
+      e[i] = _evaluators[i];
+    }
     _evaluators = e;
 
     final k = List<List<QLKeyframe<dynamic>>?>.filled(nc, null);
-    for (int i = 0; i < _count; i++) k[i] = _keyframes[i];
+    for (int i = 0; i < _count; i++) {
+      k[i] = _keyframes[i];
+    }
     _keyframes = k;
 
     _cap = nc;
@@ -479,13 +491,17 @@ class QLTimeline {
 
   void play({double speed = 1.0, bool loop = false, bool pingPong = false}) {
     _speed = speed; _loop = loop; _pingPong = pingPong; _playing = true;
-    for (int i = 0; i < _count; i++) _direction[i] = 1.0;
+    for (int i = 0; i < _count; i++) {
+      _direction[i] = 1.0;
+    }
     _wake();
   }
 
   void reverse({double speed = 1.0}) {
     _speed = speed; _playing = true;
-    for (int i = 0; i < _count; i++) _direction[i] = -1.0;
+    for (int i = 0; i < _count; i++) {
+      _direction[i] = -1.0;
+    }
     _wake();
   }
 
@@ -527,7 +543,9 @@ class QLTimeline {
         _elapsedMs = _elapsedMs % _totalDurationMs;
       } else if (_pingPong) {
         _elapsedMs = _totalDurationMs - (_elapsedMs - _totalDurationMs);
-        for (int i = 0; i < _count; i++) _direction[i] *= -1.0;
+        for (int i = 0; i < _count; i++) {
+          _direction[i] *= -1.0;
+        }
       } else {
         _elapsedMs = _totalDurationMs;
       }
@@ -539,7 +557,11 @@ class QLTimeline {
       final bool wasRev = _count > 0 && _direction[0] < 0.0;
       _ticker.stop();
       _playing = _loop || _pingPong;
-      if (wasRev) onReverseComplete?.call(); else onComplete?.call();
+      if (wasRev) {
+        onReverseComplete?.call();
+      } else {
+        onComplete?.call();
+      }
     }
   }
 
@@ -596,7 +618,9 @@ class QLTimeline {
       if (_types[i] == _kSpring) {
         final int sb = i * _springStride;
         if ((_springData[sb] - _springData[sb+2]).abs() > 0.01 ||
-             _springData[sb+1].abs() > 0.1) return false;
+             _springData[sb+1].abs() > 0.1) {
+          return false;
+        }
       } else {
         final double t = _rawT[i];
         if (t > 0.0 && t < 1.0) return false;
@@ -626,7 +650,11 @@ T _evalKf<T>(List<QLKeyframe<T>> kfs, double t) {
   int lo = 0, hi = kfs.length - 1;
   while (hi - lo > 1) {
     final int mid = (lo + hi) >> 1;
-    if (kfs[mid].t <= t) lo = mid; else hi = mid;
+    if (kfs[mid].t <= t) {
+      lo = mid;
+    } else {
+      hi = mid;
+    }
   }
   final from = kfs[lo], to = kfs[hi];
   final double span = to.t - from.t;

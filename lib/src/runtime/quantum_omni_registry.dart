@@ -231,8 +231,9 @@ abstract final class QDesignMatrix {
 
     if (scale == 'fluid' || scale == 'expanded') css.write('w-full ');
     if (family == 'input') css.write('min-w-0 ');
-    if (family == 'action' && scale == 'compact')
+    if (family == 'action' && scale == 'compact') {
       css.write('px-10 py-6 text-sm ');
+    }
 
     if (disabled) {
       css.write(
@@ -243,10 +244,10 @@ abstract final class QDesignMatrix {
           css.write('bg-$intent text-white ');
           break;
         case 'soft':
-          css.write('bg-${intent}-100 text-${intent}-800 ');
+          css.write('bg-$intent-100 text-$intent-800 ');
           break;
         case 'ghost':
-          css.write('bg-transparent text-$intent hover:bg-${intent}-50 ');
+          css.write('bg-transparent text-$intent hover:bg-$intent-50 ');
           break;
         case 'bare':
           css.write('bg-transparent text-$intent ');
@@ -256,7 +257,7 @@ abstract final class QDesignMatrix {
           break;
         case 'gradient':
           css.write(
-              'bg-gradient-to-br from-${intent}-400 to-${intent}-700 text-white ');
+              'bg-gradient-to-br from-$intent-400 to-$intent-700 text-white ');
           break;
         case 'surface':
         default:
@@ -276,7 +277,7 @@ abstract final class QDesignMatrix {
           break;
         case 'neon':
           css.write(
-              'shadow-lg shadow-${intent}-400 border border-${intent}-300 ');
+              'shadow-lg shadow-$intent-400 border border-$intent-300 ');
           break;
         case 'neobrutal':
           css.write('border-2 border-black shadow-[4px_4px_0px_#000000] ');
@@ -286,7 +287,7 @@ abstract final class QDesignMatrix {
       if (depth != 'neobrutal' && depth != 'neon') {
         switch (edge) {
           case 'hairline':
-            css.write('border border-${intent}-200 ');
+            css.write('border border-$intent-200 ');
             break;
           case 'thick':
             css.write('border-2 border-$intent ');

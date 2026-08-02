@@ -41,13 +41,11 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'dart:async';
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/foundation.dart';
-import '../foundation/quantum_isolate_bridge.dart';
 import 'package:flutter/services.dart';
 import 'package:yaml/yaml.dart';
 import '../../quantum.dart';
@@ -98,24 +96,24 @@ class QLYamlNode {
 
   /// Access as Map<String, dynamic> or empty map.
   Map<String, dynamic> get asMap {
-    if (_raw is Map) return Map<String, dynamic>.from(_raw as Map);
+    if (_raw is Map) return Map<String, dynamic>.from(_raw);
     return const <String, dynamic>{};
   }
 
   /// Access as List<dynamic> or empty list.
   List<dynamic> get asList {
-    if (_raw is List) return List<dynamic>.from(_raw as List);
+    if (_raw is List) return List<dynamic>.from(_raw);
     if (_raw != null) return [_raw];
     return const <dynamic>[];
   }
 
   String get asString => _raw?.toString() ?? '';
   double get asDouble =>
-      _raw is num ? (_raw as num).toDouble() : double.tryParse(asString) ?? 0.0;
+      _raw is num ? (_raw).toDouble() : double.tryParse(asString) ?? 0.0;
   int get asInt =>
-      _raw is num ? (_raw as num).toInt() : int.tryParse(asString) ?? 0;
+      _raw is num ? (_raw).toInt() : int.tryParse(asString) ?? 0;
   bool get asBool {
-    if (_raw is bool) return _raw as bool;
+    if (_raw is bool) return _raw;
     final s = asString.toLowerCase();
     return s == 'true' || s == '1' || s == 'yes';
   }
@@ -123,7 +121,7 @@ class QLYamlNode {
   /// Navigate into nested keys.  Returns [QLYamlNode.empty] on missing.
   QLYamlNode operator [](String key) {
     if (_raw is Map) {
-      final v = (_raw as Map)[key];
+      final v = (_raw)[key];
       return v != null ? QLYamlNode._(v) : QLYamlNode.empty;
     }
     return QLYamlNode.empty;
@@ -249,7 +247,7 @@ class QuantumYamlEngine {
   final Map<String, Future<Map<String, dynamic>>> _inFlight = {};
 
   // ── Warm the engine: preload essential config files ───────────────────────
-  bool _warmed = false;
+  final bool _warmed = false;
 
   /// Load and fully resolve a YAML/JSON asset file.
   ///
@@ -531,7 +529,7 @@ class QuantumYamlEngine {
     if (frame.contains(resolvedPath)) {
       throw QuantumYamlException('Circular import detected: "$resolvedPath"',
           sourcePath: frame.path,
-          importChain: frame.chain + ' → $resolvedPath');
+          importChain: '${frame.chain} → $resolvedPath');
     }
 
     final _ImportFrame childFrame = _ImportFrame(resolvedPath, frame);
@@ -645,7 +643,7 @@ class QuantumYamlEngine {
   // ── Type Conversion ────────────────────────────────────────────────────────
 
   static Map<String, dynamic> _toStringMap(dynamic value) {
-    if (value is Map) return Map<String, dynamic>.from(value as Map);
+    if (value is Map) return Map<String, dynamic>.from(value);
     // If top-level is a list or scalar, wrap it
     return {'_root': value};
   }

@@ -248,8 +248,9 @@ class QLModuleRegistry {
     for (final dep in importsFor(moduleId)) {
       if (canUse(moduleId, dep, ownerId: ownerId)) {
         final depMacros = section(dep, 'macros', requester: moduleId);
-        if (depMacros is Map)
+        if (depMacros is Map) {
           merged.addAll(Map<String, dynamic>.from(depMacros));
+        }
       }
     }
     final own = section(moduleId, 'macros', requester: moduleId);
@@ -548,7 +549,7 @@ extension QLModuleRegistryQEEBridge on QLModuleRegistry {
         final fieldName = fieldEntry.key.toString();
         final fieldRaw = fieldEntry.value;
         final isStatic =
-            fieldRaw is! Map || (fieldRaw as Map).containsKey('static');
+            fieldRaw is! Map || (fieldRaw).containsKey('static');
         fields[fieldName] = QSliceField(
           fieldName: fieldName,
           type: (fieldRaw is Map ? fieldRaw['type']?.toString() : null) ??

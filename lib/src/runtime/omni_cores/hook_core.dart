@@ -445,9 +445,10 @@ class _QLIntervalNodeState extends State<_QLIntervalNode> {
         final cur = widget.store.get(widget.bindKey!) as int? ?? 0;
         widget.store.set(widget.bindKey!, cur + 1);
       }
-      if (widget.actions != null)
+      if (widget.actions != null) {
         QuantumVM.instance
             .triggerActions(widget.actions!, context, env: widget.env);
+      }
     });
   }
 

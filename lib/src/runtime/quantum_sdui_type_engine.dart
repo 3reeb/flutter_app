@@ -42,7 +42,6 @@
 
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'quantum_core_schema_registry.dart';
 import 'package:quantum_layout/quantum.dart';
 @immutable
 class QuantumSduiTypeBundle {

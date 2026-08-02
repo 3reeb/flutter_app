@@ -35,13 +35,13 @@ Widget _buildBox(QLContext rawCtx) {
   final String subType = ctx.resolvedSubType(fallback: 'col');
 
   // Helper for matrix transformations
-  Matrix4 _matrix4FromDynamic(dynamic v) {
+  Matrix4 matrix4FromDynamic(dynamic v) {
     if (v is Matrix4) return v;
     if (v is Float64List && v.length >= 16) return Matrix4.fromFloat64List(v);
     if (v is List) {
       final values = v
-          .where((e) => e is num)
-          .map((e) => (e as num).toDouble())
+          .whereType<num>()
+          .map((e) => (e).toDouble())
           .toList(growable: false);
       if (values.length >= 16) {
         return Matrix4.fromFloat64List(
@@ -52,7 +52,7 @@ Widget _buildBox(QLContext rawCtx) {
   }
 
   // Helper for Animation Curves
-  Curve _curveFromName(String name) {
+  Curve curveFromName(String name) {
     switch (name.toLowerCase()) {
       case 'linear':
         return Curves.linear;
@@ -211,7 +211,7 @@ Widget _buildBox(QLContext rawCtx) {
         matrixBind.isNotEmpty ? ctx.store.signal(matrixBind) : null;
     final QLSignal<Matrix4>? transformSig = rawSig != null
         ? QLSignalProxy<Matrix4>(
-            rawSig, (v) => _matrix4FromDynamic(v), (v) => v.storage)
+            rawSig, (v) => matrix4FromDynamic(v), (v) => v.storage)
         : null;
 
     final String opacityBind = ctx.string('opacityBind');
@@ -317,9 +317,9 @@ Widget _buildBox(QLContext rawCtx) {
     if (matrixStyle.isNotEmpty) styles.add(matrixStyle);
   }
 
-  if (subType == 'row')
+  if (subType == 'row') {
     styles.add('row');
-  else if (subType == 'col')
+  } else if (subType == 'col')
     styles.add('col');
   else if (subType == 'stack')
     styles.add('stack');
@@ -335,13 +335,16 @@ Widget _buildBox(QLContext rawCtx) {
     styles.add('grid-rows-$rows');
   }
 
-  if (ctx.string('justify').isNotEmpty)
+  if (ctx.string('justify').isNotEmpty) {
     styles.add('justify-${ctx.string('justify')}');
-  if (ctx.string('items').isNotEmpty)
+  }
+  if (ctx.string('items').isNotEmpty) {
     styles.add('items-${ctx.string('items')}');
+  }
   if (ctx.boolean('clip')) styles.add('overflow-hidden');
-  if (ctx.node.style != null && ctx.node.style!.isNotEmpty)
+  if (ctx.node.style != null && ctx.node.style!.isNotEmpty) {
     styles.add(ctx.node.style!);
+  }
 
   final VoidCallback? tapAction =
       ctx.action('onClick') ?? ctx.action('onTap') ?? ctx.action('action');
@@ -359,10 +362,12 @@ Widget _buildBox(QLContext rawCtx) {
   // ─── 3. HIGH-POWER WRAPPERS (O(1) Overhead unless requested) ───
 
   if (ctx.boolean('offstage')) node = Offstage(offstage: true, child: node);
-  if (ctx.boolean('ignorePointer'))
+  if (ctx.boolean('ignorePointer')) {
     node = IgnorePointer(ignoring: true, child: node);
-  if (ctx.boolean('absorbPointer'))
+  }
+  if (ctx.boolean('absorbPointer')) {
     node = AbsorbPointer(absorbing: true, child: node);
+  }
   if (ctx.boolean('repaintBoundary')) node = RepaintBoundary(child: node);
 
   final String semanticLabel = ctx.string('semanticLabel');
@@ -418,8 +423,9 @@ Widget _buildBox(QLContext rawCtx) {
   }
 
   final double opacity = ctx.number('opacity', fallback: 1.0);
-  if (opacity < 1.0)
+  if (opacity < 1.0) {
     node = Opacity(opacity: opacity.clamp(0.0, 1.0), child: node);
+  }
 
   final String heroTag = ctx.string('heroTag', fallback: '');
   if (heroTag.isNotEmpty) {
@@ -443,7 +449,7 @@ Widget _buildBox(QLContext rawCtx) {
     final int durationMs = ctx.integer('durationMs', fallback: 180);
     final String transitionKind = ctx.string('transition', fallback: 'fade');
     final Curve curve =
-        _curveFromName(ctx.string('curve', fallback: 'easeOutCubic'));
+        curveFromName(ctx.string('curve', fallback: 'easeOutCubic'));
 
     node = AnimatedSwitcher(
       duration: Duration(milliseconds: durationMs.clamp(0, 10000)),
@@ -535,7 +541,7 @@ Widget _buildBox(QLContext rawCtx) {
         transformBind.isNotEmpty ? ctx.store.signal(transformBind) : null;
     final QLSignal<Matrix4>? transformSig = rawSig != null
         ? QLSignalProxy<Matrix4>(
-            rawSig, (v) => _matrix4FromDynamic(v), (v) => v.storage)
+            rawSig, (v) => matrix4FromDynamic(v), (v) => v.storage)
         : null;
 
     if (transformSig != null) {

@@ -51,7 +51,7 @@ Widget _buildAnimation(QLContext rawCtx) {
       ctx.slot('child') ?? Q('col min-w-0 min-h-0', children: ctx.children);
   final Duration duration =
       Duration(milliseconds: ctx.integer('durationMs', fallback: 320));
-  final Curve curve = Curves.easeOutCubic;
+  const Curve curve = Curves.easeOutCubic;
 
   switch (kind) {
     case 'fade':
@@ -159,10 +159,10 @@ Widget _buildAnimation(QLContext rawCtx) {
       int delayMs = ctx.integer('delayMs', fallback: 80);
       if (delayMs < 0) delayMs = 0;
       return _QLStaggerNode(
-          children: ctx.children,
           delayMs: delayMs,
           duration: duration,
-          curve: curve);
+          curve: curve,
+          children: ctx.children);
     case 'blur':
       return TweenAnimationBuilder<double>(
         tween: Tween<double>(
@@ -172,12 +172,12 @@ Widget _buildAnimation(QLContext rawCtx) {
         curve: curve,
         builder: (context, sigma, child) => ImageFiltered(
             imageFilter:
-                ColorFilter.mode(Colors.transparent, BlendMode.multiply),
+                const ColorFilter.mode(Colors.transparent, BlendMode.multiply),
             child: child),
         child: child,
       );
     case 'cross':
-      final Widget first = ctx.slot('first') ?? SizedBox.shrink();
+      final Widget first = ctx.slot('first') ?? const SizedBox.shrink();
       final Widget second = ctx.slot('second') ?? child;
       final bool showFirst = ctx.boolean('showFirst', fallback: true);
       return AnimatedCrossFade(
@@ -295,7 +295,9 @@ class _QLStaggerNodeState extends State<_QLStaggerNode>
 
   @override
   void dispose() {
-    for (final c in _ctrls) c.dispose();
+    for (final c in _ctrls) {
+      c.dispose();
+    }
     super.dispose();
   }
 
@@ -485,9 +487,10 @@ class _QLParticleNodeState extends State<_QLParticleNode>
     super.initState();
     _c = AnimationController(duration: const Duration(seconds: 2), vsync: this)
       ..repeat();
-    for (int i = 0; i < widget.count; i++)
+    for (int i = 0; i < widget.count; i++) {
       _p.add(Offset((math.Random().nextDouble() - 0.5) * 200,
           (math.Random().nextDouble() - 0.5) * 200));
+    }
   }
 
   @override
@@ -519,7 +522,7 @@ class _ParticlePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color.withOpacity((1 - progress).clamp(0, 1));
+      ..color = color.withValues(alpha: (1 - progress).clamp(0, 1));
     for (final p in particles) {
       canvas.drawCircle(
           Offset(size.width / 2 + p.dx * progress,

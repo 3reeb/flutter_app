@@ -72,7 +72,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../quantum.dart';
-import 'quantum_matrix_engine.dart';
 // ──────────────────────────────────────────────────────────────────────────────
 // SECTION 1 — Template Engine (QJsonPresetEngine)
 // ──────────────────────────────────────────────────────────────────────────────
@@ -265,13 +264,15 @@ class QJsonPresetEngine {
   // ── Internals ──────────────────────────────────────────────────────────────
 
   static Map<String, dynamic> _schemaForValue(dynamic value) {
-    if (value == null)
+    if (value == null) {
       return const <String, dynamic>{'type': 'dynamic', 'nullable': true};
+    }
     if (value is bool) return const <String, dynamic>{'type': 'bool'};
     if (value is int) return const <String, dynamic>{'type': 'int'};
     if (value is double) return const <String, dynamic>{'type': 'double'};
-    if (value is String)
+    if (value is String) {
       return <String, dynamic>{'type': 'String', 'example': value};
+    }
     if (value is List) {
       return <String, dynamic>{
         'type': 'List<dynamic>',
@@ -302,8 +303,9 @@ class QJsonPresetEngine {
   }
 
   static List<String> _extractTags(dynamic raw) {
-    if (raw is List)
+    if (raw is List) {
       return raw.map((e) => e.toString()).toList(growable: false);
+    }
     if (raw is String && raw.isNotEmpty) return [raw];
     return const [];
   }

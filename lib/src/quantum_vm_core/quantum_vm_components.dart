@@ -164,7 +164,7 @@ Widget _buildComponentUse(_AliasContext ctx) {
   final _QLComponentDefinition? definition =
       _resolveComponentDefinition(typeName, ctx);
   if (definition == null) {
-    final QuantumComponentBuilder? builtIn = null;
+    const QuantumComponentBuilder? builtIn = null;
     if (builtIn != null) {
       return builtIn(ctx.flutterContext, ctx.node, ctx.store);
     }
@@ -244,13 +244,15 @@ _QLComponentDefinition _compileComponentDefinition(_AliasContext ctx) {
 }
 
 Map<String, dynamic> _componentSchemaForValue(dynamic value) {
-  if (value == null)
+  if (value == null) {
     return const <String, dynamic>{'type': 'dynamic', 'nullable': true};
+  }
   if (value is bool) return const <String, dynamic>{'type': 'bool'};
   if (value is int) return const <String, dynamic>{'type': 'int'};
   if (value is double) return const <String, dynamic>{'type': 'double'};
-  if (value is String)
+  if (value is String) {
     return <String, dynamic>{'type': 'String', 'example': value};
+  }
   if (value is List) {
     return <String, dynamic>{
       'type': 'List<dynamic>',
@@ -907,8 +909,9 @@ bool _qlValueMatches(dynamic expected, dynamic actual) {
   if (expected == null) return true;
   if (expected is bool) return expected == actual;
   if (expected is num && actual is num) return expected == actual;
-  if (expected is String && actual is String)
+  if (expected is String && actual is String) {
     return _qlStringMatches(expected, actual);
+  }
   if (expected is List) {
     if (actual is List) {
       return expected.any((e) => actual.any((a) => _qlValueMatches(e, a)));
@@ -1118,14 +1121,20 @@ bool _qlBlueprintRuleMatches(
   final Map<String, dynamic> media = _qlCloneMap(env['componentMedia']);
   final Map<String, dynamic> stream = _qlCloneMap(env['componentStream']);
 
-  if (match.containsKey('type') && !_qlStringMatches(match['type'], type))
+  if (match.containsKey('type') && !_qlStringMatches(match['type'], type)) {
     return false;
-  if (match.containsKey('types') && !_qlStringMatches(match['types'], type))
+  }
+  if (match.containsKey('types') && !_qlStringMatches(match['types'], type)) {
     return false;
+  }
   if (match.containsKey('subType') &&
-      !_qlStringMatches(match['subType'], subType)) return false;
+      !_qlStringMatches(match['subType'], subType)) {
+    return false;
+  }
   if (match.containsKey('subTypes') &&
-      !_qlStringMatches(match['subTypes'], subType)) return false;
+      !_qlStringMatches(match['subTypes'], subType)) {
+    return false;
+  }
 
   final String? feature =
       runtime['feature']?.toString() ?? component['feature']?.toString();
@@ -1142,18 +1151,29 @@ bool _qlBlueprintRuleMatches(
       stream['pattern']?.toString();
 
   if (match.containsKey('feature') &&
-      !_qlStringMatches(match['feature'], feature ?? '')) return false;
-  if (match.containsKey('schema') &&
-      !_qlStringMatches(match['schema'], schema ?? '')) return false;
-  if (match.containsKey('operation') &&
-      !_qlStringMatches(match['operation'], operation ?? '')) return false;
-  if (match.containsKey('resource') &&
-      !_qlStringMatches(match['resource'], resource ?? '')) return false;
-  if (match.containsKey('pattern') &&
-      !_qlStringMatches(match['pattern'], pattern ?? '')) return false;
-
-  if (match.containsKey('path') && !_qlStringMatches(match['path'], path))
+      !_qlStringMatches(match['feature'], feature ?? '')) {
     return false;
+  }
+  if (match.containsKey('schema') &&
+      !_qlStringMatches(match['schema'], schema ?? '')) {
+    return false;
+  }
+  if (match.containsKey('operation') &&
+      !_qlStringMatches(match['operation'], operation ?? '')) {
+    return false;
+  }
+  if (match.containsKey('resource') &&
+      !_qlStringMatches(match['resource'], resource ?? '')) {
+    return false;
+  }
+  if (match.containsKey('pattern') &&
+      !_qlStringMatches(match['pattern'], pattern ?? '')) {
+    return false;
+  }
+
+  if (match.containsKey('path') && !_qlStringMatches(match['path'], path)) {
+    return false;
+  }
   if (match.containsKey('pathPrefix')) {
     final String prefix = match['pathPrefix']?.toString() ?? '';
     if (prefix.isNotEmpty && !path.startsWith(prefix)) return false;
@@ -2085,10 +2105,8 @@ class _QLComponentRuntimeHostState extends State<_QLComponentRuntimeHost> {
         _snapshotByPrefixFrom(stateSnapshot, 'props.');
     final Map<String, dynamic> linksSnapshot =
         _snapshotByPrefixFrom(stateSnapshot, 'links.');
-    final BuildContext? effectiveContext = context ?? this.context;
-    final QLDataScope? parentScope = effectiveContext != null
-        ? QLDataScope.readNode(effectiveContext)
-        : null;
+    final BuildContext effectiveContext = context ?? this.context;
+    final QLDataScope? parentScope = QLDataScope.readNode(effectiveContext);
     final Map<String, dynamic> parentData = parentScope?.localData ?? const {};
     final Map<String, dynamic> rootData = (widget.sourceCtx.env['root'] is Map)
         ? Map<String, dynamic>.from(widget.sourceCtx.env['root'] as Map)
@@ -2457,7 +2475,7 @@ class _QLComponentSignalBinding {
   const _QLComponentSignalBinding(this.signal, this.listener);
 }
 
-final _NoopListenable _noopListenable = _NoopListenable.instance;
+const _NoopListenable _noopListenable = _NoopListenable.instance;
 
 bool _equals(dynamic a, dynamic b) => identical(a, b) || a == b;
 

@@ -114,7 +114,9 @@ class QDiskIndex {
 
   int get totalAllocatedBytes {
     int total = 0;
-    for (final e in _entries.values) total += e.length;
+    for (final e in _entries.values) {
+      total += e.length;
+    }
     return total;
   }
 }

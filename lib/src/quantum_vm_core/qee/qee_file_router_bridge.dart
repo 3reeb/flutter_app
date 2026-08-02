@@ -49,7 +49,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import 'qee_node_types.dart';
 import 'qee_registry.dart';
 import 'qee_serializer.dart';
 
@@ -391,7 +390,7 @@ class QFileRouterBridge {
     final pageMap = await _loadRawMap(entry.assetPath);
     final props = pageMap['props'];
     final pageProps = props is Map
-        ? Map<String, dynamic>.from(props as Map)
+        ? Map<String, dynamic>.from(props)
         : const <String, dynamic>{};
 
     await QNodeRegistry.instance.upsertPage(QPageConfig(
@@ -445,7 +444,7 @@ class QFileRouterBridge {
           return QMiddlewareStep(
             type: s['type']?.toString() ?? '',
             params: params is Map
-                ? Map<String, dynamic>.from(params as Map)
+                ? Map<String, dynamic>.from(params)
                 : const {},
             isAsync: s['async'] == true,
             description: s['description']?.toString(),
@@ -481,8 +480,9 @@ class QFileRouterBridge {
         continue;
       }
       // Type coercion
-      if (value == 'true') result[key] = true;
-      else if (value == 'false') result[key] = false;
+      if (value == 'true') {
+        result[key] = true;
+      } else if (value == 'false') result[key] = false;
       else if (value == 'null') result[key] = null;
       else {
         final num? numVal = num.tryParse(value);

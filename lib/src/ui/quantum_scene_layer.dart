@@ -54,7 +54,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import '../foundation/quantum_primitives.dart';
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  TYPE DEFINITIONS
@@ -114,7 +113,9 @@ class _DirtyBitfield {
   void _ensureCapacity(int wordIndex) {
     if (wordIndex < _words.length) return;
     int newLen = _words.length;
-    while (newLen <= wordIndex) newLen *= 2;
+    while (newLen <= wordIndex) {
+      newLen *= 2;
+    }
     final Uint32List grown = Uint32List(newLen)..setAll(0, _words);
     _words = grown;
   }
@@ -189,7 +190,9 @@ class QLSceneLayer extends ChangeNotifier {
 
   /// Marks ALL fragments dirty (full redraw on next paint).
   void invalidateAll() {
-    for (final id in _fragments.keys) _dirty.mark(id);
+    for (final id in _fragments.keys) {
+      _dirty.mark(id);
+    }
     notifyListeners();
   }
 
@@ -258,8 +261,9 @@ class QLSceneLayer extends ChangeNotifier {
         } catch (e) {
           // Fragment draw error: skip and leave picture null.
           // The error is visible as a missing fragment, not a crash.
-          if (kDebugMode)
+          if (kDebugMode) {
             debugPrint('QLSceneLayer: fragment $id draw error: $e');
+          }
         }
         frag.picture = recorder.endRecording();
         _dirty.clear(id);
@@ -462,7 +466,9 @@ class _QLSceneStackState extends State<QLSceneStack> {
 
   @override
   void dispose() {
-    for (final layer in _layers) layer.dispose();
+    for (final layer in _layers) {
+      layer.dispose();
+    }
     super.dispose();
   }
 

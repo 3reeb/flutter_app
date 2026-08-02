@@ -49,7 +49,6 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 
@@ -982,15 +981,33 @@ class QNodeRegistry {
 
     // Build the full node map for resolution context
     final allNodes = <int, QBaseNode>{};
-    for (final node in _store.pages) allNodes[node.nodeId] = node;
-    for (final node in _store.layouts) allNodes[node.nodeId] = node;
-    for (final node in _store.middlewares) allNodes[node.nodeId] = node;
-    for (final node in _store.metas) allNodes[node.nodeId] = node;
-    for (final node in _store.errors) allNodes[node.nodeId] = node;
-    for (final node in _store.loadings) allNodes[node.nodeId] = node;
-    for (final node in _store.notFounds) allNodes[node.nodeId] = node;
-    for (final node in _store.modules) allNodes[node.nodeId] = node;
-    for (final node in _store.apps) allNodes[node.nodeId] = node;
+    for (final node in _store.pages) {
+      allNodes[node.nodeId] = node;
+    }
+    for (final node in _store.layouts) {
+      allNodes[node.nodeId] = node;
+    }
+    for (final node in _store.middlewares) {
+      allNodes[node.nodeId] = node;
+    }
+    for (final node in _store.metas) {
+      allNodes[node.nodeId] = node;
+    }
+    for (final node in _store.errors) {
+      allNodes[node.nodeId] = node;
+    }
+    for (final node in _store.loadings) {
+      allNodes[node.nodeId] = node;
+    }
+    for (final node in _store.notFounds) {
+      allNodes[node.nodeId] = node;
+    }
+    for (final node in _store.modules) {
+      allNodes[node.nodeId] = node;
+    }
+    for (final node in _store.apps) {
+      allNodes[node.nodeId] = node;
+    }
 
     // Run resolver
     try {

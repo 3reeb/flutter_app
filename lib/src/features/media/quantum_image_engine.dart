@@ -29,7 +29,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:io' as io;
 import 'package:flutter/foundation.dart';
@@ -54,8 +53,9 @@ class QLDefaultCdnResolver extends QLImageResolver {
 
   @override
   String rewrite(String url, int width, int height, int quality) {
-    if (!url.contains('cdn.') && !url.contains('res.cloudinary.com'))
+    if (!url.contains('cdn.') && !url.contains('res.cloudinary.com')) {
       return url;
+    }
 
     final int finalQuality = isLowBandwidth ? (quality * 0.5).toInt() : quality;
     final int safeWidth = width > 0 ? width : 800; // Failsafe bounds

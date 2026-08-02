@@ -74,7 +74,9 @@ class _ExportPayload {
     try {
       // base64url → standard base64 + padding
       String padded = q.replaceAll('-', '+').replaceAll('_', '/');
-      while (padded.length % 4 != 0) padded += '=';
+      while (padded.length % 4 != 0) {
+        padded += '=';
+      }
       final decoded = utf8.decode(base64.decode(padded));
       final data = Map<String, dynamic>.from(jsonDecode(decoded) as Map);
       return _ExportPayload(

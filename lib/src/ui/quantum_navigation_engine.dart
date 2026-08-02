@@ -40,8 +40,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'quantum_hydration_reader.dart';
 // Ecosystem Primitives
-import '../foundation/quantum_primitives.dart';
-import 'quantum_components.dart';
 import 'package:quantum_layout/quantum.dart';
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  HYBRID SEO & DATA FETCHING MODELS (Next.js Parity)
@@ -345,7 +343,7 @@ class _QLRadixTrie {
 abstract final class QLHydration {
   static Map<String, dynamic>? _preloadedProps;
   static bool _isHydrated = false;
-  static bool _warnedNoReader = false;
+  static const bool _warnedNoReader = false;
 
   /// Optional platform hook: return the raw `window.__QUANTUM_PROPS__` JSON
   /// map (or null if absent) using whatever JS-interop mechanism fits your
@@ -561,9 +559,10 @@ class QLNavController extends ChangeNotifier {
 
   Widget resolveWidget(BuildContext context, QLRouteInfo info) {
     final match = _trie.search(info.path);
-    if (match == null || match.routes.isEmpty)
+    if (match == null || match.routes.isEmpty) {
       return _notFoundWidget ??
           Scaffold(body: Center(child: Text('404: ${info.path}')));
+    }
 
     final leaf = match.routes.last;
 

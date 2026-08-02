@@ -22,7 +22,6 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 // Quantum ecosystem — only the barrel import is needed after decoupling.
@@ -157,10 +156,10 @@ class QLOverlayRuntimeSpec {
     if (map == null) return const QLOverlayRuntimeSpec();
 
     bool readBool(String key, {bool fallback = false}) =>
-        map![key] is bool ? map![key] as bool : fallback;
+        map![key] is bool ? map[key] as bool : fallback;
 
     int? readInt(String key) =>
-        map![key] is num ? (map![key] as num).toInt() : null;
+        map![key] is num ? (map[key] as num).toInt() : null;
 
     QLSheetEdge? readEdge(dynamic raw) {
       final value = raw?.toString().trim().toLowerCase();
@@ -1263,8 +1262,9 @@ class QuantumOverlay {
   void closeTop() {
     if (_activeNodes.value.isNotEmpty) {
       final top = _activeNodes.value.last;
-      if (!top.config.runtime.allowClose || top.config.runtime.lockClose)
+      if (!top.config.runtime.allowClose || top.config.runtime.lockClose) {
         return;
+      }
       top.closeTrigger();
     }
   }
@@ -1307,9 +1307,9 @@ class QuantumOverlay {
         bgZoomDepth = conf.bgZoomDepth;
         blurSigma = conf.bgBlurSigma;
 
-        if (conf.transition == QLTransitionMode.slideLeft)
+        if (conf.transition == QLTransitionMode.slideLeft) {
           bgAlign = Alignment.centerLeft;
-        else if (conf.transition == QLTransitionMode.slideRight)
+        } else if (conf.transition == QLTransitionMode.slideRight)
           bgAlign = Alignment.centerRight;
         else if (conf.transition == QLTransitionMode.slideUp)
           bgAlign = Alignment.bottomCenter;
@@ -1967,10 +1967,12 @@ class _QLUniversalNodeState extends State<_QLUniversalNode>
 
     if (left && top && ok(QLResizeEdge.topLeft)) return QLResizeEdge.topLeft;
     if (right && top && ok(QLResizeEdge.topRight)) return QLResizeEdge.topRight;
-    if (left && bottom && ok(QLResizeEdge.bottomLeft))
+    if (left && bottom && ok(QLResizeEdge.bottomLeft)) {
       return QLResizeEdge.bottomLeft;
-    if (right && bottom && ok(QLResizeEdge.bottomRight))
+    }
+    if (right && bottom && ok(QLResizeEdge.bottomRight)) {
       return QLResizeEdge.bottomRight;
+    }
     if (left && ok(QLResizeEdge.left)) return QLResizeEdge.left;
     if (right && ok(QLResizeEdge.right)) return QLResizeEdge.right;
     if (top && ok(QLResizeEdge.top)) return QLResizeEdge.top;

@@ -49,7 +49,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../quantum.dart';
-import 'quantum_boot_schema.dart';
 import '../quantum_vm_core/qee/qee.dart'
     show QNodeRegistry, QFileRouterBridge, QAppNodeBuilder;
 import '../quantum_vm_core/qee/qee_file_router_bridge.dart'
@@ -389,7 +388,7 @@ class _QuantumBootLoaderState extends State<_QuantumBootLoader> {
   bool _ready = false;
   dynamic _error;
   QuantumAppConfig? _appConfig;
-  Key _appKey = UniqueKey();
+  final Key _appKey = UniqueKey();
   StreamSubscription? _yamlWatcher;
   Timer? _debounce;
 
@@ -462,18 +461,20 @@ class _QuantumBootLoaderState extends State<_QuantumBootLoader> {
         configPath: widget.configPath,
         extend: widget.extend,
       );
-      if (mounted)
+      if (mounted) {
         setState(() {
           _appConfig = cfg;
           _ready = true;
         });
+      }
     } catch (e, st) {
       debugPrint('[QuantumAppEntry] Boot error: $e\n$st');
-      if (mounted)
+      if (mounted) {
         setState(() {
           _error = e;
           _ready = true;
         });
+      }
     }
   }
 
@@ -969,19 +970,21 @@ class _QLFileRouteViewStaticState extends State<_QLFileRouteViewStatic> {
           env);
 
       // 🚀 UPDATE THIS LINE
-      if (mounted)
+      if (mounted) {
         setState(() {
           _ast = ast;
           _raw = raw;
           _error = null;
         });
+      }
     } catch (e, st) {
       debugPrint('[QuantumAppEntry] Compile error: $e\n$st');
       // 🚀 ADD THIS LINE
-      if (mounted)
+      if (mounted) {
         setState(() {
           _error = e;
         });
+      }
     }
   }
 

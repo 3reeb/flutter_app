@@ -46,8 +46,6 @@
 //   All operations run on the main Dart isolate — no locks needed.
 // ════════════════════════════════════════════════════════════════════════════
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'qee_node_types.dart';

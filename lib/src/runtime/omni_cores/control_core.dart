@@ -89,8 +89,9 @@ Widget _buildControl(QLContext rawCtx) {
     if (flowStore.get(selectionKey) == null) {
       final dynamic initialSelection =
           ctx.prop('initialSelection') ?? ctx.prop('selected');
-      if (initialSelection != null)
+      if (initialSelection != null) {
         flowStore.set(selectionKey, initialSelection);
+      }
     }
     if (flowStore.get(heroKey) == null) {
       final dynamic initialHero =

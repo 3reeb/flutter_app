@@ -579,7 +579,7 @@ abstract class CacheStore {
 
 class MemoryCacheStore implements CacheStore {
   final int maxEntries;
-  final Map<String, CacheEntry> _map = LinkedHashMap<String, CacheEntry>();
+  final Map<String, CacheEntry> _map = <String, CacheEntry>{};
 
   MemoryCacheStore({this.maxEntries = 512});
 
@@ -824,7 +824,7 @@ class TransferCheckpointStore {
 }
 
 class MemoryTransferCheckpointStore extends TransferCheckpointStore {
-  final Map<String, Map<String, dynamic>> _store = LinkedHashMap();
+  final Map<String, Map<String, dynamic>> _store = {};
   final int maxEntries;
 
   MemoryTransferCheckpointStore({this.maxEntries = 100});
@@ -2105,8 +2105,9 @@ class ApiClient {
   dynamic _normalizeBody(dynamic body, Map<String, String> headers) {
     if (body == null) return null;
     if (body is MultipartRequestBody) return body;
-    if (body is Stream<List<int>> || body is List<int> || body is String)
+    if (body is Stream<List<int>> || body is List<int> || body is String) {
       return body;
+    }
     headers.putIfAbsent(
         HttpHeaders.contentTypeHeader, () => 'application/json; charset=utf-8');
     return body;
@@ -2566,8 +2567,9 @@ class IoUdpTransport implements UdpConnection {
       Uri uri, CryptoPolicy crypto, NativeSystemDelegate? nativeDelegate,
       {String encryptionKeyId = 'default-udp-session-key'}) async {
     final addresses = await InternetAddress.lookup(uri.host);
-    if (addresses.isEmpty)
+    if (addresses.isEmpty) {
       throw Exception('DNS resolution failed for ${uri.host}');
+    }
     final socket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 0);
     return IoUdpTransport._(socket, addresses.first, uri.port, crypto,
         nativeDelegate, encryptionKeyId);
@@ -2581,7 +2583,7 @@ class IoUdpTransport implements UdpConnection {
     if (_isClosed) return;
     var rawBytes = packet.toBytes();
     if (_crypto.mode == EncryptionMode.hardware && _nativeDelegate != null) {
-      rawBytes = await _nativeDelegate!.hardwareEncrypt(
+      rawBytes = await _nativeDelegate.hardwareEncrypt(
         rawBytes,
         _encryptionKeyId,
         meta: {'type': 'udp'},
@@ -2604,7 +2606,7 @@ class IoUdpTransport implements UdpConnection {
     try {
       var safeBytes = datagram.data;
       if (_crypto.mode == EncryptionMode.hardware && _nativeDelegate != null) {
-        safeBytes = await _nativeDelegate!.hardwareDecrypt(
+        safeBytes = await _nativeDelegate.hardwareDecrypt(
           safeBytes,
           _encryptionKeyId,
           meta: {'type': 'udp'},

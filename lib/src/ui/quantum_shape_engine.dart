@@ -403,8 +403,9 @@ class RenderQLShape extends RenderProxyBox {
   }
 
   double _resolve(dynamic value, double maxSpace, {double fallback = 0.0}) {
-    if (value is QShapeValue)
+    if (value is QShapeValue) {
       return value.resolve(maxSpace, fallback: fallback);
+    }
     if (value is num) return value.toDouble();
     if (value is String && value.trim().endsWith('%')) {
       final parsed = double.tryParse(value.trim().replaceAll('%', ''));
