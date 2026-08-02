@@ -54,7 +54,15 @@
           "gap": 24,
           "padding": 24
         },
-        "children": []
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Content area"
+            },
+            "children": []
+          }
+        ]
       },
       "footer": {
         "type": "box",

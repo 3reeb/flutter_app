@@ -1,3 +1,27 @@
+/*
+ * ============================================================================
+ * File: quantum_core_file_registry.dart
+ * 
+ * Description:
+ * A folder-based, lazy, and override-friendly registry system for managing 
+ * core framework assets such as macros, templates, layouts, and components.
+ * It maps directory structures to core namespaces and lazily loads file 
+ * content on demand while supporting built-in and override layers.
+ * 
+ * Key Components:
+ * - QLCoreFileDescriptor: Immutable metadata describing a registered file asset.
+ * - QLCoreFileRegistry: Singleton registry handling folder registration, 
+ *   lazy loading, and caching of core file descriptors.
+ * 
+ * Dependencies/Relationships:
+ * Interacts with QuantumYamlEngine for asset parsing and loading. Serves as 
+ * the underlying file resolution mechanism for other Quantum registries.
+ * 
+ * Notes:
+ * Implements a QLRuntimeCache to manage memory footprint for resolved files.
+ * Overrides take precedence over built-in descriptors when resolving paths.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM CORE FILE REGISTRY
 //

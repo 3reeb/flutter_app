@@ -1,3 +1,27 @@
+/*
+ * ============================================================================
+ * File: quantum_sdui_engine.dart
+ * 
+ * Description:
+ * The core engine for handling encrypted Server-Driven UI (SDUI) payloads. 
+ * It ensures zero-trust security by providing AES-256-GCM decryption, 
+ * HMAC-SHA256 signature verification, and replay attack prevention. Once 
+ * verified, it compiles the payload into a cached QLBlueprint AST.
+ * 
+ * Key Components:
+ * - QuantumSduiEngine: Singleton managing decryption, validation, and compilation.
+ * - SduiKeyStore: Manages AES and HMAC keys with support for rotation.
+ * - SduiReplayGuard: LRU-bounded nonce tracker to prevent replay attacks.
+ * 
+ * Dependencies/Relationships:
+ * Depends on the crypto package. Interacts with QLCompiler to turn 
+ * decrypted JSON maps into executable UI blueprints.
+ * 
+ * Notes:
+ * Includes a pure-Dart fallback for AES-GCM. In high-performance production 
+ * environments, consider replacing the internal _AesGcm with a native plugin.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM SDUI ENGINE v1.0 — ENCRYPTED SERVER-DRIVEN UI
 // quantum_sdui_engine.dart

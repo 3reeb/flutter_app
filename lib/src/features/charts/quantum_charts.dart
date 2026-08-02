@@ -1,3 +1,27 @@
+/*
+ * ============================================================================
+ * File: quantum_charts.dart
+ * 
+ * Description:
+ * The Omega Chart Engine for the Quantum framework. A pure Flutter, zero-copy, 
+ * SIMD-optimized charting library designed to render thousands of data points 
+ * with hardware acceleration. It supports multiple chart types (line, bar, pie, 
+ * radar, etc.) and seamlessly integrates with the SDUI engine.
+ * 
+ * Key Components:
+ * - QLChartDataBuffer: Cache-aligned data structure for fast point processing.
+ * - QLUniversalChart: The core unified chart widget supporting animations and interactions.
+ * - _QLDataPainter: Hardware-accelerated canvas painter implementing various chart layouts.
+ * 
+ * Dependencies/Relationships:
+ * Operates independently but can be instantiated via uildChart from within the 
+ * Quantum Server-Driven UI (SDUI) pipeline.
+ * 
+ * Notes:
+ * Employs extreme optimization techniques such as zero-allocation hot loops, raw 
+ * canvas point drawing, and binary search for hover interactions to maintain 60/120fps.
+ * ============================================================================
+ */
 import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:ui' as ui;

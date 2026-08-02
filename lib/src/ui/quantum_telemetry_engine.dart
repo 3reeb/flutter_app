@@ -1,3 +1,23 @@
+/*
+ * ============================================================================
+ * File: quantum_telemetry_engine.dart
+ * 
+ * Description:
+ * High-performance, production-grade telemetry engine utilizing a fixed-width, zero-GC Uint32List ring buffer to track performance, lifecycle, user journeys, and errors.
+ * 
+ * Key Components:
+ * - TelemetryController: Singleton managing global telemetry state and lifecycle hooks.
+ * - TelemetryStore: Zero-allocation circular buffer recording events.
+ * - TelemetryRecord: Decoded view of telemetry events.
+ * - SymbolCache: LRU cache resolving event label hashes.
+ * 
+ * Dependencies/Relationships:
+ * Independent SDK with optional hooks into the QuantumVM and Flutter Scheduler/Widget bindings.
+ * 
+ * Notes:
+ * Highly optimized to never allocate Strings or objects on the hot recording path.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM TELEMETRY ENGINE v2.0 — PRODUCTION GRADE
 // quantum_telemetry_engine.dart

@@ -1,3 +1,29 @@
+/*
+ * ============================================================================
+ * File: quantum_app_shell.dart
+ * 
+ * Description:
+ * The Omega Bootstrapper and God-Mode Orchestrator for the Quantum framework. 
+ * This file serves as the ultimate dependency injection (DI) container and 
+ * lifecycle manager. It handles synchronous low-level engine ignition, domain 
+ * orchestration, and global state initialization, effectively wrapping the app 
+ * in a robust shell that manages everything from routing to telemetry.
+ * 
+ * Key Components:
+ * - QuantumAppEnvironment: Exposes all core framework engines for dynamic interception.
+ * - QuantumProductionRegistry: Manages production-ready actions, pipes, and plugins.
+ * - bootQuantumApp: The insane fast launch and zone matcher bootstrapper.
+ * - _QuantumAppShell: The root widget compositing the VM, overlays, and router.
+ * 
+ * Dependencies/Relationships:
+ * Sits at the top of the architectural hierarchy, coordinating QuantumVM, 
+ * QLNavController, QuantumTelemetry, and modular QuantumDomain definitions.
+ * 
+ * Notes:
+ * Designed for absolute performance and predictability. Synchronous boot steps 
+ * ensure the environment is fully assembled before the first frame is rendered.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM APP SHELL v9.0 - OMEGA BOOTSTRAPPER + GOD-MODE ORCHESTRATOR & DI
 // quantum_app_shell.dart
@@ -619,7 +645,7 @@ class _QuantumAppShellState extends State<_QuantumAppShell> {
     if (kDebugMode) {
       QuantumYamlEngine.instance.clearCaches();
       QuantumVM.instance.clearRuntimeCaches();
-      QJsonTemplateEngine_D.clear();
+      QJsonPresetEngine.clear();
       QLSchemaRegistry.instance.clear();
     }
   }

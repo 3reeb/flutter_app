@@ -1,3 +1,27 @@
+/*
+ * ============================================================================
+ * File: quantum_schema.dart
+ * 
+ * Description:
+ * Dynamic Data Schema and Validation Engine. Enables runtime validation, parsing, 
+ * and serialization of complex data models, relationships, and computed fields 
+ * without relying on static Dart classes.
+ * 
+ * Key Components:
+ * - QLSchemaBlueprint: A parsed schema capable of handling projections and tree selection.
+ * - QLSchemaFieldSpec: Defines type, bounds, formatting, and validation rules for a field.
+ * - QLBlockPayload: A dynamically typed payload representation for content blocks.
+ * 
+ * Dependencies/Relationships:
+ * Relies on quantum_core.dart (path utilities) and quantum_primitives.dart.
+ * Powers the underlying forms, networking validation, and JSON ingestion systems.
+ * 
+ * Notes:
+ * Built to be highly flexible, supporting virtual fields, lazy-loading definitions, 
+ * array items, and dynamic relationship targets.
+ * Created At: 2026-08-02T07:37:47+03:00
+ * ============================================================================
+ */
 // quantum_schema.dart
 library quantum_schema;
 
@@ -101,7 +125,7 @@ class QLSchemaFieldSpec {
       streamingPolicy['adaptiveQuality'] == true ||
       streamingPolicy['adaptive'] == true;
   bool get supportsRangeCaching =>
-      cachePolicy['rangeCaching'] == true || cachePolicy['reels'] == true;
+      cachePolicy['rangeCaching'] == true || cachePolicy['range'] == true;
   bool get supportsLazyLoad =>
       isMedia ||
       hasMany ||
@@ -1141,7 +1165,7 @@ abstract final class QLSchemaCompiler {
   static int _parseFlags(Map<String, dynamic> val) {
     var flags = QLFieldFlags.none;
     if (val['virtual'] == true) flags |= QLFieldFlags.isVirtual;
-    if (val['computed'] != null) flags |= QLFieldFlags.isComputed;
+    if (val['computed'] == true) flags |= QLFieldFlags.isComputed;
     if (val['required'] == true) flags |= QLFieldFlags.isRequired;
     if (val['hasMany'] == true ||
         val['many'] == true ||

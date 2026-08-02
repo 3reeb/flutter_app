@@ -1,3 +1,26 @@
+/*
+ * ============================================================================
+ * File: quantum_vm_components.dart
+ * 
+ * Description:
+ * Manages the definition, resolution, and instantiation of Quantum components. 
+ * It extracts component definitions (props, hooks, state, ui) from blueprints 
+ * and binds them to the Flutter rendering pipeline.
+ * 
+ * Key Components:
+ * - _QLComponentDefinition: Represents a fully parsed component manifest.
+ * - _AliasContext: A specialized QLContext for deriving default styling and intents.
+ * - _buildComponent: The central dispatcher for instantiating component instances.
+ * 
+ * Dependencies/Relationships:
+ * A part of quantum_vm.dart. Acts as the bridge between the compiled QLBlueprint 
+ * AST and actual Flutter widget composition.
+ * 
+ * Notes:
+ * Includes sophisticated logic for merging properties, resolving slots, and caching 
+ * definitions to ensure smooth low-code component rendering.
+ * ============================================================================
+ */
 part of 'quantum_vm.dart';
 
 typedef QuantumComponentBuilder = Widget Function(

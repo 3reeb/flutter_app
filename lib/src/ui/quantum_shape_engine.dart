@@ -1,3 +1,22 @@
+/*
+ * ============================================================================
+ * File: quantum_shape_engine.dart
+ * 
+ * Description:
+ * Resolves declarative string-based geometric shapes and Boolean path operations into hardware-accelerated Flutter Paths with support for percentage-based sizing and compound path generation.
+ * 
+ * Key Components:
+ * - QShapePrimitive: Core declarative model for shapes (rect, rrect, circle, etc).
+ * - QBooleanShapeDef: Model for boolean shape operations (union, intersect, etc).
+ * - RenderQLShape: Proxy RenderBox that compiles declarative shapes into performant UI paths.
+ * 
+ * Dependencies/Relationships:
+ * Part of UI foundational library.
+ * 
+ * Notes:
+ * Handles compound paths efficiently. Immediate bounds check in hit testing provides significant performance boost.
+ * ============================================================================
+ */
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 

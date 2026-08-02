@@ -1,3 +1,24 @@
+/*
+ * ============================================================================
+ * File: media_core.dart
+ * 
+ * Description:
+ * Manages pure-render, zero-GC media handling in the Quantum Omni Registry. 
+ * Supports image rendering, AOT compiled vector paths, self-healing video lifecycles, 
+ * and reactive audio/WebRTC streams.
+ * 
+ * Key Components:
+ * - _buildMedia: Core routing for images, videos, SVGs, audio, and camera sources.
+ * - _QLCompiledPathNode / _RawPathPainter: Provides zero-heap allocation drawing.
+ * - _QLAudioPlayerNode: Reactive audio state provider.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart.
+ * 
+ * Notes:
+ * Includes optimization techniques to avoid frame drops during complex media handling.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM OMNI REGISTRY — MEDIA ENGINE (PURE RENDER, ZERO-GC)
 // Part of quantum_omni_registry.dart

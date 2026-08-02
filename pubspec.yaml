@@ -24,9 +24,10 @@ dependencies:
   vector_math: any
   video_player: ^2.11.1
 
-dev_dependencies:
   flutter_test:
     sdk: flutter
+
+dev_dependencies:
   integration_test: # <-- ADD THIS
     sdk: flutter # <-- ADD THIS
 

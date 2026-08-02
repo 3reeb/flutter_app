@@ -1,3 +1,24 @@
+/*
+ * ============================================================================
+ * File: box_core.dart
+ * 
+ * Description:
+ * Implements the universal Box factory for the Quantum Omni Registry, handling 
+ * resolution of generic box constraints and specialized layout types (grids, flex, 
+ * safearea, splits) with deep integrations into matrix transformations and 
+ * implicit UI behaviors.
+ * 
+ * Key Components:
+ * - _buildBox: Resolves node subtypes to corresponding layout architectures.
+ * - _QLMeasureNode: Spatial measurement utility for runtime bounds calculation.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart. Depends on Q Design constraints.
+ * 
+ * Notes:
+ * Implements heavy use of inline Q layout helpers for O(1) layout optimizations.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM OMNI REGISTRY — BOX & LAYOUT FACTORY
 // Part of quantum_omni_registry.dart

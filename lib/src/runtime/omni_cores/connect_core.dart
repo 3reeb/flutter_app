@@ -1,3 +1,23 @@
+/*
+ * ============================================================================
+ * File: connect_core.dart
+ * 
+ * Description:
+ * Manages interaction and behavioral augmentations in the Quantum Omni Registry. 
+ * Supplies a registry of semantic behaviors (like pull-to-refresh, dismiss, hover 
+ * scaling) that act as connective tissue between UI and action states.
+ * 
+ * Key Components:
+ * - QLBehaviorRegistry: Maintains contracts between semantic IDs and widget builders.
+ * - _buildConnect: Routes connect primitives (back, slot, focusReveal) and channels.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart.
+ * 
+ * Notes:
+ * Exposes a powerful hook architecture for adding custom interactivity models.
+ * ============================================================================
+ */
 part of '../quantum_omni_registry.dart';
 
 // Moved from quantum_connect_omni_bridge.dart

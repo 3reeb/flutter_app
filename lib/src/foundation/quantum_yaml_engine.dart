@@ -1,3 +1,28 @@
+/*
+ * ============================================================================
+ * File: quantum_yaml_engine.dart
+ * 
+ * Description:
+ * Omega YAML-First Configuration System. Provides zero-boilerplate configuration 
+ * by resolving an entire application's setup from a single root YAML file, supporting 
+ * deep includes, env substitution, and parallel loading.
+ * 
+ * Key Components:
+ * - QuantumYamlEngine: The thread-safe singleton engine managing resolution and caching.
+ * - QLYamlNode: Immutable, fully-resolved YAML/JSON node tree.
+ * - QLAppYamlConfig: Parsed, typed representation of the main APP.yaml config.
+ * - QLYamlEnv: Global environment variable registry for interpolation.
+ * 
+ * Dependencies/Relationships:
+ * Uses yaml, dart:convert, and quantum_isolate_bridge.dart. Forms the backbone 
+ * of the Server-Driven UI (SDUI) app initialization sequence.
+ * 
+ * Notes:
+ * Implements circular-import detection, content-hash deduplication, and automatic 
+ * isolate offloading for large configuration files (>8KB).
+ * Created At: 2026-08-02T07:37:47+03:00
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM YAML ENGINE v1.1 — OMEGA YAML-FIRST CONFIG SYSTEM
 // quantum_yaml_engine.dart
@@ -899,7 +924,7 @@ enum QLYamlSemanticType {
   drawer,
   overlay,
   fragment,
-  template,
+  preset,
   unknown,
 }
 
@@ -1033,7 +1058,7 @@ class QLPageYamlConfig {
       'drawer' => QLYamlSemanticType.drawer,
       'overlay' => QLYamlSemanticType.overlay,
       'fragment' => QLYamlSemanticType.fragment,
-      'template' => QLYamlSemanticType.template,
+      'preset' => QLYamlSemanticType.preset,
       _ => QLYamlSemanticType.page,
     };
   }
@@ -1053,7 +1078,7 @@ void applyYamlMacros(Map<String, dynamic> macros) {
   if (macros.isEmpty) return;
   macros.forEach((name, def) {
     if (def is Map) {
-      QJsonTemplateEngine_D.define(
+      QJsonPresetEngine.define(
           <String, dynamic>{'name': name, ...Map<String, dynamic>.from(def)});
     }
   });

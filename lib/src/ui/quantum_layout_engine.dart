@@ -1,3 +1,22 @@
+/*
+ * ============================================================================
+ * File: quantum_layout_engine.dart
+ * 
+ * Description:
+ * A high-performance virtualized DOM layout engine featuring cached render lists, bitmask-based O(1) grid occupancy tracking, and custom grid, split, morph, and sliver helpers.
+ * 
+ * Key Components:
+ * - QuantumLayout: The unified polymorphic abstraction for all layouts.
+ * - QuantumGrid / RenderQuantumGrid: The core CSS-like grid and masonry engine.
+ * - QuantumParentData: The metadata node for spanning and alignment tracking.
+ * 
+ * Dependencies/Relationships:
+ * The foundational layout layer, consumed by quantum_components.dart and QLSpace.
+ * 
+ * Notes:
+ * Rendering avoids continuous memory allocations by reusing Float64List and Int32List.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM LAYOUT ENGINE (QLE) v14.0 — HIGH-PERFORMANCE VIRTUALIZED DOM
 // quantum_layout_engine.dart

@@ -1,3 +1,22 @@
+/*
+ * ============================================================================
+ * File: hook_core.dart
+ * 
+ * Description:
+ * Implements React-style lifecycle and state management hooks for the Quantum 
+ * Omni Registry, enabling logic embedding directly within JSON blueprints.
+ * 
+ * Key Components:
+ * - _buildHook: Routes various hooks (effect, memo, scope, atom, slice, error_boundary).
+ * - _QLHookEffectNode / _QLHookLifecycleNode: Handle component mounting and side effects.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart.
+ * 
+ * Notes:
+ * Dependency signatures are deeply evaluated to prevent unnecessary effect triggers.
+ * ============================================================================
+ */
 part of '../quantum_omni_registry.dart';
 
 String _hookSignature(dynamic value) {

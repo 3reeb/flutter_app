@@ -1,3 +1,28 @@
+/*
+ * ============================================================================
+ * File: quantum_file_router.dart
+ * 
+ * Description:
+ * Provides a Next.js-style file-system based router for the Quantum framework. 
+ * It scans the application's pages directory to automatically construct routes 
+ * based on folder structures and file names, supporting nested layouts, route 
+ * groups, dynamic parameters ([id]), and catch-all segments ([...slug]).
+ * 
+ * Key Components:
+ * - QuantumFileRouter: The main engine for scanning, caching, and building routes.
+ * - QLFileRouteParser: Converts asset paths into route patterns.
+ * - QLFileRouteEntry: Represents an internal record of a discovered page file.
+ * - _LazyPagePolicyMiddleware: Ensures page configuration is loaded just-in-time.
+ * 
+ * Dependencies/Relationships:
+ * Works closely with QuantumYamlEngine for parsing page configurations and 
+ * integrates deeply with QLNavController and QEE for actual navigation.
+ * 
+ * Notes:
+ * Implements sophisticated inheritance for _layout, _middleware, and _meta 
+ * files, mimicking modern web framework routing paradigms entirely within Flutter.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM FILE ROUTER v2.0 — PAGE-AWARE / NESTED / LAYOUT-DRIVEN
 // quantum_file_router.dart
@@ -20,6 +45,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../quantum.dart';
+import '../quantum_vm_core/qee/qee.dart'
+    show QFileRouterBridge, QLFileRouteEntryLite, QNodeRegistry;
+import '../quantum_vm_core/qee/qee_registry.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // §1 — ROUTE ENTRY
@@ -55,6 +83,10 @@ class QLFileRouteEntry {
   /// Default meta from `_meta.yaml` in parent dirs.
   final Map<String, dynamic> inheritedMeta;
 
+  /// QEE node reference — set after QEE bridge sync.
+  /// null until QFileRouterBridge has registered this page.
+  final int? qeeNodeId;
+
   const QLFileRouteEntry({
     required this.assetPath,
     required this.routePath,
@@ -65,6 +97,7 @@ class QLFileRouteEntry {
     this.layoutAssetPath,
     this.inheritedMiddlewares = const [],
     this.inheritedMeta = const {},
+    this.qeeNodeId,
   });
 
   QLFileRouteEntry copyWith({

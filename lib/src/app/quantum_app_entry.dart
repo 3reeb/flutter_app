@@ -1,3 +1,29 @@
+/*
+ * ============================================================================
+ * File: quantum_app_entry.dart
+ * 
+ * Description:
+ * The core single-file application bootstrapper for the Quantum framework. It 
+ * handles assembling the app manifest, initializing the Quantum Virtual Machine (VM), 
+ * resolving file-based routing, setting up Server-Driven UI (SDUI), and booting 
+ * the Quantum Execution Environment (QEE). It bridges the gap between YAML-based 
+ * configuration and Flutter's widget tree.
+ * 
+ * Key Components:
+ * - QuantumAppManifest: The schema-first contract defining the app's requirements.
+ * - QLYamlAppEnv: Provides access to subsystems for native-Dart extensions.
+ * - bootQuantumYamlApp: Bootstraps the application purely from a YAML configuration.
+ * - _QuantumBootLoader: A StatefulWidget handling the asynchronous boot and hot-reload.
+ * 
+ * Dependencies/Relationships:
+ * Integrates deeply with QuantumVM, QuantumFileRouter, QuantumSduiEngine, 
+ * and native QEE bridges to construct the runtime environment.
+ * 
+ * Notes:
+ * Includes sophisticated hot-reload support (eassemble) that clears caches and 
+ * re-syncs routes automatically when configuration files change in debug mode.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM APP ENTRY v1.0 — SINGLE-FILE APP BOOTSTRAPPER
 // quantum_app_entry.dart
@@ -24,6 +50,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../quantum.dart';
 import 'quantum_boot_schema.dart';
+import '../quantum_vm_core/qee/qee.dart'
+    show QNodeRegistry, QFileRouterBridge, QAppNodeBuilder;
+import '../quantum_vm_core/qee/qee_file_router_bridge.dart'
+    show QLFileRouteEntryLite;
+
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  QL YAML APP ENV — passed to the extend() callback
 // ────────────────────────────────────────────────────────────────────────────
@@ -70,6 +101,15 @@ class QuantumAppManifest {
   final Future<void> Function(BuildContext context)? onReady;
   final Map<String, dynamic> raw;
 
+  /// Optional QEE app config — when provided, QNodeRegistry is initialized
+  /// during boot and routes are synced via QFileRouterBridge.
+  /// Defaults to enabled with the manifest's appName as the appId.
+  final bool qeeEnabled;
+
+  /// Override QEE encryption key (hex string). If null, the engine uses the
+  /// device's flutter_secure_storage-managed master key.
+  final String? qeeKeyHex;
+
   const QuantumAppManifest({
     required this.appName,
     this.title,
@@ -86,6 +126,8 @@ class QuantumAppManifest {
     this.onBoot,
     this.onReady,
     this.raw = const {},
+    this.qeeEnabled = true,
+    this.qeeKeyHex,
   });
 
   factory QuantumAppManifest.quick({
@@ -362,9 +404,11 @@ class _QuantumBootLoaderState extends State<_QuantumBootLoader> {
     QuantumVM.instance.clearRuntimeCaches();
     QuantumFileRouter.instance.invalidateCache();
     QLCoreFileRegistry.instance.clear();
-    QJsonTemplateEngine_D.clear();
+    QJsonPresetEngine.clear();
     QLSchemaRegistry.instance.clear();
     QuantumCoreSchemaRegistry.instance.clear();
+    // Invalidate QEE bridge change-detection cache so routes are re-synced
+    QFileRouterBridge.instance.invalidateAll();
 
     // Force the app to reboot and re-read APP.yaml
     setState(() {
@@ -600,13 +644,24 @@ Future<QuantumAppConfig> _buildAppConfig({
     explicitRoutes: explicitRoutes,
   );
 
+  // 6b. ── QEE BOOTSTRAP ────────────────────────────────────────────────────
+  // Initialize QNodeRegistry (loads index from disk, no blob decryption yet).
+  // Then sync all discovered routes + modules into the QEE node store.
+  // This runs concurrently with building the 404 widget below.
+  final qeeSyncFuture = _bootQEE(
+    config: config,
+    bootSchema: bootSchema,
+    fileRoutes: fileRoutes,
+    manifest: await _loadAssetManifestMap(),
+  );
+
   // 7. Build 404 widget
   Widget? notFoundWidget;
   if (config.notFoundPage != null) {
     notFoundWidget = _QLFileRouteViewStatic(assetPath: config.notFoundPage!);
   }
 
-  // 7. Call extend() for native Dart additions BEFORE route assembly
+  // 7b. Call extend() for native Dart additions BEFORE route assembly
   if (extend != null) {
     extend(QLYamlAppEnv(
       vm: QuantumVM.instance,
@@ -622,7 +677,10 @@ Future<QuantumAppConfig> _buildAppConfig({
   final List<QLRoute> runtimeRoutes =
       QuantumFileRouter.instance.runtimeRoutes.toList();
 
-  // 9. Assemble the final schema-first manifest and bridge into the shell.
+  // 9. Wait for QEE sync to complete (it started at step 6b)
+  await qeeSyncFuture;
+
+  // 10. Assemble the final schema-first manifest and bridge into the shell.
   final QuantumAppManifest manifest = QuantumAppManifest.fromYamlConfig(
     config,
     routes: [...runtimeRoutes, ...fileRoutes],
@@ -634,6 +692,91 @@ Future<QuantumAppConfig> _buildAppConfig({
 }
 
 // ─────────────────────────────────────────────────────────────────────── §5 ─
+//  QEE BOOT HELPERS
+// ────────────────────────────────────────────────────────────────────────────
+
+/// Initialize the QEE and sync all discovered routes + modules.
+/// Runs concurrently with the 404 widget build to reduce total boot time.
+Future<void> _bootQEE({
+  required QLAppYamlConfig config,
+  required QuantumBootSchema bootSchema,
+  required List<QLRoute> fileRoutes,
+  required Map<String, dynamic> manifest,
+}) async {
+  try {
+    // 1. Initialize QNodeRegistry (crypto + disk index load)
+    await QNodeRegistry.instance.initialize(
+      namespace: config.appName.toLowerCase().replaceAll(RegExp(r'\W+'), '_'),
+    );
+
+    // 2. Register the root app node
+    await QAppNodeBuilder.buildAndRegister(
+      appId: config.appName,
+      pagesDir: config.pagesDir,
+      initialRoute: config.initialRoute,
+    );
+
+    // 3. Sync all file-route entries into QEE via the bridge.
+    //    The bridge discovers all _layout, _middleware, _meta, _error,
+    //    _loading, _not_found files and registers them as typed nodes.
+    final entries = manifest.keys
+        .where((k) =>
+            k.startsWith(bootSchema.pagesDir.endsWith('/')
+                ? bootSchema.pagesDir
+                : '${bootSchema.pagesDir}/') &&
+            (k.endsWith('.yaml') || k.endsWith('.yml') || k.endsWith('.json')))
+        .map((assetPath) {
+          // Convert each asset path to a QLFileRouteEntryLite
+          final entry = QLFileRouteParser.parse(assetPath, config.pagesDir);
+          if (entry == null) return null;
+          return QLFileRouteEntryLite(
+            assetPath: entry.assetPath,
+            routePath: entry.routePath,
+            paramNames: entry.paramNames,
+            isCatchAll: entry.isCatchAll,
+          );
+        })
+        .whereType<QLFileRouteEntryLite>()
+        .toList(growable: false);
+
+    await QFileRouterBridge.instance.sync(
+      entries: entries,
+      allAssetPaths: manifest.keys.toList(),
+      pagesDir: config.pagesDir,
+      appId: config.appName,
+    );
+
+    // 4. Mirror all QLModuleRegistry modules into QEE
+    await QLModuleRegistry.instance.syncToQEE(appId: config.appName);
+
+    if (kDebugMode) {
+      final snap = QNodeRegistry.instance.snapshot();
+      debugPrint('[QEE] Boot complete: '
+          'pages=${snap.pageCount}, '
+          'layouts=${snap.layoutCount}, '
+          'middlewares=${snap.middlewareCount}, '
+          'modules=${snap.moduleCount}');
+    }
+  } catch (e, st) {
+    // QEE boot failure MUST NOT crash the app — the existing routing
+    // pipeline works independently and QEE is additive.
+    if (kDebugMode) {
+      debugPrint('[QEE] Boot error (non-fatal): $e\n$st');
+    }
+  }
+}
+
+/// Load the asset manifest as a flat Map<String, dynamic>.
+/// Reuses QuantumFileRouter's manifest loading logic.
+Future<Map<String, dynamic>> _loadAssetManifestMap() async {
+  try {
+    return await QuantumFileRouter.instance.loadAssetManifest();
+  } catch (_) {
+    return const {};
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────── §6 ─
 //  HELPERS
 // ────────────────────────────────────────────────────────────────────────────
 

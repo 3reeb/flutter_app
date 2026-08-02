@@ -1,3 +1,26 @@
+/*
+ * ============================================================================
+ * File: quantum.config.dart.example
+ * 
+ * Description:
+ * A template file intended to be copied to quantum.config.dart to serve as 
+ * the single source of truth for app configuration. It demonstrates the expected 
+ * developer-facing schema structure with sensible defaults for themes, routing, 
+ * telemetry, and API settings.
+ * 
+ * Key Components:
+ * - QuantumConfigRoot: The primary configuration block combining app, API, security, 
+ *   and caching policies.
+ * - QuantumConfigAppSection: Defines application-specific UI and architectural metadata.
+ * 
+ * Dependencies/Relationships:
+ * Acts as a blueprint for the actual quantum.config.dart used during the app's boot process.
+ * 
+ * Notes:
+ * Developers should copy and rename this file before modifying. It provides 
+ * strong default values across all framework sections (app, api, security, etc.).
+ * ============================================================================
+ */
 
 // ════════════════════════════════════════════════════════════════════════════
 // quantum.config.dart.example

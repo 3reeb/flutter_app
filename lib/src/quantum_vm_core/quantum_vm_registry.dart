@@ -1,3 +1,26 @@
+/*
+ * ============================================================================
+ * File: quantum_vm_registry.dart
+ * 
+ * Description:
+ * The module and schema registry for the QuantumVM. It handles the registration, 
+ * versioning, and access control of extension bundles, layout matrices, and reusable 
+ * design system schemas.
+ * 
+ * Key Components:
+ * - QLModuleRegistry: Core registry orchestrating modules and caching their definitions.
+ * - QLModuleAccessPolicy: Enforces visibility bounds (e.g., public, local, secure) on modules.
+ * - QLModuleRegistryQEEBridge: Migration utility to synchronize legacy modules to the new QEE.
+ * 
+ * Dependencies/Relationships:
+ * A part of quantum_vm.dart. It interacts with the Quantum Execution Engine (QEE) 
+ * to provide module synchronization and policy checks.
+ * 
+ * Notes:
+ * The bridge extension highlights an architectural transition towards QEE, 
+ * mapping legacy visibility settings to QNodeRegistry policies.
+ * ============================================================================
+ */
 // quantum_vm_registry.dart
 // Module, Schema, and Extension Bundle Registry for QuantumVM.
 
@@ -383,7 +406,6 @@ extension QLLazySchemaViewSmartSelect on QLLazySchemaView {
       pick(normalizeSelection(names));
 
   bool hasAll(Iterable<String>? names) => !buildReadPlan(names).needsFetch;
-
   Iterable<String> missingFields(Iterable<String>? names) =>
       buildReadPlan(names).missing;
 }
@@ -397,4 +419,190 @@ extension QLModuleRegistryInspector on QLModuleRegistry {
   /// All registered module records as an unmodifiable list.
   List<QLModuleRecord> get allModules =>
       List<QLModuleRecord>.unmodifiable(_modules.values);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// QEE BRIDGE — QLModuleRegistry → QModuleNode conversion
+//
+// Converts an existing QLModuleRecord into a QModuleConfig that can be
+// registered with QNodeRegistry. This lets the legacy QLModuleRegistry and
+// the new QEE coexist during the migration: all modules that already exist in
+// QLModuleRegistry can be mirrored into QEE without re-declaring them.
+//
+// Usage:
+//   await QLModuleRegistry.instance.syncToQEE(appId: 'root');
+// ─────────────────────────────────────────────────────────────────────────────
+
+extension QLModuleRegistryQEEBridge on QLModuleRegistry {
+  /// Convert a single [QLModuleRecord] to a [QModuleConfig] for QNodeRegistry.
+  ///
+  /// Policy mapping:
+  ///   QLModuleVisibility.public  → QModuleKind.public
+  ///   QLModuleVisibility.local   → QModuleKind.private
+  ///   QLModuleVisibility.owner   → QModuleKind.shared  (allowedApps = {ownerId})
+  ///   QLModuleVisibility.secure  → QModuleKind.private
+  static QModuleConfig recordToQEEConfig(
+    QLModuleRecord record, {
+    String? appId,
+    String? assetPath,
+  }) {
+    // Map QL visibility → QEE module kind + policy
+    final kind = switch (record.access.visibility) {
+      QLModuleVisibility.public => QModuleKind.public,
+      QLModuleVisibility.local => QModuleKind.private,
+      QLModuleVisibility.owner => QModuleKind.shared,
+      QLModuleVisibility.secure => QModuleKind.private,
+    };
+
+    final allowedIds = switch (record.access.visibility) {
+      QLModuleVisibility.owner => record.access.ownerId != null
+          ? {record.access.ownerId!}
+          : record.access.allowModules,
+      QLModuleVisibility.local => record.access.allowModules,
+      _ => record.access.allowModules,
+    };
+
+    final policy = QModulePolicy(
+      kind: kind,
+      allowedAppIds: allowedIds.toList(),
+      requireAuth: record.access.visibility == QLModuleVisibility.secure,
+    );
+
+    // Extract slices from the manifest
+    final slices = _extractSlices(record.manifest);
+
+    // Extract data sources
+    final dataSources = _extractDataSources(record.manifest);
+
+    // Extract macros, schemas, actions
+    final macros = _extractMap(record.manifest, 'macros');
+    final schemas = _extractMap(record.manifest, 'schemas');
+    final actions = _extractMap(record.manifest, 'actions');
+
+    // Extract imports
+    final imports = _extractList(record.manifest, 'uses') +
+        _extractList(record.manifest, 'imports');
+
+    return QModuleConfig(
+      moduleId: record.id,
+      appId: appId,
+      assetPath: assetPath,
+      policy: policy,
+      slices: slices,
+      dataSources: dataSources,
+      macros: macros,
+      schemas: schemas,
+      actions: actions,
+      imports: imports,
+    );
+  }
+
+  /// Sync all currently registered [QLModuleRecord]s into [QNodeRegistry].
+  ///
+  /// Skips modules that are already stored at the same [versionHash].
+  /// Safe to call multiple times — uses upsert internally.
+  Future<int> syncToQEE({String? appId}) async {
+    int synced = 0;
+    for (final record in allModules) {
+      try {
+        final config = QLModuleRegistryQEEBridge.recordToQEEConfig(
+          record,
+          appId: appId,
+        );
+        await QNodeRegistry.instance.upsertModule(config);
+        synced++;
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('[QEE Bridge] Failed to sync module ${record.id}: $e');
+        }
+      }
+    }
+    return synced;
+  }
+
+  // ── Private helpers ───────────────────────────────────────────────────────
+
+  static List<QSliceConfig> _extractSlices(Map<String, dynamic> manifest) {
+    final slicesRaw = manifest['slices'] ?? manifest['state'];
+    if (slicesRaw is! Map) return const [];
+
+    return slicesRaw.entries.map<QSliceConfig>((entry) {
+      final name = entry.key.toString();
+      final raw = entry.value;
+      if (raw is! Map) {
+        return QSliceConfig(
+          sliceName: name,
+          fields: {
+            name: QSliceField(
+              fieldName: name,
+              type: 'dynamic',
+              isStatic: true,
+              staticValue: raw,
+            ),
+          },
+        );
+      }
+
+      final fields = <String, QSliceField>{};
+      for (final fieldEntry in raw.entries) {
+        final fieldName = fieldEntry.key.toString();
+        final fieldRaw = fieldEntry.value;
+        final isStatic =
+            fieldRaw is! Map || (fieldRaw as Map).containsKey('static');
+        fields[fieldName] = QSliceField(
+          fieldName: fieldName,
+          type: (fieldRaw is Map ? fieldRaw['type']?.toString() : null) ??
+              'dynamic',
+          defaultValue: fieldRaw is Map ? fieldRaw['default'] : fieldRaw,
+          isStatic: isStatic,
+          staticValue: isStatic
+              ? (fieldRaw is Map ? fieldRaw['static'] ?? fieldRaw : fieldRaw)
+              : null,
+        );
+      }
+
+      return QSliceConfig(sliceName: name, fields: fields);
+    }).toList(growable: false);
+  }
+
+  static List<QDataSourceConfig> _extractDataSources(
+      Map<String, dynamic> manifest) {
+    final raw = manifest['dataSources'] ?? manifest['data_sources'];
+    if (raw is! List) return const [];
+
+    return raw.whereType<Map>().map<QDataSourceConfig>((ds) {
+      return QDataSourceConfig(
+        id: ds['id']?.toString() ?? '',
+        type: ds['type']?.toString() ?? 'rest',
+        endpoint: ds['endpoint']?.toString() ?? ds['url']?.toString() ?? '',
+        method: ds['method']?.toString() ?? 'GET',
+        headers: _toStringMap(ds['headers']),
+        queryParams: _toStringMap(ds['params'] ?? ds['query']),
+        body: ds['body'] is Map
+            ? Map<String, dynamic>.from(ds['body'] as Map)
+            : const {},
+        cacheSeconds:
+            (ds['cache'] as num?)?.toInt() ?? (ds['ttl'] as num?)?.toInt() ?? 0,
+        requiresAuth: ds['auth'] == true || ds['requiresAuth'] == true,
+      );
+    }).toList(growable: false);
+  }
+
+  static Map<String, dynamic> _extractMap(
+      Map<String, dynamic> manifest, String key) {
+    final raw = manifest[key];
+    if (raw is Map) return Map<String, dynamic>.from(raw);
+    return const {};
+  }
+
+  static List<String> _extractList(Map<String, dynamic> manifest, String key) {
+    final raw = manifest[key];
+    if (raw is List) return raw.map((e) => e.toString()).toList();
+    return const [];
+  }
+
+  static Map<String, String> _toStringMap(dynamic raw) {
+    if (raw is! Map) return const {};
+    return raw.map((k, v) => MapEntry(k.toString(), v?.toString() ?? ''));
+  }
 }

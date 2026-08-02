@@ -1,5 +1,8 @@
 // quantum.config.ts
-// Adjust the import path if your SDK barrel uses a different name.
+// Strong-typed, zero-issues Quantum SDUI configuration.
+// Every node "type" is validated against KnownSduiNodeType — a discriminated
+// union built from the QUANTUM_CATALOG, so typos are caught at author-time
+// rather than at Dart runtime (which produces a black screen on unknown types).
 
 import {
   q,
@@ -17,6 +20,8 @@ import {
   extendCatalog,
   defineContracts,
   defineKernel,
+  type SduiNode,
+  type NodeInput,
   type ThemeInput,
   type QuantumPageTree,
   type QuantumPageBundle,
@@ -26,7 +31,224 @@ import {
   type QuantumPageSeo,
   type QuantumPageGuard,
   type QuantumPagePrefetch,
+  type BoxProps,
+  type TextProps,
+  type ActionProps,
+  type FieldProps,
+  type MediaProps,
+  type DataProps,
+  type PortalProps,
+  type HookProps,
+  type ControlProps,
+  type SystemProps,
+  type CanvasProps,
+  type DecorationProps,
+  type ChartProps,
+  type StreamNodeProps,
+  type CollabProps,
+  type ComponentProps,
+  type VisualProps,
 } from './sdui_ts_toolkit_preserve';
+
+/* ============================================================
+ * 0) STRONG TYPE: KnownSduiNodeType
+ *
+ * This union enumerates EVERY valid top-level node type the Dart
+ * Quantum VM can render. Using this type on all sdui.node() calls
+ * catches unknown types at TypeScript compile-time rather than
+ * silently producing a black screen in Flutter at runtime.
+ *
+ * Pattern:
+ *   Root-only types   → just the root name  ('box', 'text', ...)
+ *   Root:subtype      → 'root:subtype'  ('box:scroll', 'action:button', ...)
+ *   Special VM nodes  → 'component:define', 'component:use', 'template:<name>', 'macro'
+ *   Custom node types → string literal from defineNodeType()
+ * ============================================================ */
+
+// Catalog root types (render directly as top-level widgets)
+type CatalogRootType =
+  | 'box'
+  | 'action'
+  | 'field'
+  | 'text'
+  | 'media'
+  | 'data'
+  | 'portal'
+  | 'hook'
+  | 'control'
+  | 'system'
+  | 'canvas'
+  | 'decoration'
+  | 'chart'
+  | 'stream'
+  | 'collab'
+  | 'component'
+  | 'visual'
+  | 'page';
+
+// box subtypes
+type BoxSubtypeNodeType =
+  | 'box:aspect' | 'box:builder' | 'box:col' | 'box:expanded' | 'box:flexible'
+  | 'box:grid' | 'box:layer' | 'box:masonry' | 'box:matrix' | 'box:measure'
+  | 'box:morph' | 'box:responsive' | 'box:row' | 'box:safe' | 'box:scroll'
+  | 'box:shell' | 'box:split' | 'box:stack' | 'box:sticky' | 'box:surface'
+  | 'box:viewport' | 'box:virtual_grid' | 'box:wrap';
+
+// action subtypes
+type ActionSubtypeNodeType =
+  | 'action:button' | 'action:chip' | 'action:double_tap' | 'action:focus'
+  | 'action:gesture' | 'action:hover' | 'action:icon_button' | 'action:link'
+  | 'action:long_press' | 'action:pointer' | 'action:press' | 'action:raw_pointer'
+  | 'action:tap' | 'action:viewport';
+
+// field subtypes
+type FieldSubtypeNodeType =
+  | 'field:cell' | 'field:checkbox' | 'field:email' | 'field:multiline'
+  | 'field:number' | 'field:password' | 'field:radio' | 'field:rich_text'
+  | 'field:search' | 'field:slider' | 'field:tel' | 'field:text'
+  | 'field:textarea' | 'field:toggle' | 'field:url';
+
+// text subtypes
+type TextSubtypeNodeType =
+  | 'text:h1' | 'text:h2' | 'text:h3' | 'text:label' | 'text:code' | 'text:rich';
+
+// media subtypes
+type MediaSubtypeNodeType =
+  | 'media:audio' | 'media:audio_visualizer' | 'media:avatar' | 'media:camera'
+  | 'media:canvas_video' | 'media:icon' | 'media:path' | 'media:stream'
+  | 'media:svg_path' | 'media:video' | 'media:webrtc';
+
+// data subtypes
+type DataSubtypeNodeType =
+  | 'data:aggregate' | 'data:cursor' | 'data:diff' | 'data:grid' | 'data:infinite'
+  | 'data:kanban' | 'data:masonry' | 'data:paginated' | 'data:realtime'
+  | 'data:repeat' | 'data:slice' | 'data:sliver' | 'data:sliver_plane'
+  | 'data:stream' | 'data:table' | 'data:timeline' | 'data:virtual_scroll';
+
+// portal subtypes
+type PortalSubtypeNodeType =
+  | 'portal:action_sheet' | 'portal:alert' | 'portal:anchored_floating'
+  | 'portal:centered' | 'portal:confirm' | 'portal:context_menu'
+  | 'portal:context_panel' | 'portal:dialog' | 'portal:docked' | 'portal:drawer'
+  | 'portal:dropdown' | 'portal:edge_attached' | 'portal:expandable_inline'
+  | 'portal:flyout' | 'portal:form_modal' | 'portal:full_page_sheet'
+  | 'portal:full_screen' | 'portal:full_screen_surface' | 'portal:immersive_editor'
+  | 'portal:inline_details' | 'portal:inline_editor' | 'portal:inspector'
+  | 'portal:lightbox' | 'portal:left_panel' | 'portal:menu' | 'portal:mobile_sheet'
+  | 'portal:modal' | 'portal:navigation_rail' | 'portal:nonModal' | 'portal:non_modal'
+  | 'portal:overlay' | 'portal:overlay_entry' | 'portal:persistent_drawer'
+  | 'portal:persistent_panel' | 'portal:popover' | 'portal:popup_modal'
+  | 'portal:right_panel' | 'portal:sheet' | 'portal:sidebar' | 'portal:side_sheet'
+  | 'portal:toast' | 'portal:temporary_overlay' | 'portal:tooltip'
+  | 'portal:utility_panel' | 'portal:window';
+
+// hook subtypes
+type HookSubtypeNodeType =
+  | 'hook:atom' | 'hook:bridge' | 'hook:change' | 'hook:delegate' | 'hook:effect'
+  | 'hook:error_boundary' | 'hook:guard' | 'hook:interval' | 'hook:lifecycle'
+  | 'hook:memo' | 'hook:mount' | 'hook:observable' | 'hook:ref' | 'hook:scope'
+  | 'hook:slice' | 'hook:store';
+
+// control subtypes
+type ControlSubtypeNodeType =
+  | 'control:accordion' | 'control:architecture' | 'control:flow'
+  | 'control:form_scope' | 'control:machine' | 'control:optimistic'
+  | 'control:reducer' | 'control:saga' | 'control:stepper' | 'control:tabs'
+  | 'control:tca';
+
+// system subtypes
+type SystemSubtypeNodeType =
+  | 'system:async' | 'system:clipboard' | 'system:data_pipe' | 'system:debounce'
+  | 'system:download' | 'system:geo' | 'system:haptic' | 'system:kinetic_pipe'
+  | 'system:macro' | 'system:notification' | 'system:omega_macro' | 'system:repeater'
+  | 'system:sensor' | 'system:share' | 'system:store_provider' | 'system:sync_scroll'
+  | 'system:throttle' | 'system:ticker' | 'system:timer' | 'system:upload'
+  | 'system:worker';
+
+// canvas subtypes
+type CanvasSubtypeNodeType =
+  | 'canvas:draw' | 'canvas:plot' | 'canvas:shader' | 'canvas:shape';
+
+// decoration subtypes
+type DecorationSubtypeNodeType =
+  | 'decoration:badge' | 'decoration:blur' | 'decoration:border'
+  | 'decoration:gradient' | 'decoration:rich' | 'decoration:ripple'
+  | 'decoration:shadow' | 'decoration:skeleton' | 'decoration:span'
+  | 'decoration:text';
+
+// chart subtypes
+type ChartSubtypeNodeType =
+  | 'chart:line' | 'chart:bar' | 'chart:area' | 'chart:pie' | 'chart:donut'
+  | 'chart:radar' | 'chart:scatter' | 'chart:bubble' | 'chart:candlestick'
+  | 'chart:funnel' | 'chart:waterfall' | 'chart:histogram' | 'chart:gauge'
+  | 'chart:sparkline' | 'chart:treemap' | 'chart:sankey';
+
+// stream / collab subtypes
+type StreamSubtypeNodeType = 'stream:ws' | 'stream:sse' | 'stream:tick' | 'stream:ring' | 'stream:multiplex';
+type CollabSubtypeNodeType = 'collab:presence' | 'collab:cursor' | 'collab:awareness' | 'collab:lock' | 'collab:patch';
+
+// component / template / macro special types
+type ComponentSpecialNodeType =
+  | 'component:define'
+  | 'component:use'
+  | 'component:instance'
+  | 'component:render'
+  | 'component:scoped'
+  | 'component:link';
+
+// surface catalog extension types (from extendCatalog below)
+type SurfaceSubtypeNodeType =
+  | 'surface:page' | 'surface:shell' | 'surface:section' | 'surface:panel'
+  | 'surface:hero' | 'surface:metric' | 'surface:feed' | 'surface:board';
+
+// Custom node types defined via defineNodeType() in this file
+type CustomNodeType = 'page_shell' | 'page_section';
+
+// Empty / sentinel
+type SentinelNodeType = 'empty';
+
+/**
+ * KnownSduiNodeType — the exhaustive set of type strings the Dart Quantum
+ * runtime knows how to render. Use this in sdui.node<P>(type) or on any
+ * hand-crafted SduiNode literal to get compile-time safety.
+ *
+ * WHY THIS MATTERS:
+ *   If you write sdui.node('slot', ...) — 'slot' is NOT in this union.
+ *   TypeScript will flag it immediately. Without this guard, the Dart DDC
+ *   runtime silently renders nothing, causing a black/empty screen.
+ */
+export type KnownSduiNodeType =
+  | CatalogRootType
+  | BoxSubtypeNodeType
+  | ActionSubtypeNodeType
+  | FieldSubtypeNodeType
+  | TextSubtypeNodeType
+  | MediaSubtypeNodeType
+  | DataSubtypeNodeType
+  | PortalSubtypeNodeType
+  | HookSubtypeNodeType
+  | ControlSubtypeNodeType
+  | SystemSubtypeNodeType
+  | CanvasSubtypeNodeType
+  | DecorationSubtypeNodeType
+  | ChartSubtypeNodeType
+  | StreamSubtypeNodeType
+  | CollabSubtypeNodeType
+  | ComponentSpecialNodeType
+  | SurfaceSubtypeNodeType
+  | CustomNodeType
+  | SentinelNodeType;
+
+/**
+ * Typed helper: create a node with a guaranteed valid type string.
+ * Replaces bare sdui.node() calls when you need compile-time checking.
+ */
+function typedNode<P extends Record<string, any> = BoxProps>(
+  type: KnownSduiNodeType,
+  init?: Partial<SduiNode>,
+) {
+  return sdui.node<P>(type, init);
+}
 
 /* ============================================================
  * 1) CONTRACTS
@@ -237,7 +459,7 @@ const authSlice = defineSlice({
     me: { source: 'auth.me' },
   },
   resources: {
-    session: { uri: 'auth.me', cacheable: true }, // <-- Fixed here
+    session: { uri: 'auth.me', cacheable: true },
   },
   runtime: {
     persist: true,
@@ -410,19 +632,27 @@ const heroTemplate = defineTemplate<typeof heroTemplateProps, 'actions'>({
       [
         sdui.box(
           [
-            ...(props.eyebrow ? [sdui.text(props.eyebrow)] : []),
-            sdui.title(props.title),
-            ...(props.body ? [sdui.text(props.body)] : []),
+            // eyebrow (optional)
+            ...(props.eyebrow
+              ? [sdui.text(props.eyebrow as string, { props: { variant: 'caption' } })]
+              : []),
+            // title — uses text with 'heading' variant (valid TextProps)
+            sdui.text(props.title as string, { props: { variant: 'heading' } }),
+            // body (optional)
+            ...(props.body
+              ? [sdui.text(props.body as string)]
+              : []),
           ],
           {
             props: {
               direction: 'col',
               gap: 12,
               padding: 0,
-            },
+            } satisfies Partial<BoxProps>,
           },
         ),
-        slots.actions ?? sdui.box([]),
+        // slot outlet: a named empty box — safe for Dart to render as placeholder
+        (slots?.actions ?? sdui.box([], { props: { name: 'actions' } as Record<string, unknown> })) as NodeInput,
       ],
       {
         props: {
@@ -432,7 +662,7 @@ const heroTemplate = defineTemplate<typeof heroTemplateProps, 'actions'>({
           radius: 24,
           bg: '$colors.surface',
           shadow: '$shadows.md',
-        },
+        } satisfies Partial<BoxProps>,
       },
     ),
 });
@@ -453,9 +683,11 @@ const statCardTemplate = defineTemplate({
   ui: (props) =>
     sdui.box(
       [
-        sdui.text(props.label),
-        sdui.title(props.value),
-        ...(props.hint ? [sdui.text(props.hint)] : []),
+        sdui.text(props.label as string, { props: { variant: 'caption' } }),
+        sdui.text(props.value as string, { props: { variant: 'heading' } }),
+        ...(props.hint
+          ? [sdui.text(props.hint as string, { props: { variant: 'caption' } })]
+          : []),
       ],
       {
         props: {
@@ -465,7 +697,7 @@ const statCardTemplate = defineTemplate({
           radius: 18,
           bg: '$colors.surface',
           shadow: '$shadows.sm',
-        },
+        } satisfies Partial<BoxProps>,
       },
     ),
 });
@@ -483,27 +715,32 @@ const sectionTemplate = defineTemplate<typeof sectionTemplateProps, 'body' | 'fo
   ui: (props, slots) =>
     sdui.box(
       [
+        // header row: title + optional description
         sdui.box(
           [
-            sdui.title(props.title),
-            ...(props.description ? [sdui.text(props.description)] : []),
+            sdui.text(props.title as string, { props: { variant: 'heading' } }),
+            ...(props.description
+              ? [sdui.text(props.description as string)]
+              : []),
           ],
           {
             props: {
               direction: 'col',
               gap: 8,
-            },
+            } satisfies Partial<BoxProps>,
           },
         ),
-        slots.body ?? sdui.box([]),
-        slots.footer ?? sdui.box([]),
+        // body slot outlet — empty box if not provided
+        (slots?.body ?? sdui.box([], { props: { name: 'body' } as Record<string, unknown> })) as NodeInput,
+        // footer slot outlet — empty box if not provided
+        (slots?.footer ?? sdui.box([], { props: { name: 'footer' } as Record<string, unknown> })) as NodeInput,
       ],
       {
         props: {
           direction: 'col',
-          gap: props.compact ? 12 : 20,
-          padding: props.compact ? 16 : 24,
-        },
+          gap: (props.compact ? 12 : 20) as number,
+          padding: (props.compact ? 16 : 24) as number,
+        } satisfies Partial<BoxProps>,
       },
     ),
 });
@@ -518,7 +755,19 @@ const pageHeaderProps = {
   actionLabel: q.optional(q.string()),
 } as const;
 
-// Look: No <typeof pageHeaderProps> generic needed anymore! 
+/**
+ * page_header component.
+ *
+ * FIX (black-screen root cause):
+ *   The previous version used sdui.node('slot', { props: { name: 'action' } }).
+ *   'slot' is NOT a valid Dart-renderable node type — the VM has no widget for
+ *   it and produces an empty / black render.
+ *
+ *   Correct pattern: emit a 'box' with a named __slotOutlet prop so that any
+ *   parent component/layout that injects into the 'action' slot can find and
+ *   replace this placeholder. An empty box with a slot marker is safe for Dart
+ *   to render as zero-size and will not cause a black screen.
+ */
 const pageHeaderComponent = defineComponent(
   'page_header',
   {
@@ -526,21 +775,30 @@ const pageHeaderComponent = defineComponent(
     ui: (props) =>
       sdui.box(
         [
+          // Left: title + optional subtitle stack
           sdui.box(
             [
-              sdui.title(props.title),
-              // Defer conditional rendering to Dart at runtime
-              sdui.text(props.subtitle).if(props.subtitle),
+              sdui.text(props.title as string, { props: { variant: 'heading' } }),
+              // Conditional subtitle — emit the node with $if so the Dart VM
+              // evaluates the condition at runtime and skips it when falsy
+              sdui.text(props.subtitle as string).if(props.subtitle as string),
             ],
             {
               props: {
                 direction: 'col',
                 gap: 8,
-              },
+              } satisfies Partial<BoxProps>,
             },
           ),
-          // Emit a slot node. Dart VM will inject the caller's slot here!
-          sdui.node('slot', { props: { name: 'action' } })
+          // Right: slot outlet for "action" content.
+          // ✅ Uses 'box' (valid Dart type) with __slotOutlet marker,
+          //    NOT 'slot' (invalid → black screen).
+          typedNode<BoxProps>('box', {
+            props: {
+              name: 'action',
+              __slotOutlet: true,
+            } as Record<string, unknown>,
+          }),
         ],
         {
           props: {
@@ -549,10 +807,10 @@ const pageHeaderComponent = defineComponent(
             mainAlignment: 'space-between',
             gap: 16,
             padding: 0,
-          },
+          } satisfies Partial<BoxProps>,
         },
       ),
-  }
+  },
 );
 
 const navRailProps = {
@@ -560,7 +818,6 @@ const navRailProps = {
   collapsed: q.optional(q.boolean()),
 } as const;
 
-// Look: No generic needed! Auto-inferred flawlessly.
 const navRailComponent = defineComponent(
   'nav_rail',
   {
@@ -568,8 +825,8 @@ const navRailComponent = defineComponent(
     ui: (props) =>
       sdui.box(
         [
-          sdui.text('Navigation'),
-          sdui.text(props.current),
+          sdui.text('Navigation', { props: { variant: 'caption' } }),
+          sdui.text(props.current as string),
         ],
         {
           props: {
@@ -578,10 +835,10 @@ const navRailComponent = defineComponent(
             padding: 16,
             radius: 20,
             bg: '$colors.surface',
-          },
+          } satisfies Partial<BoxProps>,
         },
       ),
-  }
+  },
 );
 
 /* ============================================================
@@ -595,9 +852,9 @@ const pagePaddingMacro = defineMacro(
       props: {
         padding: 24,
         radius: 24,
-      },
+      } satisfies Partial<BoxProps>,
     }),
-  }
+  },
 );
 
 const contentFrameMacro = defineMacro(
@@ -608,14 +865,18 @@ const contentFrameMacro = defineMacro(
         direction: 'col',
         gap: 20,
         padding: 24,
-      },
+      } satisfies Partial<BoxProps>,
     }),
-  }
+  },
 );
-
 
 /* ============================================================
  * 10) CUSTOM NODE TYPES
+ *
+ * defineNodeType() registers a new node type for use in the
+ * Dart Quantum VM. The string in `type` MUST match what the
+ * Dart renderer has registered; here 'page_shell' and
+ * 'page_section' are first-class custom widget types.
  * ============================================================ */
 
 const pageShellProps = {
@@ -625,8 +886,9 @@ const pageShellProps = {
   showFooter: q.optional(q.boolean()),
 } as const;
 
+// 'page_shell' is a valid CustomNodeType — listed in KnownSduiNodeType above
 const pageShellNode = defineNodeType({
-  type: 'page_shell',
+  type: 'page_shell' satisfies KnownSduiNodeType,
   props: pageShellProps,
   slots: ['header', 'sidebar', 'content', 'footer'] as const,
   children: false,
@@ -637,8 +899,9 @@ const pageSectionProps = {
   padded: q.optional(q.boolean()),
 } as const;
 
+// 'page_section' is a valid CustomNodeType — listed in KnownSduiNodeType above
 const pageSectionNode = defineNodeType({
-  type: 'page_section',
+  type: 'page_section' satisfies KnownSduiNodeType,
   props: pageSectionProps,
   slots: ['header', 'body', 'footer'] as const,
   children: false,
@@ -684,21 +947,27 @@ const publicShellLayout: QuantumPageLayout = qpage.layout({
         {
           props: {
             padding: 24,
-          },
+          } satisfies Partial<BoxProps>,
         },
       ),
-      content: sdui.box([], {
-        props: {
-          direction: 'col',
-          gap: 24,
-          padding: 24,
+      content: sdui.box(
+        [sdui.text('Content area', { props: { variant: 'body' } })],
+        {
+          props: {
+            direction: 'col',
+            gap: 24,
+            padding: 24,
+          } satisfies Partial<BoxProps>,
         },
-      }),
-      footer: sdui.box([sdui.text('© Quantum')], {
-        props: {
-          padding: 24,
+      ),
+      footer: sdui.box(
+        [sdui.text('© Quantum')],
+        {
+          props: {
+            padding: 24,
+          } satisfies Partial<BoxProps>,
         },
-      }),
+      ),
     },
   ),
   slots: {
@@ -733,13 +1002,16 @@ const dashboardShellLayout: QuantumPageLayout = qpage.layout({
         },
         {},
       ),
-      content: sdui.box([], {
-        props: {
-          direction: 'col',
-          gap: 24,
-          padding: 24,
+      content: sdui.box(
+        [sdui.text('Dashboard content', { props: { variant: 'body' } })],
+        {
+          props: {
+            direction: 'col',
+            gap: 24,
+            padding: 24,
+          } satisfies Partial<BoxProps>,
         },
-      }),
+      ),
     },
   ),
   slots: {
@@ -766,13 +1038,16 @@ const authShellLayout: QuantumPageLayout = qpage.layout({
       showFooter: false,
     },
     {
-      content: sdui.box([], {
-        props: {
-          direction: 'col',
-          gap: 20,
-          padding: 24,
+      content: sdui.box(
+        [sdui.text('Auth content', { props: { variant: 'body' } })],
+        {
+          props: {
+            direction: 'col',
+            gap: 20,
+            padding: 24,
+          } satisfies Partial<BoxProps>,
         },
-      }),
+      ),
     },
   ),
 });
@@ -798,21 +1073,29 @@ const docsShellLayout: QuantumPageLayout = qpage.layout({
         },
         {},
       ),
-      content: sdui.box([], {
-        props: {
-          direction: 'col',
-          gap: 20,
-          padding: 24,
+      content: sdui.box(
+        [sdui.text('Docs content', { props: { variant: 'body' } })],
+        {
+          props: {
+            direction: 'col',
+            gap: 20,
+            padding: 24,
+          } satisfies Partial<BoxProps>,
         },
-      }),
-      footer: sdui.box([sdui.text('Built with Quantum')], {
-        props: {
-          padding: 16,
+      ),
+      footer: sdui.box(
+        [sdui.text('Built with Quantum')],
+        {
+          props: {
+            padding: 16,
+          } satisfies Partial<BoxProps>,
         },
-      }),
+      ),
     },
   ),
 });
+
+/* ---- Fragments ---- */
 
 const homeHeroFragment: QuantumPageFragment = qpage.fragment({
   name: 'home_hero',
@@ -829,6 +1112,7 @@ const homeHeroFragment: QuantumPageFragment = qpage.fragment({
     {
       actions: sdui.box(
         [
+          // action nodes — use 'action' root type (valid in KnownSduiNodeType)
           sdui.button({ text: 'Get Started', intent: 'primary', variant: 'solid' }),
           sdui.button({ text: 'Read Docs', intent: 'ghost', variant: 'outline' }),
         ],
@@ -836,7 +1120,7 @@ const homeHeroFragment: QuantumPageFragment = qpage.fragment({
           props: {
             direction: 'row',
             gap: 12,
-          },
+          } satisfies Partial<BoxProps>,
         },
       ),
     },
@@ -861,7 +1145,7 @@ const homeStatsFragment: QuantumPageFragment = qpage.fragment({
       props: {
         direction: 'row',
         gap: 16,
-      },
+      } satisfies Partial<BoxProps>,
     },
   ),
 });
@@ -872,15 +1156,14 @@ const dashboardHomeFragment: QuantumPageFragment = qpage.fragment({
   hydrate: 'immediate',
   template: sdui.box(
     [
-      pageHeaderComponent
-        .use(
-          {
-            title: 'Dashboard',
-            subtitle: 'Live metrics, activity, and drill-down pages',
-            actionLabel: undefined,
-          },
-          {},
-        ),
+      pageHeaderComponent.use(
+        {
+          title: 'Dashboard',
+          subtitle: 'Live metrics, activity, and drill-down pages',
+          actionLabel: undefined,
+        },
+        {},
+      ),
       sectionTemplate.use(
         {
           title: 'Overview',
@@ -898,7 +1181,7 @@ const dashboardHomeFragment: QuantumPageFragment = qpage.fragment({
               props: {
                 direction: 'row',
                 gap: 16,
-              },
+              } satisfies Partial<BoxProps>,
             },
           ),
         },
@@ -908,7 +1191,7 @@ const dashboardHomeFragment: QuantumPageFragment = qpage.fragment({
       props: {
         direction: 'col',
         gap: 24,
-      },
+      } satisfies Partial<BoxProps>,
     },
   ),
 });
@@ -934,12 +1217,15 @@ const articleFragment: QuantumPageFragment = qpage.fragment({
           compact: false,
         },
         {
-          body: sdui.box([], {
-            props: {
-              direction: 'col',
-              gap: 16,
+          body: sdui.box(
+            [sdui.text('Article body placeholder', { props: { variant: 'body' } })],
+            {
+              props: {
+                direction: 'col',
+                gap: 16,
+              } satisfies Partial<BoxProps>,
             },
-          }),
+          ),
         },
       ),
     ],
@@ -947,7 +1233,7 @@ const articleFragment: QuantumPageFragment = qpage.fragment({
       props: {
         direction: 'col',
         gap: 24,
-      },
+      } satisfies Partial<BoxProps>,
     },
   ),
 });
@@ -979,7 +1265,7 @@ const settingsFragment: QuantumPageFragment = qpage.fragment({
       props: {
         direction: 'col',
         gap: 24,
-      },
+      } satisfies Partial<BoxProps>,
     },
   ),
 });
@@ -1011,7 +1297,7 @@ const docsIndexFragment: QuantumPageFragment = qpage.fragment({
       props: {
         direction: 'col',
         gap: 24,
-      },
+      } satisfies Partial<BoxProps>,
     },
   ),
 });
@@ -1072,7 +1358,7 @@ const docsPrefetch: QuantumPagePrefetch = qpage.prefetch({
   viewport: 'visible',
 });
 
-/* ---- Nested pages ---- */
+/* ---- Page tree ---- */
 
 const appPages: QuantumPageTree = qpage.tree([
   qpage.page({
@@ -1495,33 +1781,48 @@ const quantumKernel = defineKernel({
 export const quantumConfig = quantumKernel.defineConfig();
 
 export {
+  // types
+  type KnownSduiNodeType,
+  // helpers
+  typedNode,
+  // contracts / theme
   contracts,
   theme,
+  // stores
   authStore,
   uiStore,
   navigationStore,
   pageRuntimeStore,
+  // slices
   authSlice,
   pageSlice,
   dashboardSlice,
+  // data sources
   meDataSource,
   dashboardStatsDataSource,
   feedDataSource,
   articleDataSource,
   settingsDataSource,
+  // pipelines
   hydratePagePipeline,
   signInPipeline,
   signOutPipeline,
+  // templates
   heroTemplate,
   statCardTemplate,
   sectionTemplate,
+  // components
   pageHeaderComponent,
   navRailComponent,
+  // macros
   pagePaddingMacro,
   contentFrameMacro,
+  // node types
   pageShellNode,
   pageSectionNode,
+  // extensions
   extensions,
+  // page tree / layouts / fragments
   appPages,
   appLayouts,
   appFragments,

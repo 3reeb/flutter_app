@@ -1,3 +1,25 @@
+/*
+ * ============================================================================
+ * File: quantum_domain_builder.dart
+ * 
+ * Description:
+ * Provides a fluent builder API to construct QuantumDomain objects programmatically 
+ * or from JSON. This significantly reduces boilerplate when registering domain 
+ * components, actions, schemas, bridges, and middlewares.
+ * 
+ * Key Components:
+ * - QuantumDomainBuilder: Fluent builder for chaining domain configurations.
+ * - _QuantumProxyActionPlugin: Utility to proxy actions to another domain or target.
+ * 
+ * Dependencies/Relationships:
+ * Sits at the API edge of the framework (quantum_layout.dart), connecting 
+ * application logic to the internal Quantum runtime structures.
+ * 
+ * Notes:
+ * Facilitates an elegant DSL-like approach for Dart-side domain declaration, 
+ * serving as the primary developer entrypoint for domain assembly.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // quantum_domain_builder.dart
 //

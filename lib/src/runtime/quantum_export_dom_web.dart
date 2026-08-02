@@ -1,3 +1,27 @@
+/*
+ * ============================================================================
+ * File: quantum_export_dom_web.dart
+ * 
+ * Description:
+ * The web-specific DOM interaction layer for the Quantum Image Export pipeline.
+ * It writes rendered base64 PNG data directly into hidden HTML elements and 
+ * sets dataset flags on the document body to signal completion or errors to 
+ * headless scraper environments (like Puppeteer or Vercel edge functions).
+ * 
+ * Key Components:
+ * - writePngToDom: Creates/updates #__qx_export_result with base64 data.
+ * - signalReady: Sets qxReady='true' on the document body.
+ * - signalError: Sets error flags on the document body.
+ * 
+ * Dependencies/Relationships:
+ * Relies on dart:html. Imported conditionally by quantum_export_web_bridge.dart 
+ * during web compilation.
+ * 
+ * Notes:
+ * Ensure headless scrapers are configured to wait for the qxReady dataset 
+ * attribute before attempting to extract the image text content.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM EXPORT DOM HELPER — web implementation (dart:html)
 // quantum_export_dom_web.dart

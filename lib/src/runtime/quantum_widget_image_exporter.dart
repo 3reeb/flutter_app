@@ -1,3 +1,27 @@
+/*
+ * ============================================================================
+ * File: quantum_widget_image_exporter.dart
+ * 
+ * Description:
+ * Provides an asynchronous utility to compile an SDUI JSON schema and export 
+ * the fully rendered widget tree as PNG bytes, entirely offscreen. It achieves 
+ * this by mounting the UI in an ephemeral OverlayEntry and capturing its 
+ * RenderRepaintBoundary.
+ * 
+ * Key Components:
+ * - QuantumWidgetImageExporter: The public API for single or batch exports.
+ * - _OffscreenCaptureHost: An invisible stateful widget that inflates the blueprint.
+ * - QuantumExportConfig: Configuration for dimensions, pixel ratio, and timeout.
+ * 
+ * Dependencies/Relationships:
+ * Relies on dart:ui and Flutter's rendering pipeline. Often paired with 
+ * quantum_export_web_bridge.dart for server-side rendering scraping.
+ * 
+ * Notes:
+ * This is an intensive operation. Use exportBatch sequentially rather than 
+ * spawning many concurrent exports to avoid overwhelming the raster thread.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM WIDGET IMAGE EXPORTER v1.0
 // quantum_widget_image_exporter.dart

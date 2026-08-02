@@ -1,3 +1,22 @@
+/*
+ * ============================================================================
+ * File: decoration_core.dart
+ * 
+ * Description:
+ * Handles visual embellishments in the Quantum Omni Registry, resolving blur effects, 
+ * gradients, borders, shadows, badges, ripples, and rich text formatting onto widgets.
+ * 
+ * Key Components:
+ * - _buildDecoration: Core builder pipeline for wrapping widgets with visual styling.
+ * - Decoration subtypes: Implementations for blur, gradient, badge, shadow, etc.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart.
+ * 
+ * Notes:
+ * Heavily relies on cascading styles and composition without deep nesting.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM OMNI REGISTRY — DECORATION ENGINE
 // Part of quantum_omni_registry.dart

@@ -1,3 +1,23 @@
+/*
+ * ============================================================================
+ * File: quantum_components.dart
+ * 
+ * Description:
+ * The universal spatial and developer experience macro layer providing a unified modifier pipeline, zero-GC sensors, and adaptive layouts.
+ * 
+ * Key Components:
+ * - QLPipeline: Unified modifier pipeline for tree flattening (apply extension).
+ * - QLSensor: Universal sensor for multi-touch, 3D tilt, and hover physics.
+ * - QLSpace: Polymorphic spatial engine for layout building.
+ * - QLViewport: Zero-copy virtualized engine for scrolling lists and grids.
+ * 
+ * Dependencies/Relationships:
+ * Serves as the high-level macro layer. Depends on layout engine, behaviors, and core primitives.
+ * 
+ * Notes:
+ * Bypasses intermediate Widget allocations where possible.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM COMPONENTS ENGINE v8.0 - PRODUCTION OMEGA+ BUILD
 // The Universal Spatial & Developer Experience (DX) Macro Layer.

@@ -1,3 +1,23 @@
+/*
+ * ============================================================================
+ * File: visual_core.dart
+ * 
+ * Description:
+ * Aggregates top-level visual composition layers for the Quantum Omni Registry. 
+ * Handles structural repainting boundaries, scene routing, and high-level 
+ * structural aggregations like abstract 'surface' and 'shell' delegates.
+ * 
+ * Key Components:
+ * - _buildVisual: Central dispatcher for abstract node types (scene, canvas, surface).
+ * - RepaintBoundary wrappers: Manages explicit Flutter layout boundaries.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart.
+ * 
+ * Notes:
+ * Used heavily by the QPresetEngine to resolve semantic layout slots into Flutter trees.
+ * ============================================================================
+ */
 part of '../quantum_omni_registry.dart';
 
 QLBlueprint _visualCloneAs(

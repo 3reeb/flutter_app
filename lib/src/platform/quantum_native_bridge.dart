@@ -1,3 +1,29 @@
+/*
+ * ============================================================================
+ * File: quantum_native_bridge.dart
+ * 
+ * Description:
+ * A type-safe platform channel wrapper for the Quantum framework. It enforces 
+ * a strict boundary between raw, dynamic platform messages (Method/Event Channels) 
+ * and the typed Dart application layer. By utilizing custom codecs, it ensures 
+ * all platform interactions are validated before they enter the framework.
+ * 
+ * Key Components:
+ * - QLChannelCodec: Abstract base for encoding/decoding platform payloads.
+ * - QLMethodBridge: Lifecycle-bound wrapper for request/response MethodChannels.
+ * - QLEventBridge: Typed wrapper for streaming EventChannels.
+ * - QLNativeBridgeRegistry: Singleton directory for resolving platform bridges.
+ * 
+ * Dependencies/Relationships:
+ * Sits at the lowest level of the framework's architecture, interacting directly 
+ * with Flutter's SystemChannels.
+ * 
+ * Notes:
+ * Integrates deeply with QLAsyncSignal, meaning platform requests are 
+ * automatically cancelled or ignored if the requesting UI is disposed, preventing 
+ * memory leaks and rogue callbacks.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM NATIVE BRIDGE v1.0 - TYPE-SAFE PLATFORM CHANNEL LAYER
 // quantum_native_bridge.dart

@@ -1,3 +1,24 @@
+/*
+ * ============================================================================
+ * File: portal_core.dart
+ * 
+ * Description:
+ * Manages floating, modal, and detached surfaces within the Quantum Omni Registry. 
+ * A pattern-aware router for dialogs, sheets, drawers, popovers, and persistent 
+ * panels with declarative spatial configurations.
+ * 
+ * Key Components:
+ * - _buildPortal: Resolves and routes overlay types to proper QLSpatialConfigs.
+ * - _QLInlineSurfaceHost: Hosts expandable inline surfaces or persistent panels.
+ * - _QLTriggerBindPortal: Binds overlay behavior to underlying store signals.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart.
+ * 
+ * Notes:
+ * Intercepts routing patterns to map them into the Q Overlay/Spatial layer natively.
+ * ============================================================================
+ */
 part of '../quantum_omni_registry.dart';
 
 // Pattern-aware portal router: dialogs, sheets, drawers, menus, anchored

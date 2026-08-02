@@ -1,3 +1,27 @@
+/*
+ * ============================================================================
+ * File: quantum_atoms.dart
+ * 
+ * Description:
+ * Reactive State Atoms and Atom Families. Provides atomic, composable units of state 
+ * for managing application data globally or in isolated scopes without passing variables 
+ * down the widget tree.
+ * 
+ * Key Components:
+ * - QLStateAtom: A distinct, reactive unit of read/write state.
+ * - QLComputedAtom: A derived atom that automatically recomputes when its dependencies change.
+ * - QLAtomFamily: A factory for creating parameterized atoms dynamically (e.g., fetching by ID).
+ * 
+ * Dependencies/Relationships:
+ * Built on quantum_primitives.dart. Widely utilized by business logic controllers 
+ * and UI components to maintain global shared state efficiently.
+ * 
+ * Notes:
+ * Heavily inspired by Recoil/Jotai. Highly optimized to prevent unnecessary re-evaluations 
+ * of derived state.
+ * Created At: 2026-08-02T07:37:47+03:00
+ * ============================================================================
+ */
 import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

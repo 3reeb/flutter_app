@@ -1,3 +1,26 @@
+/*
+ * ============================================================================
+ * File: quantum_export_web_bridge.dart
+ * 
+ * Description:
+ * A specialized Flutter page that bridges the Quantum SDUI renderer with 
+ * external headless rendering pipelines (e.g., Vercel / Puppeteer). It decodes 
+ * an SDUI payload from the URL, renders it invisibly using QuantumWidgetImageExporter, 
+ * and injects the resulting PNG bytes into the web DOM for extraction.
+ * 
+ * Key Components:
+ * - QuantumExportBridgePage: The stateful widget route handling the export lifecycle.
+ * - _ExportPayload: Decoder for the base64url payload containing the UI JSON and export config.
+ * 
+ * Dependencies/Relationships:
+ * Uses quantum_export_dom_web.dart (or stub) for DOM injection. Depends on 
+ * QuantumWidgetImageExporter for the actual off-screen capture.
+ * 
+ * Notes:
+ * This route should be registered in the app config (e.g., /export). It 
+ * handles both path-based and hash-based URL routing to locate the ?q= param.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM EXPORT WEB BRIDGE v1.0
 // quantum_export_web_bridge.dart

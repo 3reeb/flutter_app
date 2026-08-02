@@ -1,3 +1,24 @@
+/*
+ * ============================================================================
+ * File: system_core.dart
+ * 
+ * Description:
+ * Implements core system and device-level integrations for the Quantum Omni 
+ * Registry. Includes vsync timers, RK4 kinetic physics interpolation, headless 
+ * workers, native memory pipes, and hardware feedback (haptic, clipboard).
+ * 
+ * Key Components:
+ * - _buildSystem: Factory method routing system abstractions (timer, geo, haptic).
+ * - _QLVsyncTimerNode / _QLKineticPipeNode: Hardware-aligned data processing.
+ * - _QLDataPipeNode: Zero-copy native memory shaping for heavy visual processing.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart. Hooks directly into Dart native isolate/worker pools.
+ * 
+ * Notes:
+ * Handles interactions that break out of the pure UI layer into OS/Hardware operations.
+ * ============================================================================
+ */
 part of '../quantum_omni_registry.dart';
 
 // Moved from quantum_omni_registry.dart: _buildSystem
@@ -50,7 +71,8 @@ Widget _buildSystem(QLContext rawCtx) {
   // A god-tier context builder that completely isolates re-renders.
   // Useful for creating standalone widgets like a "Field Wrapper", "Workflow Node", etc.
   if (subType == 'omega_macro' || subType == 'macro') {
-    final Map<String, dynamic> templateJson = ctx.map('template');
+    final Map<String, dynamic> templateJson =
+        ctx.map('preset', fallback: ctx.map('template'));
     final Map<String, dynamic> localProps = ctx.map('props');
     final QLBlueprint templateAst = QLBlueprint.fromJson(templateJson);
 

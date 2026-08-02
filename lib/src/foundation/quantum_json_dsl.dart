@@ -1,3 +1,27 @@
+/*
+ * ============================================================================
+ * File: quantum_json_dsl.dart
+ * 
+ * Description:
+ * JSON-native Component and Layout Definition Layer. Provides a high-performance 
+ * system for defining UI templates and matrix layouts dynamically via JSON without 
+ * needing to recompile the Dart codebase.
+ * 
+ * Key Components:
+ * - QJsonPresetEngine: Registry and compiler for JSON-driven templates with defaults.
+ * - _PresetRecord: Immutable compiled representation of a template.
+ * - QJsonDSL: A batch registry API supporting polymorphic component definitions.
+ * 
+ * Dependencies/Relationships:
+ * Heavily intertwined with quantum_matrix_engine.dart and quantum_core.dart. 
+ * Core enabling module for Server-Driven UI (SDUI) configurations.
+ * 
+ * Notes:
+ * Extremely cache-heavy to ensure O(1) template resolution. Replaces traditional 
+ * Dart instantiations with hashed blueprint definitions.
+ * Created At: 2026-08-02T07:37:47+03:00
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // quantum_json_dsl.dart
 //
@@ -6,7 +30,7 @@
 // Lets you define ANYTHING in the engine by throwing plain JSON/Map objects:
 //
 //   ┌──────────────────────────────────────────────────────────────────────┐
-//   │  QJsonTemplateEngine_D.define({                                            │
+//   │  QJsonPresetEngine.define({                                            │
 //   │    "type": "template",                                               │
 //   │    "name": "MyCard",              ← registered plugin type           │
 //   │    "props": { "title":"", "color":"#fff" }, ← typed default props    │
@@ -50,7 +74,7 @@ import 'package:flutter/material.dart';
 import '../../quantum.dart';
 import 'quantum_matrix_engine.dart';
 // ──────────────────────────────────────────────────────────────────────────────
-// SECTION 1 — Template Engine (QJsonTemplateEngine_D)
+// SECTION 1 — Template Engine (QJsonPresetEngine)
 // ──────────────────────────────────────────────────────────────────────────────
 
 /// High-performance JSON-native template registry.
@@ -73,14 +97,14 @@ import 'quantum_matrix_engine.dart';
 ///   "ui": { ... }              // THE compiled UI tree (QLBlueprint JSON)
 /// }
 /// ```
-class QJsonTemplateEngine_D {
-  QJsonTemplateEngine_D._();
+class QJsonPresetEngine {
+  QJsonPresetEngine._();
 
   // Singleton definition registry: name → compiled record
-  static final Map<String, _TemplateRecord> _registry = {};
+  static final Map<String, _PresetRecord> _registry = {};
 
   // Fingerprint cache: definition hash → record (guards re-compilation)
-  static final Map<int, _TemplateRecord> _fingerprintCache = {};
+  static final Map<int, _PresetRecord> _fingerprintCache = {};
 
   // ── Public API ─────────────────────────────────────────────────────────────
 
@@ -108,7 +132,7 @@ class QJsonTemplateEngine_D {
     final String name = (json['name'] ?? json['id'] ?? '').toString().trim();
     if (name.isEmpty) {
       throw ArgumentError(
-          '[QJsonTemplateEngine_D.define] JSON must have a non-empty "name" field.');
+          '[QJsonPresetEngine.define] JSON must have a non-empty "name" field.');
     }
 
     final Map<String, dynamic> defaultProps =
@@ -124,7 +148,7 @@ class QJsonTemplateEngine_D {
         _extractMap(json['params'] ?? json['parameters']);
     final List<String> tags = _extractTags(json['tags']);
     final String engine =
-        (json['engine'] ?? 'QJsonTemplateEngine_D').toString();
+        (json['engine'] ?? 'QJsonPresetEngine').toString();
     final Map<String, dynamic> metadata =
         _extractMap(json['metadata'] ?? json['meta']);
     final Map<String, dynamic> paramSchema = <String, dynamic>{
@@ -138,7 +162,7 @@ class QJsonTemplateEngine_D {
     };
     final Map<String, dynamic> infoSchema = <String, dynamic>{
       'name': name,
-      'kind': 'template',
+      'kind': 'preset',
       'description': description.isNotEmpty ? description : 'Template $name',
       'engine': engine,
       'tags': tags,
@@ -163,7 +187,7 @@ class QJsonTemplateEngine_D {
       'defaultPropsKeys': defaultProps.keys.toList(growable: false),
     };
 
-    final record = _TemplateRecord(
+    final record = _PresetRecord(
       name: name,
       fingerprint: fingerprint,
       defaultProps: Map<String, dynamic>.unmodifiable(defaultProps),
@@ -182,7 +206,7 @@ class QJsonTemplateEngine_D {
 
     // Register as a native QuantumVM plugin so the SDUI engine can resolve it.
     QuantumVM.instance.registerPlugin(
-      _TemplateDrivenPlugin(record),
+      _PresetDrivenPlugin(record),
       description:
           description.isNotEmpty ? description : 'Template ${record.name}',
       params: params.isNotEmpty ? params : defaultProps,
@@ -196,7 +220,7 @@ class QJsonTemplateEngine_D {
 
     if (kDebugMode) {
       debugPrint(
-          '✅ [QJsonTemplateEngine_D] Registered template "${record.name}" '
+          '✅ [QJsonPresetEngine] Registered template "${record.name}" '
           '(slots: ${slotNames.join(", ")}, '
           'props: ${defaultProps.keys.join(", ")})');
     }
@@ -230,7 +254,7 @@ class QJsonTemplateEngine_D {
   }
 
   /// Retrieve a compiled record — useful for introspection / hot-reload.
-  static _TemplateRecord? lookup(String name) => _registry[name];
+  static _PresetRecord? lookup(String name) => _registry[name];
 
   /// Remove a template by name (useful for hot-reload dev cycles).
   static void undefine(String name) {
@@ -321,7 +345,7 @@ class QJsonTemplateEngine_D {
 // Compiled template record — immutable, shared across all render calls
 // ──────────────────────────────────────────────────────────────────────────────
 
-class _TemplateRecord {
+class _PresetRecord {
   final String name;
   final int fingerprint;
   final Map<String, dynamic> defaultProps;
@@ -334,7 +358,7 @@ class _TemplateRecord {
   final Map<String, dynamic> metadata;
   final QLBlueprint? compiledUi; // null → pass-through slot "body"
 
-  const _TemplateRecord({
+  const _PresetRecord({
     required this.name,
     required this.fingerprint,
     required this.defaultProps,
@@ -368,13 +392,13 @@ class _TemplateRecord {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
-// Plugin — bridges _TemplateRecord into the QuantumVM plugin system
+// Plugin — bridges _PresetRecord into the QuantumVM plugin system
 // ──────────────────────────────────────────────────────────────────────────────
 
-class _TemplateDrivenPlugin extends QLPlugin implements QLWidgetCapability {
-  final _TemplateRecord _record;
+class _PresetDrivenPlugin extends QLPlugin implements QLWidgetCapability {
+  final _PresetRecord _record;
 
-  _TemplateDrivenPlugin(this._record);
+  _PresetDrivenPlugin(this._record);
 
   @override
   String get type => _record.name;
@@ -526,10 +550,10 @@ extension QuantumVMJsonDslExtension on QuantumVM {
       'type': 'object',
       'properties': {
         for (final entry in defaultProps.entries)
-          entry.key: QJsonTemplateEngine_D._schemaForValue(entry.value),
+          entry.key: QJsonPresetEngine._schemaForValue(entry.value),
       },
       'required': defaultProps.keys.toList(growable: false),
-      'slotNames': QJsonTemplateEngine_D._extractSlotNames(j['slots']),
+      'slotNames': QJsonPresetEngine._extractSlotNames(j['slots']),
       'variantNames': (j['variants'] is Map)
           ? (j['variants'] as Map)
               .keys
@@ -543,7 +567,7 @@ extension QuantumVMJsonDslExtension on QuantumVM {
       'description': (j['description'] ?? j['summary'] ?? 'Matrix layout $name')
           .toString(),
       'gap': j['gap'] ?? 0,
-      'slotNames': QJsonTemplateEngine_D._extractSlotNames(j['slots']),
+      'slotNames': QJsonPresetEngine._extractSlotNames(j['slots']),
       'variantNames': (j['variants'] is Map)
           ? (j['variants'] as Map)
               .keys
@@ -624,7 +648,7 @@ extension QuantumVMJsonDslExtension on QuantumVM {
         'paramSchema': paramSchema,
         'infoSchema': infoSchema,
       },
-      tags: QJsonTemplateEngine_D._extractTags(j['tags']),
+      tags: QJsonPresetEngine._extractTags(j['tags']),
     );
 
     if (kDebugMode) {
@@ -722,7 +746,7 @@ abstract final class _QLayoutJsonRegistry {
 /// Call once at app start to define all templates AND layouts from a single
 /// mixed list.  Each entry must have a `"type"` field:
 ///
-///   * `"template"` → forwarded to [QJsonTemplateEngine_D.define]
+///   * `"template"` → forwarded to [QJsonPresetEngine.define]
 ///   * `"layout"` → forwarded to [QuantumVM.defineMatrixLayoutJson]
 ///
 /// Any other value is silently ignored (useful for forward-compatibility).
@@ -740,7 +764,7 @@ abstract final class QJsonDSL {
       final String t = (def['type'] ?? '').toString().toLowerCase();
       switch (t) {
         case 'template':
-          QJsonTemplateEngine_D.define(def);
+          QJsonPresetEngine.define(def);
           break;
         case 'layout':
           QuantumVM.instance.defineMatrixLayoutJson(def);
@@ -758,7 +782,7 @@ abstract final class QJsonDSL {
           } else if (def.containsKey('ui') ||
               def.containsKey('template') ||
               def.containsKey('view')) {
-            QJsonTemplateEngine_D.define(def);
+            QJsonPresetEngine.define(def);
           } else if (def.containsKey('target')) {
             QuantumVM.instance.defineDecorationJson(def);
           }
@@ -812,13 +836,13 @@ abstract final class QJsonDSL {
 // SECTION 4 — QuantumVMMicroPlugin extension for JSON-native template define
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Adds [QJsonTemplateEngine_D.define] as a first-class method on [QuantumVM] itself,
+/// Adds [QJsonPresetEngine.define] as a first-class method on [QuantumVM] itself,
 /// matching the existing [QuantumVMMicroPlugin] API style.
 extension QuantumVMTemplateJsonExtension on QuantumVM {
-  /// Define a template via JSON — identical to [QJsonTemplateEngine_D.define].
+  /// Define a template via JSON — identical to [QJsonPresetEngine.define].
   ///
   /// ```dart
-  /// QuantumVM.instance.defineTemplate({
+  /// QuantumVM.instance.definePreset({
   ///   "name": "ProfileCard",
   ///   "props": { "name": "", "avatarUrl": "" },
   ///   "slots": ["header", "body"],
@@ -831,8 +855,8 @@ extension QuantumVMTemplateJsonExtension on QuantumVM {
   ///   }
   /// });
   /// ```
-  void defineTemplate(Map<String, dynamic> json) =>
-      QJsonTemplateEngine_D.define(json);
+  void definePreset(Map<String, dynamic> json) =>
+      QJsonPresetEngine.define(json);
 
   /// Batch-define templates and/or layouts in one call.
   void defineAllJson(List<Map<String, dynamic>> definitions) =>
@@ -941,7 +965,7 @@ extension QuantumVMTemplateJsonExtension on QuantumVM {
           final Map<String, dynamic> t =
               Map<String, dynamic>.from(value.cast<String, dynamic>());
           t.putIfAbsent('name', () => entry.key.toString());
-          QJsonTemplateEngine_D.define(t);
+          QJsonPresetEngine.define(t);
         }
       }
     }
@@ -1027,7 +1051,7 @@ extension QuantumVMTemplateJsonExtension on QuantumVM {
   /// Node types registered: `define_template`, `define_layout`, `define_all`.
   void registerJsonDslPlugins() {
     define('define_template', (ctx) {
-      QJsonTemplateEngine_D.define(ctx.node.props);
+      QJsonPresetEngine.define(ctx.node.props);
       final children = ctx.children;
       if (children.isEmpty) return const SizedBox.shrink();
       if (children.length == 1) return children.first;

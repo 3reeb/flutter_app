@@ -1,3 +1,28 @@
+/*
+ * ============================================================================
+ * File: quantum_primitives.dart
+ * 
+ * Description:
+ * Quantum Core Primitives Engine. Houses the low-level, high-performance foundations 
+ * of the framework such as signal-based reactivity, safe memory arenas for 3D math, 
+ * physics integrations, and the foundational god-mode RenderNode.
+ * 
+ * Key Components:
+ * - QLArena: Pre-allocated Float64List buffer for zero-GC math operations.
+ * - QLSignal / QLComputed: Fine-grained structural reactive state primitives.
+ * - QLSoAEngine: Structure-of-Arrays Entity Component System (ECS).
+ * - RenderQLNode: A robust RenderBox with layout armor to prevent crash loops.
+ * 
+ * Dependencies/Relationships:
+ * Built on Flutter's core rendering and scheduler layers. Forms the foundational 
+ * bedrock for everything else in the Quantum framework.
+ * 
+ * Notes:
+ * Crucial for maintaining 120fps via a zero-allocation design. Intercepts Flutter 
+ * rendering assertions to prevent recursive render-crash loops.
+ * Created At: 2026-08-02T07:37:47+03:00
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM CORE PRIMITIVES ENGINE v8.0 - OMNI-MATRIX DOD BUILD
 // quantum_primitives.dart

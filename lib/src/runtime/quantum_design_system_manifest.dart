@@ -1,3 +1,26 @@
+/*
+ * ============================================================================
+ * File: quantum_design_system_manifest.dart
+ * 
+ * Description:
+ * A JSON-first compiler that parses, validates, and hashes Quantum design 
+ * system manifests. It aggregates components, tokens, schemas, layouts, 
+ * templates, and workflows into a single immutable bundle.
+ * 
+ * Key Components:
+ * - QuantumDesignSystemBundle: The final immutable data structure representing 
+ *   the entire design system.
+ * - QuantumDesignSystemCompiler: Logic to compile raw JSON maps into a Bundle.
+ * 
+ * Dependencies/Relationships:
+ * Used heavily during the bootstrap phase to define the visual and behavioral 
+ * parameters of the app.
+ * 
+ * Notes:
+ * Uses a stable hashing mechanism to fingerprint the bundle, useful for 
+ * caching and determining if a re-render/re-mount is necessary.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM DESIGN SYSTEM MANIFEST
 // quantum_design_system_manifest.dart

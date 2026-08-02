@@ -1,3 +1,23 @@
+/*
+ * ============================================================================
+ * File: quantum_navigation_engine.dart
+ * 
+ * Description:
+ * The Hybrid SEO Navigation engine supporting Next.js parity data fetching (SSR/SSG), zero-rebuild transitions, pure HTML generation, and zero-allocation radix trie routing.
+ * 
+ * Key Components:
+ * - QLRoute: Universal route definition integrating SEO and fetching hooks.
+ * - QLNavController: Dynamic router engine and state manager.
+ * - QLServerRenderer: API for generating static indexable HTML for search engines.
+ * - _QLRadixTrie: Internal high-performance router table.
+ * 
+ * Dependencies/Relationships:
+ * Uses quantum_hydration_reader.dart for web hydration.
+ * 
+ * Notes:
+ * Uses ObjectKey for zero-rebuild hardware transitions without breaking Flutter's Navigator state.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM NAVIGATION ENGINE v8.0 - OMEGA HYBRID SEO BUILD
 // quantum_navigation_engine.dart

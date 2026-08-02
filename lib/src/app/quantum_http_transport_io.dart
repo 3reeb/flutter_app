@@ -1,3 +1,27 @@
+/*
+ * ============================================================================
+ * File: quantum_http_transport_io.dart
+ * 
+ * Description:
+ * Provides the native dart:io implementation of the HTTP transport layer for 
+ * the Quantum framework. It adapts the standard HttpClient to the framework's 
+ * universal QuantumHttpTransport interface, allowing high-performance network 
+ * operations on mobile and desktop platforms.
+ * 
+ * Key Components:
+ * - _IoQuantumHttpTransport: The native HTTP client wrapper.
+ * - _IoQuantumHttpRequest: Represents an outgoing native request.
+ * - _IoQuantumHttpResponse: Represents an incoming native response.
+ * 
+ * Dependencies/Relationships:
+ * Implements interfaces from quantum_http_transport.dart. Exclusively used 
+ * when the app is compiled for native platforms (non-web).
+ * 
+ * Notes:
+ * Handles translating dart:io HttpHeaders into standard Maps for cross-platform 
+ * consistency.
+ * ============================================================================
+ */
 import 'dart:convert';
 import 'dart:io';
 import 'quantum_http_transport.dart';

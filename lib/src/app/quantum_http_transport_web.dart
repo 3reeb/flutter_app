@@ -1,3 +1,25 @@
+/*
+ * ============================================================================
+ * File: quantum_http_transport_web.dart
+ * 
+ * Description:
+ * Provides the dart:html / web-compatible implementation of the HTTP transport 
+ * layer for the Quantum framework. It leverages package:http/browser_client.dart 
+ * to execute network requests seamlessly within the browser environment.
+ * 
+ * Key Components:
+ * - _WebQuantumHttpTransport: The web-based HTTP client wrapper.
+ * - _WebQuantumHttpRequest: Represents an outgoing browser request.
+ * - _WebQuantumHttpResponse: Represents an incoming browser response.
+ * 
+ * Dependencies/Relationships:
+ * Implements interfaces from quantum_http_transport.dart. Exclusively used 
+ * when the app is compiled for the web.
+ * 
+ * Notes:
+ * Ensures binary and text payloads are correctly processed using browser-native APIs.
+ * ============================================================================
+ */
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;

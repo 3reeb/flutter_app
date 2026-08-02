@@ -1,0 +1,496 @@
+﻿{
+  "$schema": "quantum://test-engine/v1",
+  "id": "reactive.data_binding",
+  "title": "Reactive Data — binding, computed values, live updates, signal chains",
+  "description": "Tests reactive data binding: state mutations propagate to UI, computed values update, signal chains fire, and conditional rendering reacts to state changes.",
+  "tags": ["reactive", "binding", "state", "computed", "signals", "conditional"],
+  "version": "1.0",
+  "viewport": { "width": 390, "height": 844, "pixelRatio": 2.0, "orientation": "portrait" },
+
+  "initialState": {
+    "user.name": "Guest",
+    "user.role": "viewer",
+    "user.score": 0,
+    "user.level": "Beginner",
+    "theme": "light",
+    "dark_mode": false,
+    "notifications.count": 0,
+    "notifications.unread": [],
+    "cart.items": [],
+    "cart.total": 0,
+    "search.query": "",
+    "search.results": [],
+    "timer.running": false,
+    "timer.seconds": 0
+  },
+
+  "env": {
+    "appName": "QuantumApp"
+  },
+
+  "sdui": {
+    "type": "box:col",
+    "props": { "padding": 16, "gap": 12 },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "testId": "greeting",
+          "text": "Hello, {{user.name}}! ({{user.role}})",
+          "style": "heading.md"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "testId": "score_display",
+          "text": "Score: {{user.score}} — Level: {{user.level}}",
+          "style": "text.md"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "testId": "notification_count",
+          "text": "{{notifications.count}} notifications",
+          "style": "text.sm"
+        }
+      },
+      {
+        "type": "decoration",
+        "props": {
+          "testId": "theme_toggle",
+          "color": "{{dark_mode ? '#1E293B' : '#F8FAFC'}}",
+          "radius": 8,
+          "height": 48,
+          "onTap": [{ "action": "state.toggle", "key": "dark_mode" }]
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "testId": "theme_label",
+              "text": "{{dark_mode ? 'Dark Mode ON' : 'Light Mode ON'}}",
+              "style": "text.md"
+            }
+          }
+        ]
+      },
+      {
+        "type": "decoration",
+        "props": {
+          "testId": "add_to_cart_btn",
+          "color": "#2563EB",
+          "radius": 8,
+          "height": 44,
+          "onTap": [
+            { "action": "state.push", "key": "cart.items", "value": { "id": "{{notifications.count}}", "price": 9.99 } },
+            { "action": "state.set", "key": "cart.total", "value": "{{cart.total + 9.99}}" }
+          ]
+        },
+        "children": [
+          { "type": "text", "props": { "text": "Add Item ({{cart.items.length}} in cart)", "testId": "cart_btn_label" } }
+        ]
+      },
+      {
+        "type": "text",
+        "props": {
+          "testId": "cart_total",
+          "text": "Cart Total: ${{cart.total}}",
+          "style": "text.md"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "testId": "search_query_display",
+          "text": "Search: {{search.query.length > 0 ? search.query : 'None'}}",
+          "style": "text.sm"
+        }
+      },
+      {
+        "type": "decoration",
+        "props": {
+          "testId": "admin_panel",
+          "color": "#FEF3C7"
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": { "testId": "admin_label", "text": "Admin Panel (role: {{user.role}})" }
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "props": { "testId": "timer_display", "text": "Timer: {{timer.seconds}}s", "style": "text.sm" }
+      }
+    ]
+  },
+
+  "performance": {
+    "maxFirstFrameMs": 32,
+    "maxReRenderMs": 16,
+    "trackFrames": true,
+    "trackMemory": true
+  },
+
+  "steps": [
+    {
+      "id": "initial_bindings",
+      "label": "Verify all initial data bindings are correct",
+      "snapshot": { "captureState": true },
+      "assertions": [
+        {
+          "id": "greeting_initial",
+          "label": "Greeting shows 'Hello, Guest!'",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "greeting" },
+          "expected": "Guest"
+        },
+        {
+          "id": "role_binding",
+          "label": "Role binding shows viewer",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "greeting" },
+          "expected": "viewer"
+        },
+        {
+          "id": "score_initial",
+          "label": "Score display shows 0",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "score_display" },
+          "expected": "0"
+        },
+        {
+          "id": "notifications_initial",
+          "label": "Notification count shows 0",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "notification_count" },
+          "expected": "0"
+        },
+        {
+          "id": "theme_initial",
+          "label": "Theme label shows 'Light Mode ON'",
+          "type": "widget_text",
+          "target": { "by": "testId", "value": "theme_label" },
+          "expected": "Light Mode ON"
+        },
+        {
+          "id": "dark_mode_false",
+          "label": "dark_mode state is false",
+          "type": "state_equals",
+          "storeKey": "dark_mode",
+          "expected": false
+        },
+        {
+          "id": "cart_items_empty",
+          "label": "cart.items is empty list",
+          "type": "state_list_length",
+          "storeKey": "cart.items",
+          "expected": 0
+        },
+        {
+          "id": "cart_total_zero",
+          "label": "cart.total is 0",
+          "type": "state_equals",
+          "storeKey": "cart.total",
+          "expected": 0
+        }
+      ]
+    },
+
+    {
+      "id": "update_user_name",
+      "label": "Update user.name and verify reactive UI update",
+      "interaction": {
+        "type": "set_state",
+        "data": { "user.name": "Alice" }
+      },
+      "assertions": [
+        {
+          "id": "greeting_updated",
+          "label": "Greeting now shows 'Alice'",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "greeting" },
+          "expected": "Alice"
+        },
+        {
+          "id": "name_signal_emitted",
+          "label": "user.name signal was emitted",
+          "type": "store_key_changed",
+          "storeKey": "user.name"
+        }
+      ]
+    },
+
+    {
+      "id": "toggle_dark_mode",
+      "label": "Toggle dark mode via tap and verify conditional rendering",
+      "interaction": {
+        "type": "tap",
+        "target": { "by": "testId", "value": "theme_toggle" }
+      },
+      "assertions": [
+        {
+          "id": "dark_mode_now_true",
+          "label": "dark_mode state toggled to true",
+          "type": "state_equals",
+          "storeKey": "dark_mode",
+          "expected": true
+        },
+        {
+          "id": "theme_label_dark",
+          "label": "Theme label reactively shows 'Dark Mode ON'",
+          "type": "widget_text",
+          "target": { "by": "testId", "value": "theme_label" },
+          "expected": "Dark Mode ON"
+        },
+        {
+          "id": "dark_mode_signal",
+          "label": "dark_mode signal was emitted",
+          "type": "signal_emitted",
+          "storeKey": "dark_mode"
+        },
+        {
+          "id": "dark_mode_signal_value",
+          "label": "dark_mode signal value is true",
+          "type": "signal_value",
+          "storeKey": "dark_mode",
+          "expected": true
+        }
+      ]
+    },
+
+    {
+      "id": "toggle_dark_back",
+      "label": "Toggle dark mode off again",
+      "interaction": {
+        "type": "toggle_state",
+        "storeKey": "dark_mode"
+      },
+      "assertions": [
+        {
+          "id": "dark_mode_off",
+          "label": "dark_mode is back to false",
+          "type": "state_equals",
+          "storeKey": "dark_mode",
+          "expected": false
+        },
+        {
+          "id": "theme_label_light_again",
+          "label": "Theme label shows Light Mode again",
+          "type": "widget_text",
+          "target": { "by": "testId", "value": "theme_label" },
+          "expected": "Light Mode ON"
+        }
+      ]
+    },
+
+    {
+      "id": "update_score_and_level",
+      "label": "Raise score and verify computed level binding",
+      "interaction": {
+        "type": "merge_state",
+        "data": {
+          "user.score": 1500,
+          "user.level": "Expert"
+        }
+      },
+      "assertions": [
+        {
+          "id": "score_updated",
+          "label": "user.score state is 1500",
+          "type": "state_equals",
+          "storeKey": "user.score",
+          "expected": 1500
+        },
+        {
+          "id": "level_updated",
+          "label": "user.level state is Expert",
+          "type": "state_equals",
+          "storeKey": "user.level",
+          "expected": "Expert"
+        },
+        {
+          "id": "score_display_updated",
+          "label": "Score display shows 1500",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "score_display" },
+          "expected": "1500"
+        },
+        {
+          "id": "level_display_updated",
+          "label": "Level display shows Expert",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "score_display" },
+          "expected": "Expert"
+        }
+      ]
+    },
+
+    {
+      "id": "add_notifications",
+      "label": "Update notifications count reactively",
+      "interaction": {
+        "type": "set_state",
+        "data": {
+          "notifications.count": 5,
+          "notifications.unread": ["msg1", "msg2", "msg3", "msg4", "msg5"]
+        }
+      },
+      "assertions": [
+        {
+          "id": "notification_count_state",
+          "label": "notifications.count is 5",
+          "type": "state_equals",
+          "storeKey": "notifications.count",
+          "expected": 5
+        },
+        {
+          "id": "notification_count_ui",
+          "label": "UI shows 5 notifications",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "notification_count" },
+          "expected": "5"
+        },
+        {
+          "id": "unread_list_length",
+          "label": "notifications.unread list has 5 items",
+          "type": "state_list_length",
+          "storeKey": "notifications.unread",
+          "expected": 5
+        }
+      ]
+    },
+
+    {
+      "id": "search_reactive",
+      "label": "Update search query and verify binding",
+      "interaction": {
+        "type": "set_state",
+        "data": { "search.query": "flutter widgets" }
+      },
+      "assertions": [
+        {
+          "id": "search_query_bound",
+          "label": "Search display shows query text",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "search_query_display" },
+          "expected": "flutter widgets"
+        },
+        {
+          "id": "search_state_matches",
+          "label": "search.query state matches regex",
+          "type": "state_matches_regex",
+          "storeKey": "search.query",
+          "expected": "^flutter.*"
+        }
+      ]
+    },
+
+    {
+      "id": "role_upgrade",
+      "label": "Upgrade user role to admin and verify conditional admin panel",
+      "interaction": {
+        "type": "set_state",
+        "data": { "user.role": "admin" }
+      },
+      "assertions": [
+        {
+          "id": "role_state_admin",
+          "label": "user.role state is admin",
+          "type": "state_equals",
+          "storeKey": "user.role",
+          "expected": "admin"
+        },
+        {
+          "id": "greeting_shows_admin",
+          "label": "Greeting shows admin role",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "greeting" },
+          "expected": "admin"
+        },
+        {
+          "id": "admin_panel_exists",
+          "label": "Admin panel is visible",
+          "type": "widget_exists",
+          "target": { "by": "testId", "value": "admin_panel" }
+        },
+        {
+          "id": "admin_label_correct",
+          "label": "Admin label shows correct role",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "admin_label" },
+          "expected": "admin"
+        }
+      ]
+    },
+
+    {
+      "id": "timer_simulation",
+      "label": "Simulate timer ticking and verify reactive updates",
+      "interaction": {
+        "type": "set_state",
+        "data": { "timer.running": true, "timer.seconds": 10 }
+      },
+      "assertions": [
+        {
+          "id": "timer_state_running",
+          "label": "timer.running is true",
+          "type": "state_equals",
+          "storeKey": "timer.running",
+          "expected": true
+        },
+        {
+          "id": "timer_display_shows_seconds",
+          "label": "Timer display shows 10s",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "timer_display" },
+          "expected": "10s"
+        }
+      ]
+    },
+
+    {
+      "id": "wait_then_verify",
+      "label": "Wait 200ms then verify state stability",
+      "interaction": {
+        "type": "wait",
+        "ms": 200
+      },
+      "assertions": [
+        {
+          "id": "state_stable",
+          "label": "All key state values remain consistent",
+          "type": "state_equals",
+          "storeKey": "user.role",
+          "expected": "admin"
+        },
+        {
+          "id": "score_still_correct",
+          "label": "Score remains 1500",
+          "type": "state_equals",
+          "storeKey": "user.score",
+          "expected": 1500
+        },
+        {
+          "id": "no_jank",
+          "label": "No jank frames during reactive updates",
+          "type": "no_jank",
+          "severity": "warning"
+        },
+        {
+          "id": "memory_delta_acceptable",
+          "label": "Memory delta acceptable since first step",
+          "type": "memory_delta_under_mb",
+          "deltaFromStep": "initial_bindings",
+          "expected": 20,
+          "severity": "warning"
+        }
+      ]
+    }
+  ],
+
+  "teardown": { "clearState": true, "clearCache": true }
+}

@@ -1,3 +1,29 @@
+/*
+ * ============================================================================
+ * File: quantum_render_scheduler.dart
+ * 
+ * Description:
+ * Frame-budget-aware rendering scheduler with priority queues, render splitting, 
+ * and adaptive throttles. It intercepts rendering work before standard Flutter 
+ * mechanisms process it, spreading expensive updates across frames to prevent jank.
+ * 
+ * Key Components:
+ * - QLFrameBudget: Tracks microseconds until vsync deadline with zero allocation.
+ * - QLRenderQueue: Priority-aware, frame-budget-limited work queue.
+ * - QLBatchedSceneLayer: A drop-in layer that spreads dirty fragment renders across frames.
+ * - QLAdaptiveThrottle: A signal-driven, frame-aligned rate limiter.
+ * - QLRenderScheduler: The global singleton coordinator flushing the queue.
+ * 
+ * Dependencies/Relationships:
+ * Uses quantum_primitives.dart and quantum_scene_layer.dart. Solves a core 
+ * gap in Flutter's uncontrolled markNeedsPaint mechanism.
+ * 
+ * Notes:
+ * Essential for rendering complex components with 5000+ elements (e.g., charts) 
+ * without blocking the main GPU thread.
+ * Created At: 2026-08-02T07:37:47+03:00
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM RENDER SCHEDULER v1.0 — FRAME-BUDGET RENDER QUEUE
 // quantum_render_scheduler.dart

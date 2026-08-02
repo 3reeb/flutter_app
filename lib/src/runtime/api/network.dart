@@ -1,3 +1,23 @@
+/*
+ * ============================================================================
+ * File: network.dart
+ * 
+ * Description:
+ * Core networking components and API adaptors for OmniCloud, including offline 
+ * queueing, SQLite caching, crypto policies, and domain logic interfaces.
+ * 
+ * Key Components:
+ * - OmniCloud / ComputeCore: Main cloud singleton and isolate-based asynchronous helpers.
+ * - IOmniAuth / IOmniDatabase / IOmniStorage: Interfaces for primary cloud services.
+ * - SqliteOfflineManager: Handles queuing mutations to a local SQLite database for offline capability.
+ * 
+ * Dependencies/Relationships:
+ * Used as the fundamental backend abstraction for the application. Dependent on sqflite, crypto.
+ * 
+ * Notes:
+ * Avoid Firebase imports here; adapter-specific logic belongs in separate adapter files.
+ * ============================================================================
+ */
 // network.dart
 
 import 'dart:async';

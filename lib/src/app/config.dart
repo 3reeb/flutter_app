@@ -1,3 +1,29 @@
+/*
+ * ============================================================================
+ * File: config.dart
+ * 
+ * Description:
+ * Provides the single-source configuration schema for the Quantum framework. 
+ * This module orchestrates loading, merging, and resolving configuration data 
+ * from various sources including local assets, file system, inline data, and 
+ * remote HTTP endpoints. It supports build-time overlays, deep nested merging, 
+ * security/vault-friendly fields, and caching policies.
+ * 
+ * Key Components:
+ * - OmniShellConfigSource: Abstract base class representing a configuration source.
+ * - OmniShellConfigRoot: The root configuration structure containing all app settings.
+ * - QuantumBuildOverlay: Handles build-time defined environment overrides.
+ * - OmniShellConfigSecurityPolicy: Enforces locked and sensitive paths for security.
+ * 
+ * Dependencies/Relationships:
+ * Relies on quantum_yaml_engine for YAML parsing, quantum_http_transport for 
+ * remote fetching, and integrates closely with app booting components.
+ * 
+ * Notes:
+ * This file is highly framework-level and declarative. It heavily utilizes 
+ * immutability to ensure resolved snapshots remain intact during the app's lifecycle.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // config.dart
 //

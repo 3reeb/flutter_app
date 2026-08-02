@@ -22,7 +22,15 @@
           "gap": 20,
           "padding": 24
         },
-        "children": []
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "Auth content"
+            },
+            "children": []
+          }
+        ]
       }
     }
   }

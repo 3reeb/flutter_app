@@ -1,3 +1,23 @@
+/*
+ * ============================================================================
+ * File: quantum_behaviors.dart
+ * 
+ * Description:
+ * The behaviors engine handling spatial layout manipulation, drags, drops, resizing, and multi-split flexible divides without global setState overhead.
+ * 
+ * Key Components:
+ * - QLMultiSplit: Render-layer flexible divides bypassing Flutter Element tree.
+ * - QLMorphSurface: Zero-allocation resizer tracking corners.
+ * - QLSpatialCanvas: Zero-object infinite pan/zoom.
+ * - QLFluidBoard: Unrolled SIMD drag & drop matrix reorder.
+ * 
+ * Dependencies/Relationships:
+ * Depends on quantum ecosystem primitives and layout constraints. Consumes quantum_animation_engine.dart for timing.
+ * 
+ * Notes:
+ * High-frequency spatial shifts write directly to Matrix4.storage to prevent allocations.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM BEHAVIORS ENGINE v8.0 - OMEGA DOD SINGULARITY
 // quantum_behaviors.dart

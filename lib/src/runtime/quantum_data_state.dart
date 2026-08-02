@@ -1,3 +1,26 @@
+/*
+ * ============================================================================
+ * File: quantum_data_state.dart
+ * 
+ * Description:
+ * Defines the centralized reactive data store and runtime utilities for Quantum. 
+ * Provides memory management (caches), topological dependency resolution for 
+ * computed fields, and transactional batching for state mutations.
+ * 
+ * Key Components:
+ * - QLDataStore: A robust, reactive store handling state changes and computes.
+ * - QLRuntimeCache: Configurable LRU cache for efficient memory management.
+ * - QLRuntimeSupport: Cross-file helper functions for context and data parsing.
+ * 
+ * Dependencies/Relationships:
+ * Core state management piece used across pipelines, orchestrators, and 
+ * view layers within quantum_layout.
+ * 
+ * Notes:
+ * Includes complex transactional mutation logic (_immutableMutate) to ensure 
+ * reliable state updates and cascade notifications.
+ * ============================================================================
+ */
 import 'dart:async';
 import 'dart:collection';
 import 'dart:typed_data';

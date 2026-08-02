@@ -1,3 +1,27 @@
+/*
+ * ============================================================================
+ * File: quantum_core_schema_registry.dart
+ * 
+ * Description:
+ * A lazy, file-backed catalog for Quantum core schemas. It defines and stores 
+ * schemas for core UI types (components, macros, templates, workflows) and 
+ * supports schema inheritance (aliases extending base schemas). It keeps schema 
+ * metadata decoupled from the render objects.
+ * 
+ * Key Components:
+ * - QLCorePropSpec & QLCoreSlotSpec: Immutable definitions for properties and slots.
+ * - QLCoreSchemaDescriptor: Defines the structure (props, slots, inheritance) of a schema.
+ * - QuantumCoreSchemaRegistry: Singleton managing the registration, lazy-loading, 
+ *   and merging of built-in and file-backed schema descriptors.
+ * 
+ * Dependencies/Relationships:
+ * Uses QuantumYamlEngine for file parsing and integrates with quantum_core_file_registry.dart.
+ * 
+ * Notes:
+ * Supports complex type guessing for properties and robust schema merging 
+ * when a schema extends another. Provides extensive built-in schema definitions.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM CORE SCHEMA REGISTRY — lazy file-backed schema catalog
 // quantum_core_schema_registry.dart

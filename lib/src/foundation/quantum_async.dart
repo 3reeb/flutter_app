@@ -1,3 +1,26 @@
+/*
+ * ============================================================================
+ * File: quantum_async.dart
+ * 
+ * Description:
+ * Reactive Asynchronous State Machine for the Quantum Framework. This file provides 
+ * signal-based wrappers around futures and streams to manage loading, data, and error 
+ * states reactively without the boilerplate of traditional FutureBuilders.
+ * 
+ * Key Components:
+ * - QLAsyncSignal: A state machine encapsulating asynchronous operations (loading/data/error).
+ * - QLAsyncBuilder: A widget that cleanly reacts to QLAsyncSignal state changes.
+ * 
+ * Dependencies/Relationships:
+ * Depends on quantum_primitives.dart (QLSignal). Used throughout the application 
+ * to handle network requests, database queries, and async initializations reactively.
+ * 
+ * Notes:
+ * Designed to minimize rebuilds by relying on the structural reactivity of Quantum Signals 
+ * rather than rebuilding the entire widget tree on every state tick.
+ * Created At: 2026-08-02T07:37:47+03:00
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM ASYNC ENGINE v1.0 - OMEGA RESOURCE PRIMITIVE
 // quantum_async.dart

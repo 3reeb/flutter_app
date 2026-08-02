@@ -1,3 +1,22 @@
+/*
+ * ============================================================================
+ * File: quantum_forms_engine.dart
+ * 
+ * Description:
+ * The high-performance SSOT (Single Source of Truth) data node and graph controller for forms and state management. Provides collaborative debouncing, zero-duplication bindings, and validation scopes.
+ * 
+ * Key Components:
+ * - QLDataNode: High-performance SSOT data node with absolute type coercion.
+ * - QLGraphController: Manages node registration, dependency tracking, and global validation.
+ * - QLFormController: Specialized graph controller for form handling.
+ * 
+ * Dependencies/Relationships:
+ * Relies on core Quantum primitives.
+ * 
+ * Notes:
+ * Incorporates unrolled type checks and avoids deep map allocations where possible for performance.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM FORMS ENGINE v3.0 - OMEGA PRODUCTION BUILD
 // quantum_forms_engine.dart

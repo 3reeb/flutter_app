@@ -1,3 +1,22 @@
+/*
+ * ============================================================================
+ * File: chart_core.dart
+ * 
+ * Description:
+ * Provides high-level chart builder configurations for the Quantum Omni Registry, 
+ * mapping abstract chart descriptors to explicit chart implementations.
+ * 
+ * Key Components:
+ * - _buildChart: Router to initialize concrete chart implementations.
+ * - _registerChartAliases: Registers dynamic aliases to chart types.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart.
+ * 
+ * Notes:
+ * Supports multiple aliases mapped to backend chart components.
+ * ============================================================================
+ */
 part of '../quantum_omni_registry.dart';
 
 Widget _buildChart(QLContext rawCtx) {

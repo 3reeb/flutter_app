@@ -1,0 +1,340 @@
+﻿{
+  "$schema": "quantum://test-engine/v1",
+  "id": "layout.resize_drag",
+  "title": "Layout — real-time resize, draggable, scroll behaviors",
+  "description": "Tests box resize via drag handle, draggable widget repositioning, scroll delta, and viewport constraints.",
+  "tags": ["layout", "resize", "drag", "scroll", "geometry"],
+  "version": "1.0",
+  "viewport": { "width": 390, "height": 844, "pixelRatio": 2.0, "orientation": "portrait" },
+
+  "initialState": {
+    "box.width": 200,
+    "box.height": 150,
+    "box.x": 50,
+    "box.y": 100,
+    "drag.active": false,
+    "drag.lastX": 0,
+    "drag.lastY": 0,
+    "scroll.position": 0
+  },
+
+  "sdui": {
+    "type": "box:col",
+    "props": { "padding": 16 },
+    "children": [
+      {
+        "type": "text",
+        "props": { "text": "Resize & Drag Test", "style": "heading.md", "testId": "page_title" }
+      },
+      {
+        "type": "system",
+        "props": {
+          "type": "draggable",
+          "testId": "draggable_box",
+          "bindX": "box.x",
+          "bindY": "box.y",
+          "axis": "both"
+        },
+        "children": [
+          {
+            "type": "decoration",
+            "props": {
+              "testId": "resizable_box",
+              "color": "#3B82F6",
+              "radius": 12,
+              "width": 200,
+              "height": 150
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "testId": "box_label",
+                  "text": "Drag Me\n{{box.width}}x{{box.height}}",
+                  "style": "text.sm"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "decoration",
+        "props": {
+          "testId": "scroll_container",
+          "color": "#F1F5F9",
+          "height": 300,
+          "radius": 8
+        },
+        "children": [
+          {
+            "type": "data",
+            "props": {
+              "testId": "scroll_list",
+              "bind": "scrollItems",
+              "direction": "vertical",
+              "itemHeight": 60
+            },
+            "children": [
+              {
+                "type": "decoration",
+                "props": {
+                  "color": "#E2E8F0",
+                  "height": 56,
+                  "radius": 6
+                },
+                "children": [
+                  { "type": "text", "props": { "text": "Item {{index}}" } }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "decoration",
+        "props": {
+          "testId": "small_box",
+          "color": "#10B981",
+          "width": 80,
+          "height": 80,
+          "radius": 40
+        },
+        "children": [
+          { "type": "text", "props": { "text": "Circle", "testId": "circle_label" } }
+        ]
+      },
+      {
+        "type": "decoration",
+        "props": {
+          "testId": "wide_box",
+          "color": "#8B5CF6",
+          "height": 60
+        },
+        "children": [
+          { "type": "text", "props": { "text": "Full Width Box", "testId": "wide_label" } }
+        ]
+      }
+    ]
+  },
+
+  "performance": {
+    "maxFirstFrameMs": 32,
+    "maxReRenderMs": 16,
+    "trackFrames": true,
+    "trackMemory": true,
+    "maxFrameDrops": 2
+  },
+
+  "steps": [
+    {
+      "id": "initial_geometry",
+      "label": "Verify initial box geometry",
+      "snapshot": { "captureState": true, "captureMemory": true, "captureFrame": true },
+      "assertions": [
+        {
+          "id": "page_title_exists",
+          "label": "Page title visible",
+          "type": "widget_exists",
+          "target": { "by": "testId", "value": "page_title" }
+        },
+        {
+          "id": "resizable_box_width",
+          "label": "Resizable box initial width is 200",
+          "type": "widget_width",
+          "target": { "by": "testId", "value": "resizable_box" },
+          "expected": 200,
+          "tolerance": 4.0
+        },
+        {
+          "id": "resizable_box_height",
+          "label": "Resizable box initial height is 150",
+          "type": "widget_height",
+          "target": { "by": "testId", "value": "resizable_box" },
+          "expected": 150,
+          "tolerance": 4.0
+        },
+        {
+          "id": "circle_size",
+          "label": "Circle box width and height are 80",
+          "type": "widget_size",
+          "target": { "by": "testId", "value": "small_box" },
+          "width": 80,
+          "height": 80,
+          "tolerance": 4.0
+        },
+        {
+          "id": "wide_box_full_width",
+          "label": "Wide box stretches full viewport width minus padding",
+          "type": "widget_width",
+          "target": { "by": "testId", "value": "wide_box" },
+          "matcher": "gte",
+          "expected": 300
+        },
+        {
+          "id": "wide_box_height",
+          "label": "Wide box height is 60",
+          "type": "widget_height",
+          "target": { "by": "testId", "value": "wide_box" },
+          "expected": 60,
+          "tolerance": 2.0
+        },
+        {
+          "id": "all_visible",
+          "label": "All boxes are visible in viewport",
+          "type": "widget_visible",
+          "target": { "by": "testId", "value": "resizable_box" }
+        }
+      ]
+    },
+
+    {
+      "id": "drag_box",
+      "label": "Drag the box by 80px to the right",
+      "interaction": {
+        "type": "drag",
+        "target": { "by": "testId", "value": "draggable_box" },
+        "from": { "dx": 0, "dy": 0 },
+        "to": { "dx": 80, "dy": 0 },
+        "durationMs": 400
+      },
+      "assertions": [
+        {
+          "id": "drag_x_changed",
+          "label": "box.x state updated after drag",
+          "type": "state_not_equals",
+          "storeKey": "box.x",
+          "expected": 50
+        },
+        {
+          "id": "box_still_visible",
+          "label": "Box is still visible after drag",
+          "type": "widget_visible",
+          "target": { "by": "testId", "value": "resizable_box" }
+        }
+      ]
+    },
+
+    {
+      "id": "resize_box",
+      "label": "Resize box to 300x200 via state mutation",
+      "interaction": {
+        "type": "set_state",
+        "data": {
+          "box.width": 300,
+          "box.height": 200
+        }
+      },
+      "assertions": [
+        {
+          "id": "width_state_set",
+          "label": "box.width state is 300",
+          "type": "state_equals",
+          "storeKey": "box.width",
+          "expected": 300
+        },
+        {
+          "id": "height_state_set",
+          "label": "box.height state is 200",
+          "type": "state_equals",
+          "storeKey": "box.height",
+          "expected": 200
+        }
+      ]
+    },
+
+    {
+      "id": "scroll_down",
+      "label": "Scroll the scroll container down by 200px",
+      "interaction": {
+        "type": "scroll",
+        "target": { "by": "testId", "value": "scroll_container" },
+        "delta": { "dx": 0, "dy": -200 }
+      },
+      "assertions": [
+        {
+          "id": "scroll_moved",
+          "label": "Scroll offset changed from 0",
+          "type": "widget_scroll_offset",
+          "target": { "by": "testId", "value": "scroll_list" },
+          "expected": 200,
+          "matcher": "gte",
+          "severity": "warning"
+        },
+        {
+          "id": "scroll_container_still_exists",
+          "label": "Scroll container still exists after scroll",
+          "type": "widget_exists",
+          "target": { "by": "testId", "value": "scroll_container" }
+        }
+      ]
+    },
+
+    {
+      "id": "double_tap_circle",
+      "label": "Double tap the circle box",
+      "interaction": {
+        "type": "double_tap",
+        "target": { "by": "testId", "value": "small_box" }
+      },
+      "assertions": [
+        {
+          "id": "circle_still_exists",
+          "label": "Circle still visible after double-tap",
+          "type": "widget_exists",
+          "target": { "by": "testId", "value": "small_box" }
+        }
+      ]
+    },
+
+    {
+      "id": "hover_wide_box",
+      "label": "Hover over wide box",
+      "interaction": {
+        "type": "hover",
+        "target": { "by": "testId", "value": "wide_box" }
+      },
+      "assertions": [
+        {
+          "id": "wide_box_still_correct_height",
+          "label": "Wide box height unchanged after hover",
+          "type": "widget_height",
+          "target": { "by": "testId", "value": "wide_box" },
+          "expected": 60,
+          "tolerance": 2.0
+        }
+      ]
+    },
+
+    {
+      "id": "geometry_after_interactions",
+      "label": "Verify geometry constraints after all interactions",
+      "assertions": [
+        {
+          "id": "box_within_viewport_width",
+          "label": "Resizable box width does not exceed viewport",
+          "type": "widget_width",
+          "target": { "by": "testId", "value": "resizable_box" },
+          "matcher": "lte",
+          "expected": 390
+        },
+        {
+          "id": "perf_frame_drops",
+          "label": "Frame drops within budget",
+          "type": "no_frame_drops",
+          "expected": 2,
+          "severity": "warning"
+        },
+        {
+          "id": "memory_budget",
+          "label": "Memory under 100MB",
+          "type": "memory_under_mb",
+          "expected": 100,
+          "severity": "warning"
+        }
+      ]
+    }
+  ],
+
+  "teardown": { "clearState": true, "clearCache": false }
+}

@@ -1,3 +1,24 @@
+/*
+ * ============================================================================
+ * File: action_core.dart
+ * 
+ * Description:
+ * Handles declarative resolution for UI action components within the Quantum 
+ * framework, implementing handlers for interactive behaviors like focus, gestures, 
+ * pointers, and viewport scaling.
+ * 
+ * Key Components:
+ * - _buildAction: Main factory turning QLContext into functional, interactive widgets.
+ * - _QLViewportNode / _QLRawGestureNode: Custom gesture recognizers to bypass 
+ *   or intercept the Flutter gesture arena for advanced interaction.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart. Integrates deeply with QLDataScope and Q Engine.
+ * 
+ * Notes:
+ * Implements primitive pointer logic mapped to application signals for state management.
+ * ============================================================================
+ */
 part of '../quantum_omni_registry.dart';
 
 // Moved from quantum_omni_registry.dart: _buildAction

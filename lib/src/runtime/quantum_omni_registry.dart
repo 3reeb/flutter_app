@@ -1,3 +1,27 @@
+/*
+ * ============================================================================
+ * File: quantum_omni_registry.dart
+ * 
+ * Description:
+ * The grand central component registry for the Quantum framework. It defines 
+ * all structural "cores" (box, text, action, fields, layouts, etc.) and routes 
+ * every SDUI element through these optimized builders. It also manages the 
+ * dynamic CSS-like QDesignMatrix styling engine and huge sets of component aliases.
+ * 
+ * Key Components:
+ * - registerOmniComponents: The massive bootstrap function defining all core types.
+ * - QDesignMatrix: Procedural generator for Tailwind-like utility classes based on intent/scale/shape.
+ * - _resolveFieldController: High-performance resolver for form field states.
+ * 
+ * Dependencies/Relationships:
+ * Highly coupled to all Quantum core libraries and features (charts, layout, 
+ * matrix engines, rendering).
+ * 
+ * Notes:
+ * This is an immense, performance-critical file utilizing LRU flyweight caches 
+ * for design tokens and aggressive optimization techniques to eliminate AST depth.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM OMNI REGISTRY v17.0 — 20-CORE OMEGA+ BUILD (SPATIAL/GPU/DECORATION/CHART/ANIMATION EXTENDED)
 // quantum_omni_registry.dart
@@ -26,7 +50,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart';
-import 'quantum_template_engine.dart';
+import 'quantum_preset_engine.dart';
 import 'package:quantum_layout/quantum.dart';
 import '../foundation/quantum_json_dsl.dart';
 import '../features/charts/quantum_charts.dart';
@@ -45,7 +69,7 @@ part 'omni_cores/canvas_core.dart';
 part 'omni_cores/system_core.dart';
 part 'omni_cores/layout_core.dart';
 part 'omni_cores/decoration_core.dart';
-part 'omni_cores/template_core.dart';
+part 'omni_cores/preset_core.dart';
 part 'omni_cores/connect_core.dart';
 part 'omni_cores/chart_core.dart';
 part 'omni_cores/animation_core.dart';
@@ -378,7 +402,7 @@ void registerOmniComponents(QuantumVM vm) {
   vm.define('system', _buildSystem,
       description: 'System services, observers, and runtime tools',
       tags: const ['core', 'system']);
-  vm.define('template', _buildTemplate,
+  vm.define('preset', _buildPreset,
       description: 'Template composition core',
       tags: const ['core', 'template']);
   vm.define('layout', _buildLayout,
@@ -407,7 +431,7 @@ void registerOmniComponents(QuantumVM vm) {
   // Core-folder defaults for file-based YAML/JSON registration.
   QLCoreFileRegistry.instance
     ..registerFolder('macros', 'macro')
-    ..registerFolder('templates', 'template')
+    ..registerFolder('presets', 'preset')
     ..registerFolder('layouts', 'layout')
     ..registerFolder('actions', 'action')
     ..registerFolder('fields', 'field')
@@ -426,7 +450,7 @@ void registerOmniComponents(QuantumVM vm) {
     ..registerFolder('stream', 'stream')
     ..registerFolder('collab', 'collab')
     ..registerFolder('box', 'box');
-  _registerPowerFieldTemplates(vm);
+  _registerPowerFieldPresets(vm);
   _registerChartAliases(vm);
   _registerVisualAliases(vm);
   _registerHookAliases(vm);
@@ -444,12 +468,12 @@ void registerOmniComponents(QuantumVM vm) {
   _registerSystemAliases(vm);
   _registerLayoutAliases(vm);
   _registerDecorationAliases(vm);
-  _registerTemplateAliases(vm);
+  _registerPresetAliases(vm);
   _registerCanvasAliases(vm);
   _registerStreamAliases(vm);
   _registerCollabAliases(vm);
 
-  _registerGeneralBuiltInTemplates(vm);
-  _registerRichDesignSystemTemplates(vm);
+  _registerGeneralBuiltInPresets(vm);
+  _registerRichDesignSystemPresets(vm);
   _registerRichSpatialLayouts(vm);
 }

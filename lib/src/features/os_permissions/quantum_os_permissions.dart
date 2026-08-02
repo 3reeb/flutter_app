@@ -1,3 +1,28 @@
+/*
+ * ============================================================================
+ * File: quantum_os_permissions.dart
+ * 
+ * Description:
+ * A sophisticated OS permission management engine designed for the Quantum 
+ * framework. It standardizes permission capabilities, statuses, and complex 
+ * request scenarios (including dependency chains) into a unified, event-driven 
+ * API, decoupling the framework from direct platform plugin dependencies.
+ * 
+ * Key Components:
+ * - PermissionResult: Immutable snapshot of a permission capability state.
+ * - DefaultPermissionKernel: Core orchestrator utilizing a caching layer and audit store.
+ * - DefaultPermissionPolicyEngine: Resolves dependency graphs and UI fallback strategies.
+ * - PermissionDriverRegistry: Abstract driver model allowing hot-pluggable implementations.
+ * 
+ * Dependencies/Relationships:
+ * Standalone architecture meant to be implemented per-platform via PermissionDriver 
+ * interfaces.
+ * 
+ * Notes:
+ * Enforces a strict separation of concerns, ensuring that permission checks do 
+ * not accidentally trigger UI prompts without explicit orchestration.
+ * ============================================================================
+ */
 library permission_engine;
 
 import 'dart:async';

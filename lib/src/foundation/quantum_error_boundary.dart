@@ -1,3 +1,25 @@
+/*
+ * ============================================================================
+ * File: quantum_error_boundary.dart
+ * 
+ * Description:
+ * Robust Subtree Error Isolation. Provides a React-like Error Boundary widget that 
+ * catches rendering, layout, and synchronous errors in its descendants, preventing 
+ * the entire application from crashing.
+ * 
+ * Key Components:
+ * - QLErrorBoundary: The boundary widget that traps errors and displays a fallback UI.
+ * 
+ * Dependencies/Relationships:
+ * Uses standard Flutter widgets. Closely integrates with RenderQLNode from 
+ * quantum_primitives.dart to handle intercepted layout faults gracefully.
+ * 
+ * Notes:
+ * Essential for the 'Crash Immunity' philosophy of the framework. Contains retry logic 
+ * and custom observability hooks for telemetry.
+ * Created At: 2026-08-02T07:37:47+03:00
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM ERROR BOUNDARY v1.0 - STRUCTURED SUBTREE FAULT ISOLATION
 // quantum_error_boundary.dart

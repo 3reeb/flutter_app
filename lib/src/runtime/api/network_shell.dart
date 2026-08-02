@@ -1,3 +1,24 @@
+/*
+ * ============================================================================
+ * File: network_shell.dart
+ * 
+ * Description:
+ * The single entry point facade (Quantum shell) for the OmniCloud networking core, 
+ * providing high-level wrappers for APIs, caching, streaming, media, offline sync, 
+ * and dynamic action routing.
+ * 
+ * Key Components:
+ * - Quantum: The unified facade for initializing and accessing network capabilities.
+ * - OmniCollection / OmniGlobal: Simplified database and global settings abstractions.
+ * - Facades (_OmniDbFacade, _OmniAuthFacade): Grouped functional boundaries.
+ * 
+ * Dependencies/Relationships:
+ * Wraps functionality from network.dart and provides an easy-to-consume SDUI API.
+ * 
+ * Notes:
+ * Handles continuous streams, live database queries, and background media pipelines.
+ * ============================================================================
+ */
 // =============================================================================
 // network_shell.dart
 // =============================================================================

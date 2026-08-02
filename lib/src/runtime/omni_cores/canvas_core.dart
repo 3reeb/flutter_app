@@ -1,3 +1,24 @@
+/*
+ * ============================================================================
+ * File: canvas_core.dart
+ * 
+ * Description:
+ * Contains canvas drawing abstractions within the Quantum Omni Registry, enabling 
+ * raw vertex buffers, AOT compiled procedural bytecode rendering, and custom 
+ * SPIR-V shader pipelines.
+ * 
+ * Key Components:
+ * - _buildCanvas: Generates specific canvas node types (plot, shape, draw, shader).
+ * - _QLVertexPlotPainter / _QLProceduralCanvasNode: High-performance plotting 
+ *   via Float32List vertex arrays and bytecode execution.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart. Operates closely with dart:ui primitives.
+ * 
+ * Notes:
+ * Includes zero-GC logic designed to minimize memory allocation per frame.
+ * ============================================================================
+ */
 part of '../quantum_omni_registry.dart';
 
 // Moved from quantum_omni_registry.dart: _buildCanvas

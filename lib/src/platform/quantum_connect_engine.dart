@@ -1,3 +1,29 @@
+/*
+ * ============================================================================
+ * File: quantum_connect_engine.dart
+ * 
+ * Description:
+ * Introduces the Quantum Connect Engine, providing a decoupled, named pub/sub 
+ * architecture (QLChannel) for cross-widget communication. It solves the issue 
+ * of deeply nested components needing to share state (like navigation context 
+ * or interactive gestures) without requiring rigid prop-drilling or monolithic 
+ * global state controllers.
+ * 
+ * Key Components:
+ * - QLChannelHub & QLChannel: Lazy-instantiated, typed pub/sub channels.
+ * - QLNavBridge: Broadcasts route transitions (e.g., previous page title) globally.
+ * - QLPressGesture: Stateless gesture recognizer for complex hold-and-drag interactions.
+ * - QLMorphSlot & QLSmartBackButton: Ready-to-use reactive UI compositions.
+ * 
+ * Dependencies/Relationships:
+ * Works seamlessly with QuantumVM and QLNavController. Connects various 
+ * framework signals to standard Flutter UI components.
+ * 
+ * Notes:
+ * Prioritizes O(1) lazy allocation�channels are only created when explicitly 
+ * published or subscribed to, preventing memory bloat.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM CONNECT ENGINE
 // quantum_connect_engine.dart

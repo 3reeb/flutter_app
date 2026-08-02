@@ -1,3 +1,23 @@
+/*
+ * ============================================================================
+ * File: data_core.dart
+ * 
+ * Description:
+ * Manages data presentation and structural binding in the Quantum Omni Registry. 
+ * Supports virtual scrolling, paginated lists, diff-based arrays, repeating 
+ * templates, and sliver optimizations for lazy rendering.
+ * 
+ * Key Components:
+ * - _buildData: Core router mapping arrays and datasets to UI elements.
+ * - data:diff / data:virtual_scroll: Mechanisms for high-performance list rendering.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart. Integrates with QLPipelineRegistry.
+ * 
+ * Notes:
+ * Handles heavy DOM manipulation and mapping of signal data to generated widgets.
+ * ============================================================================
+ */
 part of '../quantum_omni_registry.dart';
 
 // Moved from quantum_omni_registry.dart: _buildData

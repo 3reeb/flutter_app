@@ -1,3 +1,28 @@
+/*
+ * ============================================================================
+ * File: quantum_reactive_graph.dart
+ * 
+ * Description:
+ * Signal-Driven Animation Compositor. Enables seamless reactive animations by creating 
+ * a direct pipeline from data signals to animation spring targets without triggering 
+ * standard widget rebuilds.
+ * 
+ * Key Components:
+ * - QLSelector: Structural memoization primitive for fine-grained reactivity.
+ * - QLDerivedSignal: Auto-tracking batched signal that suppresses rebuild storms.
+ * - QLReactiveBinding: Direct float-value writer to a QLTimeline spring target.
+ * - QLAnimCompositor: Composer that wires multiple signals to a single ticker.
+ * 
+ * Dependencies/Relationships:
+ * Built upon quantum_primitives.dart (QLSignal) and integrates directly into 
+ * the Quantum animation layer.
+ * 
+ * Notes:
+ * Bypasses the traditional AnimatedBuilder pattern. Updates occur entirely at the 
+ * Float64List/Spring level to avoid structural Dart widget overhead.
+ * Created At: 2026-08-02T07:37:47+03:00
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM REACTIVE GRAPH ENGINE v1.0 — SIGNAL-DRIVEN ANIMATION COMPOSITOR
 // quantum_reactive_graph.dart

@@ -1,3 +1,25 @@
+/*
+ * ============================================================================
+ * File: quantum_vm_catalog.dart
+ * 
+ * Description:
+ * An auto-generated dictionary and introspection registry defining the taxonomy 
+ * of the Quantum VM components. It supplies type information, parameter schemas, 
+ * and property mappings required for visual editors, IDE validation, and low-code builders.
+ * 
+ * Key Components:
+ * - QuantumVMCatalog: Contains static maps (e.g., omniCoreSubtypes, omniCoreFeaturePropTypes) 
+ *   that define the valid configurations for every component type.
+ * 
+ * Dependencies/Relationships:
+ * Referenced by quantum_vm.dart and the AST compiler to validate nodes and 
+ * construct accurate schemas for dynamic blueprints.
+ * 
+ * Notes:
+ * This file is highly structured and largely static; it should remain synchronized 
+ * with the actual runtime component capabilities.
+ * ============================================================================
+ */
 // quantum_vm_catalog.dart
 // Auto-generated Dictionary and Introspection Registry for Quantum VM.
 // Used for Visual Editors, Low-Code Builders, and IDE Validation.
@@ -204,7 +226,7 @@ class QuantumVMCatalog {
         'window'
       ],
       'stream': <String>['multiplex', 'ring', 'sse', 'tick', 'ws'],
-      'template': <String>[],
+      'preset': <String>[],
       'layout': <String>[],
       'component': <String>[
         'define',
@@ -261,7 +283,7 @@ class QuantumVMCatalog {
         'stack',
         'surface',
         'system',
-        'template',
+        'preset',
         'text'
       ],
     };
@@ -731,10 +753,10 @@ class QuantumVMCatalog {
         'size': 'int',
         'stiffness': 'double',
         'task': 'String',
-        'template': 'Map<String, dynamic>',
+        'preset': 'Map<String, dynamic>',
         'type': 'String',
       },
-      'template': <String, String>{
+      'preset': <String, String>{
         'activeFill': 'String',
         'avatars': 'List<dynamic>',
         'backText': 'String',
@@ -1839,12 +1861,12 @@ class QuantumVMCatalog {
           'size': 'int',
           'stiffness': 'double',
           'task': 'String',
-          'template': 'Map<String, dynamic>',
+          'preset': 'Map<String, dynamic>',
           'type': 'String',
         },
       },
-      'template': <String, dynamic>{
-        'sourceFile': 'omni_cores/template_core.dart',
+      'preset': <String, dynamic>{
+        'sourceFile': 'omni_cores/preset_core.dart',
         'aliasCount': 51,
         'defineCount': 0,
         'propCount': 34,

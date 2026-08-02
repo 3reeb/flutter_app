@@ -1,3 +1,26 @@
+/*
+ * ============================================================================
+ * File: quantum_vm_init.dart
+ * 
+ * Description:
+ * The primary initializer for the Quantum Virtual Machine. It bootstraps the 
+ * environment by registering built-in action plugins, Omni components, data 
+ * schema defaults, slice resource schemes, and core structural nodes (e.g., 
+ * slot, scene).
+ * 
+ * Key Components:
+ * - initQuantumBuiltIns: The main bootstrap function called during app startup.
+ * - LambdaActionPlugin: Utility for registering quick, inline async actions.
+ * 
+ * Dependencies/Relationships:
+ * Ties together almost every subsystem in Quantum (UI, routing, data state, 
+ * registries, and the ECS renderer).
+ * 
+ * Notes:
+ * Modifying this file is usually required when adding new foundational 
+ * capabilities or system-level actions available globally to all SDUI payloads.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM VIRTUAL MACHINE INITIALIZER v13.0 - OMEGA BUILD
 // quantum_vm_init.dart

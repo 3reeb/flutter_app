@@ -1,3 +1,24 @@
+/*
+ * ============================================================================
+ * File: field_core.dart
+ * 
+ * Description:
+ * Manages headless input interactions and form field states within the Quantum 
+ * Omni Registry. Uses JSON-driven UI shells to decouple native text controllers 
+ * from their visual representation.
+ * 
+ * Key Components:
+ * - _buildField: Factory initializing input mechanisms (text, toggle, slider, array).
+ * - _resolveFieldController: Manages decoupled states binding QLSignals.
+ * - QLRawTextInput: Highly customizable generic input wrapper.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart. Relies on internal field controllers.
+ * 
+ * Notes:
+ * Supports dynamic validation, styling states (hover/focus/error), and nested arrays.
+ * ============================================================================
+ */
 part of '../quantum_omni_registry.dart';
 
 // Moved from quantum_omni_registry.dart: _buildField

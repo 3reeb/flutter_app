@@ -1,3 +1,27 @@
+/*
+ * ============================================================================
+ * File: quantum_vm_compiler.dart
+ * 
+ * Description:
+ * The AST compilation engine for QuantumVM. It is responsible for parsing raw JSON 
+ * or dynamic map trees into strongly-typed QLBlueprint objects. It processes 
+ * layout structural syntax, resolves macros, applies data pipes, and evaluates 
+ * structural directives like $if and $repeat.
+ * 
+ * Key Components:
+ * - QLCompiler: Static class that recursively parses nodes and normalizes syntax.
+ * - QLBlueprint: Represents a compiled UI or logic node in the AST.
+ * - QLPipes: A registry of data transformation functions (e.g., uppercase, round).
+ * 
+ * Dependencies/Relationships:
+ * A part of quantum_vm.dart. Crucial for translating external API payloads and 
+ * design system manifests into runtime widgets.
+ * 
+ * Notes:
+ * Uses aggressive hashing (QLStableHasher) and caching (QLRuntimeCache) to 
+ * optimize recurring node compilation.
+ * ============================================================================
+ */
 // quantum_vm_compiler.dart
 // Core AST, Compilation, and Data Binding logic for QuantumVM.
 

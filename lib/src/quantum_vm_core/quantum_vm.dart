@@ -1,3 +1,28 @@
+/*
+ * ============================================================================
+ * File: quantum_vm.dart
+ * 
+ * Description:
+ * The main orchestrator and entry point for the Quantum Virtual Machine (QVM). 
+ * It manages the initialization, global state, plugins, design system bundles, 
+ * and alias definitions, binding them together into an executable architecture 
+ * for rendering dynamic UI blueprints.
+ * 
+ * Key Components:
+ * - QuantumVM: The singleton class acting as the hub for the virtual machine.
+ * - QLSignalBatch: A utility to defer and batch reactive state notifications.
+ * - QLPluginStreamRegistry: A registry connecting Dart streams to observable nodes.
+ * 
+ * Dependencies/Relationships:
+ * Integrates closely with quantum_vm_compiler.dart, quantum_vm_registry.dart, 
+ * and quantum_vm_components.dart as part files. It acts as the backbone for 
+ * the Quantum Execution Engine (QEE).
+ * 
+ * Notes:
+ * This file serves as a God-object in the architecture, coordinating everything 
+ * from UI routing to macro actions and zero-GC signaling.
+ * ============================================================================
+ */
 // QUANTUM VIRTUAL MACHINE (QVM) v11.0 - GOD-MODE OMEGA CORE
 // quantum_vm.dart
 //
@@ -17,6 +42,9 @@ import 'package:flutter/services.dart';
 import 'package:collection/collection.dart';
 import 'package:quantum_layout/quantum.dart';
 import 'quantum_vm_catalog.dart';
+import './qee/qee_registry.dart';
+import './qee/qee_node_types.dart';
+
 part 'quantum_vm_compiler.dart';
 part 'quantum_vm_registry.dart';
 part 'quantum_vm_components.dart';
@@ -255,10 +283,10 @@ class QuantumVM {
     });
 
     bundle.templates.forEach((name, payload) {
-      if (!overwrite && QJsonTemplateEngine_D.lookup(name) != null) return;
+      if (!overwrite && QJsonPresetEngine.lookup(name) != null) return;
       final Map<String, dynamic> def = Map<String, dynamic>.from(payload);
       def.putIfAbsent('name', () => name);
-      QJsonTemplateEngine_D.define(def);
+      QJsonPresetEngine.define(def);
     });
 
     bundle.layouts.forEach((name, payload) {
@@ -312,7 +340,7 @@ class QuantumVM {
       _registerComponentDefinition(compiled);
     }
     registerSectionEntries('native_component', bundle.components);
-    registerSectionEntries('template', bundle.templates);
+    registerSectionEntries('preset', bundle.templates);
     registerSectionEntries('layout', bundle.layouts);
     registerSectionEntries('action', bundle.actions);
     registerSectionEntries('behavior', bundle.behaviors);
@@ -1284,15 +1312,15 @@ class QuantumVM {
       }
     }
 
-    for (final name in QJsonTemplateEngine_D.registryNames) {
-      final item = QJsonTemplateEngine_D.describe(name);
+    for (final name in QJsonPresetEngine.registryNames) {
+      final item = QJsonPresetEngine.describe(name);
       if (item != null) {
         items.add(QLRegistryEntry(
-          id: 'template:$name',
-          kind: 'template',
+          id: 'preset:$name',
+          kind: 'preset',
           name: name,
           description: item['description']?.toString() ?? '',
-          engine: item['engine']?.toString() ?? 'QJsonTemplateEngine_D',
+          engine: item['engine']?.toString() ?? 'QJsonPresetEngine',
           tags: _asStringList(item['tags']),
           params: Map<String, dynamic>.from(item['params'] as Map? ?? const {}),
           metadata:
@@ -1372,7 +1400,7 @@ class QuantumVM {
         'modules': QLModuleRegistry.instance.registeredModuleIds.length,
         'macros': items.where((e) => e['kind'] == 'macro').length,
         'schemas': QLSchemaRegistry.instance.allSchemaNames.length,
-        'templates': QJsonTemplateEngine_D.registryNames.length,
+        'presets': QJsonPresetEngine.registryNames.length,
         'designSystems': _designSystems.length,
         'layouts': QMatrixLayoutRegistry.registryNames.length,
         'coreFiles': QLCoreFileRegistry.instance.count,
@@ -1405,7 +1433,7 @@ class QuantumVM {
       };
     }
 
-    final template = QJsonTemplateEngine_D.describe(key);
+    final template = QJsonPresetEngine.describe(key);
     if (template != null) return template;
     final layout = QMatrixLayoutRegistry.describe(key);
     if (layout != null) return layout;
@@ -1442,7 +1470,7 @@ class QuantumVM {
         'slotnodes',
         'module',
         'macro',
-        'template',
+        'preset',
         'layout',
         'schema',
         'pipe',

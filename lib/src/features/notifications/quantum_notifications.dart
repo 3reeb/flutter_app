@@ -1,3 +1,28 @@
+/*
+ * ============================================================================
+ * File: quantum_notifications.dart
+ * 
+ * Description:
+ * Provides a comprehensive, Server-Driven UI (SDUI) first model for constructing 
+ * rich notifications and live activities. It standardizes the data structures 
+ * required to present advanced notifications across different OS platforms, 
+ * including animations, interactive layouts, progress indicators, and inline replies.
+ * 
+ * Key Components:
+ * - QuantumNotificationAnimationSpec: Defines hardware animations for notification elements.
+ * - QuantumNotificationProgressSpec: Configuration for live progress bars/spinners.
+ * - QuantumNotificationLayoutSpec: Advanced grid/flex layouts for custom notification UIs.
+ * - QuantumNotificationTriggerSpec: Supports location/geofence-based notification triggers.
+ * 
+ * Dependencies/Relationships:
+ * Built to be bridged natively via quantum_native_bridge.dart for rendering by 
+ * OS-specific push notification extensions (APNs/FCM).
+ * 
+ * Notes:
+ * Uses aggressive type normalization to safely parse untyped JSON maps originating 
+ * from remote push payloads into strongly-typed Dart records.
+ * ============================================================================
+ */
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';

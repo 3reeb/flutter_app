@@ -1,3 +1,25 @@
+/*
+ * ============================================================================
+ * File: quantum_data_orchestrator.dart
+ * 
+ * Description:
+ * Responsible for bootstrapping and orchestrating data structures from SDUI 
+ * manifests. It parses JSON manifests and wires up modules, schemas, data 
+ * sources, slice pipelines, and dynamic actions within the Quantum framework.
+ * 
+ * Key Components:
+ * - QuantumDataOrchestrator: Static bootstrap and initialization orchestrator.
+ * - QLOrchestratorPipelineDelegate: Connects a data pipeline to the VM for data fetching.
+ * 
+ * Dependencies/Relationships:
+ * Interacts heavily with QuantumVM and delegates actual data management to 
+ * quantum_data_pipeline.dart and quantum_data_state.dart.
+ * 
+ * Notes:
+ * Keeps state storage out of this file. Focuses purely on declarative parsing 
+ * and registration during app or domain bootstrap.
+ * ============================================================================
+ */
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';

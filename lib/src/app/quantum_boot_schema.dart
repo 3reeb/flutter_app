@@ -1,3 +1,26 @@
+/*
+ * ============================================================================
+ * File: quantum_boot_schema.dart
+ * 
+ * Description:
+ * Implements a schema-first, lazy-loaded file catalog for the Quantum framework. 
+ * It maps out application structures (macros, templates, layouts, boxes) without 
+ * eagerly parsing them, ensuring extremely fast boot times. Assets are discovered 
+ * and registered via the Flutter asset manifest and only compiled when required.
+ * 
+ * Key Components:
+ * - QuantumBootSchema: Defines the mapping of directories to core types and handles schemas.
+ * - QuantumBootCatalog: A singleton catalog ensuring lazy resolution of assets on demand.
+ * 
+ * Dependencies/Relationships:
+ * Interacts with QLCoreFileRegistry and QuantumCoreSchemaRegistry to register 
+ * available components for the Server-Driven UI (SDUI) engine.
+ * 
+ * Notes:
+ * Avoids any parsing during the launch phase. The architecture relies on lazy 
+ * execution and caching to maintain O(1) performance during runtime lookups.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM BOOT SCHEMA — schema-first, lazy-loaded file catalog
 // quantum_boot_schema.dart
@@ -32,7 +55,7 @@ class QuantumBootSchema {
     this.pagesDir = 'pages',
     this.coreFolders = const {
       'macro': 'macros',
-      'template': 'templates',
+      'preset': 'presets',
       'layout': 'layouts',
       'box': 'boxes',
       'action': 'actions',
@@ -255,7 +278,7 @@ class QuantumBootSchema {
     _loaded.add(key);
   }
 
-  Future<void> ensureTemplate(String name) => ensure('template', name);
+  Future<void> ensurePreset(String name) => ensure('template', name);
   Future<void> ensureMacro(String name) => ensure('macro', name);
   Future<void> ensureBox(String name) => ensure('box', name);
   Future<void> ensureLayout(String name) async {
@@ -326,7 +349,7 @@ final class QuantumBootCatalog {
     await schema.ensure(core, name, useCache: useCache);
   }
 
-  Future<void> ensureTemplate(String name) => ensure('template', name);
+  Future<void> ensurePreset(String name) => ensure('template', name);
   Future<void> ensureMacro(String name) => ensure('macro', name);
   Future<void> ensureBox(String name) => ensure('box', name);
   Future<void> ensureLayout(String name) => ensure('layout', name);

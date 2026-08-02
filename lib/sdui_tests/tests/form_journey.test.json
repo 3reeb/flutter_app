@@ -1,0 +1,373 @@
+﻿{
+  "$schema": "quantum://test-engine/v1",
+  "id": "form.full_journey",
+  "title": "Form — full user journey: fill, validate, submit, success state",
+  "description": "Complete user journey through a registration form. Types into fields, triggers validation, submits, verifies success state.",
+  "tags": ["form", "journey", "validation", "state", "interaction"],
+  "version": "1.0",
+  "viewport": { "width": 390, "height": 844, "pixelRatio": 2.0, "orientation": "portrait" },
+
+  "initialState": {
+    "form.name": "",
+    "form.email": "",
+    "form.password": "",
+    "form.errors": {},
+    "form.submitted": false,
+    "form.loading": false,
+    "form.success": false
+  },
+
+  "env": {
+    "title": "Create Account"
+  },
+
+  "sdui": {
+    "type": "box:col",
+    "props": { "gap": 20, "padding": 24, "scrollable": true },
+    "children": [
+      {
+        "type": "text",
+        "props": { "text": "{{title}}", "style": "heading.lg", "testId": "form_title" }
+      },
+      {
+        "type": "field",
+        "props": {
+          "testId": "field_name",
+          "id": "name",
+          "bind": "form.name",
+          "label": "Full Name",
+          "placeholder": "Enter your name",
+          "prefix": { "type": "media", "props": { "mediaType": "icon", "codePoint": 57534 } }
+        }
+      },
+      {
+        "type": "field",
+        "props": {
+          "testId": "field_email",
+          "id": "email",
+          "bind": "form.email",
+          "label": "Email Address",
+          "placeholder": "you@example.com"
+        }
+      },
+      {
+        "type": "field",
+        "props": {
+          "testId": "field_password",
+          "id": "password",
+          "bind": "form.password",
+          "label": "Password",
+          "placeholder": "Min 8 characters"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "testId": "error_name",
+          "text": "{{form.errors.name}}",
+          "style": "text.error"
+        }
+      },
+      {
+        "type": "text",
+        "props": {
+          "testId": "error_email",
+          "text": "{{form.errors.email}}",
+          "style": "text.error"
+        }
+      },
+      {
+        "type": "decoration",
+        "props": {
+          "testId": "submit_button",
+          "color": "#2563EB",
+          "radius": 12,
+          "height": 52,
+          "onTap": [
+            {
+              "action": "state.set",
+              "key": "form.loading",
+              "value": true
+            },
+            {
+              "action": "lambda",
+              "code": "if (!state['form.name'] || state['form.name'].length < 2) { state['form.errors.name'] = 'Name is required'; return; } if (!state['form.email'] || !state['form.email'].includes('@')) { state['form.errors.email'] = 'Valid email required'; return; } state['form.errors'] = {}; state['form.submitted'] = true; state['form.success'] = true; state['form.loading'] = false;"
+            }
+          ]
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "testId": "submit_label",
+              "text": "{{form.loading ? 'Submitting...' : 'Create Account'}}",
+              "style": "button.primary"
+            }
+          }
+        ]
+      },
+      {
+        "type": "decoration",
+        "props": {
+          "testId": "success_banner",
+          "color": "#16A34A",
+          "radius": 8,
+          "padding": 16
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": { "text": "Account created! Welcome {{form.name}}", "testId": "success_message" }
+          }
+        ]
+      }
+    ]
+  },
+
+  "performance": {
+    "maxFirstFrameMs": 32,
+    "maxReRenderMs": 16,
+    "trackFrames": true,
+    "trackMemory": true
+  },
+
+  "steps": [
+    {
+      "id": "initial_render",
+      "label": "Form renders with all fields",
+      "assertions": [
+        {
+          "id": "title_visible",
+          "label": "Form title is visible",
+          "type": "widget_exists",
+          "target": { "by": "testId", "value": "form_title" }
+        },
+        {
+          "id": "name_field_exists",
+          "label": "Name field exists",
+          "type": "widget_exists",
+          "target": { "by": "testId", "value": "field_name" }
+        },
+        {
+          "id": "email_field_exists",
+          "label": "Email field exists",
+          "type": "widget_exists",
+          "target": { "by": "testId", "value": "field_email" }
+        },
+        {
+          "id": "password_field_exists",
+          "label": "Password field exists",
+          "type": "widget_exists",
+          "target": { "by": "testId", "value": "field_password" }
+        },
+        {
+          "id": "submit_btn_exists",
+          "label": "Submit button exists",
+          "type": "widget_exists",
+          "target": { "by": "testId", "value": "submit_button" }
+        },
+        {
+          "id": "submit_label_initial",
+          "label": "Submit button shows 'Create Account'",
+          "type": "widget_text",
+          "target": { "by": "testId", "value": "submit_label" },
+          "expected": "Create Account"
+        },
+        {
+          "id": "name_state_empty",
+          "label": "form.name state is empty",
+          "type": "state_equals",
+          "storeKey": "form.name",
+          "expected": ""
+        },
+        {
+          "id": "submitted_false",
+          "label": "form.submitted is false",
+          "type": "state_equals",
+          "storeKey": "form.submitted",
+          "expected": false
+        }
+      ]
+    },
+
+    {
+      "id": "type_name",
+      "label": "Type into the Name field",
+      "interaction": {
+        "type": "type",
+        "target": { "by": "testId", "value": "field_name" },
+        "text": "Alice Johnson"
+      },
+      "assertions": [
+        {
+          "id": "name_state_updated",
+          "label": "form.name state reflects typed value",
+          "type": "state_equals",
+          "storeKey": "form.name",
+          "expected": "Alice Johnson"
+        },
+        {
+          "id": "name_state_not_null",
+          "label": "form.name is not null",
+          "type": "state_not_null",
+          "storeKey": "form.name"
+        }
+      ]
+    },
+
+    {
+      "id": "type_email",
+      "label": "Type into the Email field",
+      "interaction": {
+        "type": "type",
+        "target": { "by": "testId", "value": "field_email" },
+        "text": "alice@example.com"
+      },
+      "assertions": [
+        {
+          "id": "email_state_updated",
+          "label": "form.email state reflects typed value",
+          "type": "state_equals",
+          "storeKey": "form.email",
+          "expected": "alice@example.com"
+        }
+      ]
+    },
+
+    {
+      "id": "type_password",
+      "label": "Type into the Password field",
+      "interaction": {
+        "type": "type",
+        "target": { "by": "testId", "value": "field_password" },
+        "text": "secureP@ssw0rd"
+      },
+      "assertions": [
+        {
+          "id": "password_state_not_empty",
+          "label": "form.password state is not empty",
+          "type": "state_not_null",
+          "storeKey": "form.password"
+        }
+      ]
+    },
+
+    {
+      "id": "submit_empty_name_validation",
+      "label": "Submit with empty name — verify validation error",
+      "interaction": {
+        "type": "set_state",
+        "data": { "form.name": "", "form.email": "no-at-sign" }
+      },
+      "assertions": [
+        {
+          "id": "name_cleared",
+          "label": "form.name is empty",
+          "type": "state_equals",
+          "storeKey": "form.name",
+          "expected": ""
+        }
+      ]
+    },
+
+    {
+      "id": "submit_form",
+      "label": "Fill valid data and submit form",
+      "interaction": {
+        "type": "set_state",
+        "data": {
+          "form.name": "Alice Johnson",
+          "form.email": "alice@example.com",
+          "form.password": "secureP@ssw0rd",
+          "form.errors": {}
+        }
+      },
+      "assertions": [
+        {
+          "id": "valid_state_ready",
+          "label": "All form fields populated",
+          "type": "state_equals",
+          "storeKey": "form.name",
+          "expected": "Alice Johnson"
+        }
+      ]
+    },
+
+    {
+      "id": "tap_submit",
+      "label": "Tap submit button and verify success",
+      "interaction": {
+        "type": "tap",
+        "target": { "by": "testId", "value": "submit_button" }
+      },
+      "snapshot": { "captureState": true },
+      "assertions": [
+        {
+          "id": "submitted_true",
+          "label": "form.submitted is true after submit",
+          "type": "state_equals",
+          "storeKey": "form.submitted",
+          "expected": true
+        },
+        {
+          "id": "success_true",
+          "label": "form.success is true",
+          "type": "state_equals",
+          "storeKey": "form.success",
+          "expected": true
+        },
+        {
+          "id": "loading_false",
+          "label": "Loading state reset to false",
+          "type": "state_equals",
+          "storeKey": "form.loading",
+          "expected": false
+        },
+        {
+          "id": "success_banner_visible",
+          "label": "Success banner is visible",
+          "type": "widget_visible",
+          "target": { "by": "testId", "value": "success_banner" },
+          "severity": "warning"
+        },
+        {
+          "id": "success_message_correct",
+          "label": "Success message contains the user name",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "success_message" },
+          "expected": "Alice",
+          "severity": "warning"
+        },
+        {
+          "id": "no_jank_on_submit",
+          "label": "No jank during submit",
+          "type": "no_jank",
+          "severity": "info"
+        }
+      ]
+    },
+
+    {
+      "id": "verify_no_errors",
+      "label": "Verify no validation errors displayed after successful submit",
+      "assertions": [
+        {
+          "id": "errors_cleared",
+          "label": "form.errors is empty object",
+          "type": "state_type",
+          "storeKey": "form.errors",
+          "expected": "_Map"
+        },
+        {
+          "id": "rerender_fast",
+          "label": "Form re-render under 16ms",
+          "type": "rerender_under_ms",
+          "expected": 32,
+          "severity": "warning"
+        }
+      ]
+    }
+  ],
+
+  "teardown": { "clearState": true, "clearCache": false }
+}

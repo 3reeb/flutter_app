@@ -1,3 +1,23 @@
+/*
+ * ============================================================================
+ * File: text_core.dart
+ * 
+ * Description:
+ * Core typography engine for the Quantum Omni Registry. Maps declarative text 
+ * styles into fast, memory-optimized TextSpans driven directly by QEngine's 
+ * SIMD Arena.
+ * 
+ * Key Components:
+ * - _buildText: Constructs text nodes, mapping format flags from memory pointers.
+ * - QToken mappings: Reads precompiled O(1) bitmasks for font configurations.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart. Relies on QEngine.instance.mem.
+ * 
+ * Notes:
+ * Designed to completely bypass standard Flutter styling overhead by utilizing bitwise flags.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM OMNI REGISTRY — TEXT ENGINE
 // Part of quantum_omni_registry.dart

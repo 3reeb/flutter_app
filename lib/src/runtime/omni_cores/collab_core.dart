@@ -1,3 +1,23 @@
+/*
+ * ============================================================================
+ * File: collab_core.dart
+ * 
+ * Description:
+ * Implements real-time collaboration primitives, including live cursors, presence, 
+ * awareness, and optimistic locking mechanisms, hooked into the Quantum Registry.
+ * 
+ * Key Components:
+ * - _buildCollab: Orchestrates presence, cursor, lock, patch, and awareness types.
+ * - _QLCollabRegistry: Singleton room state store backing all collaborative UI updates.
+ * - _QLCursorOverlayNode / _QLCollabLockNode: Live UI overlay management nodes.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart.
+ * 
+ * Notes:
+ * Provides state abstractions for CRDT-lite interactions across multiple users.
+ * ============================================================================
+ */
 part of '../quantum_omni_registry.dart';
 
 // ════════════════════════════════════════════════════════════════════════════

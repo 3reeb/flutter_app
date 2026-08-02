@@ -1,3 +1,28 @@
+/*
+ * ============================================================================
+ * File: quantum_media_engine.dart
+ * 
+ * Description:
+ * Implements a high-performance media playback engine for the Quantum framework, 
+ * focusing on smooth, TikTok-style feed orchestration. It handles multi-format 
+ * video/audio streams, sophisticated pre-buffering, synchronized subtitles, and 
+ * integrates with the OmniCloud network shell for secure, proxy-routed fetching.
+ * 
+ * Key Components:
+ * - QLMediaPlaybackController: A unified controller for video/audio hardware management.
+ * - QuantumMediaOrchestrator: Manages state for continuous feeds, pre-buffering upcoming items.
+ * - QLSubtitleParser: O(log N) binary search based subtitle tracking.
+ * - QLVideoLifecycleWrapper: Safely encapsulates video surfaces and fallbacks.
+ * 
+ * Dependencies/Relationships:
+ * Registers the q_cinema and q_feed components into the QuantumVM. Interacts 
+ * with NetworkAssetBundle and Quantum.media for data retrieval.
+ * 
+ * Notes:
+ * Optimizes memory and CPU by actively managing playback lifecycles—killing off-screen 
+ * controllers and pre-warming L2 disk caches for upcoming content.
+ * ============================================================================
+ */
 import 'dart:async';
 import 'dart:math' as math;
 import 'dart:typed_data';

@@ -1,3 +1,25 @@
+/*
+ * ============================================================================
+ * File: downloader_web.dart
+ * 
+ * Description:
+ * Provides file downloading capabilities for the web environment. It utilizes
+ * HTML5 Blob and object URLs to dynamically generate downloadable files and
+ * triggers the browser's download prompt via a hidden anchor element.
+ * 
+ * Key Components:
+ * - downloadText: Creates a Blob from text and triggers a browser download.
+ * - downloadImage: Creates an image Blob from bytes and triggers a browser download.
+ * 
+ * Dependencies/Relationships:
+ * Depends on dart:html for DOM manipulation (Blob, Url, AnchorElement). Acts as 
+ * the web-specific counterpart to downloader_io.dart.
+ * 
+ * Notes:
+ * Automatically cleans up object URLs and temporary DOM elements after the 
+ * download prompt is triggered to prevent memory leaks.
+ * ============================================================================
+ */
 import 'dart:html' as html;
 import 'dart:typed_data';
 Future<String> downloadText(

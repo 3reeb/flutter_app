@@ -1,3 +1,28 @@
+/*
+ * ============================================================================
+ * File: quantum_matrix_engine.dart
+ * 
+ * Description:
+ * Core engine for CSS-like CSS-Grid matrix layouts. Supports responsive breakpoints, 
+ * variants, interactive slot overrides, and accessibility/logical ordering. Translates 
+ * ASCII grid definitions into structured mathematical layouts.
+ * 
+ * Key Components:
+ * - QMatrixInteractionController: Runtime controller managing drag, drop, and resize states.
+ * - QMatrixSlotRuntimeOverride: Visual tweaks/overrides for a specific slot.
+ * - QMatrixBuilder: Fluent builder for compiling ASCII grids into structured layouts.
+ * - QMatrixLayoutRegistry: Global cache and registry of defined matrix layouts.
+ * 
+ * Dependencies/Relationships:
+ * Consumes quantum_core.dart (QSize, QParser). Used directly by the JSON DSL 
+ * and layout engines for rendering responsive matrices.
+ * 
+ * Notes:
+ * Translates intuitive ASCII strings into highly optimized constraints. Supports RTL, 
+ * nesting, and complex Z-indexing natively.
+ * Created At: 2026-08-02T07:37:47+03:00
+ * ============================================================================
+ */
 // Enhanced quantum_matrix_engine.dart
 //
 // Added capabilities:

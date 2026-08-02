@@ -1,3 +1,28 @@
+/*
+ * ============================================================================
+ * File: quantum_data_pipeline.dart
+ * 
+ * Description:
+ * Implements an advanced, high-performance, flat-cache data pipeline designed 
+ * for large record sets. It handles complex data operations like indexing, 
+ * filtering, sorting, pagination, prefetching, and aggregate calculations 
+ * efficiently in memory.
+ * 
+ * Key Components:
+ * - QLDataPipeline: The core pipeline maintaining indices, bitmasks for 
+ *   partial hydration, and computed record visibility.
+ * - QLAggregateOp: Defines a mathematical aggregation over a dataset field.
+ * - QLPipelineDelegate: Interface for fetching data into the pipeline.
+ * 
+ * Dependencies/Relationships:
+ * Relies on schemas from quantum_data_state.dart and foundational elements 
+ * from quantum_primitives.dart.
+ * 
+ * Notes:
+ * Highly optimized for speed. Uses bitmasks to track partially loaded records 
+ * and maintains reactive signals for bound UI updates.
+ * ============================================================================
+ */
 import 'dart:async';
 import 'dart:collection';
 import 'dart:math' as math;

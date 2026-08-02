@@ -1,3 +1,24 @@
+/*
+ * ============================================================================
+ * File: layout_core.dart
+ * 
+ * Description:
+ * Defines core layout structures and spatial arrangements for the Quantum Omni 
+ * Registry. Contains rich declarative layout presets for full workspaces, app shells, 
+ * forms, modals, and CSS-grid like matrices dynamically compiled at runtime.
+ * 
+ * Key Components:
+ * - _buildLayout: Resolves layouts using the QMatrixLayoutRegistry.
+ * - _buildPageShell / _buildPageSection: High-level macro layout containers.
+ * - Matrix Definitions: App shell, workspace, feed, modal, and split shells.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart. Integrates deeply with QMatrixLayoutRegistry.
+ * 
+ * Notes:
+ * Implements a unique declarative string-based grid language for structural generation.
+ * ============================================================================
+ */
 part of '../quantum_omni_registry.dart';
 
 // Moved from quantum_omni_registry.dart: _buildLayout

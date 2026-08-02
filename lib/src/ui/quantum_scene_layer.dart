@@ -1,3 +1,22 @@
+/*
+ * ============================================================================
+ * File: quantum_scene_layer.dart
+ * 
+ * Description:
+ * A retained-mode 2D/3D draw engine using UI picture fragment caching, O(1) dirty bitfield tracking, and unrolled GPU pass orchestration to eliminate CPU rendering overhead.
+ * 
+ * Key Components:
+ * - QLSceneLayer: The main retained-mode scene list that records to cached ui.Pictures.
+ * - _DirtyBitfield: Compact bitwise tracker for fragment invalidations.
+ * - QLSceneStack: Manages layered compositing with independent repaint boundaries.
+ * 
+ * Dependencies/Relationships:
+ * Exposes integrations for QLSoAEngine.
+ * 
+ * Notes:
+ * Highly optimized for trading charts, game scenes, and data-heavy visualizations.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM SCENE LAYER v1.0 - RETAINED-MODE 2D/3D DRAW ENGINE
 // quantum_scene_layer.dart

@@ -1,3 +1,27 @@
+/*
+ * ============================================================================
+ * File: quantum_image_engine.dart
+ * 
+ * Description:
+ * The Omega CDN Optimizer & Disk Cache Bridge for the Quantum framework. 
+ * This engine handles advanced image loading, caching, resizing, and rendering 
+ * using a zero-allocation GPU pipeline. It supports intelligent CDN URL rewriting, 
+ * in-memory LRU caching, and native disk caching to maximize performance and minimize bandwidth.
+ * 
+ * Key Components:
+ * - QuantumImagePipeline: Manages the LRU GPU texture cache and concurrent requests.
+ * - QLImage: A smart, responsive image widget that triggers hardware painting.
+ * - _QLHardwareImagePainter: Custom painter that renders images directly to the canvas.
+ * - QuantumMediaEngine: Multi-tiered (L1 RAM / L2 Disk) media cache engine.
+ * 
+ * Dependencies/Relationships:
+ * Integrates with QuantumMediaEngine for disk fallback and supports SDUI components.
+ * 
+ * Notes:
+ * Uses ui.ImmutableBuffer and ui.instantiateImageCodecFromBuffer for zero-copy 
+ * decoding, drastically reducing garbage collection overhead.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM IMAGE ENGINE v10.0 - OMEGA CDN OPTIMIZER & DISK CACHE BRIDGE
 // quantum_image_engine.dart

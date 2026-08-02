@@ -1,3 +1,22 @@
+/*
+ * ============================================================================
+ * File: quantum_animation_engine.dart
+ * 
+ * Description:
+ * The core animation engine providing a single-ticker multi-track scheduler (QLTimeline), zero-allocation interpolation (QLLerps), Curve LUTs, and iOS-calibrated spring physics. Eliminates AnimationController overhead.
+ * 
+ * Key Components:
+ * - QLTimeline: Single-ticker multi-track scheduler for all animation tracks.
+ * - QLSpringCurve: True iOS-matched spring physics pre-sampled into LUT.
+ * - QLGlassLayer: The single canonical owner of BackdropFilter across the framework.
+ * 
+ * Dependencies/Relationships:
+ * Consumed by quantum_behaviors.dart, overlays, transitions, and themes.
+ * 
+ * Notes:
+ * Curve evaluation is O(1) via 257-entry Float32List. RK4 spring physics is unrolled for zero garbage collection.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM ANIMATION ENGINE v2.0 — OMEGA TIMELINE + iOS SPRING CORE
 // quantum_animation_engine.dart

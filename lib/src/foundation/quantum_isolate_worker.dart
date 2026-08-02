@@ -1,3 +1,28 @@
+/*
+ * ============================================================================
+ * File: quantum_isolate_worker.dart
+ * 
+ * Description:
+ * Quantum Isolate Worker Engine v1.0. A structured, zero-copy background compute 
+ * engine that eliminates the overhead of traditional isolate spawning by maintaining 
+ * a persistent worker pool. Highly optimized for high-frequency concurrent data processing.
+ * 
+ * Key Components:
+ * - QLTransferableBuffer: Zero-copy wrapper for TypedData transfer between isolates.
+ * - QLWorkerTask: Typed contract defining the computation, encoding, and decoding phases.
+ * - QLIsolateWorker: A persistent background isolate with a mailbox-style receive port.
+ * - QLWorkerPool: A pool of N workers with round-robin dispatch.
+ * 
+ * Dependencies/Relationships:
+ * Relies on dart:isolate, dart:typed_data, and quantum_async.dart (QLAsyncSignal).
+ * Provides background processing capabilities for the entire Quantum ecosystem.
+ * 
+ * Notes:
+ * Degrades gracefully to synchronous computation on Web platforms where isolates 
+ * are unsupported.
+ * Created At: 2026-08-02T07:37:47+03:00
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM ISOLATE WORKER ENGINE v1.0 — ZERO-COPY BACKGROUND COMPUTE
 // quantum_isolate_worker.dart

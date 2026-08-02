@@ -1,3 +1,22 @@
+/*
+ * ============================================================================
+ * File: quantum_overlays.dart
+ * 
+ * Description:
+ * A hardened, production-oriented overlay manager for dialogs, sheets, drawers, menus, popovers, and inline editors with comprehensive spatial logic and unified transition specs.
+ * 
+ * Key Components:
+ * - QLOverlayRuntimeSpec: Declarative specification for drag/resize/dismiss interactions.
+ * - QLSpatialConfig: Configuration consolidating dialog, sheet, and popover behaviors.
+ * - QLMotionSpec: Unification of entry/exit animations.
+ * 
+ * Dependencies/Relationships:
+ * Depends on quantum ecosystem primitives and layout constraints.
+ * 
+ * Notes:
+ * This abstraction standardizes floating surface physics and lifecycles.
+ * ============================================================================
+ */
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;

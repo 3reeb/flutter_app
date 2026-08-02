@@ -1,3 +1,25 @@
+/*
+ * ============================================================================
+ * File: animation_core.dart
+ * 
+ * Description:
+ * Provides declarative animations by resolving animation configurations into 
+ * complex Flutter animation widgets like tweening, staging, morphs, or sequences.
+ * 
+ * Key Components:
+ * - _buildAnimation: Resolves raw QLContext configurations into specific Flutter 
+ *   animation constructs (fade, slide, scale, spring, glass).
+ * - _QLStaggerNode / _QLSkeletonWidget / _QLKeyframeNode: Specialized widgets 
+ *   handling staggered lists, skeleton loaders, and keyframe interpolations.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart. Depends on Flutter's animation library.
+ * 
+ * Notes:
+ * Uses implicit animations (TweenAnimationBuilder) and explicit ones (AnimationController) 
+ * driven by dynamic properties from the QLContext.
+ * ============================================================================
+ */
 part of '../quantum_omni_registry.dart';
 
 Widget _buildAnimation(QLContext rawCtx) {

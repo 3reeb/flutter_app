@@ -1,3 +1,25 @@
+/*
+ * ============================================================================
+ * File: quantum_isolate_bridge.dart
+ * 
+ * Description:
+ * Cross-Platform Isolate Safety Wrapper. Provides a unified API for spawning 
+ * background computations that safely degrades to synchronous execution on platforms 
+ * lacking isolate support (e.g., Flutter Web).
+ * 
+ * Key Components:
+ * - QLIsolateBridge: Manages safe execution and data transfer across isolate boundaries.
+ * 
+ * Dependencies/Relationships:
+ * Utilized by heavy parsing tasks like quantum_yaml_engine.dart and large JSON 
+ * payload decoding.
+ * 
+ * Notes:
+ * Protects the UI thread from dropping frames during heavy computation. Always use 
+ * this bridge instead of raw Isolate.run() for cross-platform compatibility.
+ * Created At: 2026-08-02T07:37:47+03:00
+ * ============================================================================
+ */
 import 'dart:async';
 import 'dart:isolate';
 import 'package:flutter/foundation.dart';

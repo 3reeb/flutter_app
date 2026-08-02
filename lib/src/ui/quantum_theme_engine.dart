@@ -1,3 +1,22 @@
+/*
+ * ============================================================================
+ * File: quantum_theme_engine.dart
+ * 
+ * Description:
+ * The core styling resolution engine utilizing a DoD (Data-Oriented Design) 4x32 SIMD memory model. Compiles string tokens to direct memory pointers for zero-allocation styling during runtime.
+ * 
+ * Key Components:
+ * - QSimdArena: Central memory buffer using typed Float32List, Uint32List arrays for SIMD operations.
+ * - QCompiler: JIT compiler mapping token strings to memory array pointers.
+ * - QThemeGraph: Resolves and caches token aliases, colors, and string variables.
+ * 
+ * Dependencies/Relationships:
+ * Consumed by almost all Quantum widgets and layouts for high-performance styling.
+ * 
+ * Notes:
+ * Employs a 4x32 architecture to reduce object instantiation overhead during layout and paint.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM THEME ENGINE (QTE) v14.0 — OMEGA DoD 4x32 SIMD CORE (QLE Enhanced)
 // quantum_theme_engine.dart

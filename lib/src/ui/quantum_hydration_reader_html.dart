@@ -1,3 +1,20 @@
+/*
+ * ============================================================================
+ * File: quantum_hydration_reader_html.dart
+ * 
+ * Description:
+ * HTML implementation of the hydration reader, intended to read properties injected into the DOM for web initialization.
+ * 
+ * Key Components:
+ * - quantumReadDomProps: Reads and decodes __QUANTUM_PROPS__ from the HTML window.
+ * 
+ * Dependencies/Relationships:
+ * Imported conditionally by quantum_hydration_reader.dart. Uses dart:html.
+ * 
+ * Notes:
+ * Logic currently commented out; returns null by default.
+ * ============================================================================
+ */
 import 'dart:convert';
 import 'dart:html' as html;
 

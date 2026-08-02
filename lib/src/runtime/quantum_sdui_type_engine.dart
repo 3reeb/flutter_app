@@ -1,3 +1,26 @@
+/*
+ * ============================================================================
+ * File: quantum_sdui_type_engine.dart
+ * 
+ * Description:
+ * A utility engine that exports a live, strongly-typed snapshot of the Quantum 
+ * runtime registry. It generates JSON or TypeScript bundles containing schemas, 
+ * design systems, alias maps, and macros to allow external consumers (like web 
+ * frontends or IDE extensions) to have end-to-end type safety.
+ * 
+ * Key Components:
+ * - QuantumSduiTypeEngine: Static generator for JSON and TS bundles.
+ * - QuantumSduiTypeBundle: Data class holding the exported strings and maps.
+ * 
+ * Dependencies/Relationships:
+ * Polls QuantumVM, QuantumCoreSchemaRegistry, and QLCoreFileRegistry 
+ * to build a comprehensive map of the current app's capabilities.
+ * 
+ * Notes:
+ * Essential for developer experience (DX), enabling typed autocompletion 
+ * when authoring JSON/YAML manifests for the framework.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM SDUI TYPE ENGINE — schema export + TypeScript bundle generator
 // quantum_sdui_type_engine.dart

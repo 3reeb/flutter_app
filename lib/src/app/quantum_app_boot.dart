@@ -1,3 +1,26 @@
+/*
+ * ============================================================================
+ * File: quantum_app_boot.dart
+ * 
+ * Description:
+ * The recommended public bootstrap surface for developers using the Quantum framework. 
+ * It provides a simplified, explicit wrapper for initiating the application boot flow, 
+ * abstracting away the complexities of manifest and runtime initialization while 
+ * retaining compatibility with both code-first and YAML-first startup methods.
+ * 
+ * Key Components:
+ * - QuantumAppBootstrap: A streamlined wrapper class for the manifest-based boot flow.
+ * - quantumAppBoot: A convenience helper function for the shortest possible app startup.
+ * 
+ * Dependencies/Relationships:
+ * Reexports and wraps core booting mechanisms from quantum_app_entry.dart and 
+ * quantum_app_shell.dart.
+ * 
+ * Notes:
+ * Designed to be the primary entry point in a new app's main() function to keep 
+ * the initialization logic clean and concise.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // quantum_app_boot.dart
 //

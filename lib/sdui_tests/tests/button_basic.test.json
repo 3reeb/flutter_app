@@ -1,0 +1,244 @@
+﻿{
+  "$schema": "quantum://test-engine/v1",
+  "id": "button.basic",
+  "title": "Button — render, geometry, click, reactive state",
+  "description": "Verifies a primary button renders correctly, responds to tap, and updates reactive state.",
+  "tags": ["button", "interaction", "state", "geometry"],
+  "version": "1.0",
+  "viewport": { "width": 390, "height": 844, "pixelRatio": 2.0, "orientation": "portrait" },
+
+  "initialState": {
+    "counter": 0,
+    "buttonEnabled": true,
+    "lastAction": null
+  },
+
+  "env": {
+    "label": "Click Me",
+    "primaryColor": "#2563EB"
+  },
+
+  "sdui": {
+    "type": "box:col",
+    "props": { "gap": 16, "padding": 24 },
+    "children": [
+      {
+        "type": "text",
+        "props": {
+          "text": "Counter: {{counter}}",
+          "style": "heading.md",
+          "testId": "counter_label"
+        }
+      },
+      {
+        "type": "decoration",
+        "props": {
+          "testId": "primary_button",
+          "color": "#2563EB",
+          "radius": 12,
+          "onTap": [{ "action": "state.set", "key": "counter", "value": "{{counter + 1}}" },
+                    { "action": "state.set", "key": "lastAction", "value": "tapped" }],
+          "width": 200,
+          "height": 52
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": { "text": "{{label}}", "style": "button.primary", "testId": "button_label_text" }
+          }
+        ]
+      },
+      {
+        "type": "decoration",
+        "props": {
+          "testId": "secondary_button",
+          "color": "#64748B",
+          "radius": 8,
+          "onTap": [{ "action": "state.set", "key": "counter", "value": 0 }],
+          "width": 140,
+          "height": 40
+        },
+        "children": [
+          { "type": "text", "props": { "text": "Reset", "style": "button.secondary" } }
+        ]
+      }
+    ]
+  },
+
+  "performance": {
+    "maxFirstFrameMs": 32,
+    "maxReRenderMs": 16,
+    "maxMemoryMb": 80,
+    "trackFrames": true,
+    "trackMemory": true
+  },
+
+  "steps": [
+    {
+      "id": "initial_render",
+      "label": "Verify initial render and button geometry",
+      "snapshot": { "captureState": true, "captureMemory": true },
+      "assertions": [
+        {
+          "id": "btn_exists",
+          "label": "Primary button exists",
+          "type": "widget_exists",
+          "target": { "by": "testId", "value": "primary_button" }
+        },
+        {
+          "id": "btn_width",
+          "label": "Button width is 200px",
+          "type": "widget_width",
+          "target": { "by": "testId", "value": "primary_button" },
+          "expected": 200,
+          "tolerance": 2.0
+        },
+        {
+          "id": "btn_height",
+          "label": "Button height is 52px",
+          "type": "widget_height",
+          "target": { "by": "testId", "value": "primary_button" },
+          "expected": 52,
+          "tolerance": 2.0
+        },
+        {
+          "id": "btn_label",
+          "label": "Button text is 'Click Me'",
+          "type": "widget_text",
+          "target": { "by": "testId", "value": "button_label_text" },
+          "expected": "Click Me"
+        },
+        {
+          "id": "counter_initial",
+          "label": "Counter label shows 'Counter: 0'",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "counter_label" },
+          "expected": "0"
+        },
+        {
+          "id": "counter_state_initial",
+          "label": "State counter is 0",
+          "type": "state_equals",
+          "storeKey": "counter",
+          "expected": 0
+        },
+        {
+          "id": "btn_color",
+          "label": "Button background color is primary blue",
+          "type": "widget_background_color",
+          "target": { "by": "testId", "value": "primary_button" },
+          "color": "#2563EB",
+          "tolerance": 10
+        },
+        {
+          "id": "btn_visible",
+          "label": "Button is visible in viewport",
+          "type": "widget_visible",
+          "target": { "by": "testId", "value": "primary_button" }
+        },
+        {
+          "id": "perf_first_frame",
+          "label": "First frame renders under 32ms",
+          "type": "first_frame_under_ms",
+          "expected": 32,
+          "severity": "warning"
+        }
+      ]
+    },
+
+    {
+      "id": "click_button",
+      "label": "Tap primary button and verify state update",
+      "interaction": {
+        "type": "tap",
+        "target": { "by": "testId", "value": "primary_button" }
+      },
+      "snapshot": { "captureState": true },
+      "assertions": [
+        {
+          "id": "counter_incremented",
+          "label": "Counter state is now 1",
+          "type": "state_equals",
+          "storeKey": "counter",
+          "expected": 1
+        },
+        {
+          "id": "last_action_set",
+          "label": "lastAction state is 'tapped'",
+          "type": "state_equals",
+          "storeKey": "lastAction",
+          "expected": "tapped"
+        },
+        {
+          "id": "counter_label_updated",
+          "label": "Counter label displays updated value",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "counter_label" },
+          "expected": "1"
+        },
+        {
+          "id": "store_key_changed",
+          "label": "counter key changed signal emitted",
+          "type": "store_key_changed",
+          "storeKey": "counter"
+        }
+      ]
+    },
+
+    {
+      "id": "click_three_more",
+      "label": "Tap button 3 more times",
+      "interaction": { "type": "tap", "target": { "by": "testId", "value": "primary_button" } },
+      "assertions": [
+        { "id": "counter_gt1", "label": "Counter > 1", "type": "state_greater_than", "storeKey": "counter", "expected": 1 }
+      ]
+    },
+
+    {
+      "id": "reset_button",
+      "label": "Tap reset button and verify counter resets",
+      "interaction": {
+        "type": "tap",
+        "target": { "by": "testId", "value": "secondary_button" }
+      },
+      "assertions": [
+        {
+          "id": "counter_reset",
+          "label": "Counter reset to 0",
+          "type": "state_equals",
+          "storeKey": "counter",
+          "expected": 0
+        },
+        {
+          "id": "counter_label_reset",
+          "label": "Counter label shows 0 after reset",
+          "type": "widget_text_contains",
+          "target": { "by": "testId", "value": "counter_label" },
+          "expected": "0"
+        }
+      ]
+    },
+
+    {
+      "id": "perf_check",
+      "label": "Final performance budget validation",
+      "assertions": [
+        {
+          "id": "no_jank",
+          "label": "No jank frames during test",
+          "type": "no_jank",
+          "severity": "warning"
+        },
+        {
+          "id": "memory_ok",
+          "label": "Memory under 80MB",
+          "type": "memory_under_mb",
+          "expected": 80,
+          "severity": "warning"
+        }
+      ]
+    }
+  ],
+
+  "teardown": { "clearState": true, "clearCache": false }
+}

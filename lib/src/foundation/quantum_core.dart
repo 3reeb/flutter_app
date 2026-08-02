@@ -1,3 +1,26 @@
+/*
+ * ============================================================================
+ * File: quantum_core.dart
+ * 
+ * Description:
+ * Core Types and Utilities for the Quantum Framework. Defines essential models, 
+ * path resolution logic, and abstract framework constants required by the runtime.
+ * 
+ * Key Components:
+ * - QLNodeState: Standardized state definitions (active, hover, disabled).
+ * - QLPathUtils: Utility functions for parsing dot-notation and array access paths.
+ * - QLFormatParser: Parsers for standardizing inputs (sizes, dimensions, coordinates).
+ * 
+ * Dependencies/Relationships:
+ * Consumed by almost every other foundational module, notably quantum_schema.dart 
+ * and quantum_yaml_engine.dart.
+ * 
+ * Notes:
+ * Contains the fundamental vocabulary for layout logic. Must remain free of heavy 
+ * UI dependencies to allow sharing across isolate boundaries.
+ * Created At: 2026-08-02T07:37:47+03:00
+ * ============================================================================
+ */
 // quantum_core.dart
 library quantum_core;
 

@@ -1,3 +1,24 @@
+/*
+ * ============================================================================
+ * File: stream_core.dart
+ * 
+ * Description:
+ * Manages real-time streaming primitives in the Quantum Omni Registry. Provides 
+ * nodes for WebSocket channels, Server-Sent Events (SSE), fixed-capacity Ring 
+ * buffers, and hardware-aligned ticker loops.
+ * 
+ * Key Components:
+ * - _buildStream: Router for stream primitives.
+ * - _QLWebSocketNode / _QLSSENode: Exposes real-time network payloads as signals.
+ * - _QLTickNode / _QLRingBufferNode: Utilities for high-frequency telemetry.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart. Integrates with QLPluginStreamRegistry.
+ * 
+ * Notes:
+ * Essential for rendering live financial data, chat systems, or real-time telemetry.
+ * ============================================================================
+ */
 part of '../quantum_omni_registry.dart';
 
 // ════════════════════════════════════════════════════════════════════════════

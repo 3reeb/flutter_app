@@ -1,3 +1,24 @@
+/*
+ * ============================================================================
+ * File: control_core.dart
+ * 
+ * Description:
+ * Implements logical control structures within the Quantum Omni Registry, including 
+ * topological form scopes, tab/stepper indexing, optimistic updates, Redux-like 
+ * reducers, state machines, and side-effect sagas.
+ * 
+ * Key Components:
+ * - _buildControl: Resolves logical control subtypes (e.g., form_scope, flow).
+ * - _QLMachineNode: Orchestrates XState-inspired finite state machines.
+ * - _QLOptimisticNode: Manages optimistic UI updates with automatic rollback.
+ * 
+ * Dependencies/Relationships:
+ * Part of quantum_omni_registry.dart. Hooks deeply into Quantum VM and DataStore.
+ * 
+ * Notes:
+ * Handles complex asynchronous flows and state synchronization natively.
+ * ============================================================================
+ */
 part of '../quantum_omni_registry.dart';
 
 // Moved from quantum_omni_registry.dart: _buildControl

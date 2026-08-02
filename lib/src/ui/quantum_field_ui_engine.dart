@@ -1,3 +1,23 @@
+/*
+ * ============================================================================
+ * File: quantum_field_ui_engine.dart
+ * 
+ * Description:
+ * The headless UI primitives for form fields, providing purely mathematical state for toggles, sliders, text inputs, and triggers, completely decoupled from styling.
+ * 
+ * Key Components:
+ * - QLRawTextInput: Headless text input bridge with the engine.
+ * - QLRawToggle: Mathematical toggle primitive.
+ * - QLRawSlider: Layout-agnostic slider primitive calculating spatial percentages.
+ * - QLReactiveTextBridge: Links Flutter's TextEditingController to QLTextController.
+ * 
+ * Dependencies/Relationships:
+ * Uses internal/quantum_focus_sync.dart. Consumed by the form field presentation layer.
+ * 
+ * Notes:
+ * Zero forced padding, margins, or colors. Handles FocusNode and keyboard integration natively.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // QUANTUM FIELD UI ENGINE v2.0 - OMEGA HEADLESS PRIMITIVES
 // quantum_field_ui_engine.dart

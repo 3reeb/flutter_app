@@ -1,886 +1,4 @@
 {
-  "contracts": {
-    "session": {
-      "_tag": "object",
-      "_meta": {
-        "shape": {
-          "userId": {
-            "_tag": "string"
-          },
-          "accessToken": {
-            "_tag": "optional",
-            "_meta": {
-              "inner": {
-                "_tag": "string"
-              }
-            }
-          },
-          "refreshToken": {
-            "_tag": "optional",
-            "_meta": {
-              "inner": {
-                "_tag": "string"
-              }
-            }
-          },
-          "roles": {
-            "_tag": "array",
-            "_meta": {
-              "item": {
-                "_tag": "string"
-              }
-            }
-          },
-          "flags": {
-            "_tag": "record",
-            "_meta": {
-              "value": {
-                "_tag": "boolean"
-              }
-            }
-          }
-        }
-      }
-    },
-    "pageMeta": {
-      "_tag": "object",
-      "_meta": {
-        "shape": {
-          "title": {
-            "_tag": "string"
-          },
-          "description": {
-            "_tag": "optional",
-            "_meta": {
-              "inner": {
-                "_tag": "string"
-              }
-            }
-          },
-          "canonical": {
-            "_tag": "optional",
-            "_meta": {
-              "inner": {
-                "_tag": "string"
-              }
-            }
-          },
-          "ogImage": {
-            "_tag": "optional",
-            "_meta": {
-              "inner": {
-                "_tag": "string"
-              }
-            }
-          },
-          "keywords": {
-            "_tag": "optional",
-            "_meta": {
-              "inner": {
-                "_tag": "array",
-                "_meta": {
-                  "item": {
-                    "_tag": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "routeState": {
-      "_tag": "object",
-      "_meta": {
-        "shape": {
-          "path": {
-            "_tag": "string"
-          },
-          "params": {
-            "_tag": "record",
-            "_meta": {
-              "value": {
-                "_tag": "string"
-              }
-            }
-          },
-          "query": {
-            "_tag": "record",
-            "_meta": {
-              "value": {
-                "_tag": "string"
-              }
-            }
-          },
-          "locale": {
-            "_tag": "optional",
-            "_meta": {
-              "inner": {
-                "_tag": "string"
-              }
-            }
-          }
-        }
-      }
-    },
-    "uiFlags": {
-      "_tag": "object",
-      "_meta": {
-        "shape": {
-          "isMobile": {
-            "_tag": "boolean"
-          },
-          "reducedMotion": {
-            "_tag": "boolean"
-          },
-          "highContrast": {
-            "_tag": "boolean"
-          },
-          "darkMode": {
-            "_tag": "boolean"
-          }
-        }
-      }
-    },
-    "dashboardStats": {
-      "_tag": "object",
-      "_meta": {
-        "shape": {
-          "usersOnline": {
-            "_tag": "number"
-          },
-          "requestsPerMinute": {
-            "_tag": "number"
-          },
-          "errorRate": {
-            "_tag": "number"
-          }
-        }
-      }
-    }
-  },
-  "theme": {
-    "colors": {
-      "brand": {
-        "50": "#eef7ff",
-        "100": "#d9ecff",
-        "200": "#b9ddff",
-        "300": "#89c6ff",
-        "400": "#58a8ff",
-        "500": "#2c86ff",
-        "600": "#1667e6",
-        "700": "#124fb4",
-        "800": "#103f8f",
-        "900": "#0e3575"
-      },
-      "neutral": {
-        "50": "#f9fafb",
-        "100": "#f3f4f6",
-        "200": "#e5e7eb",
-        "300": "#d1d5db",
-        "400": "#9ca3af",
-        "500": "#6b7280",
-        "600": "#4b5563",
-        "700": "#374151",
-        "800": "#1f2937",
-        "900": "#111827"
-      },
-      "success": "#16a34a",
-      "warning": "#f59e0b",
-      "danger": "#ef4444",
-      "info": "#0ea5e9",
-      "surface": "#ffffff",
-      "background": "#f8fafc",
-      "text": "#0f172a"
-    },
-    "spacing": {
-      "0": 0,
-      "1": 4,
-      "2": 8,
-      "3": 12,
-      "4": 16,
-      "5": 20,
-      "6": 24,
-      "8": 32,
-      "10": 40,
-      "12": 48,
-      "16": 64,
-      "20": 80,
-      "24": 96
-    },
-    "typography": {
-      "display": {
-        "fontSize": 56,
-        "fontWeight": 800,
-        "lineHeight": 1.05
-      },
-      "h1": {
-        "fontSize": 40,
-        "fontWeight": 800,
-        "lineHeight": 1.1
-      },
-      "h2": {
-        "fontSize": 32,
-        "fontWeight": 700,
-        "lineHeight": 1.15
-      },
-      "h3": {
-        "fontSize": 24,
-        "fontWeight": 700,
-        "lineHeight": 1.2
-      },
-      "body": {
-        "fontSize": 16,
-        "fontWeight": 400,
-        "lineHeight": 1.6
-      },
-      "caption": {
-        "fontSize": 12,
-        "fontWeight": 500,
-        "lineHeight": 1.4
-      },
-      "mono": {
-        "fontSize": 13,
-        "fontWeight": 500,
-        "lineHeight": 1.4,
-        "fontFamily": "monospace"
-      }
-    },
-    "radii": {
-      "xs": 6,
-      "sm": 10,
-      "md": 14,
-      "lg": 18,
-      "xl": 24,
-      "full": 999
-    },
-    "shadows": {
-      "sm": {
-        "offsetX": 0,
-        "offsetY": 1,
-        "blurRadius": 2,
-        "color": "rgba(15, 23, 42, 0.08)"
-      },
-      "md": {
-        "offsetX": 0,
-        "offsetY": 8,
-        "blurRadius": 24,
-        "color": "rgba(15, 23, 42, 0.12)"
-      },
-      "lg": {
-        "offsetX": 0,
-        "offsetY": 16,
-        "blurRadius": 40,
-        "color": "rgba(15, 23, 42, 0.14)"
-      }
-    },
-    "animations": {
-      "fast": {
-        "duration": 120,
-        "curve": "easeOut"
-      },
-      "normal": {
-        "duration": 220,
-        "curve": "easeInOut"
-      },
-      "slow": {
-        "duration": 360,
-        "curve": "easeOutCubic"
-      }
-    },
-    "breakpoints": {
-      "sm": 640,
-      "md": 768,
-      "lg": 1024,
-      "xl": 1280,
-      "xxl": 1536
-    },
-    "zIndex": {
-      "base": 0,
-      "content": 1,
-      "sticky": 20,
-      "overlay": 100,
-      "dropdown": 200,
-      "modal": 300,
-      "toast": 400
-    }
-  },
-  "stores": {
-    "auth": {
-      "namespace": "auth",
-      "state": {
-        "status": "anonymous",
-        "userId": null,
-        "accessToken": null,
-        "refreshToken": null,
-        "roles": [],
-        "flags": {},
-        "lastSyncedAt": null
-      }
-    },
-    "ui": {
-      "namespace": "ui",
-      "state": {
-        "sidebarOpen": true,
-        "searchOpen": false,
-        "commandPaletteOpen": false,
-        "reducedMotion": false,
-        "compactMode": false,
-        "density": "comfortable"
-      }
-    },
-    "navigation": {
-      "namespace": "navigation",
-      "state": {
-        "path": "/",
-        "params": {},
-        "query": {},
-        "activeRouteId": null,
-        "history": [],
-        "breadcrumbs": []
-      }
-    },
-    "pageRuntime": {
-      "namespace": "pageRuntime",
-      "state": {
-        "currentPageId": null,
-        "currentLayoutId": null,
-        "loading": false,
-        "error": null,
-        "cacheKey": null,
-        "prefetchQueue": []
-      }
-    }
-  },
-  "slices": {
-    "auth": {
-      "namespace": "auth",
-      "schema": "session",
-      "state": {
-        "status": "anonymous",
-        "userId": null,
-        "accessToken": null,
-        "refreshToken": null,
-        "roles": [],
-        "flags": {}
-      },
-      "computed": {
-        "isAuthenticated": "state.status === \"authenticated\" && !!state.userId",
-        "isAnonymous": "state.status === \"anonymous\""
-      },
-      "mutations": {
-        "signIn": "auth.signIn",
-        "signOut": "auth.signOut",
-        "refreshSession": "auth.refresh"
-      },
-      "queries": {
-        "me": {
-          "source": "auth.me"
-        }
-      },
-      "pipelines": {
-        "onSignIn": "auth_sign_in_pipeline",
-        "onSignOut": "auth_sign_out_pipeline"
-      },
-      "resources": {
-        "session": {
-          "uri": "auth.me",
-          "cacheable": true
-        }
-      },
-      "runtime": {
-        "persist": true,
-        "hydrateOnStart": true
-      }
-    },
-    "page": {
-      "namespace": "page",
-      "schema": "routeState",
-      "state": {
-        "path": "/",
-        "params": {},
-        "query": {},
-        "locale": "en"
-      },
-      "computed": {
-        "currentPath": "state.path"
-      },
-      "mutations": {
-        "setRoute": "page.setRoute",
-        "setLocale": "page.setLocale"
-      },
-      "runtime": {
-        "persist": false
-      }
-    },
-    "dashboard": {
-      "namespace": "dashboard",
-      "schema": "dashboardStats",
-      "state": {
-        "usersOnline": 0,
-        "requestsPerMinute": 0,
-        "errorRate": 0
-      },
-      "computed": {
-        "healthy": "state.errorRate < 1"
-      },
-      "mutations": {
-        "setStats": "dashboard.setStats"
-      }
-    }
-  },
-  "dataSources": {
-    "me": {
-      "name": "auth.me",
-      "schema": "session",
-      "type": "rest",
-      "domain": "api_collection",
-      "action": "readOne",
-      "resource": "/me",
-      "direction": "inbound",
-      "select": [
-        "userId",
-        "roles",
-        "flags"
-      ],
-      "query": {
-        "include": [
-          "roles",
-          "flags"
-        ]
-      }
-    },
-    "dashboardStats": {
-      "name": "dashboard.stats",
-      "schema": "dashboardStats",
-      "type": "rest",
-      "domain": "api_collection",
-      "action": "readOne",
-      "resource": "/dashboard/stats",
-      "direction": "inbound"
-    },
-    "feed": {
-      "name": "feed.list",
-      "type": "rest",
-      "domain": "api_collection",
-      "action": "readMany",
-      "resource": "/feed",
-      "direction": "inbound",
-      "select": [
-        "id",
-        "title",
-        "summary",
-        "author",
-        "createdAt"
-      ],
-      "query": {
-        "pageSize": 20,
-        "includeComments": false
-      }
-    },
-    "article": {
-      "name": "articles.bySlug",
-      "type": "rest",
-      "domain": "api_collection",
-      "action": "readOne",
-      "resource": "/articles/:slug",
-      "direction": "inbound",
-      "params": {
-        "slug": "{{route.params.slug}}"
-      }
-    },
-    "settings": {
-      "name": "settings.get",
-      "type": "rest",
-      "domain": "api_collection",
-      "action": "readOne",
-      "resource": "/settings",
-      "direction": "inbound"
-    }
-  },
-  "templates": {
-    "hero": {
-      "name": "hero",
-      "slots": [
-        "actions"
-      ],
-      "ui": {
-        "type": "box",
-        "props": {
-          "direction": "col",
-          "gap": 24,
-          "padding": 24,
-          "radius": 24,
-          "bg": "$colors.surface",
-          "shadow": "$shadows.md"
-        },
-        "children": [
-          {
-            "_node": {
-              "type": "box",
-              "props": {
-                "direction": "col",
-                "gap": 12,
-                "padding": 0
-              },
-              "children": [
-                {
-                  "_node": {
-                    "type": "text",
-                    "props": {
-                      "text": "{{props.eyebrow}}"
-                    },
-                    "children": []
-                  }
-                },
-                {
-                  "_node": {
-                    "type": "text",
-                    "props": {
-                      "text": "{{props.title}}",
-                      "variant": "heading"
-                    },
-                    "children": []
-                  }
-                },
-                {
-                  "_node": {
-                    "type": "text",
-                    "props": {
-                      "text": "{{props.body}}"
-                    },
-                    "children": []
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "_node": {
-              "type": "box",
-              "props": {},
-              "children": []
-            }
-          }
-        ]
-      },
-      "tags": [],
-      "metadata": {}
-    },
-    "statCard": {
-      "name": "stat_card",
-      "slots": [],
-      "ui": {
-        "type": "box",
-        "props": {
-          "direction": "col",
-          "gap": 6,
-          "padding": 18,
-          "radius": 18,
-          "bg": "$colors.surface",
-          "shadow": "$shadows.sm"
-        },
-        "children": [
-          {
-            "_node": {
-              "type": "text",
-              "props": {
-                "text": "{{props.label}}"
-              },
-              "children": []
-            }
-          },
-          {
-            "_node": {
-              "type": "text",
-              "props": {
-                "text": "{{props.value}}",
-                "variant": "heading"
-              },
-              "children": []
-            }
-          },
-          {
-            "_node": {
-              "type": "text",
-              "props": {
-                "text": "{{props.hint}}"
-              },
-              "children": []
-            }
-          }
-        ]
-      },
-      "tags": [],
-      "metadata": {}
-    },
-    "section": {
-      "name": "section",
-      "slots": [
-        "body",
-        "footer"
-      ],
-      "ui": {
-        "type": "box",
-        "props": {
-          "direction": "col",
-          "gap": 12,
-          "padding": 16
-        },
-        "children": [
-          {
-            "_node": {
-              "type": "box",
-              "props": {
-                "direction": "col",
-                "gap": 8
-              },
-              "children": [
-                {
-                  "_node": {
-                    "type": "text",
-                    "props": {
-                      "text": "{{props.title}}",
-                      "variant": "heading"
-                    },
-                    "children": []
-                  }
-                },
-                {
-                  "_node": {
-                    "type": "text",
-                    "props": {
-                      "text": "{{props.description}}"
-                    },
-                    "children": []
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "_node": {
-              "type": "box",
-              "props": {},
-              "children": []
-            }
-          },
-          {
-            "_node": {
-              "type": "box",
-              "props": {},
-              "children": []
-            }
-          }
-        ]
-      },
-      "tags": [],
-      "metadata": {}
-    }
-  },
-  "components": {
-    "pageHeader": {
-      "type": "component:define",
-      "name": "page_header",
-      "props": {
-        "name": "page_header",
-        "ui": {
-          "type": "box",
-          "props": {
-            "direction": "row",
-            "crossAlignment": "center",
-            "mainAlignment": "space-between",
-            "gap": 16,
-            "padding": 0
-          },
-          "children": [
-            {
-              "_node": {
-                "type": "box",
-                "props": {
-                  "direction": "col",
-                  "gap": 8
-                },
-                "children": [
-                  {
-                    "_node": {
-                      "type": "text",
-                      "props": {
-                        "text": "{{props.title}}",
-                        "variant": "heading"
-                      },
-                      "children": []
-                    }
-                  },
-                  {
-                    "_node": {
-                      "type": "text",
-                      "props": {
-                        "text": "{{props.subtitle}}"
-                      },
-                      "children": [],
-                      "$if": "{{props.subtitle}}"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "_node": {
-                "type": "slot",
-                "props": {
-                  "name": "action"
-                },
-                "children": []
-              }
-            }
-          ]
-        }
-      }
-    },
-    "navRail": {
-      "type": "component:define",
-      "name": "nav_rail",
-      "props": {
-        "name": "nav_rail",
-        "ui": {
-          "type": "box",
-          "props": {
-            "direction": "col",
-            "gap": 8,
-            "padding": 16,
-            "radius": 20,
-            "bg": "$colors.surface"
-          },
-          "children": [
-            {
-              "_node": {
-                "type": "text",
-                "props": {
-                  "text": "Navigation"
-                },
-                "children": []
-              }
-            },
-            {
-              "_node": {
-                "type": "text",
-                "props": {
-                  "text": "{{props.current}}"
-                },
-                "children": []
-              }
-            }
-          ]
-        }
-      }
-    }
-  },
-  "macros": {
-    "pagePadding": {
-      "type": "macro",
-      "name": "page_padding",
-      "props": {
-        "$view": {
-          "type": "box",
-          "props": {
-            "padding": 24,
-            "radius": 24
-          },
-          "children": []
-        }
-      }
-    },
-    "contentFrame": {
-      "type": "macro",
-      "name": "content_frame",
-      "props": {
-        "$view": {
-          "type": "box",
-          "props": {
-            "direction": "col",
-            "gap": 20,
-            "padding": 24
-          },
-          "children": []
-        }
-      }
-    }
-  },
-  "pipelines": {
-    "hydratePage": {
-      "name": "page_hydrate",
-      "namespace": "app.pages",
-      "steps": [
-        {
-          "op": "resolveRoute"
-        },
-        {
-          "op": "hydratePageState"
-        },
-        {
-          "op": "loadLayout"
-        },
-        {
-          "op": "prefetchVisibleFragments"
-        },
-        {
-          "op": "renderFrame"
-        }
-      ]
-    },
-    "authSignIn": {
-      "name": "auth_sign_in_pipeline",
-      "namespace": "auth",
-      "steps": [
-        {
-          "op": "submitAuth"
-        },
-        {
-          "op": "storeSession"
-        },
-        {
-          "op": "warmUserCaches"
-        },
-        {
-          "op": "navigate",
-          "to": "/dashboard"
-        }
-      ]
-    },
-    "authSignOut": {
-      "name": "auth_sign_out_pipeline",
-      "namespace": "auth",
-      "steps": [
-        {
-          "op": "clearSession"
-        },
-        {
-          "op": "clearPrivateCaches"
-        },
-        {
-          "op": "navigate",
-          "to": "/login"
-        }
-      ]
-    }
-  },
-  "extensions": {
-    "roots": {
-      "surface": [
-        "page",
-        "shell",
-        "section",
-        "panel",
-        "hero",
-        "metric",
-        "feed",
-        "board"
-      ]
-    },
-    "sdui": {},
-    "factories": {}
-  },
   "app": {
     "name": "Quantum Super App",
     "version": "1.0.0",
@@ -926,7 +44,15 @@
                 "gap": 24,
                 "padding": 24
               },
-              "children": []
+              "children": [
+                {
+                  "type": "text",
+                  "props": {
+                    "text": "Content area"
+                  },
+                  "children": []
+                }
+              ]
             },
             "footer": {
               "type": "box",
@@ -994,7 +120,15 @@
                 "gap": 24,
                 "padding": 24
               },
-              "children": []
+              "children": [
+                {
+                  "type": "text",
+                  "props": {
+                    "text": "Dashboard content"
+                  },
+                  "children": []
+                }
+              ]
             }
           }
         },
@@ -1036,7 +170,15 @@
                 "gap": 20,
                 "padding": 24
               },
-              "children": []
+              "children": [
+                {
+                  "type": "text",
+                  "props": {
+                    "text": "Auth content"
+                  },
+                  "children": []
+                }
+              ]
             }
           }
         },
@@ -1074,7 +216,15 @@
                 "gap": 20,
                 "padding": 24
               },
-              "children": []
+              "children": [
+                {
+                  "type": "text",
+                  "props": {
+                    "text": "Docs content"
+                  },
+                  "children": []
+                }
+              ]
             },
             "footer": {
               "type": "box",
@@ -1311,7 +461,15 @@
                     "direction": "col",
                     "gap": 16
                   },
-                  "children": []
+                  "children": [
+                    {
+                      "type": "text",
+                      "props": {
+                        "text": "Article body placeholder"
+                      },
+                      "children": []
+                    }
+                  ]
                 }
               }
             }
@@ -1629,7 +787,15 @@
                   "gap": 24,
                   "padding": 24
                 },
-                "children": []
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Content area"
+                    },
+                    "children": []
+                  }
+                ]
               },
               "footer": {
                 "type": "box",
@@ -1697,7 +863,15 @@
                   "gap": 24,
                   "padding": 24
                 },
-                "children": []
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Dashboard content"
+                    },
+                    "children": []
+                  }
+                ]
               }
             }
           },
@@ -1739,7 +913,15 @@
                   "gap": 20,
                   "padding": 24
                 },
-                "children": []
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Auth content"
+                    },
+                    "children": []
+                  }
+                ]
               }
             }
           },
@@ -1777,7 +959,15 @@
                   "gap": 20,
                   "padding": 24
                 },
-                "children": []
+                "children": [
+                  {
+                    "type": "text",
+                    "props": {
+                      "text": "Docs content"
+                    },
+                    "children": []
+                  }
+                ]
               },
               "footer": {
                 "type": "box",
@@ -2014,7 +1204,15 @@
                       "direction": "col",
                       "gap": 16
                     },
-                    "children": []
+                    "children": [
+                      {
+                        "type": "text",
+                        "props": {
+                          "text": "Article body placeholder"
+                        },
+                        "children": []
+                      }
+                    ]
                   }
                 }
               }
@@ -2210,6 +1408,555 @@
       "engine": "flutter",
       "sdui": "json",
       "version": "v2"
+    }
+  },
+  "theme": {
+    "namespace": "app.theme",
+    "state": {
+      "colors": {
+        "brand": {
+          "50": "#eef7ff",
+          "100": "#d9ecff",
+          "200": "#b9ddff",
+          "300": "#89c6ff",
+          "400": "#58a8ff",
+          "500": "#2c86ff",
+          "600": "#1667e6",
+          "700": "#124fb4",
+          "800": "#103f8f",
+          "900": "#0e3575"
+        },
+        "neutral": {
+          "50": "#f9fafb",
+          "100": "#f3f4f6",
+          "200": "#e5e7eb",
+          "300": "#d1d5db",
+          "400": "#9ca3af",
+          "500": "#6b7280",
+          "600": "#4b5563",
+          "700": "#374151",
+          "800": "#1f2937",
+          "900": "#111827"
+        },
+        "success": "#16a34a",
+        "warning": "#f59e0b",
+        "danger": "#ef4444",
+        "info": "#0ea5e9",
+        "surface": "#ffffff",
+        "background": "#f8fafc",
+        "text": "#0f172a"
+      }
+    }
+  },
+  "contracts": {
+    "session": {
+      "tag": "object",
+      "meta": {
+        "shape": {
+          "userId": {
+            "_tag": "string"
+          },
+          "accessToken": {
+            "_tag": "optional",
+            "_meta": {
+              "inner": {
+                "_tag": "string"
+              }
+            }
+          },
+          "refreshToken": {
+            "_tag": "optional",
+            "_meta": {
+              "inner": {
+                "_tag": "string"
+              }
+            }
+          },
+          "roles": {
+            "_tag": "array",
+            "_meta": {
+              "item": {
+                "_tag": "string"
+              }
+            }
+          },
+          "flags": {
+            "_tag": "record",
+            "_meta": {
+              "value": {
+                "_tag": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "pageMeta": {
+      "tag": "object",
+      "meta": {
+        "shape": {
+          "title": {
+            "_tag": "string"
+          },
+          "description": {
+            "_tag": "optional",
+            "_meta": {
+              "inner": {
+                "_tag": "string"
+              }
+            }
+          },
+          "canonical": {
+            "_tag": "optional",
+            "_meta": {
+              "inner": {
+                "_tag": "string"
+              }
+            }
+          },
+          "ogImage": {
+            "_tag": "optional",
+            "_meta": {
+              "inner": {
+                "_tag": "string"
+              }
+            }
+          },
+          "keywords": {
+            "_tag": "optional",
+            "_meta": {
+              "inner": {
+                "_tag": "array",
+                "_meta": {
+                  "item": {
+                    "_tag": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "routeState": {
+      "tag": "object",
+      "meta": {
+        "shape": {
+          "path": {
+            "_tag": "string"
+          },
+          "params": {
+            "_tag": "record",
+            "_meta": {
+              "value": {
+                "_tag": "string"
+              }
+            }
+          },
+          "query": {
+            "_tag": "record",
+            "_meta": {
+              "value": {
+                "_tag": "string"
+              }
+            }
+          },
+          "locale": {
+            "_tag": "optional",
+            "_meta": {
+              "inner": {
+                "_tag": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "uiFlags": {
+      "tag": "object",
+      "meta": {
+        "shape": {
+          "isMobile": {
+            "_tag": "boolean"
+          },
+          "reducedMotion": {
+            "_tag": "boolean"
+          },
+          "highContrast": {
+            "_tag": "boolean"
+          },
+          "darkMode": {
+            "_tag": "boolean"
+          }
+        }
+      }
+    },
+    "dashboardStats": {
+      "tag": "object",
+      "meta": {
+        "shape": {
+          "usersOnline": {
+            "_tag": "number"
+          },
+          "requestsPerMinute": {
+            "_tag": "number"
+          },
+          "errorRate": {
+            "_tag": "number"
+          }
+        }
+      }
+    }
+  },
+  "slices": [
+    {
+      "namespace": "auth",
+      "schema": "session",
+      "state": {
+        "status": "anonymous",
+        "userId": null,
+        "accessToken": null,
+        "refreshToken": null,
+        "roles": [],
+        "flags": {}
+      },
+      "computed": {
+        "isAuthenticated": "state.status === \"authenticated\" && !!state.userId",
+        "isAnonymous": "state.status === \"anonymous\""
+      },
+      "mutations": {
+        "signIn": "auth.signIn",
+        "signOut": "auth.signOut",
+        "refreshSession": "auth.refresh"
+      },
+      "queries": {
+        "me": {
+          "source": "auth.me"
+        }
+      },
+      "pipelines": {
+        "onSignIn": "auth_sign_in_pipeline",
+        "onSignOut": "auth_sign_out_pipeline"
+      },
+      "resources": {
+        "session": {
+          "uri": "auth.me",
+          "cacheable": true
+        }
+      },
+      "runtime": {
+        "persist": true,
+        "hydrateOnStart": true
+      }
+    },
+    {
+      "namespace": "page",
+      "schema": "routeState",
+      "state": {
+        "path": "/",
+        "params": {},
+        "query": {},
+        "locale": "en"
+      },
+      "computed": {
+        "currentPath": "state.path"
+      },
+      "mutations": {
+        "setRoute": "page.setRoute",
+        "setLocale": "page.setLocale"
+      },
+      "runtime": {
+        "persist": false
+      }
+    },
+    {
+      "namespace": "dashboard",
+      "schema": "dashboardStats",
+      "state": {
+        "usersOnline": 0,
+        "requestsPerMinute": 0,
+        "errorRate": 0
+      },
+      "computed": {
+        "healthy": "state.errorRate < 1"
+      },
+      "mutations": {
+        "setStats": "dashboard.setStats"
+      }
+    },
+    {
+      "namespace": "auth",
+      "state": {
+        "status": "anonymous",
+        "userId": null,
+        "accessToken": null,
+        "refreshToken": null,
+        "roles": [],
+        "flags": {},
+        "lastSyncedAt": null
+      }
+    },
+    {
+      "namespace": "ui",
+      "state": {
+        "sidebarOpen": true,
+        "searchOpen": false,
+        "commandPaletteOpen": false,
+        "reducedMotion": false,
+        "compactMode": false,
+        "density": "comfortable"
+      }
+    },
+    {
+      "namespace": "navigation",
+      "state": {
+        "path": "/",
+        "params": {},
+        "query": {},
+        "activeRouteId": null,
+        "history": [],
+        "breadcrumbs": []
+      }
+    },
+    {
+      "namespace": "pageRuntime",
+      "state": {
+        "currentPageId": null,
+        "currentLayoutId": null,
+        "loading": false,
+        "error": null,
+        "cacheKey": null,
+        "prefetchQueue": []
+      }
+    }
+  ],
+  "dataSources": [
+    {
+      "name": "auth.me",
+      "schema": "session",
+      "type": "rest",
+      "domain": "api_collection",
+      "action": "readOne",
+      "resource": "/me",
+      "direction": "inbound",
+      "select": [
+        "userId",
+        "roles",
+        "flags"
+      ],
+      "query": {
+        "include": [
+          "roles",
+          "flags"
+        ]
+      }
+    },
+    {
+      "name": "dashboard.stats",
+      "schema": "dashboardStats",
+      "type": "rest",
+      "domain": "api_collection",
+      "action": "readOne",
+      "resource": "/dashboard/stats",
+      "direction": "inbound"
+    },
+    {
+      "name": "feed.list",
+      "type": "rest",
+      "domain": "api_collection",
+      "action": "readMany",
+      "resource": "/feed",
+      "direction": "inbound",
+      "select": [
+        "id",
+        "title",
+        "summary",
+        "author",
+        "createdAt"
+      ],
+      "query": {
+        "pageSize": 20,
+        "includeComments": false
+      }
+    },
+    {
+      "name": "articles.bySlug",
+      "type": "rest",
+      "domain": "api_collection",
+      "action": "readOne",
+      "resource": "/articles/:slug",
+      "direction": "inbound",
+      "params": {
+        "slug": "{{route.params.slug}}"
+      }
+    },
+    {
+      "name": "settings.get",
+      "type": "rest",
+      "domain": "api_collection",
+      "action": "readOne",
+      "resource": "/settings",
+      "direction": "inbound"
+    }
+  ],
+  "templates": {
+    "hero": {
+      "type": "template",
+      "name": "hero",
+      "slots": [
+        "actions"
+      ],
+      "ui": {
+        "type": "box",
+        "props": {
+          "direction": "col",
+          "gap": 24,
+          "padding": 24,
+          "radius": 24,
+          "bg": "$colors.surface",
+          "shadow": "$shadows.md"
+        },
+        "children": [
+          {
+            "type": "box",
+            "props": {
+              "direction": "col",
+              "gap": 12,
+              "padding": 0
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "{{props.eyebrow}}"
+                },
+                "children": []
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "{{props.title}}"
+                },
+                "children": []
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "{{props.body}}"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "props": {
+              "name": "actions"
+            },
+            "children": []
+          }
+        ]
+      },
+      "tags": [],
+      "metadata": {}
+    },
+    "stat_card": {
+      "type": "template",
+      "name": "stat_card",
+      "slots": [],
+      "ui": {
+        "type": "box",
+        "props": {
+          "direction": "col",
+          "gap": 6,
+          "padding": 18,
+          "radius": 18,
+          "bg": "$colors.surface",
+          "shadow": "$shadows.sm"
+        },
+        "children": [
+          {
+            "type": "text",
+            "props": {
+              "text": "{{props.label}}"
+            },
+            "children": []
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "{{props.value}}"
+            },
+            "children": []
+          },
+          {
+            "type": "text",
+            "props": {
+              "text": "{{props.hint}}"
+            },
+            "children": []
+          }
+        ]
+      },
+      "tags": [],
+      "metadata": {}
+    },
+    "section": {
+      "type": "template",
+      "name": "section",
+      "slots": [
+        "body",
+        "footer"
+      ],
+      "ui": {
+        "type": "box",
+        "props": {
+          "direction": "col",
+          "gap": 12,
+          "padding": 16
+        },
+        "children": [
+          {
+            "type": "box",
+            "props": {
+              "direction": "col",
+              "gap": 8
+            },
+            "children": [
+              {
+                "type": "text",
+                "props": {
+                  "text": "{{props.title}}"
+                },
+                "children": []
+              },
+              {
+                "type": "text",
+                "props": {
+                  "text": "{{props.description}}"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "props": {
+              "name": "body"
+            },
+            "children": []
+          },
+          {
+            "type": "box",
+            "props": {
+              "name": "footer"
+            },
+            "children": []
+          }
+        ]
+      },
+      "tags": [],
+      "metadata": {}
     }
   }
 }

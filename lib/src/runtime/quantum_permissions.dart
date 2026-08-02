@@ -1,3 +1,28 @@
+/*
+ * ============================================================================
+ * File: quantum_permissions.dart
+ * 
+ * Description:
+ * A comprehensive, declarative permissions and access control engine for Quantum. 
+ * It evaluates complex JSON/Map-based rules against a unified context (containing 
+ * session data, roles, claims, time windows, and feature flags) to yield 
+ * deterministic allow/deny decisions.
+ * 
+ * Key Components:
+ * - QuantumPermissionEngine: Singleton engine evaluating rules and caching decisions.
+ * - QuantumPermissionContext: The unified context object aggregating user/env/data state.
+ * - QuantumPermissionDecision: The immutable result of an evaluation (allowed, reason).
+ * 
+ * Dependencies/Relationships:
+ * Relies on SessionContext from network modules. Used throughout the framework 
+ * to gate actions, UI visibility, and data access.
+ * 
+ * Notes:
+ * Supports rich logic operators (ll, ny, 
+ot), time-based constraints, 
+ * regex matching, and nested role/claim checks. Highly optimized with a cache.
+ * ============================================================================
+ */
 // ════════════════════════════════════════════════════════════════════════════
 // quantum_permissions.dart
 // ════════════════════════════════════════════════════════════════════════════

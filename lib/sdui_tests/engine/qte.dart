@@ -1,0 +1,39 @@
+/*
+ * ============================================================================
+ * File: qte.dart
+ * 
+ * Description:
+ * Serves as the primary barrel file (library export) for the Quantum Test Engine (QTE).
+ * It consolidates all QTE engine components, allowing external consumers to import a
+ * single file rather than individual modules. This simplifies the import surface for
+ * the testing framework.
+ * 
+ * Key Components:
+ * - library quantum_test_engine: The library declaration for QTE.
+ * - Exports: Exposes schema, validator, render probe, reactive, performance, 
+ *   interaction, assertion, report, host widget, and runner modules.
+ * 
+ * Dependencies/Relationships:
+ * Exports all other qte_*.dart files in the engine directory.
+ * 
+ * Notes:
+ * When adding new engine components, ensure they are exported here to maintain
+ * a cohesive API surface for the testing framework.
+ * ============================================================================
+ */
+// ??????????????????????????????????????????????????????????????????????????????
+// QTE — Quantum Test Engine
+// Barrel export for all engine components.
+// ??????????????????????????????????????????????????????????????????????????????
+library quantum_test_engine;
+
+export 'qte_schema.dart';
+export 'qte_validator.dart';
+export 'qte_render_probe.dart';
+export 'qte_reactive.dart';
+export 'qte_performance.dart';
+export 'qte_interaction.dart';
+export 'qte_assertion.dart';
+export 'qte_report.dart';
+export 'qte_host_widget.dart';
+export 'qte_runner.dart';
