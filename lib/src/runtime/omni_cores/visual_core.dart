@@ -326,3 +326,13 @@ void _registerVisualAliases(QuantumVM vm) {
     tags: const ['visual', 'alias'],
   );
 }
+
+class VisualCoreExporter implements QuantumCoreExporter {
+  const VisualCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('visual', _buildVisual, tags: const ['core', 'visual']);
+    _registerVisualAliases(vm);
+  }
+}

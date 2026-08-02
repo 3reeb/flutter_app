@@ -958,3 +958,13 @@ void _registerPortalAliases(QuantumVM vm) {
   vm.defineAlias('inline_expandable', 'portal:overlay',
       description: 'Inline expandable alias.', tags: const ['portal', 'alias']);
 }
+
+class PortalCoreExporter implements QuantumCoreExporter {
+  const PortalCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('portal', _buildPortal, tags: const ['core', 'portal']);
+    _registerPortalAliases(vm);
+  }
+}

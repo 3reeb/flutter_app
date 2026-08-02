@@ -235,3 +235,13 @@ void _registerDecorationAliases(QuantumVM vm) {
       description: 'Markup text decoration alias.',
       tags: const ['decoration', 'alias']);
 }
+
+class DecorationCoreExporter implements QuantumCoreExporter {
+  const DecorationCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('decoration', _buildDecoration, tags: const ['core', 'decoration']);
+    _registerDecorationAliases(vm);
+  }
+}

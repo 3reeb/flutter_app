@@ -1137,3 +1137,15 @@ void _registerLayoutAliases(QuantumVM vm) {
   vm.defineAlias('ai_layout', 'layout:workspace',
       description: 'AI layout alias.', tags: const ['layout', 'alias']);
 }
+
+class LayoutCoreExporter implements QuantumCoreExporter {
+  const LayoutCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('layout', _buildLayout, tags: const ['core', 'layout']);
+    vm.define('page_shell', _buildPageShell, description: 'Page shell rendering', tags: const ['core', 'layout']);
+    vm.define('page_section', _buildPageSection, description: 'Page section layout', tags: const ['core', 'layout']);
+    _registerLayoutAliases(vm);
+  }
+}

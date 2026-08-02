@@ -211,3 +211,13 @@ void _registerCollabAliases(QuantumVM vm) {
   vm.defineAlias('awareness', 'collab:awareness', description: 'Awareness alias.', tags: const ['collab', 'alias']);
   vm.defineAlias('lock', 'collab:lock', description: 'Lock alias.', tags: const ['collab', 'alias']);
 }
+
+class CollabCoreExporter implements QuantumCoreExporter {
+  const CollabCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('collab', _buildCollab, tags: const ['core', 'collab']);
+    _registerCollabAliases(vm);
+  }
+}

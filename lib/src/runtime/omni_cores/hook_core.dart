@@ -539,3 +539,13 @@ class _QLErrorCatcher extends StatelessWidget {
     return child;
   }
 }
+
+class HookCoreExporter implements QuantumCoreExporter {
+  const HookCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('hook', _buildHook, tags: const ['core', 'hook']);
+    _registerHookAliases(vm);
+  }
+}

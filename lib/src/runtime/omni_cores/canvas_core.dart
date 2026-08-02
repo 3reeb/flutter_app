@@ -301,3 +301,13 @@ void _registerCanvasAliases(QuantumVM vm) {
   vm.defineAlias('shader', 'canvas:shader',
       description: 'Canvas shader alias.', tags: const ['canvas', 'alias']);
 }
+
+class CanvasCoreExporter implements QuantumCoreExporter {
+  const CanvasCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('canvas', _buildCanvas, tags: const ['core', 'canvas']);
+    _registerCanvasAliases(vm);
+  }
+}

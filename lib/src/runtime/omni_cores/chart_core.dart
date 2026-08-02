@@ -64,3 +64,13 @@ void _registerChartAliases(QuantumVM vm) {
       tags: const ['chart', 'compat']);
 }
 
+
+class ChartCoreExporter implements QuantumCoreExporter {
+  const ChartCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('chart', _buildChart, tags: const ['core', 'chart']);
+    _registerChartAliases(vm);
+  }
+}

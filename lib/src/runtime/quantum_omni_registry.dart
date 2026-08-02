@@ -364,68 +364,40 @@ abstract final class QDesignMatrix {
 //  REGISTRATION & TOP-LEVEL CORE BUILDERS
 // ────────────────────────────────────────────────────────────────────────────
 
+
+abstract class QuantumCoreExporter {
+  void export(QuantumVM vm);
+}
+
+const List<QuantumCoreExporter> _omniCoreExporters = [
+  ActionCoreExporter(),
+  AnimationCoreExporter(),
+  BoxCoreExporter(),
+  CanvasCoreExporter(),
+  ChartCoreExporter(),
+  CollabCoreExporter(),
+  ConnectCoreExporter(),
+  ControlCoreExporter(),
+  DataCoreExporter(),
+  DecorationCoreExporter(),
+  FieldCoreExporter(),
+  HookCoreExporter(),
+  LayoutCoreExporter(),
+  MediaCoreExporter(),
+  PortalCoreExporter(),
+  PresetCoreExporter(),
+  StreamCoreExporter(),
+  SystemCoreExporter(),
+  TextCoreExporter(),
+  VisualCoreExporter(),
+];
+
 void registerOmniComponents(QuantumVM vm) {
-  // 🚀 THE OMNIVERSAL CORES
-  vm.define('box', _buildBox,
-      description: 'Universal structural container',
-      tags: const ['core', 'container', 'box']);
-  vm.define('action', _buildAction,
-      description: 'Interactive action trigger',
-      tags: const ['core', 'action']);
-  vm.define('field', _buildField,
-      description: 'Universal field and control renderer',
-      tags: const ['core', 'field', 'input']);
-  vm.define('text', _buildText,
-      description: 'Typography and text rendering core',
-      tags: const ['core', 'text']);
-  vm.define('media', _buildMedia,
-      description: 'Media and asset presentation core',
-      tags: const ['core', 'media']);
-  vm.define('visual', _buildVisual,
-      description: 'Top-level visual composition core',
-      tags: const ['core', 'visual']);
-  vm.define('hook', _buildHook,
-      description: 'Top-level hook and lifecycle core',
-      tags: const ['core', 'hook']);
-  vm.define('data', _buildData,
-      description: 'Data access and reactive data core',
-      tags: const ['core', 'data']);
-  vm.define('portal', _buildPortal,
-      description: 'Overlay, dialog, and portal surfaces',
-      tags: const ['core', 'portal']);
-  vm.define('control', _buildControl,
-      description: 'Control-flow and orchestration core',
-      tags: const ['core', 'control']);
-  vm.define('canvas', _buildCanvas,
-      description: 'Canvas and GPU rendering core',
-      tags: const ['core', 'canvas']);
-  vm.define('system', _buildSystem,
-      description: 'System services, observers, and runtime tools',
-      tags: const ['core', 'system']);
-  vm.define('preset', _buildPreset,
-      description: 'Template composition core',
-      tags: const ['core', 'template']);
-  vm.define('layout', _buildLayout,
-      description: 'Layout composition core', tags: const ['core', 'layout']);
-  vm.define('page_shell', _buildPageShell,
-      description: 'Page shell rendering', tags: const ['core', 'layout']);
-  vm.define('page_section', _buildPageSection,
-      description: 'Page section layout', tags: const ['core', 'layout']);
-  vm.define('decoration', _buildDecoration,
-      description: 'Decorative styling and semantic adornment core',
-      tags: const ['core', 'decoration']);
-  vm.define('chart', _buildChart,
-      description: 'Chart rendering and visualization core',
-      tags: const ['core', 'chart', 'visualization']);
-  vm.define('animation', _buildAnimation,
-      description: 'Animation orchestration and motion core',
-      tags: const ['core', 'animation', 'motion']);
-  vm.define('stream', _buildStream,
-      description: 'Real-time streaming and reactive data pipe core',
-      tags: const ['core', 'stream', 'realtime']);
-  vm.define('collab', _buildCollab,
-      description: 'Multi-user presence, cursor, and CRDT collaboration core',
-      tags: const ['core', 'collab', 'realtime']);
+  // Execute all Core Exporters to define components and aliases.
+  for (final exporter in _omniCoreExporters) {
+    exporter.export(vm);
+  }
+
   vm.registerJsonDslPlugins();
 
   // Core-folder defaults for file-based YAML/JSON registration.
@@ -450,29 +422,8 @@ void registerOmniComponents(QuantumVM vm) {
     ..registerFolder('stream', 'stream')
     ..registerFolder('collab', 'collab')
     ..registerFolder('box', 'box');
+
   _registerPowerFieldPresets(vm);
-  _registerChartAliases(vm);
-  _registerVisualAliases(vm);
-  _registerHookAliases(vm);
-  _registerAnimationAliases(vm);
-
-  // 🚀 CORE-LOCAL ALIAS REGISTRATIONS
-  _registerBoxAliases(vm);
-  _registerActionAliases(vm);
-  _registerFieldAliases(vm);
-  _registerTextAliases(vm);
-  _registerMediaAliases(vm);
-  _registerDataAliases(vm);
-  _registerPortalAliases(vm);
-  _registerControlAliases(vm);
-  _registerSystemAliases(vm);
-  _registerLayoutAliases(vm);
-  _registerDecorationAliases(vm);
-  _registerPresetAliases(vm);
-  _registerCanvasAliases(vm);
-  _registerStreamAliases(vm);
-  _registerCollabAliases(vm);
-
   _registerGeneralBuiltInPresets(vm);
   _registerRichDesignSystemPresets(vm);
   _registerRichSpatialLayouts(vm);

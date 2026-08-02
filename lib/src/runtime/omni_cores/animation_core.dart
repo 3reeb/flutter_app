@@ -533,3 +533,13 @@ class _ParticlePainter extends CustomPainter {
   bool shouldRepaint(covariant _ParticlePainter old) =>
       old.progress != progress;
 }
+
+class AnimationCoreExporter implements QuantumCoreExporter {
+  const AnimationCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('animation', _buildAnimation, tags: const ['core', 'animation']);
+    _registerAnimationAliases(vm);
+  }
+}

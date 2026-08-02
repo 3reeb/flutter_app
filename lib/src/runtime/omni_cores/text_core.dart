@@ -207,3 +207,13 @@ void _registerTextAliases(QuantumVM vm) {
   vm.defineAlias('rich', 'text:rich',
       description: 'Rich text alias.', tags: const ['text']);
 }
+
+class TextCoreExporter implements QuantumCoreExporter {
+  const TextCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('text', _buildText, tags: const ['core', 'text']);
+    _registerTextAliases(vm);
+  }
+}

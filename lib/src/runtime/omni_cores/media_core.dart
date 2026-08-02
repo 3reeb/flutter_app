@@ -415,3 +415,13 @@ void _registerMediaAliases(QuantumVM vm) {
   vm.defineAlias('icon', 'media:icon',
       description: 'Icon media alias.', tags: const ['media', 'alias']);
 }
+
+class MediaCoreExporter implements QuantumCoreExporter {
+  const MediaCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('media', _buildMedia, tags: const ['core', 'media']);
+    _registerMediaAliases(vm);
+  }
+}

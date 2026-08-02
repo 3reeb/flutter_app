@@ -747,3 +747,13 @@ void _registerBoxAliases(QuantumVM vm) {
       description: 'Matrix layout alias.',
       tags: const ['box', 'matrix', 'alias']);
 }
+
+class BoxCoreExporter implements QuantumCoreExporter {
+  const BoxCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('box', _buildBox, tags: const ['core', 'box']);
+    _registerBoxAliases(vm);
+  }
+}

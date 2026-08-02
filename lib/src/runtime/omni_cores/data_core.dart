@@ -328,3 +328,13 @@ void _registerDataAliases(QuantumVM vm) {
   vm.defineAlias('sliver', 'data:sliver',
       description: 'Sliver alias.', tags: const ['data', 'alias']);
 }
+
+class DataCoreExporter implements QuantumCoreExporter {
+  const DataCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('data', _buildData, tags: const ['core', 'data']);
+    _registerDataAliases(vm);
+  }
+}

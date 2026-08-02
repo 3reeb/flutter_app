@@ -667,3 +667,13 @@ class _QLStoreProviderNodeState extends State<_QLStoreProviderNode> {
     );
   }
 }
+
+class SystemCoreExporter implements QuantumCoreExporter {
+  const SystemCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('system', _buildSystem, tags: const ['core', 'system']);
+    _registerSystemAliases(vm);
+  }
+}

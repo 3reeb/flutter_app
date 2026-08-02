@@ -732,3 +732,13 @@ QLBlueprint _cloneNodeWithPrefix(QLBlueprint node, String pathPrefix,
           children: overrideChildren)
       : bp;
 }
+
+class FieldCoreExporter implements QuantumCoreExporter {
+  const FieldCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('field', _buildField, tags: const ['core', 'field']);
+    _registerFieldAliases(vm);
+  }
+}

@@ -355,3 +355,13 @@ void _registerActionAliases(QuantumVM vm) {
     tags: const ['action', 'alias'],
   );
 }
+
+class ActionCoreExporter implements QuantumCoreExporter {
+  const ActionCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('action', _buildAction, tags: const ['core', 'action']);
+    _registerActionAliases(vm);
+  }
+}

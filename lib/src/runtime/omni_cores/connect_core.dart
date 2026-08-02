@@ -345,3 +345,13 @@ void registerConnectOmniNodes(QuantumVM vm) {
   vm.defineAlias('rpc', 'connect:rpc');
 }
 
+
+class ConnectCoreExporter implements QuantumCoreExporter {
+  const ConnectCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('connect', _buildConnect, tags: const ['core', 'connect']);
+    
+  }
+}

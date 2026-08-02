@@ -3049,3 +3049,13 @@ void _registerPresetAliases(QuantumVM vm) {
       description: 'Search shell preset alias.',
       tags: const ['preset', 'alias']);
 }
+
+class PresetCoreExporter implements QuantumCoreExporter {
+  const PresetCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('preset', _buildPreset, tags: const ['core', 'preset']);
+    _registerPresetAliases(vm);
+  }
+}

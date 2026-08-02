@@ -506,3 +506,13 @@ void _registerControlAliases(QuantumVM vm) {
       description: 'Optimistic control alias.',
       tags: const ['control', 'alias']);
 }
+
+class ControlCoreExporter implements QuantumCoreExporter {
+  const ControlCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('control', _buildControl, tags: const ['core', 'control']);
+    _registerControlAliases(vm);
+  }
+}

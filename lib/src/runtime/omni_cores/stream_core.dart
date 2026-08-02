@@ -199,3 +199,13 @@ void _registerStreamAliases(QuantumVM vm) {
   vm.defineAlias('tick', 'stream:tick', description: 'Tick stream alias.', tags: const ['stream', 'alias']);
   vm.defineAlias('ring', 'stream:ring', description: 'Ring buffer stream alias.', tags: const ['stream', 'alias']);
 }
+
+class StreamCoreExporter implements QuantumCoreExporter {
+  const StreamCoreExporter();
+  
+  @override
+  void export(QuantumVM vm) {
+    vm.define('stream', _buildStream, tags: const ['core', 'stream']);
+    _registerStreamAliases(vm);
+  }
+}
