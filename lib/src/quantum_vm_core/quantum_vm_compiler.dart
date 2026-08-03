@@ -1765,6 +1765,10 @@ abstract final class QLPathResolver {
 abstract final class QLDataBinder {
   static dynamic resolveAOT(dynamic propValue, BuildContext? ctx,
       Map<String, dynamic> env, QLDataStore globalStore) {
+    if (propValue is String && propValue.contains('{{')) {
+      return _interpolateString(propValue, ctx, env, globalStore);
+    }
+
     if (propValue is List) {
       return propValue
           .map((v) => resolveAOT(v, ctx, env, globalStore))
@@ -1796,6 +1800,61 @@ abstract final class QLDataBinder {
     }
 
     return propValue;
+  }
+
+  static dynamic _interpolateString(String input, BuildContext? ctx, Map<String, dynamic> env, QLDataStore globalStore) {
+    final trimmed = input.trim();
+    if (trimmed.startsWith('{{') && trimmed.endsWith('}}') && '{{'.allMatches(trimmed).length == 1) {
+      final expr = trimmed.substring(2, trimmed.length - 2).trim();
+      return _evalExpr(expr, ctx, env, globalStore);
+    }
+
+    return input.replaceAllMapped(RegExp(r'\{\{(.*?)\}\}'), (match) {
+      final expr = match.group(1)?.trim() ?? '';
+      final val = _evalExpr(expr, ctx, env, globalStore);
+      return val?.toString() ?? '';
+    });
+  }
+
+  static dynamic _evalExpr(String expr, BuildContext? ctx, Map<String, dynamic> env, QLDataStore globalStore) {
+    if (expr.contains('?')) {
+      final parts = expr.split('?');
+      final condExpr = parts[0].trim();
+      final rest = parts[1].split(':');
+      final trueExpr = rest[0].trim();
+      final falseExpr = rest.length > 1 ? rest[1].trim() : '';
+      final condVal = _evalExpr(condExpr, ctx, env, globalStore);
+      final bool isTrue = condVal == true || condVal == 'true' || (condVal is num && condVal != 0);
+      final activeExpr = isTrue ? trueExpr : falseExpr;
+      if ((activeExpr.startsWith("'") && activeExpr.endsWith("'")) || (activeExpr.startsWith('"') && activeExpr.endsWith('"'))) {
+        return activeExpr.substring(1, activeExpr.length - 1);
+      }
+      return _evalExpr(activeExpr, ctx, env, globalStore);
+    }
+    
+    if (expr.contains('+')) {
+      final parts = expr.split('+').map((p) => p.trim()).toList();
+      num sum = 0;
+      bool isNum = true;
+      for (final p in parts) {
+        final val = _evalExpr(p, ctx, env, globalStore);
+        if (val is num) {
+          sum += val;
+        } else if (num.tryParse(val?.toString() ?? '') != null) {
+          sum += num.parse(val.toString());
+        } else {
+          isNum = false;
+          break;
+        }
+      }
+      if (isNum) return sum;
+    }
+
+    if ((expr.startsWith("'") && expr.endsWith("'")) || (expr.startsWith('"') && expr.endsWith('"'))) {
+      return expr.substring(1, expr.length - 1);
+    }
+
+    return QLPathResolver.read(expr, ctx, env, globalStore);
   }
 
 // Inside QLDataBinder

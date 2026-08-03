@@ -617,18 +617,7 @@ class _QLKineticPipeNodeState extends State<_QLKineticPipeNode>
   Widget build(BuildContext context) => widget.child;
 }
 
-void _registerSystemAliases(QuantumVM vm) {
-  vm.defineAlias('sync_scroll', 'system:sync_scroll',
-      description: 'Sync scroll alias.', tags: const ['system', 'alias']);
-  vm.defineAlias('worker', 'system:worker',
-      description: 'Worker alias.', tags: const ['system', 'alias']);
-  vm.defineAlias('ticker', 'system:ticker',
-      description: 'Ticker alias.', tags: const ['system', 'alias']);
-  vm.defineAlias('omega_macro', 'system:omega_macro',
-      description: 'Omega macro alias.', tags: const ['system', 'alias']);
-}
-
-class _QLStoreProviderNode extends StatefulWidget {
+class _QLStoreProviderNode extends StatelessWidget {
   final Map<String, dynamic> initialState;
   final QLContext ctx;
 
@@ -638,46 +627,34 @@ class _QLStoreProviderNode extends StatefulWidget {
   });
 
   @override
-  State<_QLStoreProviderNode> createState() => _QLStoreProviderNodeState();
-}
-
-class _QLStoreProviderNodeState extends State<_QLStoreProviderNode> {
-  late final QLDataStore _store;
-
-  @override
-  void initState() {
-    super.initState();
-    _store = QLDataStore(namespace: 'scoped_store_$hashCode');
-    for (final entry in widget.initialState.entries) {
-      _store.set(entry.key, entry.value);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return QLDataScope(
-      localStore: _store,
-      moduleStore: _store,
-      localData: widget.ctx.env,
-      child: Builder(
-        builder: (innerContext) {
-          final children = widget.ctx.node.children
-              .where((c) => c.props['slot'] == null)
-              .map((c) => QuantumVM.instance.renderWidget(innerContext, c))
-              .toList();
-          return Q('col w-full', children: children);
-        },
-      ),
+      localData: {...ctx.env, ...initialState},
+      child: Q('col w-full', children: ctx.children),
     );
   }
 }
 
+final QuantumDomain systemDomain = quantumDomain('system')
+    .surface('system', _buildSystem, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias('sync_scroll', 'system:sync_scroll',
+          description: 'Sync scroll alias.', tags: const ['system', 'alias']);
+      vm.defineAlias('worker', 'system:worker',
+          description: 'Worker alias.', tags: const ['system', 'alias']);
+      vm.defineAlias('ticker', 'system:ticker',
+          description: 'Ticker alias.', tags: const ['system', 'alias']);
+      vm.defineAlias('omega_macro', 'system:omega_macro',
+          description: 'Omega macro alias.', tags: const ['system', 'alias']);
+    })
+    .build();
+
 class SystemCoreExporter implements QuantumCoreExporter {
   const SystemCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('system', _buildSystem, tags: const ['core', 'system']);
-    _registerSystemAliases(vm);
+    vm.installDomain(systemDomain);
   }
 }
+

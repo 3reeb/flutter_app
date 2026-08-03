@@ -93,30 +93,67 @@ class QTERenderProbe {
 
   QTERenderProbe(this.tester);
 
-  // ── Find widget by target spec ────────────────────────────────────────────
+  // ── Find widget by target spec ─────────────────────────────────────────────
   Finder findByTarget(QTETargetSpec target) {
+    Finder f;
     switch (target.by) {
       case QTETargetBy.key:
+        f = find.byKey(ValueKey(target.value));
+        if (_exists(f)) return f;
+        f = find.byKey(Key(target.value));
+        if (_exists(f)) return f;
+        f = find.byKey(ValueKey('__qte_testId_${target.value}'));
+        if (_exists(f)) return f;
         return find.byKey(ValueKey(target.value));
+
+      case QTETargetBy.testId:
+        f = find.byKey(ValueKey('__qte_testId_${target.value}'));
+        if (_exists(f)) return f;
+        f = find.byKey(ValueKey(target.value));
+        if (_exists(f)) return f;
+        f = find.byKey(Key(target.value));
+        if (_exists(f)) return f;
+        f = find.bySemanticsLabel(target.value);
+        if (_exists(f)) return f;
+        f = find.text(target.value);
+        if (_exists(f)) return f;
+        return find.byKey(ValueKey('__qte_testId_${target.value}'));
+
       case QTETargetBy.text:
+        f = find.text(target.value);
+        if (_exists(f)) return f;
+        f = find.textContaining(target.value);
+        if (_exists(f)) return f;
+        f = find.bySemanticsLabel(target.value);
+        if (_exists(f)) return f;
         return find.text(target.value);
+
       case QTETargetBy.type:
-        // Resolve type string to Type — limited set for now
+        f = find.byWidgetPredicate(
+          (w) => w.runtimeType.toString() == target.value,
+        );
+        if (_exists(f)) return f;
+        f = find.byWidgetPredicate(
+          (w) => w.runtimeType.toString().toLowerCase().contains(target.value.toLowerCase()),
+        );
+        if (_exists(f)) return f;
         return find.byWidgetPredicate(
           (w) => w.runtimeType.toString() == target.value,
         );
+
       case QTETargetBy.semanticLabel:
+        f = find.bySemanticsLabel(target.value);
+        if (_exists(f)) return f;
         return find.bySemanticsLabel(target.value);
-      case QTETargetBy.testId:
-        return find.byKey(ValueKey('__qte_testId_${target.value}'));
+
       case QTETargetBy.path:
-        // path is dot-separated widget key path — find first match
         final parts = target.value.split('.');
-        Finder f = find.byKey(ValueKey(parts.first));
+        Finder current = findByTarget(QTETargetSpec(by: QTETargetBy.key, value: parts.first));
         for (final part in parts.skip(1)) {
-          f = find.descendant(of: f, matching: find.byKey(ValueKey(part)));
+          final nextKey = findByTarget(QTETargetSpec(by: QTETargetBy.key, value: part));
+          current = find.descendant(of: current, matching: nextKey);
         }
-        return f;
+        return current;
     }
   }
 

@@ -172,7 +172,6 @@ Widget _buildData(QLContext rawCtx) {
 
   // ── data:realtime ───────────────────────────────────────────────────────────
   if (subType == 'realtime') {
-    final String channel = ctx.string('channel');
     final String asKey = ctx.string('as', fallback: 'event');
     return QLDataScope(
         localData: {...ctx.env, asKey: const {}},
@@ -182,8 +181,6 @@ Widget _buildData(QLContext rawCtx) {
 
   // ── data:paginated ──────────────────────────────────────────────────────────
   if (subType == 'paginated') {
-    final String action = ctx.string('action');
-    final int pageSize = ctx.integer('pageSize', fallback: 20);
     return Q('col w-full',
         children: ctx
             .children); // Wraps data:list with intersection observer for prefetch
@@ -220,7 +217,6 @@ Widget _buildData(QLContext rawCtx) {
 
   // ── data:aggregate ──────────────────────────────────────────────────────────
   if (subType == 'aggregate') {
-    final List<dynamic> sources = ctx.list('sources');
     return Q('col w-full',
         children: ctx.children); // Merges signals, re-renders on any change
   }
@@ -326,19 +322,22 @@ Widget _buildData(QLContext rawCtx) {
 // CORE 7: PORTAL (Absolute Z-Space & Modals)
 // ════════════════════════════════════════════════════════════════════════════
 
-void _registerDataAliases(QuantumVM vm) {
-  vm.defineAlias('sliver_plane', 'data:sliver_plane',
-      description: 'Sliver plane alias.', tags: const ['data', 'alias']);
-  vm.defineAlias('sliver', 'data:sliver',
-      description: 'Sliver alias.', tags: const ['data', 'alias']);
-}
+final QuantumDomain dataDomain = quantumDomain('data')
+    .surface('data', _buildData, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias('sliver_plane', 'data:sliver_plane',
+          description: 'Sliver plane alias.', tags: const ['data', 'alias']);
+      vm.defineAlias('sliver', 'data:sliver',
+          description: 'Sliver alias.', tags: const ['data', 'alias']);
+    })
+    .build();
 
 class DataCoreExporter implements QuantumCoreExporter {
   const DataCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('data', _buildData, tags: const ['core', 'data']);
-    _registerDataAliases(vm);
+    vm.installDomain(dataDomain);
   }
 }
+

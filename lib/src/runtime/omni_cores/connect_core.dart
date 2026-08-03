@@ -324,34 +324,37 @@ Widget _buildConnect(QLContext ctx) {
 /// Call once, wherever you already call `registerOmniComponents(vm)`.
 /// Purely additive — registers one new base type ('connect') and a handful
 /// of aliases; touches nothing that already exists.
-void registerConnectOmniNodes(QuantumVM vm) {
-  QLBehaviorRegistry.registerDefaults();
 
-  QLCoreFileRegistry.instance.registerFolder('connect', 'connect');
+final QuantumDomain connectDomain = quantumDomain('connect')
+    .surface('connect', _buildConnect, defaultSurface: true)
+    .install((vm) {
+      QLBehaviorRegistry.registerDefaults();
 
-  vm.define('connect', _buildConnect);
+      QLCoreFileRegistry.instance.registerFolder('connect', 'connect');
 
-  vm.defineAlias('backButton', 'connect:back');
-  vm.defineAlias('pressGesture', 'connect:pressGesture');
-  vm.defineAlias('connectSlot', 'connect:slot');
-  vm.defineAlias('focusReveal', 'connect:focusReveal');
-  vm.defineAlias('channelText', 'connect:channelText');
-  vm.defineAlias('behavior', 'connect:behavior');
-  
-  vm.defineAlias('socket', 'connect:socket');
-  vm.defineAlias('channel', 'connect:channel');
-  vm.defineAlias('broadcast', 'connect:broadcast');
-  vm.defineAlias('sync', 'connect:sync');
-  vm.defineAlias('rpc', 'connect:rpc');
-}
+      vm.defineAlias('backButton', 'connect:back');
+      vm.defineAlias('pressGesture', 'connect:pressGesture');
+      vm.defineAlias('connectSlot', 'connect:slot');
+      vm.defineAlias('focusReveal', 'connect:focusReveal');
+      vm.defineAlias('channelText', 'connect:channelText');
+      vm.defineAlias('behavior', 'connect:behavior');
 
+      vm.defineAlias('socket', 'connect:socket');
+      vm.defineAlias('channel', 'connect:channel');
+      vm.defineAlias('broadcast', 'connect:broadcast');
+      vm.defineAlias('sync', 'connect:sync');
+      vm.defineAlias('rpc', 'connect:rpc');
+    })
+    .build();
+
+void registerConnectOmniNodes(QuantumVM vm) => const ConnectCoreExporter().export(vm);
 
 class ConnectCoreExporter implements QuantumCoreExporter {
   const ConnectCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('connect', _buildConnect, tags: const ['core', 'connect']);
-    
+    vm.installDomain(connectDomain);
   }
 }
+

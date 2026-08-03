@@ -37,6 +37,8 @@
 //    at render time, even when defined at a parent directory level.
 // ════════════════════════════════════════════════════════════════════════════
 
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -272,20 +274,16 @@ class QPageBody {
   }
 
   static Map<String, dynamic> _deserializeConfig(Uint8List bytes) {
-    // Config is stored as a length-prefixed JSON blob inside the binary node.
-    // The QNodeDecoder handles the outer binary envelope;
-    // the inner JSON (for the SDUI/QL UI tree) is preserved as-is for
-    // compatibility with the existing QLCompiler pipeline.
+    // Config is stored as a length-prefixed text or binary blob inside the
+    // binary node. The QNodeDecoder handles the outer binary envelope;
+    // this inner payload is preserved as-is for the UI/compiler pipeline.
     if (bytes.isEmpty) return const {};
-    // Forward-compatible: parse as UTF-8 JSON config
     try {
-      // ignore: avoid_dynamic_calls
-      final str = String.fromCharCodes(bytes);
-      // Basic check — actual parsing done by QLFormatParser when needed
-      if (str.startsWith('{') || str.startsWith('[')) {
-        // Return a wrapper that the caller can pass to QLFormatParser
-        return {'__raw__': str, '__bodyBytes__': bytes};
-      }
+      final str = utf8.decode(bytes);
+      // Preserve readable text payloads verbatim, regardless of whether they
+      // are JSON, YAML, or plain text. Binary payloads still fall back to raw
+      // bytes only.
+      return {'__raw__': str, '__bodyBytes__': bytes};
     } catch (_) {}
     return {'__bodyBytes__': bytes};
   }

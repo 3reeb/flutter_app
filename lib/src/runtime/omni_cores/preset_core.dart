@@ -2992,70 +2992,73 @@ void _registerGeneralBuiltInPresets(QuantumVM vm) {
       defaultProps: {'tone': 'error'});
 }
 
-void _registerPresetAliases(QuantumVM vm) {
-  vm.defineAlias('menu', 'preset:nested_menu',
-      description: 'Menu preset alias.', tags: const ['preset', 'alias']);
-  vm.defineAlias('menu_item', 'preset:menu_item',
-      description: 'Menu item preset alias.', tags: const ['preset', 'alias']);
-  vm.defineAlias('list', 'preset:rich_list',
-      description: 'List preset alias.', tags: const ['preset', 'alias']);
-  vm.defineAlias('table', 'preset:rich_table',
-      description: 'Table preset alias.', tags: const ['preset', 'alias']);
-  vm.defineAlias('avatars', 'preset:avatar_group',
-      description: 'Avatars preset alias.', tags: const ['preset', 'alias']);
-  vm.defineAlias('avatar_group', 'preset:avatar_group',
-      description: 'Avatar group preset alias.',
-      tags: const ['preset', 'alias']);
-  vm.defineAlias('categories', 'preset:category_browser',
-      description: 'Categories preset alias.', tags: const ['preset', 'alias']);
-  vm.defineAlias('category_browser', 'preset:category_browser',
-      description: 'Category browser preset alias.',
-      tags: const ['preset', 'alias']);
-  vm.defineAlias('rich_shell', 'preset:rich_shell',
-      description: 'Rich shell preset alias.', tags: const ['preset', 'alias']);
-  vm.defineAlias('rich_list', 'preset:rich_list',
-      description: 'Rich list preset alias.', tags: const ['preset', 'alias']);
-  vm.defineAlias('rich_table', 'preset:rich_table',
-      description: 'Rich table preset alias.', tags: const ['preset', 'alias']);
-  vm.defineAlias('tabs', 'preset:tabs',
-      description: 'Preset tabs alias.', tags: const ['preset', 'alias']);
-  vm.defineAlias('data_shell', 'preset:collection_shell',
-      description: 'Data shell preset alias.', tags: const ['preset', 'alias']);
-  vm.defineAlias('wizard', 'preset:stepper',
-      description: 'Wizard preset alias.', tags: const ['preset', 'alias']);
-  vm.defineAlias('empty_state', 'preset:state_surface',
-      description: 'Empty state preset alias.',
-      tags: const ['preset', 'alias']);
-  vm.defineAlias('error_state', 'preset:state_surface',
-      description: 'Error state preset alias.',
-      tags: const ['preset', 'alias']);
-  vm.defineAlias('profile_card', 'preset:profile_card',
-      description: 'Profile card preset alias.',
-      tags: const ['preset', 'alias']);
-  vm.defineAlias('flow_shell', 'preset:flow_shell',
-      description: 'Flow shell preset alias.', tags: const ['preset', 'alias']);
-  vm.defineAlias('hero_bridge', 'preset:hero_bridge',
-      description: 'Hero bridge preset alias.',
-      tags: const ['preset', 'alias']);
-  vm.defineAlias('tabs_shell', 'preset:tabs',
-      description: 'Tabs shell preset alias.', tags: const ['preset', 'alias']);
-  vm.defineAlias('carousel_shell', 'preset:carousel',
-      description: 'Carousel shell preset alias.',
-      tags: const ['preset', 'alias']);
-  vm.defineAlias('canvas_shell', 'preset:stage_shell',
-      description: 'Canvas shell preset alias.',
-      tags: const ['preset', 'alias']);
-  vm.defineAlias('search_shell', 'preset:search_panel',
-      description: 'Search shell preset alias.',
-      tags: const ['preset', 'alias']);
-}
+final QuantumDomain presetDomain = quantumDomain('preset')
+    .surface('preset', _buildPreset, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias('menu', 'preset:nested_menu',
+          description: 'Menu preset alias.', tags: const ['preset', 'alias']);
+      vm.defineAlias('menu_item', 'preset:menu_item',
+          description: 'Menu item preset alias.', tags: const ['preset', 'alias']);
+      vm.defineAlias('list', 'preset:rich_list',
+          description: 'List preset alias.', tags: const ['preset', 'alias']);
+      vm.defineAlias('table', 'preset:rich_table',
+          description: 'Table preset alias.', tags: const ['preset', 'alias']);
+      vm.defineAlias('avatars', 'preset:avatar_group',
+          description: 'Avatars preset alias.', tags: const ['preset', 'alias']);
+      vm.defineAlias('avatar_group', 'preset:avatar_group',
+          description: 'Avatar group preset alias.',
+          tags: const ['preset', 'alias']);
+      vm.defineAlias('categories', 'preset:category_browser',
+          description: 'Categories preset alias.', tags: const ['preset', 'alias']);
+      vm.defineAlias('category_browser', 'preset:category_browser',
+          description: 'Category browser preset alias.',
+          tags: const ['preset', 'alias']);
+      vm.defineAlias('rich_shell', 'preset:rich_shell',
+          description: 'Rich shell preset alias.', tags: const ['preset', 'alias']);
+      vm.defineAlias('rich_list', 'preset:rich_list',
+          description: 'Rich list preset alias.', tags: const ['preset', 'alias']);
+      vm.defineAlias('rich_table', 'preset:rich_table',
+          description: 'Rich table preset alias.', tags: const ['preset', 'alias']);
+      vm.defineAlias('tabs', 'preset:tabs',
+          description: 'Preset tabs alias.', tags: const ['preset', 'alias']);
+      vm.defineAlias('data_shell', 'preset:collection_shell',
+          description: 'Data shell preset alias.', tags: const ['preset', 'alias']);
+      vm.defineAlias('wizard', 'preset:stepper',
+          description: 'Wizard preset alias.', tags: const ['preset', 'alias']);
+      vm.defineAlias('empty_state', 'preset:state_surface',
+          description: 'Empty state preset alias.',
+          tags: const ['preset', 'alias']);
+      vm.defineAlias('error_state', 'preset:state_surface',
+          description: 'Error state preset alias.',
+          tags: const ['preset', 'alias']);
+      vm.defineAlias('profile_card', 'preset:profile_card',
+          description: 'Profile card preset alias.',
+          tags: const ['preset', 'alias']);
+      vm.defineAlias('flow_shell', 'preset:flow_shell',
+          description: 'Flow shell preset alias.', tags: const ['preset', 'alias']);
+      vm.defineAlias('hero_bridge', 'preset:hero_bridge',
+          description: 'Hero bridge preset alias.',
+          tags: const ['preset', 'alias']);
+      vm.defineAlias('tabs_shell', 'preset:tabs',
+          description: 'Tabs shell preset alias.', tags: const ['preset', 'alias']);
+      vm.defineAlias('carousel_shell', 'preset:carousel',
+          description: 'Carousel shell preset alias.',
+          tags: const ['preset', 'alias']);
+      vm.defineAlias('canvas_shell', 'preset:stage_shell',
+          description: 'Canvas shell preset alias.',
+          tags: const ['preset', 'alias']);
+      vm.defineAlias('search_shell', 'preset:search_panel',
+          description: 'Search shell preset alias.',
+          tags: const ['preset', 'alias']);
+    })
+    .build();
 
 class PresetCoreExporter implements QuantumCoreExporter {
   const PresetCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('preset', _buildPreset, tags: const ['core', 'preset']);
-    _registerPresetAliases(vm);
+    vm.installDomain(presetDomain);
   }
 }
+

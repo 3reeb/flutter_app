@@ -1600,7 +1600,8 @@ class QuantumVMCatalog {
         },
       },
       'layout': <String, dynamic>{
-        'sourceFile': 'omni_cores/layout_core.dart',
+        'sourceFile': 'quantum_vm_core/quantum_vm_layout.dart',
+
         'aliasCount': 38,
         'defineCount': 0,
         'propCount': 9,

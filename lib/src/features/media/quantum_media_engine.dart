@@ -19,7 +19,7 @@
  * with NetworkAssetBundle and Quantum.media for data retrieval.
  * 
  * Notes:
- * Optimizes memory and CPU by actively managing playback lifecycles�killing off-screen 
+ * Optimizes memory and CPU by actively managing playback lifecycles�killing off-screen 
  * controllers and pre-warming L2 disk caches for upcoming content.
  * ============================================================================
  */
@@ -35,10 +35,11 @@ import 'package:video_player/video_player.dart';
 // Ecosystem Primitives
 import '../../foundation/quantum_primitives.dart';
 import '../../foundation/quantum_async.dart';
+import '../../platform/quantum_connect_engine.dart';
 import 'package:quantum_layout/quantum.dart';
 
 // 🚀 TRUE PRODUCTION CORE IMPORT
-import 'package:quantum_layout/src/runtime/api/network_shell.dart';
+import 'package:quantum_layout/src/platform/api/network_shell.dart';
 
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  FRONTEND POLICIES & MODELS

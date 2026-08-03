@@ -195,16 +195,21 @@ class QWebDiskStore extends QDiskStore {
     final tx = db.transaction(_kStoreName, 'readonly');
     final store = tx.objectStore(_kStoreName);
 
-
     final ids = <int>[];
     final entries = <int, int>{}; // nodeId → version
 
+    final cursor = store.openCursor(autoAdvance: true);
     await cursor.forEach((idb.CursorWithValue c) {
       final key = c.key;
       final value = c.value;
-      if (key is int && value is ByteBuffer) {
-        final bytes = value.asUint8List();
-        if (bytes.length >= _kVersionPrefixLen) {
+      if (key is int) {
+        Uint8List? bytes;
+        if (value is ByteBuffer) {
+          bytes = value.asUint8List();
+        } else if (value is Uint8List) {
+          bytes = value;
+        }
+        if (bytes != null && bytes.length >= _kVersionPrefixLen) {
           final version =
               ByteData.sublistView(bytes).getUint32(0, Endian.little);
           entries[key] = version;

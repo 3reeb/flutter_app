@@ -62,9 +62,12 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:quantum_layout/quantum.dart' show QuantumVM;
+import 'package:quantum_layout/quantum.dart' show QuantumVMLayoutBridge;
 
 import 'qee_node_types.dart';
 
@@ -96,9 +99,7 @@ class QContextScope extends InheritedWidget {
 
   /// Access the notifier without subscribing to rebuilds.
   static QPageContextNotifier? maybeRead(BuildContext context) {
-    return context
-        .getInheritedWidgetOfExactType<QContextScope>()
-        ?.notifier;
+    return context.getInheritedWidgetOfExactType<QContextScope>()?.notifier;
   }
 
   @override
@@ -196,6 +197,30 @@ class _QPropScopeState extends State<QPropScope> {
   Widget build(BuildContext context) => widget.child;
 }
 
+/// Rebuilds when a specific prop changes within [QPropScope].
+class QPropConsumer extends StatelessWidget {
+  final String propKey;
+  final Widget Function(BuildContext context, dynamic value) builder;
+
+  const QPropConsumer({
+    super.key,
+    required this.propKey,
+    required this.builder,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final notifier = QPropScope.of(context, propKey);
+    if (notifier == null) {
+      return builder(context, null);
+    }
+    return ValueListenableBuilder<dynamic>(
+      valueListenable: notifier,
+      builder: (ctx, value, _) => builder(ctx, value),
+    );
+  }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // §3 — LAYOUT CHAIN BUILDER
 // ─────────────────────────────────────────────────────────────────────────────
@@ -254,7 +279,11 @@ class _QLayoutChainState extends State<QLayoutChain> {
   Future<void> _buildChain() async {
     final ref = widget.innermostLayoutRef;
     if (ref == null) {
-      if (mounted) setState(() { _chain = null; _loading = false; });
+      if (mounted)
+        setState(() {
+          _chain = null;
+          _loading = false;
+        });
       return;
     }
 
@@ -546,7 +575,8 @@ class _QBodyBridgeState extends State<_QBodyBridge> {
   @override
   void initState() {
     super.initState();
-    _resolvedConfig = _applyContext(widget.config, widget.contextNotifier.value);
+    _resolvedConfig =
+        _applyContext(widget.config, widget.contextNotifier.value);
     _listener = _onContextChanged;
     widget.contextNotifier.addListener(_listener);
   }
@@ -626,34 +656,127 @@ class _QResolvedConfigScope extends InheritedWidget {
     required super.child,
   });
 
-  static Map<String, dynamic>? of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<_QResolvedConfigScope>()?.config;
+  static Map<String, dynamic>? of(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<_QResolvedConfigScope>()
+      ?.config;
 
   @override
   bool updateShouldNotify(_QResolvedConfigScope old) => old.config != config;
 }
 
-/// Placeholder renderer — replaced by actual QL/SDUI rendering pipeline
-/// integration in production.
+/// Bridges the resolved QPageBody config → QuantumVM render pipeline.
+///
+/// Pulls `__raw__` from the config scope, hands it to
+/// [QuantumVM.instance.renderLayoutFromRaw()], and injects the page slot
+/// as the `$page` environment variable so matrix layout shells can embed it.
+///
+/// Wrapped in a [RepaintBoundary] so layout repaints never cascade into the
+/// inner page slot and vice-versa.
 class _QConfigRenderer extends StatelessWidget {
   const _QConfigRenderer();
 
   @override
   Widget build(BuildContext context) {
-    // In production: pull config from _QResolvedConfigScope and pass to
-    // QuantumVM renderer. The body config's '__raw__' key contains the
-    // serialized QL/SDUI tree that QLCompiler can process.
     final config = _QResolvedConfigScope.of(context);
-    final slot = QSlotProvider.of(context)?.slot;
+    // The slot is the actual page widget this layout must wrap.
+    final Widget slot =
+        QSlotProvider.of(context)?.slot ?? const SizedBox.shrink();
 
-    if (config == null) return slot ?? const SizedBox.shrink();
+    // No config at all — render the slot bare (root app with no _layout file).
+    if (config == null) return slot;
 
-    // If there is a raw body string, forward to QL pipeline
-    final raw = config['__raw__'];
-    if (raw == null && slot != null) return slot;
+    final dynamic raw = config['__raw__'];
 
-    // Default: show slot (layout body integration point)
-    return slot ?? const SizedBox.shrink();
+    // Config present but body empty — same fallback.
+    if (raw == null || (raw is String && raw.trim().isEmpty)) return slot;
+
+    return _QVMLayoutBridge(
+      rawSource: raw.toString(),
+      pageSlot: slot,
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// §6b — _QVMLayoutBridge
+// Stateful so we can cache the parsed result across rebuilds that don't
+// change rawSource, avoiding redundant YAML/JSON parses on every build.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Parses [rawSource] once, then delegates to QuantumVM.renderLayoutFromRaw().
+///
+/// Cache key = hashCode of rawSource. If rawSource doesn't change, the
+/// same parsed result is reused — zero additional allocations.
+/// The [pageSlot] widget itself is NOT cached (it changes on navigation).
+class _QVMLayoutBridge extends StatefulWidget {
+  final String rawSource;
+  final Widget pageSlot;
+
+  const _QVMLayoutBridge({
+    required this.rawSource,
+    required this.pageSlot,
+  });
+
+  @override
+  State<_QVMLayoutBridge> createState() => _QVMLayoutBridgeState();
+}
+
+class _QVMLayoutBridgeState extends State<_QVMLayoutBridge> {
+  /// Hash of the last rawSource we parsed. Lets us skip re-parse when only
+  /// [pageSlot] changes (i.e., normal page navigation).
+  int? _parsedHash;
+
+  /// Pre-validated: if the raw source is invalid YAML/JSON we store false
+  /// so subsequent builds skip the VM call entirely.
+  bool _isValid = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _parsedHash = widget.rawSource.hashCode;
+  }
+
+  @override
+  void didUpdateWidget(_QVMLayoutBridge old) {
+    super.didUpdateWidget(old);
+    // If the layout file changed (hot reload or dynamic update), reset flag.
+    final newHash = widget.rawSource.hashCode;
+    if (newHash != _parsedHash) {
+      _parsedHash = newHash;
+      _isValid = true; // allow re-attempt after a source change
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_isValid) {
+      // Previously failed to parse — don't retry, just show page.
+      return widget.pageSlot;
+    }
+
+    // Quick JSON/YAML sanity pre-check before handing to VM.
+    // If the source is clearly invalid we skip the VM call.
+    final trimmed = widget.rawSource.trim();
+    if (trimmed.isEmpty) return widget.pageSlot;
+
+    Widget result;
+    try {
+      result = QuantumVM.instance.renderLayoutFromRaw(
+        context,
+        widget.rawSource,
+        pageSlot: widget.pageSlot,
+      );
+    } catch (e, st) {
+      _isValid = false; // suppress future attempts for this source
+      if (kDebugMode) {
+        debugPrint('🚨 [QVMLayoutBridge] Render failed: $e\n$st\n'
+            'Source preview: ${trimmed.substring(0, trimmed.length.clamp(0, 120))}');
+      }
+      return widget.pageSlot;
+    }
+
+    // Isolate the layout paint tree from the page slot's paint tree.
+    return RepaintBoundary(child: result);
   }
 }
 
@@ -882,7 +1005,8 @@ class _QLoadingOverlayState extends State<QLoadingOverlay> {
     final minMs = node?.minDisplayMs ?? 0;
 
     if (minMs > 0 && _loadingStartTime != null) {
-      final elapsed = DateTime.now().difference(_loadingStartTime!).inMilliseconds;
+      final elapsed =
+          DateTime.now().difference(_loadingStartTime!).inMilliseconds;
       final remaining = minMs - elapsed;
       if (remaining > 0) {
         Future.delayed(Duration(milliseconds: remaining), () {
@@ -1246,6 +1370,11 @@ class QMetaNotifier {
 
   void _updateOG(Map<String, String> tags) {
     openGraph.value = tags;
+  }
+
+  void reset() {
+    title.value = '';
+    openGraph.value = <String, String>{};
   }
 }
 

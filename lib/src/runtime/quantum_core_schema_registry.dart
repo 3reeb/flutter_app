@@ -1205,7 +1205,7 @@ final class QuantumCoreSchemaRegistry {
           slots: <QLCoreSlotSpec>[],
           metadata: const <String, dynamic>{'source': 'built-in'},
         ),
-        'template': _schema(
+        'template_core': _schema(
           name: 'template',
           summary: 'Reusable composition and content template core.',
           category: 'core',
@@ -1370,7 +1370,7 @@ final class QuantumCoreSchemaRegistry {
           props: <QLCorePropSpec>[],
           metadata: const <String, dynamic>{'aliasOf': 'control:flow'},
         ),
-        'workflow': _schema(
+        'workflow_alias': _schema(
           name: 'workflow',
           extendsName: 'control',
           summary: 'Alias for control:flow.',

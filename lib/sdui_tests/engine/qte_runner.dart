@@ -44,10 +44,13 @@ import 'qte_host_widget.dart';
 class QTERunnerConfig {
   /// Stop after first failed step
   final bool failFast;
+
   /// Also run disabled steps
   final bool runDisabled;
+
   /// Print step-by-step progress to debugPrint
   final bool verbose;
+
   /// Output a JUnit XML report alongside the text report
   final bool junitOutput;
 
@@ -69,28 +72,23 @@ class QTERunner {
 
   // ── Entry point from flutter_test ─────────────────────────────────────────
   Future<QTERunResult> run(WidgetTester tester) async {
-    print('QTERunner.run STARTING...');
     if (config.verbose) {
-      debugPrint('\n[QTE] ▶ Starting test: ${testFile.title} [${testFile.id}]');
+      debugPrint('[QTE] ▶ Starting test: ${testFile.title} [${testFile.id}]');
     }
 
     final totalSw = Stopwatch()..start();
 
     // ── 1. Build host ────────────────────────────────────────────────────────
-    print('QTERunner: building host...');
     final host = QTEHostBuilder.build(testFile);
     final store = host.store;
 
-    print('QTERunner: pumping widget...');
     await tester.pumpWidget(host.widget);
-    print('QTERunner: pumping widget done, trying pumpAndSettle...');
     try {
-      await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 2));
+      await tester.pumpAndSettle(const Duration(milliseconds: 100),
+          EnginePhase.sendSemanticsUpdate, const Duration(seconds: 2));
     } catch (_) {
-      print('QTERunner: pumpAndSettle timed out, doing pump() instead...');
       await tester.pump();
     }
-    print('QTERunner: pumpAndSettle done!');
 
     // ── 2. Build engines ─────────────────────────────────────────────────────
     final probe = QTERenderProbe(tester);
@@ -98,10 +96,17 @@ class QTERunner {
     final profiler = QTEPerformanceProfiler(tester, testFile.performance);
 
     final interactionEngine = QTEInteractionEngine(
-      tester: tester, store: store, probe: probe, watcher: watcher,
+      tester: tester,
+      store: store,
+      probe: probe,
+      watcher: watcher,
     );
     final assertionEngine = QTEAssertionEngine(
-      tester: tester, store: store, probe: probe, watcher: watcher, profiler: profiler,
+      tester: tester,
+      store: store,
+      probe: probe,
+      watcher: watcher,
+      profiler: profiler,
     );
 
     // Watch all store keys referenced in assertions
@@ -120,21 +125,31 @@ class QTERunner {
       if (step.disabled && !config.runDisabled) {
         if (config.verbose) debugPrint('[QTE]   ⏭ Skipped: ${step.id}');
         stepResults.add(QTEStepResult(
-          stepId: step.id, label: step.label,
-          status: QTEStepStatus.skipped, assertions: [],
+          stepId: step.id,
+          label: step.label,
+          status: QTEStepStatus.skipped,
+          assertions: [],
           elapsed: Duration.zero,
         ));
         continue;
       }
 
       final result = await _runStep(
-        step, store, tester, probe, watcher, profiler,
-        interactionEngine, assertionEngine,
+        step,
+        store,
+        tester,
+        probe,
+        watcher,
+        profiler,
+        interactionEngine,
+        assertionEngine,
       );
       stepResults.add(result);
 
       if (config.failFast && result.status == QTEStepStatus.failed) {
-        if (config.verbose) debugPrint('[QTE]   ⛔ Fail-fast: stopping after step ${step.id}');
+        if (config.verbose) {
+          debugPrint('[QTE]   ⛔ Fail-fast: stopping after step ${step.id}');
+        }
         break;
       }
     }
@@ -157,8 +172,10 @@ class QTERunner {
       title: testFile.title,
       steps: stepResults,
       totalElapsed: totalSw.elapsed,
-      performanceSummary: testFile.performance.trackFrames || testFile.performance.trackMemory
-          ? profiler.summary() : null,
+      performanceSummary:
+          testFile.performance.trackFrames || testFile.performance.trackMemory
+              ? profiler.summary()
+              : null,
     );
 
     if (config.verbose) {
@@ -179,7 +196,9 @@ class QTERunner {
     QTEInteractionEngine interactionEngine,
     QTEAssertionEngine assertionEngine,
   ) async {
-    if (config.verbose) debugPrint('[QTE]   ▷ Step [${step.id}]: ${step.label}');
+    if (config.verbose) {
+      debugPrint('[QTE]   ▷ Step [${step.id}]: ${step.label}');
+    }
 
     watcher.setCurrentStep(step.id);
     final stepSw = Stopwatch()..start();
@@ -189,7 +208,8 @@ class QTERunner {
 
     // ── Capture memory before ─────────────────────────────────────────────
     QTEMemorySnapshot? memBefore;
-    if (step.snapshot?.captureMemory == true || testFile.performance.trackMemory) {
+    if (step.snapshot?.captureMemory == true ||
+        testFile.performance.trackMemory) {
       memBefore = profiler.captureMemory(step.id);
     }
 
@@ -261,15 +281,21 @@ class QTERunner {
 
     // ── Determine step status ─────────────────────────────────────────────
     final hasError = interactionError != null ||
-        assertionOutcomes.any((a) => !a.passed && a.severity == QTESeverity.error);
-    final hasWarn = assertionOutcomes.any((a) => !a.passed && a.severity == QTESeverity.warning);
+        assertionOutcomes
+            .any((a) => !a.passed && a.severity == QTESeverity.error);
+    final hasWarn = assertionOutcomes
+        .any((a) => !a.passed && a.severity == QTESeverity.warning);
 
-    final status = hasError ? QTEStepStatus.failed
-        : hasWarn ? QTEStepStatus.warning
-        : QTEStepStatus.passed;
+    final status = hasError
+        ? QTEStepStatus.failed
+        : hasWarn
+            ? QTEStepStatus.warning
+            : QTEStepStatus.passed;
 
     return QTEStepResult(
-      stepId: step.id, label: step.label, status: status,
+      stepId: step.id,
+      label: step.label,
+      status: status,
       assertions: assertionOutcomes,
       interactionError: interactionError,
       elapsed: stepSw.elapsed,
@@ -288,20 +314,15 @@ Future<QTERunResult> qteRunJson(
   WidgetTester tester, {
   QTERunnerConfig config = const QTERunnerConfig(),
 }) async {
-  print('qteRunJson: started');
   // Validate first
-  print('qteRunJson: validating...');
   final validation = QTEValidator.validate(rawJson);
   if (!validation.isValid) {
     throw Exception(
       'QTE validation failed:\n${validation.errors.map((e) => "  $e").join("\n")}',
     );
   }
-  print('qteRunJson: converting to QTETestFile...');
   final testFile = QTETestFile.fromJson(rawJson);
-  print('qteRunJson: creating runner...');
   final runner = QTERunner(testFile, config: config);
-  print('qteRunJson: calling runner.run()...');
   return runner.run(tester);
 }
 

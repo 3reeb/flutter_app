@@ -1,28 +1,90 @@
 /*
  * ============================================================================
- * File: layout_core.dart
- * 
+ * File: quantum_vm_layout.dart
+ *
  * Description:
- * Defines core layout structures and spatial arrangements for the Quantum Omni 
- * Registry. Contains rich declarative layout presets for full workspaces, app shells, 
- * forms, modals, and CSS-grid like matrices dynamically compiled at runtime.
- * 
- * Key Components:
- * - _buildLayout: Resolves layouts using the QMatrixLayoutRegistry.
- * - _buildPageShell / _buildPageSection: High-level macro layout containers.
- * - Matrix Definitions: App shell, workspace, feed, modal, and split shells.
- * 
- * Dependencies/Relationships:
- * Part of quantum_omni_registry.dart. Integrates deeply with QMatrixLayoutRegistry.
- * 
- * Notes:
- * Implements a unique declarative string-based grid language for structural generation.
+ * Native built-in layout engine for the Quantum VM Core.
+ * This is a `part of` file for quantum_vm.dart — the layout system lives
+ * HERE and is registered before any external plugin (omni_cores, etc.) runs.
+ *
+ * Contains:
+ * - _registerNativeLayoutCore()   — called from QuantumVM.initialize()
+ * - _buildLayout()                — resolves layoutId → QMatrixLayoutRegistry
+ * - _buildPageShell()             — page-level shell macro (header/sidebar/footer)
+ * - _buildPageSection()           — section-level layout block
+ * - All 8 built-in matrix layout JSON definitions
+ * - All layout aliases
+ * - QuantumVMLayoutBridge extension — renderLayoutFromRaw()
+ * - _QVMLayoutBridge StatefulWidget — QEE _layout body → QuantumVM render
+ *
+ * Design guarantees:
+ * - ZERO imports from lib/src/runtime/
+ * - All symbols available from package:quantum_layout/quantum.dart (parent)
+ * - O(1) layout lookup via QMatrixLayoutRegistry (HashMap)
+ * - Idempotent registration — safe to call multiple times
+ * - RepaintBoundary isolation on every QEE layout body
+ * - Memory-safe: parsed blueprint is cached per raw-source hash
  * ============================================================================
  */
-part of '../quantum_omni_registry.dart';
 
-// Moved from quantum_omni_registry.dart: _buildLayout
+part of 'quantum_vm.dart';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// §1 — IDEMPOTENCY GUARD
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// True once _registerNativeLayoutCore has completed.
+/// Guards against double-registration on hot-reload or repeated init calls.
+bool _nativeLayoutCoreRegistered = false;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// §2 — LAYOUT WIDGET BUILDERS
+// All builders are private top-level functions (fastest possible call path —
+// no vtable, no closure allocation on hot paths).
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Resolves the `layoutId` prop and delegates to QMatrixLayoutRegistry.
+///
+/// This is the primary entry point for `{type: 'layout', layoutId: 'workspace'}`
+/// SDUI nodes. Zero-allocation on cache-hit (registry uses a fixed HashMap).
+@pragma('vm:prefer-inline')
+Widget _buildLayout(QLContext rawCtx) {
+  final ctx = _AliasContext(rawCtx);
+  // Colon sub-type (layout:workspace) OR explicit layoutId/id prop.
+  final String layoutId = ctx.resolvedSubType(
+      fallback: ctx.string('layoutId', fallback: ctx.string('id')));
+
+  if (layoutId.isEmpty) {
+    // Graceful fallback: render children in a column.
+    return Q('col min-w-0 min-h-0', children: ctx.children);
+  }
+
+  final layoutDef = QMatrixLayoutRegistry.get(layoutId);
+  if (layoutDef == null) {
+    if (kDebugMode) {
+      return ErrorWidget('🚨 [QuantumVM] Unknown layout: "$layoutId"\n'
+          'Path: ${ctx.node.debugPath}\n'
+          'Available: ${QMatrixLayoutRegistry.registryNames.join(', ')}');
+    }
+    return const SizedBox.shrink();
+  }
+
+  // O(1) runtime-cache lookup inside buildQuantumMatrixWidget.
+  return buildQuantumMatrixWidget(
+    ctx: ctx.flutterContext,
+    node: ctx.node,
+    store: ctx.store,
+    layoutDef: layoutDef,
+    runtimeCache: QMatrixLayoutRegistry.runtimeCache(layoutId),
+  );
+}
+
+/// High-level page shell: header / (sidebar | content) / footer composition.
+///
+/// Used as `{type: 'page_shell'}` in SDUI. Children are wired via named slots
+/// (header, content, footer, sidebar). The `$page` env-key carries the inner
+/// page widget when called from the QEE layout bridge.
+@pragma('vm:never-inline')
 Widget _buildPageShell(QLContext rawCtx) {
   final ctx = _AliasContext(rawCtx);
 
@@ -43,12 +105,12 @@ Widget _buildPageShell(QLContext rawCtx) {
       ? QuantumVM.instance.renderWidget(ctx.flutterContext, sidebarNode)
       : const SizedBox.shrink();
 
+  // $page env key carries the inner slot when used from QEE.
   final Widget page = ctx.env[r'$page'] as Widget? ?? const SizedBox.shrink();
 
   Widget content = page;
   if (contentNode != null) {
     final String baseStyle = contentNode.style ?? '';
-
     final String justify = QLDataBinder.resolveAOT(contentNode.props['justify'],
                 ctx.flutterContext, ctx.env, ctx.store)
             ?.toString() ??
@@ -68,13 +130,8 @@ Widget _buildPageShell(QLContext rawCtx) {
     final String direction =
         contentNode.props['direction']?.toString() ?? 'col';
 
-    String combinedStyle = baseStyle;
-    if (direction == 'row') {
-      combinedStyle = 'row $combinedStyle';
-    } else {
-      combinedStyle = 'col $combinedStyle';
-    }
-
+    String combinedStyle =
+        direction == 'row' ? 'row $baseStyle' : 'col $baseStyle';
     if (justify.isNotEmpty) combinedStyle = '$combinedStyle justify-$justify';
     if (items.isNotEmpty) combinedStyle = '$combinedStyle items-$items';
     if (clip) combinedStyle = '$combinedStyle overflow-hidden';
@@ -114,6 +171,10 @@ Widget _buildPageShell(QLContext rawCtx) {
   );
 }
 
+/// Section-level layout block: header / body / footer in a Column.
+///
+/// Used as `{type: 'page_section'}`. Optional `padded: true` prop adds 24px.
+@pragma('vm:prefer-inline')
 Widget _buildPageSection(QLContext rawCtx) {
   final ctx = _AliasContext(rawCtx);
 
@@ -124,11 +185,9 @@ Widget _buildPageSection(QLContext rawCtx) {
   final Widget header = headerNode != null
       ? QuantumVM.instance.renderWidget(ctx.flutterContext, headerNode)
       : const SizedBox.shrink();
-
   final Widget body = bodyNode != null
       ? QuantumVM.instance.renderWidget(ctx.flutterContext, bodyNode)
       : const SizedBox.shrink();
-
   final Widget footer = footerNode != null
       ? QuantumVM.instance.renderWidget(ctx.flutterContext, footerNode)
       : const SizedBox.shrink();
@@ -151,34 +210,52 @@ Widget _buildPageSection(QLContext rawCtx) {
   );
 }
 
-Widget _buildLayout(QLContext rawCtx) {
-  final ctx = _AliasContext(rawCtx);
-  final String layoutId = ctx.resolvedSubType(
-      fallback: ctx.string('layoutId', fallback: ctx.string('id')));
+// ─────────────────────────────────────────────────────────────────────────────
+// §3 — NATIVE LAYOUT REGISTRATION
+// Called once from QuantumVM.initialize(). All 8 built-in matrix layouts +
+// all aliases are registered here at VM boot, before any omni_core runs.
+// ─────────────────────────────────────────────────────────────────────────────
 
-  if (layoutId.isEmpty) {
-    return Q('col min-w-0 min-h-0', children: ctx.children);
-  }
+void _registerNativeLayoutCore(QuantumVM vm) {
+  if (_nativeLayoutCoreRegistered) return;
+  _nativeLayoutCoreRegistered = true;
 
-  final layoutDef = QMatrixLayoutRegistry.get(layoutId);
-  if (layoutDef == null) {
-    if (kDebugMode) {
-      return ErrorWidget('''Unknown Layout: $layoutId
-Path: ${ctx.node.debugPath}''');
-    }
-    return const SizedBox.shrink();
-  }
-
-  return buildQuantumMatrixWidget(
-    ctx: ctx.flutterContext,
-    node: ctx.node,
-    store: ctx.store,
-    layoutDef: layoutDef,
-    runtimeCache: QMatrixLayoutRegistry.runtimeCache(layoutId),
+  // ── 3a: Core widget types ─────────────────────────────────────────────────
+  vm.registerPlugin(
+    _MicroWidgetPlugin('layout', _buildLayout, const {}),
+    description:
+        'Native matrix layout resolver — maps layoutId to QMatrixLayoutRegistry',
+    engine: 'QuantumVM.layout',
+    tags: const ['core', 'layout', 'native'],
   );
+  vm.registerPlugin(
+    _MicroWidgetPlugin('page_shell', _buildPageShell, const {}),
+    description: 'Page shell — header / (sidebar | content) / footer',
+    engine: 'QuantumVM.layout',
+    tags: const ['core', 'layout', 'native'],
+  );
+  vm.registerPlugin(
+    _MicroWidgetPlugin('page_section', _buildPageSection, const {}),
+    description: 'Page section — header / body / footer column',
+    engine: 'QuantumVM.layout',
+    tags: const ['core', 'layout', 'native'],
+  );
+
+  // ── 3b: Matrix layouts ────────────────────────────────────────────────────
+  _registerBuiltInMatrixLayouts(vm);
+
+  // ── 3c: Layout aliases ────────────────────────────────────────────────────
+  _registerBuiltInLayoutAliases(vm);
 }
 
-void _registerRichSpatialLayouts(QuantumVM vm) {
+// ─────────────────────────────────────────────────────────────────────────────
+// §4 — BUILT-IN MATRIX LAYOUTS (8 shells)
+// All definitions are const-level literal Maps → zero heap allocation after
+// first compilation. defineMatrixLayoutJson() interns them in QMatrixLayoutRegistry.
+// ─────────────────────────────────────────────────────────────────────────────
+
+void _registerBuiltInMatrixLayouts(QuantumVM vm) {
+  // Guard: if already registered (e.g. app re-init on test), skip.
   if (QMatrixLayoutRegistry.has('workspace') &&
       QMatrixLayoutRegistry.has('page') &&
       QMatrixLayoutRegistry.has('app_shell') &&
@@ -190,6 +267,7 @@ void _registerRichSpatialLayouts(QuantumVM vm) {
     return;
   }
 
+  // ── workspace ─────────────────────────────────────────────────────────────
   vm.defineMatrixLayoutJson({
     'name': 'workspace',
     'gap': 12,
@@ -265,36 +343,25 @@ footer footer footer | auto
 ''',
     },
     'slots': {
-      'chrome': {
-        'padding': 12,
-        'zIndex': 20,
-      },
-      'header': {
-        'padding': 12,
-        'zIndex': 18,
-      },
-      'toolbar': {
-        'padding': 12,
-      },
+      'chrome': {'padding': 12, 'zIndex': 20},
+      'header': {'padding': 12, 'zIndex': 18},
+      'toolbar': {'padding': 12},
       'sidebar': {
         'scrollable': true,
         'draggable': true,
         'resizable': true,
         'reorderable': true,
         'padding': 12,
-        'resizeHandle': 'right',
+        'resizeHandle': 'right'
       },
-      'main': {
-        'scrollable': true,
-        'padding': 16,
-      },
+      'main': {'scrollable': true, 'padding': 16},
       'inspector': {
         'scrollable': true,
         'draggable': true,
         'resizable': true,
         'reorderable': true,
         'padding': 12,
-        'resizeHandle': 'left',
+        'resizeHandle': 'left'
       },
       'panel': {
         'scrollable': true,
@@ -302,41 +369,28 @@ footer footer footer | auto
         'resizable': true,
         'reorderable': true,
         'padding': 12,
-        'resizeHandle': 'bottom',
+        'resizeHandle': 'bottom'
       },
       'status': {
         'floating': true,
         'preserveOverlap': true,
         'zIndex': 30,
-        'padding': 8,
+        'padding': 8
       },
-      'overlay': {
-        'floating': true,
-        'preserveOverlap': true,
-        'zIndex': 100,
-      },
-      'canvas': {
-        'scrollable': true,
-        'preserveOverlap': true,
-        'padding': 0,
-      },
-      'notes': {
-        'scrollable': true,
-        'padding': 12,
-      },
-      'footer': {
-        'padding': 12,
-        'zIndex': 18,
-      },
+      'overlay': {'floating': true, 'preserveOverlap': true, 'zIndex': 100},
+      'canvas': {'scrollable': true, 'preserveOverlap': true, 'padding': 0},
+      'notes': {'scrollable': true, 'padding': 12},
+      'footer': {'padding': 12, 'zIndex': 18},
       'drawer': {
         'floating': true,
         'preserveOverlap': true,
         'zIndex': 90,
-        'padding': 12,
+        'padding': 12
       },
     },
   });
 
+  // ── page ──────────────────────────────────────────────────────────────────
   vm.defineMatrixLayoutJson({
     'name': 'page',
     'gap': 16,
@@ -413,81 +467,58 @@ footer footer footer | auto
 ''',
     },
     'slots': {
-      'chrome': {
-        'padding': 12,
-        'zIndex': 20,
-      },
-      'header': {
-        'padding': 12,
-        'zIndex': 18,
-      },
+      'chrome': {'padding': 12, 'zIndex': 20},
+      'header': {'padding': 12, 'zIndex': 18},
       'sheet': {
         'scrollable': true,
         'draggable': true,
         'resizable': true,
         'reorderable': false,
         'padding': 24,
-        'resizeHandle': 'right',
+        'resizeHandle': 'right'
       },
-      'stage': {
-        'scrollable': true,
-        'padding': 20,
-        'preserveOverlap': true,
-      },
-      'notes': {
-        'scrollable': true,
-        'padding': 12,
-      },
+      'stage': {'scrollable': true, 'padding': 20, 'preserveOverlap': true},
+      'notes': {'scrollable': true, 'padding': 12},
       'inspector': {
         'scrollable': true,
         'draggable': true,
         'resizable': true,
         'reorderable': true,
         'padding': 12,
-        'resizeHandle': 'left',
+        'resizeHandle': 'left'
       },
       'thumbnails': {
         'scrollable': true,
         'draggable': true,
         'resizable': true,
         'padding': 10,
-        'resizeHandle': 'left',
+        'resizeHandle': 'left'
       },
       'ruler': {
         'floating': true,
         'preserveOverlap': true,
         'zIndex': 16,
-        'padding': 6,
+        'padding': 6
       },
-      'guides': {
-        'floating': true,
-        'preserveOverlap': true,
-        'zIndex': 15,
-      },
+      'guides': {'floating': true, 'preserveOverlap': true, 'zIndex': 15},
       'controls': {
         'floating': true,
         'preserveOverlap': true,
         'zIndex': 50,
-        'padding': 10,
+        'padding': 10
       },
-      'overlay': {
-        'floating': true,
-        'preserveOverlap': true,
-        'zIndex': 100,
-      },
+      'overlay': {'floating': true, 'preserveOverlap': true, 'zIndex': 100},
       'status': {
         'floating': true,
         'preserveOverlap': true,
         'zIndex': 30,
-        'padding': 8,
+        'padding': 8
       },
-      'footer': {
-        'padding': 12,
-        'zIndex': 18,
-      },
+      'footer': {'padding': 12, 'zIndex': 18},
     },
   });
 
+  // ── app_shell ─────────────────────────────────────────────────────────────
   vm.defineMatrixLayoutJson({
     'name': 'app_shell',
     'gap': 12,
@@ -571,6 +602,7 @@ footer footer footer | auto
     },
   });
 
+  // ── split_shell ───────────────────────────────────────────────────────────
   vm.defineMatrixLayoutJson({
     'name': 'split_shell',
     'gap': 12,
@@ -637,6 +669,7 @@ footer footer footer footer | auto
     },
   });
 
+  // ── feed_shell ────────────────────────────────────────────────────────────
   vm.defineMatrixLayoutJson({
     'name': 'feed_shell',
     'gap': 12,
@@ -694,6 +727,7 @@ footer footer footer footer | auto
     },
   });
 
+  // ── form_shell ────────────────────────────────────────────────────────────
   vm.defineMatrixLayoutJson({
     'name': 'form_shell',
     'gap': 12,
@@ -753,6 +787,7 @@ footer footer footer footer | auto
     },
   });
 
+  // ── modal_shell ───────────────────────────────────────────────────────────
   vm.defineMatrixLayoutJson({
     'name': 'modal_shell',
     'gap': 8,
@@ -808,6 +843,7 @@ footer footer footer | auto
     },
   });
 
+  // ── timeline_shell ────────────────────────────────────────────────────────
   vm.defineMatrixLayoutJson({
     'name': 'timeline_shell',
     'gap': 12,
@@ -866,288 +902,157 @@ footer footer footer footer | auto
       'footer': {'padding': 12, 'zIndex': 18},
     },
   });
-
-  vm.defineAlias('workspace_layout', 'layout:workspace');
-  vm.defineAlias('page_layout', 'layout:page');
-  vm.defineAlias('app_shell', 'layout:app_shell');
-  vm.defineAlias('shell_layout', 'layout:app_shell');
-  vm.defineAlias('split_layout', 'layout:split_shell');
-  vm.defineAlias('feed_layout', 'layout:feed_shell');
-  vm.defineAlias('form_layout', 'layout:form_shell');
-  vm.defineAlias('modal_layout', 'layout:modal_shell');
-  vm.defineAlias('timeline_layout', 'layout:timeline_shell');
-  vm.defineAlias('dashboard_layout', 'layout:workspace',
-      defaultProps: {'variant': 'dashboard'});
-  vm.defineAlias('document_layout', 'layout:page',
-      defaultProps: {'variant': 'document'});
-  vm.defineAlias('presentation_layout', 'layout:page',
-      defaultProps: {'variant': 'presentation'});
-  vm.defineAlias('vscode_layout', 'layout:workspace',
-      defaultProps: {'variant': 'code'});
-  vm.defineAlias('studio_layout', 'layout:workspace',
-      defaultProps: {'variant': 'studio'});
-  vm.defineAlias('kanban_layout', 'layout:workspace',
-      defaultProps: {'variant': 'board'});
-  vm.defineAlias('social_layout', 'layout:feed_shell',
-      defaultProps: {'variant': 'social'});
-  vm.defineAlias('commerce_layout', 'layout:workspace',
-      defaultProps: {'variant': 'dashboard'});
-  vm.defineAlias('erp_layout', 'layout:workspace',
-      defaultProps: {'variant': 'dashboard'});
-  vm.defineAlias('ai_layout', 'layout:workspace',
-      defaultProps: {'variant': 'studio'});
 }
 
-TextStyle _resolveDecorationTextStyle(
-  _AliasContext ctx, {
-  String extraStyle = '',
-}) {
-  String styleStr = '';
-  final String subtype = ctx.resolvedSubType(fallback: 'p');
-  if (subtype == 'h1') {
-    styleStr = 'text-3xl font-bold';
-  } else if (subtype == 'h2') {
-    styleStr = 'text-2xl font-bold';
-  } else if (subtype == 'h3') {
-    styleStr = 'text-xl font-bold';
-  } else if (subtype == 'label') {
-    styleStr = 'text-xs font-semibold uppercase tracking-wide';
-  } else {
-    styleStr = 'text-md';
-  }
+// ─────────────────────────────────────────────────────────────────────────────
+// §5 — LAYOUT ALIASES
+// ─────────────────────────────────────────────────────────────────────────────
 
-  final String nodeStyle = ctx.node.style ?? '';
-  final String propStyle = ctx.string('style');
-  final String combinedStyle = [nodeStyle, propStyle, extraStyle]
-      .where((s) => s.trim().isNotEmpty)
-      .join(' ')
-      .trim();
-  if (combinedStyle.isNotEmpty) styleStr += ' $combinedStyle';
-  if (subtype == 'code') styleStr = '$styleStr font-mono text-sm';
-  if (subtype == 'rich') styleStr = '$styleStr leading-relaxed';
-
-  final QToken ptr = QEngine.instance.compiler.compile(styleStr);
-  final QSimdArena mem = QEngine.instance.mem;
-
-  // 🚀 FIX: Use 4x32 textFlags instead of deprecated single flags array
-  final int tFlags = mem.textFlags[ptr.id];
-  final int fPtr = ptr.fPtr;
-  final int cPtr = ptr.cPtr;
-
-  return TextStyle(
-    color: Color(mem.c32[cPtr + QC32.text] != 0
-        ? mem.c32[cPtr + QC32.text]
-        : 0xFF0F172A),
-    fontSize: mem.f32[fPtr + QF32.fontSize] > 0
-        ? mem.f32[fPtr + QF32.fontSize]
-        : 14.0,
-    fontWeight: (tFlags & QTextFlags.fontBold) != 0
-        ? FontWeight.bold
-        : FontWeight.normal,
-    fontStyle: (tFlags & QTextFlags.fontItalic) != 0
-        ? FontStyle.italic
-        : FontStyle.normal,
-    // 🚀 NEW: Support underline & strike-through mapped from the new compiler
-    decoration: (tFlags & QTextFlags.underline) != 0
-        ? TextDecoration.underline
-        : ((tFlags & QTextFlags.strikeThrough) != 0
-            ? TextDecoration.lineThrough
-            : TextDecoration.none),
-    letterSpacing: mem.f32[fPtr + QF32.letterSpacing] != 0
-        ? mem.f32[fPtr + QF32.letterSpacing]
-        : null,
-    height: mem.f32[fPtr + QF32.lineHeight],
-  );
-}
-
-InlineSpan _buildDecorationPartSpan(
-  _AliasContext ctx,
-  Map<String, dynamic> part,
-  TextStyle baseStyle,
-) {
-  final String text = (part['text'] ?? part['value'] ?? '').toString();
-  final String style = (part['style'] ?? part['textStyle'] ?? '').toString();
-  final bool selected = part['selected'] == true;
-  final String selectedStyle =
-      (part['selectedStyle'] ?? part['highlightStyle'] ?? '').toString();
-  final String mergedStyle = [style, if (selected) selectedStyle]
-      .where((s) => s.trim().isNotEmpty)
-      .join(' ')
-      .trim();
-  final TextStyle spanStyle = mergedStyle.isEmpty
-      ? baseStyle
-      : baseStyle
-          .merge(_resolveDecorationTextStyle(ctx, extraStyle: mergedStyle));
-
-  final dynamic child = part['child'] ?? part['widget'] ?? part['content'];
-  final dynamic action = part['onTap'] ?? part['action'];
-  if (child is Map) {
-    final blueprint = QLBlueprint.fromJson(
-      Map<String, dynamic>.from(child.cast<String, dynamic>()),
-      path: '${ctx.node.debugPath}.decoration.part',
-    );
-    final Widget widget =
-        QuantumVM.instance.renderWidget(ctx.flutterContext, blueprint);
-    if (action != null || selected) {
-      return WidgetSpan(
-        alignment: PlaceholderAlignment.middle,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: action == null
-              ? null
-              : () => ctx.action(action.toString())?.call(),
-          child: widget,
-        ),
-      );
-    }
-    return WidgetSpan(alignment: PlaceholderAlignment.middle, child: widget);
-  }
-
-  if (action != null) {
-    return WidgetSpan(
-      alignment: PlaceholderAlignment.middle,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => ctx.action(action.toString())?.call(),
-        child: Text(text, style: spanStyle),
-      ),
-    );
-  }
-
-  return TextSpan(text: text, style: spanStyle);
-}
-
-Widget _buildDecorationRichText(QLContext rawCtx) {
-  final ctx = _AliasContext(rawCtx);
-  final TextAlign align = ctx.string('align') == 'center'
-      ? TextAlign.center
-      : (ctx.string('align') == 'right' ? TextAlign.right : TextAlign.start);
-  final bool selectable = ctx.boolean('selectable', fallback: false);
-  final TextStyle baseStyle = _resolveDecorationTextStyle(ctx);
-  final String text = ctx.string('text', fallback: ctx.string('value'));
-  final dynamic rawParts =
-      ctx.prop('parts') ?? ctx.prop('spans') ?? ctx.prop('segments');
-
-  final List<InlineSpan> spans = <InlineSpan>[];
-  if (rawParts is List && rawParts.isNotEmpty) {
-    for (final part in rawParts) {
-      if (part is Map) {
-        spans.add(_buildDecorationPartSpan(
-          ctx,
-          Map<String, dynamic>.from(part.cast<String, dynamic>()),
-          baseStyle,
-        ));
-      } else {
-        spans.add(TextSpan(text: part.toString(), style: baseStyle));
-      }
-    }
-  } else if (text.isNotEmpty) {
-    final String match = ctx.string('match');
-    final dynamic selectedChild =
-        ctx.prop('selectedChild') ?? ctx.prop('replaceChild');
-    final String selectedStyle = ctx.string('selectedStyle');
-    if (match.isNotEmpty && text.contains(match)) {
-      final parts = text.split(match);
-      for (int i = 0; i < parts.length; i++) {
-        final chunk = parts[i];
-        if (chunk.isNotEmpty) {
-          spans.add(TextSpan(text: chunk, style: baseStyle));
-        }
-        if (i < parts.length - 1) {
-          if (selectedChild is Map) {
-            final blueprint = QLBlueprint.fromJson(
-              Map<String, dynamic>.from(selectedChild.cast<String, dynamic>()),
-              path: '${ctx.node.debugPath}.decoration.selected',
-            );
-            spans.add(WidgetSpan(
-              alignment: PlaceholderAlignment.middle,
-              child: QuantumVM.instance
-                  .renderWidget(ctx.flutterContext, blueprint),
-            ));
-          } else if (selectedChild is Widget) {
-            spans.add(WidgetSpan(
-              alignment: PlaceholderAlignment.middle,
-              child: selectedChild,
-            ));
-          } else {
-            spans.add(TextSpan(
-              text: match,
-              style: baseStyle.merge(
-                _resolveDecorationTextStyle(ctx, extraStyle: selectedStyle),
-              ),
-            ));
-          }
-        }
-      }
-    } else {
-      spans.add(TextSpan(text: text, style: baseStyle));
-    }
-  }
-
-  final TextSpan span = TextSpan(style: baseStyle, children: spans);
-  if (selectable) {
-    return SelectableText.rich(
-      span,
-      textAlign: align,
-      contextMenuBuilder: (context, editableTextState) =>
-          AdaptiveTextSelectionToolbar.editableText(
-              editableTextState: editableTextState),
-    );
-  }
-  return Text.rich(span, textAlign: align);
-}
-
-void _registerLayoutAliases(QuantumVM vm) {
+void _registerBuiltInLayoutAliases(QuantumVM vm) {
+  // Core aliases
   vm.defineAlias('workspace_layout', 'layout:workspace',
-      description: 'Workspace layout alias.', tags: const ['layout', 'alias']);
+      description: 'Full IDE-style workspace layout',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('page_layout', 'layout:page',
-      description: 'Page layout alias.', tags: const ['layout', 'alias']);
+      description: 'Document/page layout',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('app_layout', 'layout:app_shell',
-      description: 'App layout alias.', tags: const ['layout', 'alias']);
+      description: 'App shell layout',
+      tags: const ['layout', 'alias', 'native']);
+  vm.defineAlias('app_shell', 'layout:app_shell',
+      description: 'App shell alias',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('shell_layout', 'layout:app_shell',
-      description: 'Shell layout alias.', tags: const ['layout', 'alias']);
+      description: 'Shell layout alias',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('split_layout', 'layout:split_shell',
-      description: 'Split layout alias.', tags: const ['layout', 'alias']);
+      description: 'Split-pane layout',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('feed_layout', 'layout:feed_shell',
-      description: 'Feed layout alias.', tags: const ['layout', 'alias']);
+      description: 'Social feed layout',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('form_layout', 'layout:form_shell',
-      description: 'Form layout alias.', tags: const ['layout', 'alias']);
+      description: 'Form/wizard layout',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('modal_layout', 'layout:modal_shell',
-      description: 'Modal layout alias.', tags: const ['layout', 'alias']);
+      description: 'Modal/sheet layout',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('timeline_layout', 'layout:timeline_shell',
-      description: 'Timeline layout alias.', tags: const ['layout', 'alias']);
+      description: 'Timeline layout',
+      tags: const ['layout', 'alias', 'native']);
+  // Variant shortcuts
   vm.defineAlias('dashboard_layout', 'layout:workspace',
-      description: 'Dashboard layout alias.', tags: const ['layout', 'alias']);
+      defaultProps: const {'variant': 'dashboard'},
+      description: 'Dashboard workspace',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('document_layout', 'layout:page',
-      description: 'Document layout alias.', tags: const ['layout', 'alias']);
+      defaultProps: const {'variant': 'document'},
+      description: 'Document page layout',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('presentation_layout', 'layout:page',
-      description: 'Presentation layout alias.',
-      tags: const ['layout', 'alias']);
+      defaultProps: const {'variant': 'presentation'},
+      description: 'Presentation layout',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('vscode_layout', 'layout:workspace',
-      description: 'VS Code style layout alias.',
-      tags: const ['layout', 'alias']);
+      defaultProps: const {'variant': 'code'},
+      description: 'VS Code style layout',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('studio_layout', 'layout:workspace',
-      description: 'Studio layout alias.', tags: const ['layout', 'alias']);
+      defaultProps: const {'variant': 'studio'},
+      description: 'Studio layout',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('kanban_layout', 'layout:workspace',
-      description: 'Kanban layout alias.', tags: const ['layout', 'alias']);
+      defaultProps: const {'variant': 'board'},
+      description: 'Kanban board layout',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('social_layout', 'layout:feed_shell',
-      description: 'Social layout alias.', tags: const ['layout', 'alias']);
+      defaultProps: const {'variant': 'social'},
+      description: 'Social feed layout',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('commerce_layout', 'layout:workspace',
-      description: 'Commerce layout alias.', tags: const ['layout', 'alias']);
+      defaultProps: const {'variant': 'dashboard'},
+      description: 'E-commerce layout',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('erp_layout', 'layout:workspace',
-      description: 'ERP layout alias.', tags: const ['layout', 'alias']);
+      defaultProps: const {'variant': 'dashboard'},
+      description: 'ERP layout',
+      tags: const ['layout', 'alias', 'native']);
   vm.defineAlias('ai_layout', 'layout:workspace',
-      description: 'AI layout alias.', tags: const ['layout', 'alias']);
+      defaultProps: const {'variant': 'studio'},
+      description: 'AI studio layout',
+      tags: const ['layout', 'alias', 'native']);
 }
 
-class LayoutCoreExporter implements QuantumCoreExporter {
-  const LayoutCoreExporter();
-  
-  @override
-  void export(QuantumVM vm) {
-    vm.define('layout', _buildLayout, tags: const ['core', 'layout']);
-    vm.define('page_shell', _buildPageShell, description: 'Page shell rendering', tags: const ['core', 'layout']);
-    vm.define('page_section', _buildPageSection, description: 'Page section layout', tags: const ['core', 'layout']);
-    _registerLayoutAliases(vm);
+// ─────────────────────────────────────────────────────────────────────────────
+// §6 — QEE LAYOUT BRIDGE EXTENSION
+//
+// renderLayoutFromRaw() is the integration point between the QEE file router
+// (`_layout.yaml` stored as QPageBody bytes) and the QuantumVM render pipeline.
+//
+// Usage inside _QVMLayoutBridge (qee_layout_host.dart):
+//   QuantumVM.instance.renderLayoutFromRaw(context, rawYaml, pageSlot: slotWidget)
+// ─────────────────────────────────────────────────────────────────────────────
+
+extension QuantumVMLayoutBridge on QuantumVM {
+  /// Parses raw YAML or JSON layout source and renders it via the VM pipeline.
+  ///
+  /// [rawSource]  — the `__raw__` string from QPageBody.toConfig()
+  /// [pageSlot]   — the inner page widget injected as env['$page']
+  /// [store]      — optional; defaults to the VM global store
+  ///
+  /// Returns the fully built Flutter widget tree. Falls back to [pageSlot] on
+  /// any parse error so the page is never completely blank.
+  Widget renderLayoutFromRaw(
+    BuildContext ctx,
+    String rawSource, {
+    Widget pageSlot = const SizedBox.shrink(),
+    QLDataStore? store,
+  }) {
+    if (rawSource.trim().isEmpty) return pageSlot;
+
+    // ── Parse YAML / JSON → blueprint map ───────────────────────────────────
+    Map<String, dynamic> config;
+    try {
+      final trimmed = rawSource.trim();
+      if (trimmed.startsWith('{')) {
+        config = Map<String, dynamic>.from(jsonDecode(trimmed) as Map);
+      } else {
+        config = QuantumYamlEngine.parse(rawSource);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('🚨 [QuantumVM.renderLayoutFromRaw] Parse error: $e');
+      }
+      return pageSlot;
+    }
+
+    if (config.isEmpty) return pageSlot;
+
+    // ── Build the QLBlueprint ────────────────────────────────────────────────
+    QLBlueprint node;
+    try {
+      node = QLBlueprint.fromJson(config, path: '_layout');
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('🚨 [QuantumVM.renderLayoutFromRaw] Blueprint error: $e');
+      }
+      return pageSlot;
+    }
+
+    // ── Inject page slot via env + render ────────────────────────────────────
+    final Map<String, dynamic> env = {
+      ...QLDataScope.of(ctx),
+      r'$page': pageSlot,
+    };
+    final resolvedStore = store ?? QLDataScope.resolveStore(ctx);
+
+    try {
+      return _assembleNode(ctx, node, env, resolvedStore, null);
+    } catch (e, st) {
+      if (kDebugMode) {
+        debugPrint('🚨 [QuantumVM.renderLayoutFromRaw] Render error: $e\n$st');
+      }
+      return pageSlot;
+    }
   }
 }

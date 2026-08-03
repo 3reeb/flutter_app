@@ -337,6 +337,7 @@ class QuantumExtensionBundle {
   final Map<String, QLPlugin> plugins;
   final Map<String, QLActionPlugin> actions;
   final Map<String, Map<String, dynamic>> aliases;
+  final Map<String, Map<String, dynamic>> variants;
   final Map<String, Map<String, String>> slotTypes;
   final Map<String, Map<String, dynamic>> slotNodes;
   final Map<String, Map<String, dynamic>> metadata;
@@ -345,6 +346,7 @@ class QuantumExtensionBundle {
     this.plugins = const {},
     this.actions = const {},
     this.aliases = const {},
+    this.variants = const {},
     this.slotTypes = const {},
     this.slotNodes = const {},
     this.metadata = const {},

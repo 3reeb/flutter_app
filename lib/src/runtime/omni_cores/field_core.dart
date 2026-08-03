@@ -677,74 +677,50 @@ class _QLRichTextNodeState extends State<_QLRichTextNode> {
 
 // ════════════════════════════════════════════════════════════════════════════
 // CORE 4: TEXT (Typography)
-// ════════════════════════════════════════════════════════════════════════════
-
-void _registerFieldAliases(QuantumVM vm) {
-  vm.defineAlias('text_field', 'field:text',
-      description: 'Text field alias.', tags: const ['field', 'alias']);
-  vm.defineAlias('textarea', 'field:multiline',
-      description: 'Multiline field alias.', tags: const ['field', 'alias']);
-  vm.defineAlias('email_field', 'field:email',
-      description: 'Email field alias.', tags: const ['field', 'alias']);
-  vm.defineAlias('password_field', 'field:password',
-      description: 'Password field alias.', tags: const ['field', 'alias']);
-  vm.defineAlias('number_field', 'field:number',
-      description: 'Number field alias.', tags: const ['field', 'alias']);
-  vm.defineAlias('search_field', 'field:search',
-      description: 'Search field alias.', tags: const ['field', 'alias']);
-  vm.defineAlias('date_field', 'field:date',
-      description: 'Date field alias.', tags: const ['field', 'alias']);
-  vm.defineAlias('select_field', 'field:select',
-      description: 'Select field alias.', tags: const ['field', 'alias']);
-  vm.defineAlias('toggle', 'field:toggle',
-      description: 'Toggle field alias.', tags: const ['field', 'alias']);
-  vm.defineAlias('slider', 'field:slider',
-      description: 'Slider field alias.', tags: const ['field', 'alias']);
-}
-
-// 2. Update the helper at the bottom:
-QLBlueprint _cloneNodeWithPrefix(QLBlueprint node, String pathPrefix,
-    {List<QLBlueprint>? overrideChildren}) {
+QLBlueprint _cloneNodeWithPrefix(
+  QLBlueprint node,
+  String prefix, {
+  List<QLBlueprint>? overrideChildren,
+}) {
   final Map<String, dynamic> json = node.toJson();
-
-  void updateBinds(Map<String, dynamic> map) {
-    if (map['props'] is Map && map['props']['bind'] != null) {
-      final currentBind = map['props']['bind'].toString();
-      if (!currentBind.startsWith(pathPrefix)) {
-        map['props']['bind'] = '$pathPrefix.$currentBind';
-      }
-    }
-    if (map['children'] is List) {
-      for (final child in map['children']) {
-        if (child is Map) updateBinds(child as Map<String, dynamic>);
-      }
-    }
-    if (map['slots'] is Map) {
-      for (final child in (map['slots'] as Map).values) {
-        if (child is Map) updateBinds(child as Map<String, dynamic>);
-      }
-    }
+  if (overrideChildren != null) {
+    json['children'] = overrideChildren.map((c) => c.toJson()).toList();
   }
-
-  updateBinds(json);
-  final bp = QLBlueprint.fromJson(json);
-
-  return overrideChildren != null
-      ? QLBlueprint(
-          type: bp.type,
-          props: bp.props,
-          style: bp.style,
-          slots: bp.slots,
-          children: overrideChildren)
-      : bp;
+  return QLBlueprint.fromJson(json);
 }
+
+final QuantumDomain fieldDomain = quantumDomain('field')
+    .surface('field', _buildField, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias('text_field', 'field:text',
+          description: 'Text field alias.', tags: const ['field', 'alias']);
+      vm.defineAlias('textarea', 'field:multiline',
+          description: 'Multiline field alias.', tags: const ['field', 'alias']);
+      vm.defineAlias('email_field', 'field:email',
+          description: 'Email field alias.', tags: const ['field', 'alias']);
+      vm.defineAlias('password_field', 'field:password',
+          description: 'Password field alias.', tags: const ['field', 'alias']);
+      vm.defineAlias('number_field', 'field:number',
+          description: 'Number field alias.', tags: const ['field', 'alias']);
+      vm.defineAlias('search_field', 'field:search',
+          description: 'Search field alias.', tags: const ['field', 'alias']);
+      vm.defineAlias('date_field', 'field:date',
+          description: 'Date field alias.', tags: const ['field', 'alias']);
+      vm.defineAlias('select_field', 'field:select',
+          description: 'Select field alias.', tags: const ['field', 'alias']);
+      vm.defineAlias('toggle', 'field:toggle',
+          description: 'Toggle field alias.', tags: const ['field', 'alias']);
+      vm.defineAlias('slider', 'field:slider',
+          description: 'Slider field alias.', tags: const ['field', 'alias']);
+    })
+    .build();
 
 class FieldCoreExporter implements QuantumCoreExporter {
   const FieldCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('field', _buildField, tags: const ['core', 'field']);
-    _registerFieldAliases(vm);
+    vm.installDomain(fieldDomain);
   }
 }
+

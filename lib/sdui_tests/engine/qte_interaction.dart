@@ -79,7 +79,8 @@ class QTEInteractionEngine {
       await _dispatch(ix, stepId);
       sw.stop();
       return QTEInteractionResult.ok(stepId, sw.elapsed);
-    } catch (e) {
+    } catch (e, st) {
+      print('INTERACTION ERROR: $e\n$st');
       sw.stop();
       return QTEInteractionResult.fail(stepId, '$e', sw.elapsed);
     }
@@ -143,9 +144,22 @@ class QTEInteractionEngine {
   }
 
   // ── Target resolution ─────────────────────────────────────────────────────
-  Finder _findTarget(QTEInteraction ix) {
+  Future<Finder> _resolveTarget(QTEInteraction ix) async {
     if (ix.target == null) return find.byType(Widget).first;
-    return probe.findByTarget(ix.target!);
+    final f = probe.findByTarget(ix.target!);
+    if (!tester.any(f)) {
+      try {
+        await tester.pumpAndSettle(
+          const Duration(milliseconds: 50),
+          EnginePhase.sendSemanticsUpdate,
+          const Duration(seconds: 1),
+        );
+      } catch (_) {}
+    }
+    if (!tester.any(f)) {
+      throw Exception('Target not found: ${ix.target!.by.name}="${ix.target!.value}"');
+    }
+    return f;
   }
 
   Offset _centerOf(Finder f) => tester.getCenter(f.first);
@@ -154,14 +168,14 @@ class QTEInteractionEngine {
 
   // ── tap ───────────────────────────────────────────────────────────────────
   Future<void> _tap(QTEInteraction ix) async {
-    final f = _findTarget(ix);
+    final f = await _resolveTarget(ix);
     final pos = _applyOffset(_centerOf(f), ix.offset);
     await tester.tapAt(pos);
   }
 
   // ── double_tap ────────────────────────────────────────────────────────────
   Future<void> _doubleTap(QTEInteraction ix) async {
-    final f = _findTarget(ix);
+    final f = await _resolveTarget(ix);
     final pos = _applyOffset(_centerOf(f), ix.offset);
     await tester.tapAt(pos);
     await tester.pump(const Duration(milliseconds: 50));
@@ -170,7 +184,7 @@ class QTEInteractionEngine {
 
   // ── long_press ────────────────────────────────────────────────────────────
   Future<void> _longPress(QTEInteraction ix) async {
-    final f = _findTarget(ix);
+    final f = await _resolveTarget(ix);
     final pos = _applyOffset(_centerOf(f), ix.offset);
     final gesture = await tester.startGesture(pos);
     await tester.pump(const Duration(milliseconds: 500));
@@ -179,7 +193,7 @@ class QTEInteractionEngine {
 
   // ── hover ─────────────────────────────────────────────────────────────────
   Future<void> _hover(QTEInteraction ix, {required bool entering}) async {
-    final f = _findTarget(ix);
+    final f = await _resolveTarget(ix);
     final pos = _applyOffset(_centerOf(f), ix.offset);
     final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
     if (entering) {
@@ -193,7 +207,7 @@ class QTEInteractionEngine {
 
   // ── drag ──────────────────────────────────────────────────────────────────
   Future<void> _drag(QTEInteraction ix) async {
-    final f = _findTarget(ix);
+    final f = await _resolveTarget(ix);
     final center = _centerOf(f);
     final from = ix.from != null ? center + Offset(ix.from!.dx, ix.from!.dy) : center;
     final to = ix.to != null ? center + Offset(ix.to!.dx, ix.to!.dy) : center + const Offset(100, 0);
@@ -202,36 +216,67 @@ class QTEInteractionEngine {
 
   // ── scroll ────────────────────────────────────────────────────────────────
   Future<void> _scroll(QTEInteraction ix) async {
-    final f = _findTarget(ix);
+    final f = await _resolveTarget(ix);
     final delta = ix.delta;
     if (delta == null) return;
     await tester.drag(f.first, Offset(delta.dx, delta.dy));
   }
 
-  // ── type ──────────────────────────────────────────────────────────────────
+  // ── type ───────────────────────────────────────────────────────────────────
   Future<void> _typeText(QTEInteraction ix) async {
     if (ix.target != null) {
-      final f = _findTarget(ix);
+      final f = await _resolveTarget(ix);
+      
+      // --- DEBUG ---
+      final element = f.first.evaluate().first;
+      final box = element.renderObject as RenderBox;
+      final size = box.size;
+      final pos = box.localToGlobal(Offset.zero);
+      print('DEBUG QTE_TAP TARGET: ${ix.target!.value} -> Size: $size, Pos: $pos');
+      // -------------
+      
       await tester.tap(f.first);
-      await tester.pump();
+      await tester.pumpAndSettle();
+      
+      if (!tester.any(f)) {
+        throw Exception('Target disappeared after tap: ${ix.target!.value}');
+      }
+      await tester.enterText(f.first, ix.text ?? '');
+      await tester.pumpAndSettle();
+    } else {
+      final f = find.byType(EditableText);
+      if (!tester.any(f)) {
+        throw Exception('No EditableText found to type into');
+      }
+      await tester.enterText(f.first, ix.text ?? '');
     }
-    await tester.enterText(
-      ix.target != null ? _findTarget(ix).first : find.byType(EditableText).first,
-      ix.text ?? '',
-    );
+    await tester.pumpAndSettle();
   }
 
-  // ── clear_text ────────────────────────────────────────────────────────────
+  // ── clear_text ──────────────────────────────────────────────────────────────
   Future<void> _clearText(QTEInteraction ix) async {
-    final f = ix.target != null ? _findTarget(ix) : find.byType(EditableText);
-    await tester.tap(f.first);
-    await tester.pump();
-    await tester.enterText(f.first, '');
+    if (ix.target != null) {
+      final f = await _resolveTarget(ix);
+      await tester.tap(f.first);
+      await tester.pumpAndSettle();
+
+      if (!tester.any(f)) {
+        throw Exception('Target disappeared after tap: ${ix.target!.value}');
+      }
+      await tester.enterText(f.first, '');
+    } else {
+      final f = find.byType(EditableText);
+      if (!tester.any(f)) {
+        throw Exception('No EditableText found to clear');
+      }
+      await tester.enterText(f.first, '');
+    }
+    await tester.pumpAndSettle();
   }
 
   // ── focus ─────────────────────────────────────────────────────────────────
   Future<void> _focus(QTEInteraction ix) async {
-    final f = _findTarget(ix);
+    final f = await _resolveTarget(ix);
     await tester.tap(f.first);
   }
 
@@ -252,7 +297,7 @@ class QTEInteractionEngine {
     } catch (_) {
       // Fallback: drag from bottom-right corner of target
       if (ix.target != null) {
-        final f = _findTarget(ix);
+        final f = await _resolveTarget(ix);
         final rect = tester.getRect(f.first);
         final handlePos = rect.bottomRight - const Offset(4, 4);
         final targetW = ix.newWidth ?? rect.width;
@@ -265,7 +310,7 @@ class QTEInteractionEngine {
     }
     final handlePos = tester.getCenter(handleFinder.first);
     if (ix.target != null) {
-      final targetRect = tester.getRect(_findTarget(ix).first);
+      final targetRect = tester.getRect((await _resolveTarget(ix)).first);
       final currentW = targetRect.width;
       final currentH = targetRect.height;
       final deltaX = (ix.newWidth ?? currentW) - currentW;
@@ -324,7 +369,7 @@ class QTEInteractionEngine {
 
   // ── right_click ───────────────────────────────────────────────────────────
   Future<void> _rightClick(QTEInteraction ix) async {
-    final f = _findTarget(ix);
+    final f = await _resolveTarget(ix);
     final pos = _applyOffset(_centerOf(f), ix.offset);
     final gesture = await tester.startGesture(pos, pointer: 2, buttons: kSecondaryMouseButton);
     await tester.pump();
@@ -333,7 +378,7 @@ class QTEInteractionEngine {
 
   // ── zoom ──────────────────────────────────────────────────────────────────
   Future<void> _zoom(QTEInteraction ix) async {
-    final f = _findTarget(ix);
+    final f = await _resolveTarget(ix);
     final center = _centerOf(f);
     final scale = ix.scale ?? 2.0;
     // Simulate two-finger pinch-to-zoom
@@ -352,7 +397,7 @@ class QTEInteractionEngine {
 
   // ── pinch ────────────────────────────────────────────────────────────────
   Future<void> _pinch(QTEInteraction ix) async {
-    final f = _findTarget(ix);
+    final f = await _resolveTarget(ix);
     final center = _centerOf(f);
     final scale = ix.scale ?? 0.5;
     final p1Start = center + const Offset(-100, 0);

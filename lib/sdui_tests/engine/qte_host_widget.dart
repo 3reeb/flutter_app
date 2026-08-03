@@ -61,7 +61,14 @@ class _QTEDataScopeState extends State<QTEDataScope> {
   }
 
   @override
-  Widget build(BuildContext context) => widget.child;
+  Widget build(BuildContext context) {
+    return QLDataScope(
+      localData: widget.env,
+      localStore: widget.store,
+      moduleStore: widget.store,
+      child: widget.child,
+    );
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -165,6 +172,10 @@ class _SDUIRendererState extends State<_SDUIRenderer> {
 // ─────────────────────────────────────────────────────────────────────────────
 
 abstract final class QTEHostBuilder {
+  static void _injectTestKeys(Map<String, dynamic> node) {
+    // No-op: QuantumVM automatically wraps nodes with testId in a KeyedSubtree.
+  }
+
   /// Build a QTEHostWidget from a parsed QTETestFile.
   /// Returns both the widget and the store for engine access.
   static ({QTEHostWidget widget, QLDataStore store}) build(QTETestFile testFile) {
@@ -177,7 +188,9 @@ abstract final class QTEHostBuilder {
       }
     }
 
-    final blueprint = QLBlueprint.fromJson(testFile.sdui);
+    final Map<String, dynamic> sdui = Map<String, dynamic>.from(testFile.sdui);
+    _injectTestKeys(sdui);
+    final blueprint = QLBlueprint.fromJson(sdui);
 
     final widget = QTEHostWidget(
       blueprint: blueprint,

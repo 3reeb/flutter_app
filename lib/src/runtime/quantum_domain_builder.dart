@@ -26,9 +26,10 @@
 // Fluent helpers for building QuantumDomain objects with minimal boilerplate.
 // ════════════════════════════════════════════════════════════════════════════
 
+import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:quantum_layout/quantum.dart';
-import 'package:quantum_layout/src/runtime/api/network_shell.dart';
+import 'package:quantum_layout/src/platform/api/network_shell.dart';
 
 /// Convenience factory for fluent domain construction.
 QuantumDomainBuilder quantumDomain(String name) => QuantumDomainBuilder(name);
@@ -52,6 +53,16 @@ class QuantumDomainBuilder {
       <String, dynamic Function(dynamic, List<String>)>{};
   final Map<String, Map<String, dynamic>> _schemas =
       <String, Map<String, dynamic>>{};
+  final Map<String, Widget Function(QLContext)> _surfaces =
+      <String, Widget Function(QLContext)>{};
+  final Map<String, Widget Function(QLContext)> _variants =
+      <String, Widget Function(QLContext)>{};
+  String? _defaultVariant;
+  final Map<String, Map<String, dynamic>> _aliases =
+      <String, Map<String, dynamic>>{};
+  final List<QuantumDomainTestCase> _tests = <QuantumDomainTestCase>[];
+  final List<QuantumDomainInstallHook> _installHooks =
+      <QuantumDomainInstallHook>[];
   final List<ActionMiddleware> _actionMiddlewares = <ActionMiddleware>[];
   final List<QLMiddleware> _routeMiddlewares = <QLMiddleware>[];
   final Map<String, QLActionPlugin Function(QuantumAppEnvironment env)>
@@ -125,6 +136,56 @@ class QuantumDomainBuilder {
     return this;
   }
 
+  QuantumDomainBuilder surface(
+    String key,
+    Widget Function(QLContext) builder, {
+    bool defaultSurface = false,
+  }) {
+    _surfaces[key] = builder;
+    if (defaultSurface || key == name) {
+      _defaultVariant = key;
+    }
+    return this;
+  }
+
+  QuantumDomainBuilder variant(
+    String key,
+    Widget Function(QLContext) builder,
+  ) {
+    _variants[key] = builder;
+    return this;
+  }
+
+  QuantumDomainBuilder alias(
+    String alias,
+    String target, {
+    Map<String, dynamic> defaultProps = const {},
+    String? description,
+    Map<String, dynamic> metadata = const {},
+    List<String> tags = const [],
+  }) {
+    _aliases[alias] = <String, dynamic>{
+      'type': target,
+      'props': Map<String, dynamic>.from(defaultProps),
+      if (description != null) 'description': description,
+      if (metadata.isNotEmpty) 'metadata': Map<String, dynamic>.from(metadata),
+      if (tags.isNotEmpty) 'tags': List<String>.unmodifiable(tags),
+    };
+    return this;
+  }
+
+  QuantumDomainBuilder test(
+    FutureOr<void> Function(QuantumAppEnvironment env) callback,
+  ) {
+    _tests.add(callback);
+    return this;
+  }
+
+  QuantumDomainBuilder install(QuantumDomainInstallHook callback) {
+    _installHooks.add(callback);
+    return this;
+  }
+
   QuantumDomainBuilder initialStore(Map<String, dynamic> data) {
     _initialStoreData.addAll(data);
     return this;
@@ -168,6 +229,8 @@ class QuantumDomainBuilder {
       initialStoreData: Map<String, dynamic>.unmodifiable(_initialStoreData),
       sduiComponents:
           Map<String, Widget Function(QLContext)>.unmodifiable(_components),
+      sduiVariants:
+          Map<String, Widget Function(QLContext)>.unmodifiable(_variants),
       sduiPipes:
           Map<String, dynamic Function(dynamic, List<String>)>.unmodifiable(
               _pipes),
@@ -179,6 +242,11 @@ class QuantumDomainBuilder {
           String,
           QLActionPlugin Function(
               QuantumAppEnvironment env)>.unmodifiable(_actionFactories),
+      aliases: Map<String, Map<String, dynamic>>.unmodifiable(_aliases),
+      tests: List<QuantumDomainTestCase>.unmodifiable(_tests),
+      installHooks: List<QuantumDomainInstallHook>.unmodifiable(_installHooks),
+      defaultVariant: _defaultVariant,
+      widgetBuilder: _surfaces[name] ?? _variants[_defaultVariant ?? name],
       onInitialize: _onInitialize,
       orchestrator: _orchestrator,
     );
@@ -226,6 +294,37 @@ class QuantumDomainBuilder {
     if (bridges is Map) {
       for (final entry in bridges.entries) {
         builder.bridge(entry.key.toString(), entry.value as Object);
+      }
+    }
+
+    final dynamic aliases = json['aliases'];
+    if (aliases is Map) {
+      for (final entry in aliases.entries) {
+        final key = entry.key.toString();
+        final dynamic value = entry.value;
+        if (value is String) {
+          builder.alias(key, value);
+        } else if (value is Map) {
+          final Map<String, dynamic> v =
+              Map<String, dynamic>.from(value.cast<String, dynamic>());
+          final Map<String, dynamic> defaultProps = v['props'] is Map
+              ? Map<String, dynamic>.from(v['props'] as Map)
+              : const <String, dynamic>{};
+          final Map<String, dynamic> metadata = v['metadata'] is Map
+              ? Map<String, dynamic>.from(v['metadata'] as Map)
+              : const <String, dynamic>{};
+          final List<String> tags = v['tags'] is List
+              ? v['tags'].map((e) => e.toString()).toList(growable: false)
+              : const <String>[];
+          builder.alias(
+            key,
+            v['type']?.toString() ?? '',
+            defaultProps: defaultProps,
+            description: v['description']?.toString(),
+            metadata: metadata,
+            tags: tags,
+          );
+        }
       }
     }
 

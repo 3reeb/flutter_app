@@ -20,7 +20,7 @@
  * framework signals to standard Flutter UI components.
  * 
  * Notes:
- * Prioritizes O(1) lazy allocation—channels are only created when explicitly 
+ * Prioritizes O(1) lazy allocationï¿½channels are only created when explicitly 
  * published or subscribed to, preventing memory bloat.
  * ============================================================================
  */
@@ -129,7 +129,8 @@ class QLChannel<T> {
   /// Two-way bind this channel to a signal. The channel publishes the current
   /// signal value immediately, then follows future updates until the returned
   /// unsubscribe callback is called.
-  VoidCallback bindSignal(QLSignalBase<T> signal, {bool publishInitial = true}) {
+  VoidCallback bindSignal(QLSignalBase<T> signal,
+      {bool publishInitial = true}) {
     void sync() => publish(signal.value);
     if (publishInitial) sync();
     signal.addListener(sync);
@@ -284,12 +285,15 @@ class QLNavBridge {
       final previous = stack.length > 1 ? stack[stack.length - 2] : null;
 
       QLChannelHub.instance.publish<QLRouteInfo>('nav.current.route', current);
-      QLChannelHub.instance.publish<String>('nav.current.title', titleOf(current));
+      QLChannelHub.instance
+          .publish<String>('nav.current.title', titleOf(current));
       QLChannelHub.instance.publish<bool>('nav.canPop', controller.canPop);
 
       if (previous != null) {
-        QLChannelHub.instance.publish<QLRouteInfo>('nav.previous.route', previous);
-        QLChannelHub.instance.publish<String>('nav.previous.title', titleOf(previous));
+        QLChannelHub.instance
+            .publish<QLRouteInfo>('nav.previous.route', previous);
+        QLChannelHub.instance
+            .publish<String>('nav.previous.title', titleOf(previous));
       } else {
         QLChannelHub.instance.publish<String>('nav.previous.title', '');
       }
@@ -464,7 +468,8 @@ class QLMorphSlot extends StatelessWidget {
       switchOutCurve: Curves.easeInCubic,
       transitionBuilder: (child, anim) => FadeTransition(
         opacity: anim,
-        child: SizeTransition(sizeFactor: anim, axisAlignment: -1, child: child),
+        child:
+            SizeTransition(sizeFactor: anim, axisAlignment: -1, child: child),
       ),
       child: KeyedSubtree(key: ValueKey(activeRole), child: content),
     );
@@ -526,9 +531,12 @@ class _QLSmartBackButtonState extends State<QLSmartBackButton> {
             widget.revealMode == QLBackRevealMode.longPress && title.isNotEmpty;
         return GestureDetector(
           onTap: _handleBack,
-          onLongPressStart: canReveal ? (_) => setState(() => _revealed = true) : null,
-          onLongPressEnd: canReveal ? (_) => setState(() => _revealed = false) : null,
-          onLongPressCancel: canReveal ? () => setState(() => _revealed = false) : null,
+          onLongPressStart:
+              canReveal ? (_) => setState(() => _revealed = true) : null,
+          onLongPressEnd:
+              canReveal ? (_) => setState(() => _revealed = false) : null,
+          onLongPressCancel:
+              canReveal ? () => setState(() => _revealed = false) : null,
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 180),
             transitionBuilder: (child, anim) => FadeTransition(
@@ -585,7 +593,8 @@ class _DefaultBackTag extends StatelessWidget {
 class QLFocusRevealField<T> extends StatefulWidget {
   final Widget field;
   final QLFieldController<T> controller;
-  final Widget Function(BuildContext context, VoidCallback close)? closeButtonBuilder;
+  final Widget Function(BuildContext context, VoidCallback close)?
+      closeButtonBuilder;
 
   const QLFocusRevealField({
     super.key,
@@ -626,7 +635,8 @@ class _QLFocusRevealFieldState<T> extends State<QLFocusRevealField<T>> {
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 150),
           child: focused
-              ? (widget.closeButtonBuilder?.call(context, widget.controller.blur) ??
+              ? (widget.closeButtonBuilder
+                      ?.call(context, widget.controller.blur) ??
                   IconButton(
                     key: const ValueKey('ql-focus-close'),
                     icon: const Icon(Icons.close, size: 18),
@@ -638,7 +648,6 @@ class _QLFocusRevealFieldState<T> extends State<QLFocusRevealField<T>> {
     );
   }
 }
-
 
 /// Bridges any signal-like atom into a [QLChannel] without introducing a new
 /// reactive graph. Useful when you want the connect layer to mirror a local

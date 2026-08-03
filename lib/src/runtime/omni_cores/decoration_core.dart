@@ -224,24 +224,225 @@ Widget _buildDecoration(QLContext rawCtx) {
 // §2 — ALIAS REGISTRATION
 // ─────────────────────────────────────────────────────────────────────────────
 
-void _registerDecorationAliases(QuantumVM vm) {
-  vm.defineAlias('decorate', 'decoration:merge',
-      description: 'Decoration merge alias.',
-      tags: const ['decoration', 'alias']);
-  vm.defineAlias('highlight', 'decoration:text',
-      description: 'Highlight text decoration alias.',
-      tags: const ['decoration', 'alias']);
-  vm.defineAlias('markup', 'decoration:text',
-      description: 'Markup text decoration alias.',
-      tags: const ['decoration', 'alias']);
-}
+final QuantumDomain decorationDomain = quantumDomain('decoration')
+    .surface('decoration', _buildDecoration, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias('decorate', 'decoration:merge',
+          description: 'Decoration merge alias.',
+          tags: const ['decoration', 'alias']);
+      vm.defineAlias('highlight', 'decoration:text',
+          description: 'Highlight text decoration alias.',
+          tags: const ['decoration', 'alias']);
+      vm.defineAlias('markup', 'decoration:text',
+          description: 'Markup text decoration alias.',
+          tags: const ['decoration', 'alias']);
+    })
+    .build();
 
 class DecorationCoreExporter implements QuantumCoreExporter {
   const DecorationCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('decoration', _buildDecoration, tags: const ['core', 'decoration']);
-    _registerDecorationAliases(vm);
+    vm.installDomain(decorationDomain);
   }
+}
+
+TextStyle _resolveDecorationTextStyle(
+  _AliasContext ctx, {
+  String extraStyle = '',
+}) {
+  String styleStr = '';
+  final String subtype = ctx.resolvedSubType(fallback: 'p');
+  if (subtype == 'h1') {
+    styleStr = 'text-3xl font-bold';
+  } else if (subtype == 'h2') {
+    styleStr = 'text-2xl font-bold';
+  } else if (subtype == 'h3') {
+    styleStr = 'text-xl font-bold';
+  } else if (subtype == 'label') {
+    styleStr = 'text-xs font-semibold uppercase tracking-wide';
+  } else {
+    styleStr = 'text-md';
+  }
+
+  final String nodeStyle = ctx.node.style ?? '';
+  final String propStyle = ctx.string('style');
+  final String combinedStyle = [nodeStyle, propStyle, extraStyle]
+      .where((s) => s.trim().isNotEmpty)
+      .join(' ')
+      .trim();
+  if (combinedStyle.isNotEmpty) styleStr += ' $combinedStyle';
+  if (subtype == 'code') styleStr = '$styleStr font-mono text-sm';
+  if (subtype == 'rich') styleStr = '$styleStr leading-relaxed';
+
+  final QToken ptr = QEngine.instance.compiler.compile(styleStr);
+  final QSimdArena mem = QEngine.instance.mem;
+
+  // 🚀 FIX: Use 4x32 textFlags instead of deprecated single flags array
+  final int tFlags = mem.textFlags[ptr.id];
+  final int fPtr = ptr.fPtr;
+  final int cPtr = ptr.cPtr;
+
+  return TextStyle(
+    color: Color(mem.c32[cPtr + QC32.text] != 0
+        ? mem.c32[cPtr + QC32.text]
+        : 0xFF0F172A),
+    fontSize: mem.f32[fPtr + QF32.fontSize] > 0
+        ? mem.f32[fPtr + QF32.fontSize]
+        : 14.0,
+    fontWeight: (tFlags & QTextFlags.fontBold) != 0
+        ? FontWeight.bold
+        : FontWeight.normal,
+    fontStyle: (tFlags & QTextFlags.fontItalic) != 0
+        ? FontStyle.italic
+        : FontStyle.normal,
+    // 🚀 NEW: Support underline & strike-through mapped from the new compiler
+    decoration: (tFlags & QTextFlags.underline) != 0
+        ? TextDecoration.underline
+        : ((tFlags & QTextFlags.strikeThrough) != 0
+            ? TextDecoration.lineThrough
+            : TextDecoration.none),
+    letterSpacing: mem.f32[fPtr + QF32.letterSpacing] != 0
+        ? mem.f32[fPtr + QF32.letterSpacing]
+        : null,
+    height: mem.f32[fPtr + QF32.lineHeight],
+  );
+}
+
+InlineSpan _buildDecorationPartSpan(
+  _AliasContext ctx,
+  Map<String, dynamic> part,
+  TextStyle baseStyle,
+) {
+  final String text = (part['text'] ?? part['value'] ?? '').toString();
+  final String style = (part['style'] ?? part['textStyle'] ?? '').toString();
+  final bool selected = part['selected'] == true;
+  final String selectedStyle =
+      (part['selectedStyle'] ?? part['highlightStyle'] ?? '').toString();
+  final String mergedStyle = [style, if (selected) selectedStyle]
+      .where((s) => s.trim().isNotEmpty)
+      .join(' ')
+      .trim();
+  final TextStyle spanStyle = mergedStyle.isEmpty
+      ? baseStyle
+      : baseStyle
+          .merge(_resolveDecorationTextStyle(ctx, extraStyle: mergedStyle));
+
+  final dynamic child = part['child'] ?? part['widget'] ?? part['content'];
+  final dynamic action = part['onTap'] ?? part['action'];
+  if (child is Map) {
+    final blueprint = QLBlueprint.fromJson(
+      Map<String, dynamic>.from(child.cast<String, dynamic>()),
+      path: '${ctx.node.debugPath}.decoration.part',
+    );
+    final Widget widget =
+        QuantumVM.instance.renderWidget(ctx.flutterContext, blueprint);
+    if (action != null || selected) {
+      return WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: action == null
+              ? null
+              : () => ctx.action(action.toString())?.call(),
+          child: widget,
+        ),
+      );
+    }
+    return WidgetSpan(alignment: PlaceholderAlignment.middle, child: widget);
+  }
+
+  if (action != null) {
+    return WidgetSpan(
+      alignment: PlaceholderAlignment.middle,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => ctx.action(action.toString())?.call(),
+        child: Text(text, style: spanStyle),
+      ),
+    );
+  }
+
+  return TextSpan(text: text, style: spanStyle);
+}
+
+Widget _buildDecorationRichText(QLContext rawCtx) {
+  final ctx = _AliasContext(rawCtx);
+  final TextAlign align = ctx.string('align') == 'center'
+      ? TextAlign.center
+      : (ctx.string('align') == 'right' ? TextAlign.right : TextAlign.start);
+  final bool selectable = ctx.boolean('selectable', fallback: false);
+  final TextStyle baseStyle = _resolveDecorationTextStyle(ctx);
+  final String text = ctx.string('text', fallback: ctx.string('value'));
+  final dynamic rawParts =
+      ctx.prop('parts') ?? ctx.prop('spans') ?? ctx.prop('segments');
+
+  final List<InlineSpan> spans = <InlineSpan>[];
+  if (rawParts is List && rawParts.isNotEmpty) {
+    for (final part in rawParts) {
+      if (part is Map) {
+        spans.add(_buildDecorationPartSpan(
+          ctx,
+          Map<String, dynamic>.from(part.cast<String, dynamic>()),
+          baseStyle,
+        ));
+      } else {
+        spans.add(TextSpan(text: part.toString(), style: baseStyle));
+      }
+    }
+  } else if (text.isNotEmpty) {
+    final String match = ctx.string('match');
+    final dynamic selectedChild =
+        ctx.prop('selectedChild') ?? ctx.prop('replaceChild');
+    final String selectedStyle = ctx.string('selectedStyle');
+    if (match.isNotEmpty && text.contains(match)) {
+      final parts = text.split(match);
+      for (int i = 0; i < parts.length; i++) {
+        final chunk = parts[i];
+        if (chunk.isNotEmpty) {
+          spans.add(TextSpan(text: chunk, style: baseStyle));
+        }
+        if (i < parts.length - 1) {
+          if (selectedChild is Map) {
+            final blueprint = QLBlueprint.fromJson(
+              Map<String, dynamic>.from(selectedChild.cast<String, dynamic>()),
+              path: '${ctx.node.debugPath}.decoration.selected',
+            );
+            spans.add(WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+              child: QuantumVM.instance
+                  .renderWidget(ctx.flutterContext, blueprint),
+            ));
+          } else if (selectedChild is Widget) {
+            spans.add(WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+              child: selectedChild,
+            ));
+          } else {
+            spans.add(TextSpan(
+              text: match,
+              style: baseStyle.merge(
+                _resolveDecorationTextStyle(ctx, extraStyle: selectedStyle),
+              ),
+            ));
+          }
+        }
+      }
+    } else {
+      spans.add(TextSpan(text: text, style: baseStyle));
+    }
+  }
+
+  final TextSpan span = TextSpan(style: baseStyle, children: spans);
+  if (selectable) {
+    return SelectableText.rich(
+      span,
+      textAlign: align,
+      contextMenuBuilder: (context, editableTextState) =>
+          AdaptiveTextSelectionToolbar.editableText(
+              editableTextState: editableTextState),
+    );
+  }
+  return Text.rich(span, textAlign: align);
 }

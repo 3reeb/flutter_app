@@ -696,70 +696,73 @@ Widget _buildSmartScrollViewport({required Axis axis, required Widget child}) {
 // §4 — ALIAS REGISTRATION (Omni Kinematics)
 // ─────────────────────────────────────────────────────────────────────────────
 
-void _registerBoxAliases(QuantumVM vm) {
-  vm.defineAlias('row', 'box:row',
-      description: 'Row layout alias.', tags: const ['box', 'layout', 'alias']);
-  vm.defineAlias('col', 'box:col',
-      description: 'Column layout alias.',
-      tags: const ['box', 'layout', 'alias']);
-  vm.defineAlias('stack', 'box:stack',
-      description: 'Stack layout alias.',
-      tags: const ['box', 'layout', 'alias']);
-  vm.defineAlias('wrap', 'box:wrap',
-      description: 'Wrap layout alias.',
-      tags: const ['box', 'layout', 'alias']);
-  vm.defineAlias('grid', 'box:grid',
-      description: 'Grid layout alias.',
-      tags: const ['box', 'layout', 'alias']);
-  vm.defineAlias('masonry', 'box:masonry',
-      description: 'Masonry layout alias.',
-      tags: const ['box', 'layout', 'alias']);
-  vm.defineAlias('card', 'box:card',
-      defaultProps: const <String, dynamic>{
-        'fill': 'surface',
-        'depth': 'raised',
-        'padding': [24]
-      },
-      description: 'Card surface alias.',
-      tags: const ['box', 'surface', 'alias']);
-  vm.defineAlias('split', 'box:split',
-      defaultProps: const <String, dynamic>{'style': 'min-w-0 min-h-0'},
-      description: 'Split layout alias.',
-      tags: const ['box', 'layout', 'alias']);
-  vm.defineAlias('morph', 'box:morph',
-      description: 'Morphing container alias.', tags: const ['box', 'alias']);
-  vm.defineAlias('surface', 'box:surface',
-      description: 'Surface container alias.',
-      tags: const ['box', 'surface', 'alias']);
-  vm.defineAlias('shell', 'box:shell',
-      description: 'Shell container alias.',
-      tags: const ['box', 'shell', 'alias']);
-  vm.defineAlias('viewport', 'box:viewport',
-      description: 'Viewport container alias.',
-      tags: const ['box', 'viewport', 'alias']);
-  vm.defineAlias('responsive', 'box:responsive',
-      description: 'Responsive container alias.',
-      tags: const ['box', 'responsive', 'alias']);
-  vm.defineAlias('measure', 'box:measure',
-      description: 'Layout measure alias.',
-      tags: const ['box', 'measure', 'alias']);
-  vm.defineAlias('builder', 'box:builder',
-      description: 'Builder container alias.',
-      tags: const ['box', 'builder', 'alias']);
-  vm.defineAlias('layer', 'box:layer',
-      description: 'Layer container alias.',
-      tags: const ['box', 'layer', 'alias']);
-  vm.defineAlias('matrix', 'box:matrix',
-      description: 'Matrix layout alias.',
-      tags: const ['box', 'matrix', 'alias']);
-}
+final QuantumDomain boxDomain = quantumDomain('box')
+    .surface('box', _buildBox, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias('row', 'box:row',
+          description: 'Row layout alias.', tags: const ['box', 'layout', 'alias']);
+      vm.defineAlias('col', 'box:col',
+          description: 'Column layout alias.',
+          tags: const ['box', 'layout', 'alias']);
+      vm.defineAlias('stack', 'box:stack',
+          description: 'Stack layout alias.',
+          tags: const ['box', 'layout', 'alias']);
+      vm.defineAlias('wrap', 'box:wrap',
+          description: 'Wrap layout alias.',
+          tags: const ['box', 'layout', 'alias']);
+      vm.defineAlias('grid', 'box:grid',
+          description: 'Grid layout alias.',
+          tags: const ['box', 'layout', 'alias']);
+      vm.defineAlias('masonry', 'box:masonry',
+          description: 'Masonry layout alias.',
+          tags: const ['box', 'layout', 'alias']);
+      vm.defineAlias('card', 'box:card',
+          defaultProps: const <String, dynamic>{
+            'fill': 'surface',
+            'depth': 'raised',
+            'padding': [24]
+          },
+          description: 'Card surface alias.',
+          tags: const ['box', 'surface', 'alias']);
+      vm.defineAlias('split', 'box:split',
+          defaultProps: const <String, dynamic>{'style': 'min-w-0 min-h-0'},
+          description: 'Split layout alias.',
+          tags: const ['box', 'layout', 'alias']);
+      vm.defineAlias('morph', 'box:morph',
+          description: 'Morphing container alias.', tags: const ['box', 'alias']);
+      vm.defineAlias('surface', 'box:surface',
+          description: 'Surface container alias.',
+          tags: const ['box', 'surface', 'alias']);
+      vm.defineAlias('shell', 'box:shell',
+          description: 'Shell container alias.',
+          tags: const ['box', 'shell', 'alias']);
+      vm.defineAlias('viewport', 'box:viewport',
+          description: 'Viewport container alias.',
+          tags: const ['box', 'viewport', 'alias']);
+      vm.defineAlias('responsive', 'box:responsive',
+          description: 'Responsive container alias.',
+          tags: const ['box', 'responsive', 'alias']);
+      vm.defineAlias('measure', 'box:measure',
+          description: 'Layout measure alias.',
+          tags: const ['box', 'measure', 'alias']);
+      vm.defineAlias('builder', 'box:builder',
+          description: 'Builder container alias.',
+          tags: const ['box', 'builder', 'alias']);
+      vm.defineAlias('layer', 'box:layer',
+          description: 'Layer container alias.',
+          tags: const ['box', 'layer', 'alias']);
+      vm.defineAlias('matrix', 'box:matrix',
+          description: 'Matrix layout alias.',
+          tags: const ['box', 'matrix', 'alias']);
+    })
+    .build();
 
 class BoxCoreExporter implements QuantumCoreExporter {
   const BoxCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('box', _buildBox, tags: const ['core', 'box']);
-    _registerBoxAliases(vm);
+    vm.installDomain(boxDomain);
   }
 }
+

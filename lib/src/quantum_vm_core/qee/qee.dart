@@ -129,6 +129,7 @@ export 'qee_layout_host.dart'
     show
         QContextScope,
         QPropScope,
+        QPropConsumer,
         QLayoutChain,
         QLayoutHost,
         QPageSlot,

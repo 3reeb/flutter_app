@@ -141,10 +141,10 @@ Widget _buildPortal(QLContext rawCtx) {
   }
 
   QLMotionSpec parseMotion() {
-    final dynamic motionValue = ctx.map('motion') ??
-        ctx.map('animation') ??
-        ctx.map('motionSpec') ??
-        ctx.map('animationSpec');
+    final dynamic motionValue = ctx.node.props['motion'] ??
+        ctx.node.props['animation'] ??
+        ctx.node.props['motionSpec'] ??
+        ctx.node.props['animationSpec'];
     if (motionValue is Map || motionValue is String) {
       return QLMotionSpec.fromValue(motionValue);
     }
@@ -183,13 +183,13 @@ Widget _buildPortal(QLContext rawCtx) {
   }
 
   QLOverlayRuntimeSpec parseRuntime() {
-    final dynamic runtimeValue = ctx.map('runtime') ??
-        ctx.map('control') ??
-        ctx.map('behavior') ??
-        ctx.map('stack') ??
-        ctx.map('hooks') ??
-        ctx.map('actions') ??
-        ctx.map('overlay');
+    final dynamic runtimeValue = ctx.node.props['runtime'] ??
+        ctx.node.props['control'] ??
+        ctx.node.props['behavior'] ??
+        ctx.node.props['stack'] ??
+        ctx.node.props['hooks'] ??
+        ctx.node.props['actions'] ??
+        ctx.node.props['overlay'];
     if (runtimeValue is Map || runtimeValue is String) {
       return QLOverlayRuntimeSpec.fromValue(runtimeValue);
     }
@@ -933,38 +933,41 @@ class _QLToastAutoMounterState extends State<_QLToastAutoMounter> {
 // CORE 8: CONTROL (Stateful Aggregation & Forms)
 // ════════════════════════════════════════════════════════════════════════════
 
-void _registerPortalAliases(QuantumVM vm) {
-  vm.defineAlias('overlay_entry', 'portal:overlay_entry',
-      description: 'Overlay entry alias.',
-      tags: const ['portal', 'overlay', 'alias']);
-  vm.defineAlias('overlay', 'portal:overlay',
-      description: 'Overlay alias.',
-      tags: const ['portal', 'overlay', 'alias']);
-  vm.defineAlias('dialog', 'portal:dialog',
-      description: 'Dialog portal alias.', tags: const ['portal', 'alias']);
-  vm.defineAlias('drawer', 'portal:sheet',
-      description: 'Drawer alias routed through sheet.',
-      tags: const ['portal', 'alias']);
-  vm.defineAlias('sheet', 'portal:sheet',
-      description: 'Sheet portal alias.', tags: const ['portal', 'alias']);
-  vm.defineAlias('popover', 'portal:popover',
-      description: 'Popover portal alias.', tags: const ['portal', 'alias']);
-  vm.defineAlias('modal', 'portal:dialog',
-      description: 'Modal alias.', tags: const ['portal', 'alias']);
-  vm.defineAlias('centered_overlay', 'portal:dialog',
-      description: 'Centered overlay alias.', tags: const ['portal', 'alias']);
-  vm.defineAlias('persistent_panel', 'portal:overlay',
-      description: 'Persistent panel alias.', tags: const ['portal', 'alias']);
-  vm.defineAlias('inline_expandable', 'portal:overlay',
-      description: 'Inline expandable alias.', tags: const ['portal', 'alias']);
-}
+final QuantumDomain portalDomain = quantumDomain('portal')
+    .surface('portal', _buildPortal, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias('overlay_entry', 'portal:overlay_entry',
+          description: 'Overlay entry alias.',
+          tags: const ['portal', 'overlay', 'alias']);
+      vm.defineAlias('overlay', 'portal:overlay',
+          description: 'Overlay alias.',
+          tags: const ['portal', 'overlay', 'alias']);
+      vm.defineAlias('dialog', 'portal:dialog',
+          description: 'Dialog portal alias.', tags: const ['portal', 'alias']);
+      vm.defineAlias('drawer', 'portal:sheet',
+          description: 'Drawer alias routed through sheet.',
+          tags: const ['portal', 'alias']);
+      vm.defineAlias('sheet', 'portal:sheet',
+          description: 'Sheet portal alias.', tags: const ['portal', 'alias']);
+      vm.defineAlias('popover', 'portal:popover',
+          description: 'Popover portal alias.', tags: const ['portal', 'alias']);
+      vm.defineAlias('modal', 'portal:dialog',
+          description: 'Modal alias.', tags: const ['portal', 'alias']);
+      vm.defineAlias('centered_overlay', 'portal:dialog',
+          description: 'Centered overlay alias.', tags: const ['portal', 'alias']);
+      vm.defineAlias('persistent_panel', 'portal:overlay',
+          description: 'Persistent panel alias.', tags: const ['portal', 'alias']);
+      vm.defineAlias('inline_expandable', 'portal:overlay',
+          description: 'Inline expandable alias.', tags: const ['portal', 'alias']);
+    })
+    .build();
 
 class PortalCoreExporter implements QuantumCoreExporter {
   const PortalCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('portal', _buildPortal, tags: const ['core', 'portal']);
-    _registerPortalAliases(vm);
+    vm.installDomain(portalDomain);
   }
 }
+

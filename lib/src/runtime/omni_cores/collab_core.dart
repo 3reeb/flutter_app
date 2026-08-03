@@ -205,19 +205,22 @@ class _QLCollabLockNodeState extends State<_QLCollabLockNode> {
   }
 }
 
-void _registerCollabAliases(QuantumVM vm) {
-  vm.defineAlias('presence', 'collab:presence', description: 'Presence alias.', tags: const ['collab', 'alias']);
-  vm.defineAlias('cursor', 'collab:cursor', description: 'Cursor alias.', tags: const ['collab', 'alias']);
-  vm.defineAlias('awareness', 'collab:awareness', description: 'Awareness alias.', tags: const ['collab', 'alias']);
-  vm.defineAlias('lock', 'collab:lock', description: 'Lock alias.', tags: const ['collab', 'alias']);
-}
+final QuantumDomain collabDomain = quantumDomain('collab')
+    .surface('collab', _buildCollab, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias('presence', 'collab:presence', description: 'Presence alias.', tags: const ['collab', 'alias']);
+      vm.defineAlias('cursor', 'collab:cursor', description: 'Cursor alias.', tags: const ['collab', 'alias']);
+      vm.defineAlias('awareness', 'collab:awareness', description: 'Awareness alias.', tags: const ['collab', 'alias']);
+      vm.defineAlias('lock', 'collab:lock', description: 'Lock alias.', tags: const ['collab', 'alias']);
+    })
+    .build();
 
 class CollabCoreExporter implements QuantumCoreExporter {
   const CollabCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('collab', _buildCollab, tags: const ['core', 'collab']);
-    _registerCollabAliases(vm);
+    vm.installDomain(collabDomain);
   }
 }
+

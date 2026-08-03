@@ -110,8 +110,7 @@ class QLYamlNode {
   String get asString => _raw?.toString() ?? '';
   double get asDouble =>
       _raw is num ? (_raw).toDouble() : double.tryParse(asString) ?? 0.0;
-  int get asInt =>
-      _raw is num ? (_raw).toInt() : int.tryParse(asString) ?? 0;
+  int get asInt => _raw is num ? (_raw).toInt() : int.tryParse(asString) ?? 0;
   bool get asBool {
     if (_raw is bool) return _raw;
     final s = asString.toLowerCase();
@@ -198,12 +197,6 @@ class QLYamlEnv {
   static Map<String, String> get snapshot => Map.unmodifiable(_vars);
 }
 
-// ─────────────────────────────────────────────────────────────────────── §5 ─
-//  QUANTUM YAML ENGINE — SINGLETON
-// ────────────────────────────────────────────────────────────────────────────
-
-/// The Quantum YAML Engine.
-///
 /// All public methods are safe to call from the main isolate.
 /// Heavy parsing is offloaded to background isolates automatically
 /// for files > 8 KB.
@@ -211,6 +204,25 @@ class QuantumYamlEngine {
   // ── Singleton ──────────────────────────────────────────────────────────────
   static final QuantumYamlEngine instance = QuantumYamlEngine._();
   QuantumYamlEngine._();
+
+  /// Synchronously parses a raw YAML or JSON string into a [Map<String, dynamic>].
+  static Map<String, dynamic> parse(String rawData) {
+    final trimmed = rawData.trim();
+    if (trimmed.isEmpty) return const <String, dynamic>{};
+    if (trimmed.startsWith('{')) {
+      final decoded = jsonDecode(trimmed);
+      if (decoded is Map) {
+        return Map<String, dynamic>.from(decoded);
+      }
+      return const <String, dynamic>{};
+    }
+    final doc = loadYaml(rawData);
+    final native = _yamlToNative(doc);
+    if (native is Map) {
+      return Map<String, dynamic>.from(native);
+    }
+    return const <String, dynamic>{};
+  }
 
   /// Resolves the absolute path to the flutter project root in debug mode.
   static String? getProjectRoot() {
@@ -247,7 +259,10 @@ class QuantumYamlEngine {
   final Map<String, Future<Map<String, dynamic>>> _inFlight = {};
 
   // ── Warm the engine: preload essential config files ───────────────────────
-  final bool _warmed = false;
+  bool _warmed = false;
+
+  /// Whether the engine has warmed essential config files.
+  bool get isWarmed => _warmed;
 
   /// Load and fully resolve a YAML/JSON asset file.
   ///

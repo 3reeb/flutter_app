@@ -51,14 +51,13 @@ export 'src/runtime/quantum_sdui_type_engine.dart';
 export 'src/runtime/quantum_permissions.dart';
 export 'src/quantum_vm_core/quantum_vm.dart';
 export 'src/runtime/quantum_vm_init.dart';
-export 'src/runtime/api/network.dart';
+export 'src/platform/api/network.dart';
 export 'dev/quantum_test_engine.dart';
 export 'dev/quantum_test_engine_shared.dart';
 export 'src/runtime/quantum_widget_image_exporter.dart';
 export 'src/runtime/quantum_export_web_bridge.dart';
 // App
-export 'src/app/quantum_app_entry.dart';
-export 'src/app/quantum_boot_schema.dart';
+export 'src/app/quantum_app_boot.dart';
 export 'src/app/quantum_app_shell.dart';
 export 'src/app/quantum_file_router.dart';
 export 'src/app/config.dart';

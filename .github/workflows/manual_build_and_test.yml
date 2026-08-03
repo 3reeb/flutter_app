@@ -1,0 +1,337 @@
+name: On-Demand Build & Test Suite
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Target Platform to Build'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - 'all'
+          - 'android'
+          - 'ios'
+          - 'web'
+          - 'windows'
+          - 'macos'
+          - 'linux'
+          - 'none'
+      build_mode:
+        description: 'Build Mode'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+          - 'release'
+          - 'debug'
+          - 'profile'
+      run_analysis:
+        description: 'Run Flutter Static Analysis (flutter analyze)'
+        required: true
+        type: boolean
+        default: true
+      run_tests:
+        description: 'Run Unit & Widget Tests (flutter test)'
+        required: true
+        type: boolean
+        default: true
+      upload_artifacts:
+        description: 'Upload Build Artifacts to GitHub Actions'
+        required: true
+        type: boolean
+        default: true
+      create_release:
+        description: 'Create a GitHub Release with Artifacts'
+        required: true
+        type: boolean
+        default: false
+      release_tag:
+        description: 'Release Tag (Required if Create Release is checked)'
+        required: false
+        default: 'v1.0.0'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  analyze_and_test:
+    name: 🔍 Analysis & Unit Tests
+    runs-on: ubuntu-latest
+    if: inputs.run_analysis || inputs.run_tests
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Get Dependencies
+        run: flutter pub get
+
+      - name: Run Static Analysis
+        if: inputs.run_analysis
+        run: flutter analyze
+
+      - name: Run Unit & Widget Tests
+        if: inputs.run_tests
+        run: flutter test
+
+  build_android:
+    name: 🤖 Build Android (APK & AAB)
+    runs-on: ubuntu-latest
+    if: inputs.target == 'all' || inputs.target == 'android'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Get Dependencies
+        run: flutter pub get
+
+      - name: Build Android APK
+        run: flutter build apk --${{ inputs.build_mode }}
+
+      - name: Build Android App Bundle (AAB)
+        run: flutter build appbundle --${{ inputs.build_mode }}
+
+      - name: Upload APK Artifact
+        if: inputs.upload_artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk-${{ inputs.build_mode }}
+          path: build/app/outputs/flutter-apk/*.apk
+          retention-days: 7
+
+      - name: Upload AAB Artifact
+        if: inputs.upload_artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-aab-${{ inputs.build_mode }}
+          path: build/app/outputs/bundle/${{ inputs.build_mode }}/*.aab
+          retention-days: 7
+
+  build_ios:
+    name: 🍏 Build iOS App
+    runs-on: macos-14
+    if: inputs.target == 'all' || inputs.target == 'ios'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Get Dependencies
+        run: flutter pub get
+
+      - name: Build iOS (No Code Sign)
+        run: flutter build ipa --no-codesign --${{ inputs.build_mode }}
+
+      - name: Compress iOS Build Output
+        run: |
+          cd build/ios/iphoneos || cd build/ios/archive
+          zip -r ../../../ios-app-${{ inputs.build_mode }}.zip .
+
+      - name: Upload iOS Artifact
+        if: inputs.upload_artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-app-${{ inputs.build_mode }}
+          path: ios-app-${{ inputs.build_mode }}.zip
+          retention-days: 7
+
+  build_web:
+    name: 🌐 Build Web App
+    runs-on: ubuntu-latest
+    if: inputs.target == 'all' || inputs.target == 'web'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Get Dependencies
+        run: flutter pub get
+
+      - name: Build Web Application
+        run: flutter build web --release
+
+      - name: Compress Web Output
+        run: |
+          cd build/web
+          zip -r ../../web-release.zip .
+
+      - name: Upload Web Artifact
+        if: inputs.upload_artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-release
+          path: web-release.zip
+          retention-days: 7
+
+  build_windows:
+    name: 💻 Build Windows Desktop
+    runs-on: windows-latest
+    if: inputs.target == 'all' || inputs.target == 'windows'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Enable Windows Desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Get Dependencies
+        run: flutter pub get
+
+      - name: Build Windows Executable
+        run: flutter build windows --${{ inputs.build_mode }}
+
+      - name: Compress Windows Release Bundle
+        run: |
+          powershell Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath windows-release.zip
+
+      - name: Upload Windows Artifact
+        if: inputs.upload_artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-${{ inputs.build_mode }}
+          path: windows-release.zip
+          retention-days: 7
+
+  build_macos:
+    name: 🖥️ Build macOS Desktop
+    runs-on: macos-14
+    if: inputs.target == 'all' || inputs.target == 'macos'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Enable macOS Desktop
+        run: flutter config --enable-macos-desktop
+
+      - name: Get Dependencies
+        run: flutter pub get
+
+      - name: Build macOS Application
+        run: flutter build macos --${{ inputs.build_mode }}
+
+      - name: Compress macOS Application
+        run: |
+          cd build/macos/Build/Products/Release/
+          zip -r ../../../../../macos-release.zip *.app
+
+      - name: Upload macOS Artifact
+        if: inputs.upload_artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-${{ inputs.build_mode }}
+          path: macos-release.zip
+          retention-days: 7
+
+  build_linux:
+    name: 🐧 Build Linux Desktop
+    runs-on: ubuntu-latest
+    if: inputs.target == 'all' || inputs.target == 'linux'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Linux Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Enable Linux Desktop
+        run: flutter config --enable-linux-desktop
+
+      - name: Get Dependencies
+        run: flutter pub get
+
+      - name: Build Linux Executable
+        run: flutter build linux --${{ inputs.build_mode }}
+
+      - name: Compress Linux Release Bundle
+        run: |
+          cd build/linux/x64/release/bundle
+          zip -r ../../../../../linux-release.zip .
+
+      - name: Upload Linux Artifact
+        if: inputs.upload_artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-${{ inputs.build_mode }}
+          path: linux-release.zip
+          retention-days: 7
+
+  create_release:
+    name: 🚀 Create GitHub Release
+    needs: [build_android, build_ios, build_web, build_windows, build_macos, build_linux]
+    if: always() && inputs.create_release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.release_tag }}
+          name: Release ${{ inputs.release_tag }}
+          draft: false
+          prerelease: false
+          files: |
+            artifacts/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

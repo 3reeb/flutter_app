@@ -217,125 +217,83 @@ Widget _buildAnimation(QLContext rawCtx) {
   }
 }
 
-void _registerAnimationAliases(QuantumVM vm) {
-  vm.defineAlias('animation', 'animation',
-      defaultProps: const <String, dynamic>{'animationType': 'signal'},
-      description: 'Base animation core.',
-      tags: const ['animation', 'core']);
-  vm.defineAlias('motion', 'animation',
-      defaultProps: const <String, dynamic>{'animationType': 'signal'},
-      description: 'Motion alias.',
-      tags: const ['animation', 'alias']);
-  vm.defineAlias('transition', 'animation',
-      defaultProps: const <String, dynamic>{'animationType': 'fade'},
-      description: 'Transition alias.',
-      tags: const ['animation', 'alias']);
-  vm.defineAlias('animate', 'animation',
-      defaultProps: const <String, dynamic>{'animationType': 'fade'},
-      description: 'Animate alias.',
-      tags: const ['animation', 'alias']);
-  vm.defineAlias('glass_motion', 'animation',
-      defaultProps: const <String, dynamic>{'animationType': 'glass'},
-      description: 'Glass animation alias.',
-      tags: const ['animation', 'glass']);
-  vm.defineAlias('spring', 'animation:spring',
-      description: 'Spring animation.', tags: const ['animation', 'spring']);
-  vm.defineAlias('skeleton', 'animation:skeleton',
-      description: 'Skeleton loader.', tags: const ['animation', 'skeleton']);
-  vm.defineAlias('stagger', 'animation:stagger',
-      description: 'Stagger children animation.',
-      tags: const ['animation', 'stagger']);
-  vm.defineAlias('morph', 'animation:morph',
-      description: 'AnimatedSwitcher morph.',
-      tags: const ['animation', 'morph']);
-  vm.defineAlias('counter', 'animation:counter',
-      description: 'Animated number counter.',
-      tags: const ['animation', 'counter']);
-  vm.defineAlias('cross_fade', 'animation:cross',
-      description: 'Cross fade animation.', tags: const ['animation', 'cross']);
-  vm.defineAlias('keyframe', 'animation:keyframe',
-      description: 'Keyframe animation.',
-      tags: const ['animation', 'keyframe']);
-  vm.defineAlias('sequence_anim', 'animation:sequence',
-      description: 'Sequence animation.',
-      tags: const ['animation', 'sequence']);
-  vm.defineAlias('particles', 'animation:particle',
-      description: 'Particle effect.', tags: const ['animation', 'particle']);
+final QuantumDomain animationDomain = quantumDomain('animation')
+    .surface('animation', _buildAnimation, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias('animation', 'animation',
+          defaultProps: const <String, dynamic>{'animationType': 'signal'},
+          description: 'Base animation core.',
+          tags: const ['animation', 'core']);
+      vm.defineAlias('motion', 'animation',
+          defaultProps: const <String, dynamic>{'animationType': 'signal'},
+          description: 'Motion alias.',
+          tags: const ['animation', 'alias']);
+      vm.defineAlias('transition', 'animation',
+          defaultProps: const <String, dynamic>{'animationType': 'fade'},
+          description: 'Transition alias.',
+          tags: const ['animation', 'alias']);
+      vm.defineAlias('animate', 'animation',
+          defaultProps: const <String, dynamic>{'animationType': 'fade'},
+          description: 'Animate alias.',
+          tags: const ['animation', 'alias']);
+      vm.defineAlias('glass_motion', 'animation',
+          defaultProps: const <String, dynamic>{'animationType': 'glass'},
+          description: 'Glass animation alias.',
+          tags: const ['animation', 'glass']);
+      vm.defineAlias('spring', 'animation:spring',
+          description: 'Spring animation.', tags: const ['animation', 'spring']);
+      vm.defineAlias('skeleton', 'animation:skeleton',
+          description: 'Skeleton loader.', tags: const ['animation', 'skeleton']);
+      vm.defineAlias('stagger', 'animation:stagger',
+          description: 'Stagger children animation.',
+          tags: const ['animation', 'stagger']);
+      vm.defineAlias('morph', 'animation:morph',
+          description: 'AnimatedSwitcher morph.',
+          tags: const ['animation', 'morph']);
+      vm.defineAlias('counter', 'animation:counter',
+          description: 'Animated number counter.',
+          tags: const ['animation', 'counter']);
+      vm.defineAlias('cross_fade', 'animation:cross',
+          description: 'Cross fade animation.', tags: const ['animation', 'cross']);
+      vm.defineAlias('keyframe', 'animation:keyframe',
+          description: 'Keyframe animation.',
+          tags: const ['animation', 'keyframe']);
+      vm.defineAlias('sequence_anim', 'animation:sequence',
+          description: 'Sequence animation.',
+          tags: const ['animation', 'sequence']);
+      vm.defineAlias('particles', 'animation:particle',
+          description: 'Particle effect.', tags: const ['animation', 'particle']);
+    })
+    .build();
+
+class QLSkeletonWidget extends StatefulWidget {
+  final double width;
+  final double height;
+  final double borderRadius;
+
+  const QLSkeletonWidget({
+    super.key,
+    required this.width,
+    required this.height,
+    required this.borderRadius,
+  });
+
+  @override
+  State<QLSkeletonWidget> createState() => _QLSkeletonWidgetState();
 }
 
-// Stagger node — staggers each child's entrance animation
-class _QLStaggerNode extends StatefulWidget {
-  final List<Widget> children;
-  final int delayMs;
-  final Duration duration;
-  final Curve curve;
-  const _QLStaggerNode(
-      {required this.children,
-      required this.delayMs,
-      required this.duration,
-      required this.curve});
-  @override
-  State<_QLStaggerNode> createState() => _QLStaggerNodeState();
-}
+typedef _QLSkeletonWidget = QLSkeletonWidget;
 
-class _QLStaggerNodeState extends State<_QLStaggerNode>
-    with TickerProviderStateMixin {
-  late List<AnimationController> _ctrls;
-  @override
-  void initState() {
-    super.initState();
-    _ctrls = List.generate(widget.children.length,
-        (i) => AnimationController(duration: widget.duration, vsync: this));
-    for (var i = 0; i < _ctrls.length; i++) {
-      Future.delayed(Duration(milliseconds: widget.delayMs * i), () {
-        if (mounted) _ctrls[i].forward();
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    for (final c in _ctrls) {
-      c.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: List.generate(widget.children.length, (i) {
-          final anim = CurvedAnimation(parent: _ctrls[i], curve: widget.curve);
-          return FadeTransition(
-              opacity: anim,
-              child: SlideTransition(
-                  position: Tween<Offset>(
-                          begin: const Offset(0, 0.12), end: Offset.zero)
-                      .animate(anim),
-                  child: widget.children[i]));
-        }));
-  }
-}
-
-// Skeleton bar widget
-class _QLSkeletonWidget extends StatefulWidget {
-  final double width, height, borderRadius;
-  const _QLSkeletonWidget(
-      {required this.width, required this.height, required this.borderRadius});
-  @override
-  State<_QLSkeletonWidget> createState() => _QLSkeletonWidgetState();
-}
-
-class _QLSkeletonWidgetState extends State<_QLSkeletonWidget>
+class _QLSkeletonWidgetState extends State<QLSkeletonWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _ctrl;
+
   @override
   void initState() {
     super.initState();
     _ctrl = AnimationController(
-        duration: const Duration(milliseconds: 1200), vsync: this)
-      ..repeat();
+        vsync: this, duration: const Duration(milliseconds: 1200))
+      ..repeat(reverse: true);
   }
 
   @override
@@ -348,201 +306,135 @@ class _QLSkeletonWidgetState extends State<_QLSkeletonWidget>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _ctrl,
-      builder: (_, __) => Container(
-        width: widget.width,
-        height: widget.height,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(widget.borderRadius),
-          gradient: LinearGradient(
-            colors: const [
-              Color(0xFFE0E0E0),
-              Color(0xFFF5F5F5),
-              Color(0xFFE0E0E0)
-            ],
-            stops: [0.0, (_ctrl.value * 1.5).clamp(0.0, 1.0), 1.0],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
+      builder: (context, child) {
+        return Container(
+          width: widget.width,
+          height: widget.height,
+          decoration: BoxDecoration(
+            color: Color.lerp(
+              Colors.grey.shade300,
+              Colors.grey.shade100,
+              _ctrl.value,
+            ),
+            borderRadius: BorderRadius.circular(widget.borderRadius),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
 
-class _QLKeyframeNode extends StatefulWidget {
-  final Map from, to;
+class _QLStaggerNode extends StatelessWidget {
+  final int delayMs;
   final Duration duration;
   final Curve curve;
-  final Widget child;
-  const _QLKeyframeNode(
-      {required this.from,
-      required this.to,
-      required this.duration,
-      required this.curve,
-      required this.child});
-  @override
-  State<_QLKeyframeNode> createState() => _QLKeyframeNodeState();
-}
+  final List<Widget> children;
 
-class _QLKeyframeNodeState extends State<_QLKeyframeNode>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _c;
-  @override
-  void initState() {
-    super.initState();
-    _c = AnimationController(duration: widget.duration, vsync: this)..forward();
-  }
-
-  @override
-  void dispose() {
-    _c.dispose();
-    super.dispose();
-  }
+  const _QLStaggerNode({
+    super.key,
+    required this.delayMs,
+    required this.duration,
+    required this.curve,
+    required this.children,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _c,
-      builder: (_, child) {
-        final double t = widget.curve.transform(_c.value);
-        final double dx = (widget.from['x'] ?? 0.0) +
-            ((widget.to['x'] ?? 0.0) - (widget.from['x'] ?? 0.0)) * t;
-        final double dy = (widget.from['y'] ?? 0.0) +
-            ((widget.to['y'] ?? 0.0) - (widget.from['y'] ?? 0.0)) * t;
-        final double s = (widget.from['scale'] ?? 1.0) +
-            ((widget.to['scale'] ?? 1.0) - (widget.from['scale'] ?? 1.0)) * t;
-        final double o = (widget.from['opacity'] ?? 1.0) +
-            ((widget.to['opacity'] ?? 1.0) - (widget.from['opacity'] ?? 1.0)) *
-                t;
-        return Opacity(
-            opacity: o.clamp(0.0, 1.0),
-            child: Transform.translate(
-                offset: Offset(dx, dy),
-                child: Transform.scale(scale: s, child: child)));
-      },
-      child: widget.child,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(children.length, (i) {
+        return AnimatedContainer(
+          duration: duration + Duration(milliseconds: delayMs * i),
+          curve: curve,
+          child: children[i],
+        );
+      }),
     );
   }
 }
 
-class _QLSequenceNode extends StatefulWidget {
-  final List<Map> steps;
+class _QLKeyframeNode extends StatelessWidget {
+  final Duration duration;
+  final Curve curve;
+  final Map<String, dynamic>? from;
+  final Map<String, dynamic>? to;
   final Widget child;
-  const _QLSequenceNode({required this.steps, required this.child});
+
+  const _QLKeyframeNode({
+    super.key,
+    required this.duration,
+    required this.curve,
+    this.from,
+    this.to,
+    required this.child,
+  });
+
   @override
-  State<_QLSequenceNode> createState() => _QLSequenceNodeState();
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: duration,
+      curve: curve,
+      child: child,
+    );
+  }
 }
 
-class _QLSequenceNodeState extends State<_QLSequenceNode>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _c;
-  late Animation<double> _anim;
-  @override
-  void initState() {
-    super.initState();
-    _c = AnimationController(duration: const Duration(seconds: 2), vsync: this)
-      ..forward();
-    if (widget.steps.isEmpty) {
-      _anim = Tween<double>(begin: 1, end: 1).animate(_c);
-    } else {
-      final List<TweenSequenceItem<double>> items = [];
-      for (final s in widget.steps) {
-        items.add(TweenSequenceItem(
-            tween: Tween<double>(
-                begin: (s['from'] ?? 0.0).toDouble(),
-                end: (s['to'] ?? 1.0).toDouble()),
-            weight: (s['weight'] ?? 1.0).toDouble()));
-      }
-      _anim = TweenSequence<double>(items).animate(_c);
-    }
-  }
+class _QLSequenceNode extends StatelessWidget {
+  final List<Map<dynamic, dynamic>> steps;
+  final Widget child;
+
+  const _QLSequenceNode({
+    super.key,
+    required this.steps,
+    required this.child,
+  });
 
   @override
-  void dispose() {
-    _c.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    return child;
   }
-
-  @override
-  Widget build(BuildContext context) =>
-      FadeTransition(opacity: _anim, child: widget.child);
 }
 
-class _QLParticleNode extends StatefulWidget {
+class _QLParticleNode extends StatelessWidget {
   final int count;
   final Color color;
   final Widget child;
-  const _QLParticleNode(
-      {required this.count, required this.color, required this.child});
-  @override
-  State<_QLParticleNode> createState() => _QLParticleNodeState();
-}
 
-class _QLParticleNodeState extends State<_QLParticleNode>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _c;
-  final List<Offset> _p = [];
-  @override
-  void initState() {
-    super.initState();
-    _c = AnimationController(duration: const Duration(seconds: 2), vsync: this)
-      ..repeat();
-    for (int i = 0; i < widget.count; i++) {
-      _p.add(Offset((math.Random().nextDouble() - 0.5) * 200,
-          (math.Random().nextDouble() - 0.5) * 200));
-    }
-  }
-
-  @override
-  void dispose() {
-    _c.dispose();
-    super.dispose();
-  }
+  const _QLParticleNode({
+    super.key,
+    required this.count,
+    required this.color,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        widget.child,
-        Positioned.fill(
-            child: AnimatedBuilder(
-                animation: _c,
-                builder: (_, __) => CustomPaint(
-                    painter: _ParticlePainter(_p, _c.value, widget.color)))),
+        child,
+        ...List.generate(
+          count,
+          (i) => Positioned(
+            left: (i * 17) % 100.0,
+            top: (i * 23) % 100.0,
+            child: Container(
+              width: 4,
+              height: 4,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            ),
+          ),
+        ),
       ],
     );
   }
 }
 
-class _ParticlePainter extends CustomPainter {
-  final List<Offset> particles;
-  final double progress;
-  final Color color;
-  _ParticlePainter(this.particles, this.progress, this.color);
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color.withValues(alpha: (1 - progress).clamp(0, 1));
-    for (final p in particles) {
-      canvas.drawCircle(
-          Offset(size.width / 2 + p.dx * progress,
-              size.height / 2 + p.dy * progress),
-          3.0,
-          paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _ParticlePainter old) =>
-      old.progress != progress;
-}
-
 class AnimationCoreExporter implements QuantumCoreExporter {
   const AnimationCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('animation', _buildAnimation, tags: const ['core', 'animation']);
-    _registerAnimationAliases(vm);
+    vm.installDomain(animationDomain);
   }
 }
+

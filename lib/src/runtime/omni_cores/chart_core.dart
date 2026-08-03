@@ -32,45 +32,47 @@ Widget _buildChart(QLContext rawCtx) {
   return buildChart(ctx, chartType);
 }
 
-void _registerChartAliases(QuantumVM vm) {
-  vm.defineAlias('chart', 'chart',
-      defaultProps: const <String, dynamic>{'chartType': 'line'},
-      description: 'Base chart core.',
-      tags: const ['chart', 'core']);
+final QuantumDomain chartDomain = quantumDomain('chart')
+    .surface('chart', _buildChart, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias('chart', 'chart',
+          defaultProps: const <String, dynamic>{'chartType': 'line'},
+          description: 'Base chart core.',
+          tags: const ['chart', 'core']);
 
-  for (final type in QLChartType.values) {
-    final props = <String, dynamic>{'chartType': type.name};
-    vm.defineAlias(type.name, 'chart',
-        defaultProps: props,
-        description: '${type.name} chart alias.',
-        tags: const ['chart', 'alias']);
-    vm.defineAlias('chart_${type.name}', 'chart',
-        defaultProps: props,
-        description: 'chart_${type.name} alias.',
-        tags: const ['chart', 'alias']);
-    vm.defineAlias('${type.name}_chart', 'chart',
-        defaultProps: props,
-        description: '${type.name}_chart alias.',
-        tags: const ['chart', 'alias']);
-    vm.defineAlias('media_${type.name}_chart', 'chart',
-        defaultProps: props,
-        description: 'media_${type.name}_chart compatibility alias.',
-        tags: const ['chart', 'compat']);
-  }
+      for (final type in QLChartType.values) {
+        final props = <String, dynamic>{'chartType': type.name};
+        vm.defineAlias(type.name, 'chart',
+            defaultProps: props,
+            description: '${type.name} chart alias.',
+            tags: const ['chart', 'alias']);
+        vm.defineAlias('chart_${type.name}', 'chart',
+            defaultProps: props,
+            description: 'chart_${type.name} alias.',
+            tags: const ['chart', 'alias']);
+        vm.defineAlias('${type.name}_chart', 'chart',
+            defaultProps: props,
+            description: '${type.name}_chart alias.',
+            tags: const ['chart', 'alias']);
+        vm.defineAlias('media_${type.name}_chart', 'chart',
+            defaultProps: props,
+            description: 'media_${type.name}_chart compatibility alias.',
+            tags: const ['chart', 'compat']);
+      }
 
-  vm.defineAlias('media:chart', 'chart',
-      defaultProps: const <String, dynamic>{'chartType': 'line'},
-      description: 'Backward-compatible media chart alias.',
-      tags: const ['chart', 'compat']);
-}
-
+      vm.defineAlias('media:chart', 'chart',
+          defaultProps: const <String, dynamic>{'chartType': 'line'},
+          description: 'Backward-compatible media chart alias.',
+          tags: const ['chart', 'compat']);
+    })
+    .build();
 
 class ChartCoreExporter implements QuantumCoreExporter {
   const ChartCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('chart', _buildChart, tags: const ['core', 'chart']);
-    _registerChartAliases(vm);
+    vm.installDomain(chartDomain);
   }
 }
+

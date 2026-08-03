@@ -406,23 +406,26 @@ class _RawPathPainter extends CustomPainter {
 // §4 — ALIAS REGISTRATIONS
 // ─────────────────────────────────────────────────────────────────────────────
 
-void _registerMediaAliases(QuantumVM vm) {
-  vm.defineAlias('image', 'media:image',
-      description: 'Image media alias.', tags: const ['media', 'alias']);
-  vm.defineAlias('avatar', 'media:avatar',
-      description: 'Avatar media alias.', tags: const ['media', 'alias']);
-  vm.defineAlias('video', 'media:video',
-      description: 'Video media alias.', tags: const ['media', 'alias']);
-  vm.defineAlias('icon', 'media:icon',
-      description: 'Icon media alias.', tags: const ['media', 'alias']);
-}
+final QuantumDomain mediaDomain = quantumDomain('media')
+    .surface('media', _buildMedia, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias('image', 'media:image',
+          description: 'Image media alias.', tags: const ['media', 'alias']);
+      vm.defineAlias('avatar', 'media:avatar',
+          description: 'Avatar media alias.', tags: const ['media', 'alias']);
+      vm.defineAlias('video', 'media:video',
+          description: 'Video media alias.', tags: const ['media', 'alias']);
+      vm.defineAlias('icon', 'media:icon',
+          description: 'Icon media alias.', tags: const ['media', 'alias']);
+    })
+    .build();
 
 class MediaCoreExporter implements QuantumCoreExporter {
   const MediaCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('media', _buildMedia, tags: const ['core', 'media']);
-    _registerMediaAliases(vm);
+    vm.installDomain(mediaDomain);
   }
 }
+

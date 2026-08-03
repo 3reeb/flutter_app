@@ -1,53 +1,57 @@
+// ════════════════════════════════════════════════════════════════════════════
+// quantum.config.dart.example
+//
+// Copy this file to `quantum.config.dart` and edit the single source of truth.
+// The actual implementation lives in `quantum.config.dart`.
+// This template shows the intended developer-facing shape with stronger defaults.
+// ════════════════════════════════════════════════════════════════════════════
+
 import 'package:quantum_layout/quantum.dart';
-import 'package:quantum_layout/src/runtime/api/network_shell.dart';
+import 'package:quantum_layout/src/platform/api/network_shell.dart';
 
 // ────────────────────────────────────────────────────────────────────────────
-// OmniShell Configuration
-//
-// This is the static baseline configuration for your app.
-// Note: In this architecture, the actual pages, layouts, schemas, and global
-// configs are driven entirely by `assets/config/kernel.json` and `assets/pages/`.
+// Example starter object
 // ────────────────────────────────────────────────────────────────────────────
 
 final OmniShellConfigRoot quantumConfig = OmniShellConfigRoot(
   app: OmniShellConfigAppSection(
-    appName: 'OmniShell Omega SDUI',
-    title: 'SDUI Application',
+    appName: 'OmniShellApp',
+    title: '',
     locale: 'en',
     version: '1.0.0',
     theme: OmniShellConfigThemeSection(
       mode: 'system',
-      colors: const <String, dynamic>{},
-      typography: const <String, dynamic>{},
-      spacing: const <String, dynamic>{},
-      breakpoints: const <String, dynamic>{},
-      shadows: const <String, dynamic>{},
-      radii: const <String, dynamic>{},
+      colors: <String, dynamic>{},
+      typography: <String, dynamic>{},
+      spacing: <String, dynamic>{},
+      breakpoints: <String, dynamic>{},
+      shadows: <String, dynamic>{},
+      radii: <String, dynamic>{},
     ),
     router: OmniShellConfigRouterSection(
       initialRoute: '/',
-      pagesDir: 'assets/pages', // Point to our generated pages folder
+      pagesDir: 'pages',
       notFoundPage: null,
-      globalGuards: const <Map<String, dynamic>>[],
+      globalGuards: <Map<String, dynamic>>[],
     ),
     vm: OmniShellConfigVmSection(
       workerThreads: 4,
-      simdArenaCapacity: 16384,
+      simdArenaCapacity: 4096,
     ),
     telemetry: OmniShellConfigTelemetrySection(
       enabled: true,
       frameMonitor: true,
     ),
-    domains: const <Map<String, dynamic>>[],
-    state: const <String, dynamic>{},
-    macros: const <String, dynamic>{},
-    schemas: const <String, dynamic>{},
-    pipes: const <String, dynamic>{},
-    actions: const <String, dynamic>{},
-    sdui: const <String, dynamic>{},
-    boot: const <String, dynamic>{
-      'appName': 'OmniShell Omega SDUI',
-      'pagesDir': 'assets/pages',
+    domains: <Map<String, dynamic>>[],
+    state: <String, dynamic>{},
+    macros: <String, dynamic>{},
+    schemas: <String, dynamic>{},
+    pipes: <String, dynamic>{},
+    actions: <String, dynamic>{},
+    sdui: <String, dynamic>{},
+    boot: <String, dynamic>{
+      'appName': 'OmniShellApp',
+      'pagesDir': 'pages',
     },
   ),
   api: OmniShellConfigApiSection(
@@ -59,10 +63,18 @@ final OmniShellConfigRoot quantumConfig = OmniShellConfigRoot(
     enableTelemetry: true,
     enableOfflineQueueing: true,
     driverMode: QuantumDriverMode.http,
+    mockMinLatency: Duration(milliseconds: 1),
+    mockMaxLatency: Duration(milliseconds: 5),
+    mockFailureProbability: 0.0,
   ),
   security: OmniShellConfigSecurityPolicy(
-    lockedPaths: const <String>{},
-    sensitivePaths: const <String>{},
+    lockedPaths: <String>{
+      'api.clientSecret',
+    },
+    sensitivePaths: <String>{
+      'api.clientSecret',
+      'security.clientSecret',
+    },
     requireBuildLockForSensitive: true,
     requireSignedRemoteConfig: false,
     allowUnsignedRemoteConfigInDebug: true,
@@ -78,25 +90,37 @@ final OmniShellConfigRoot quantumConfig = OmniShellConfigRoot(
   ),
   cache: OmniShellConfigCachePolicy(
     enableMemoization: true,
-    remoteTtl: const Duration(minutes: 5),
-    localTtl: const Duration(days: 3650),
+    remoteTtl: Duration(minutes: 5),
+    localTtl: Duration(days: 3650),
     maxSnapshots: 4,
     singleFlight: true,
     useSourceDigests: true,
   ),
   sources: OmniShellConfigSources(
     local: OmniShellConfigLocalSourceSpec(
-      sources: const <OmniShellConfigSource>[
+      sources: <OmniShellConfigSource>[
         QuantumAssetConfigSource(
-          id: 'kernel',
-          assetPath: 'assets/config/kernel.json',
+          id: 'app-yaml',
+          assetPath: 'APP.yaml',
+          priority: 10,
         ),
       ],
     ),
+    // remote: OmniShellConfigRemoteSourceSpec(
+    //   sources: <OmniShellConfigSource>[
+    //     OmniShellHttpConfigSource(
+    //       id: 'remote-config',
+    //       uri: Uri.parse('https://example.invalid/quantum-config.yaml'),
+    //       priority: 100,
+    //       timeout: Duration(seconds: 10),
+    //       cacheByEtag: true,
+    //     ),
+    //   ],
+    // ),
   ),
-  extras: const <String, dynamic>{},
+  extras: <String, dynamic>{},
   buildOverlay: QuantumBuildOverlay(
-    data: const <String, dynamic>{},
-    lockedPaths: const <String>{},
+    data: <String, dynamic>{},
+    lockedPaths: <String>{},
   ),
 );

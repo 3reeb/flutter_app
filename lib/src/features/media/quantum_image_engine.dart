@@ -36,7 +36,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../foundation/quantum_primitives.dart';
 import '../../foundation/quantum_async.dart';
-import 'package:quantum_layout/src/runtime/api/network_shell.dart';
+import 'package:quantum_layout/src/platform/api/network_shell.dart';
 import 'package:crypto/crypto.dart';
 // ─────────────────────────────────────────────────────────────────────── §1 ─
 //  RESOLVERS & CONFIGURATION (Smart CDN Resizing)

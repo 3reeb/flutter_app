@@ -621,6 +621,16 @@ class QNodeRegistry {
 
   Future<void> flush() => _disk.flush();
 
+  /// Force any debounced resolution work to complete before returning.
+  /// Useful in tests and after batch registrations when callers need
+  /// fully wired refs immediately.
+  Future<void> flushResolution() async {
+    final timer = _resolveDebounce;
+    _resolveDebounce = null;
+    timer?.cancel();
+    await _runBatchResolve();
+  }
+
   // ── INTERNAL WRITE HELPERS ────────────────────────────────────────────────
 
   Future<QNodeRef<QPageNode>> _writePageNode(

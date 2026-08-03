@@ -313,63 +313,66 @@ class _QLViewportNodeState extends State<_QLViewportNode> {
       child: widget.child);
 }
 
-void _registerActionAliases(QuantumVM vm) {
-  vm.defineAlias('raw_pointer', 'action:raw_pointer',
-      description: 'Raw pointer action alias.',
-      tags: const ['action', 'input', 'alias']);
-  vm.defineAlias('pointer', 'action:pointer',
-      description: 'Pointer action alias.',
-      tags: const ['action', 'input', 'alias']);
-  vm.defineAlias('focus', 'action:focus',
-      description: 'Focus action alias.',
-      tags: const ['action', 'input', 'alias']);
-  vm.defineAlias('button', 'action:button',
-      description: 'Button action alias.', tags: const ['action', 'alias']);
-  vm.defineAlias('tap', 'action:button',
-      description: 'Tap alias for button action.',
-      tags: const ['action', 'alias']);
-  vm.defineAlias('press', 'action:button',
-      description: 'Press alias for button action.',
-      tags: const ['action', 'alias']);
-  vm.defineAlias('hover_action', 'action:hover',
-      description: 'Hover action alias.', tags: const ['action', 'alias']);
-  vm.defineAlias(
-    'icon_button',
-    'action:button',
-    defaultProps: const <String, dynamic>{'shape': 'circle', 'fill': 'ghost'},
-    description: 'Icon button alias.',
-    tags: const ['action', 'alias'],
-  );
-  vm.defineAlias(
-    'chip',
-    'action:chip',
-    defaultProps: const <String, dynamic>{
-      'shape': 'pill',
-      'scale': 'sm',
-      'edge': 'hairline'
-    },
-    description: 'Chip action alias.',
-    tags: const ['action', 'alias'],
-  );
-  vm.defineAlias(
-    'badge',
-    'action:badge',
-    defaultProps: const <String, dynamic>{
-      'shape': 'pill',
-      'scale': 'xs',
-      'disabled': true
-    },
-    description: 'Badge action alias.',
-    tags: const ['action', 'alias'],
-  );
-}
+final QuantumDomain actionDomain = quantumDomain('action')
+    .surface('action', _buildAction, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias('raw_pointer', 'action:raw_pointer',
+          description: 'Raw pointer action alias.',
+          tags: const ['action', 'input', 'alias']);
+      vm.defineAlias('pointer', 'action:pointer',
+          description: 'Pointer action alias.',
+          tags: const ['action', 'input', 'alias']);
+      vm.defineAlias('focus', 'action:focus',
+          description: 'Focus action alias.',
+          tags: const ['action', 'input', 'alias']);
+      vm.defineAlias('button', 'action:button',
+          description: 'Button action alias.', tags: const ['action', 'alias']);
+      vm.defineAlias('tap', 'action:button',
+          description: 'Tap alias for button action.',
+          tags: const ['action', 'alias']);
+      vm.defineAlias('press', 'action:button',
+          description: 'Press alias for button action.',
+          tags: const ['action', 'alias']);
+      vm.defineAlias('hover_action', 'action:hover',
+          description: 'Hover action alias.', tags: const ['action', 'alias']);
+      vm.defineAlias(
+        'icon_button',
+        'action:button',
+        defaultProps: const <String, dynamic>{'shape': 'circle', 'fill': 'ghost'},
+        description: 'Icon button alias.',
+        tags: const ['action', 'alias'],
+      );
+      vm.defineAlias(
+        'chip',
+        'action:chip',
+        defaultProps: const <String, dynamic>{
+          'shape': 'pill',
+          'scale': 'sm',
+          'edge': 'hairline'
+        },
+        description: 'Chip action alias.',
+        tags: const ['action', 'alias'],
+      );
+      vm.defineAlias(
+        'badge',
+        'action:badge',
+        defaultProps: const <String, dynamic>{
+          'shape': 'pill',
+          'scale': 'xs',
+          'disabled': true
+        },
+        description: 'Badge action alias.',
+        tags: const ['action', 'alias'],
+      );
+    })
+    .build();
 
 class ActionCoreExporter implements QuantumCoreExporter {
   const ActionCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('action', _buildAction, tags: const ['core', 'action']);
-    _registerActionAliases(vm);
+    vm.installDomain(actionDomain);
   }
 }
+

@@ -374,6 +374,10 @@ class QuantumAppEnvironment {
 typedef QuantumDomainOrchestrator = FutureOr<void> Function(
     QuantumAppEnvironment env);
 
+typedef QuantumDomainWidgetBuilder = Widget Function(QLContext ctx);
+typedef QuantumDomainTestCase = FutureOr<void> Function(QuantumAppEnvironment env);
+typedef QuantumDomainInstallHook = void Function(QuantumVM vm);
+
 class QuantumDomain {
   final String name;
   final List<QLRoute> routes;
@@ -385,7 +389,8 @@ class QuantumDomain {
   final Map<String, dynamic> initialStoreData;
 
   // 🚀 MISSING GAPS ADDED (Absolute Declarative Injection)
-  final Map<String, Widget Function(QLContext)> sduiComponents;
+  final Map<String, QuantumDomainWidgetBuilder> sduiComponents;
+  final Map<String, QuantumDomainWidgetBuilder> sduiVariants;
   final Map<String, dynamic Function(dynamic, List<String>)> sduiPipes;
   final Map<String, Map<String, dynamic>> schemas;
   final List<ActionMiddleware> actionMiddlewares;
@@ -394,6 +399,13 @@ class QuantumDomain {
   // 🚀 DEPENDENCY INJECTION: Factories that receive the God-Mode Environment
   final Map<String, QLActionPlugin Function(QuantumAppEnvironment env)>
       actionFactories;
+
+  // 🚀 DECLARATIVE DOMAIN REGISTRY
+  final Map<String, Map<String, dynamic>> aliases;
+  final List<QuantumDomainTestCase> tests;
+  final List<QuantumDomainInstallHook> installHooks;
+  final String? defaultVariant;
+  final QuantumDomainWidgetBuilder? widgetBuilder;
 
   // 🚀 THE GOD-MODE HOOKS
   final QuantumDomainOrchestrator? onInitialize;
@@ -407,15 +419,126 @@ class QuantumDomain {
     this.nativeBridges = const {},
     this.initialStoreData = const {},
     this.sduiComponents = const {},
+    this.sduiVariants = const {},
     this.sduiPipes = const {},
     this.schemas = const {},
     this.actionMiddlewares = const [],
     this.routeMiddlewares = const [],
     this.actionFactories = const {}, // 🚀 Added
+    this.aliases = const {},
+    this.tests = const [],
+    this.installHooks = const [],
+    this.defaultVariant,
+    this.widgetBuilder,
     this.onInitialize,
     this.orchestrator,
   });
+
+  String resolveVariant(QLContext ctx, {String? fallback}) {
+    final fromNode = ctx.node.props['variant']?.toString().trim() ?? '';
+    if (fromNode.isNotEmpty) return fromNode;
+    final fromType = ctx.resolvedSubType(
+      fallback: defaultVariant ?? fallback ?? name,
+    ).trim();
+    return fromType.isNotEmpty ? fromType : (defaultVariant ?? fallback ?? name);
+  }
+
+  Widget build(QLContext ctx, {String? variant}) {
+    final resolvedVariant = (variant?.trim().isNotEmpty ?? false)
+        ? variant!.trim()
+        : resolveVariant(ctx);
+    final builder =
+        sduiVariants[resolvedVariant] ?? sduiComponents[resolvedVariant] ?? widgetBuilder;
+    if (builder != null) {
+      return builder(ctx);
+    }
+    final fallbackBuilder =
+        sduiComponents[name] ?? sduiVariants[defaultVariant ?? ''];
+    if (fallbackBuilder != null) {
+      return fallbackBuilder(ctx);
+    }
+    return const SizedBox.shrink();
+  }
+
+  Future<void> runTests(QuantumAppEnvironment env) async {
+    for (final test in tests) {
+      await test(env);
+    }
+  }
+
+  QuantumDomain withAliases(Map<String, Map<String, dynamic>> next) =>
+      QuantumDomain(
+        name: name,
+        routes: routes,
+        sduiPlugins: sduiPlugins,
+        sduiActions: sduiActions,
+        nativeBridges: nativeBridges,
+        initialStoreData: initialStoreData,
+        sduiComponents: sduiComponents,
+        sduiVariants: sduiVariants,
+        sduiPipes: sduiPipes,
+        schemas: schemas,
+        actionMiddlewares: actionMiddlewares,
+        routeMiddlewares: routeMiddlewares,
+        actionFactories: actionFactories,
+        aliases: next,
+        tests: tests,
+        installHooks: installHooks,
+        defaultVariant: defaultVariant,
+        widgetBuilder: widgetBuilder,
+        onInitialize: onInitialize,
+        orchestrator: orchestrator,
+      );
+
+  QuantumDomain withTests(List<QuantumDomainTestCase> next) =>
+      QuantumDomain(
+        name: name,
+        routes: routes,
+        sduiPlugins: sduiPlugins,
+        sduiActions: sduiActions,
+        nativeBridges: nativeBridges,
+        initialStoreData: initialStoreData,
+        sduiComponents: sduiComponents,
+        sduiVariants: sduiVariants,
+        sduiPipes: sduiPipes,
+        schemas: schemas,
+        actionMiddlewares: actionMiddlewares,
+        routeMiddlewares: routeMiddlewares,
+        actionFactories: actionFactories,
+        aliases: aliases,
+        tests: next,
+        installHooks: installHooks,
+        defaultVariant: defaultVariant,
+        widgetBuilder: widgetBuilder,
+        onInitialize: onInitialize,
+        orchestrator: orchestrator,
+      );
+
+  QuantumDomain withInstallHooks(List<QuantumDomainInstallHook> next) =>
+      QuantumDomain(
+        name: name,
+        routes: routes,
+        sduiPlugins: sduiPlugins,
+        sduiActions: sduiActions,
+        nativeBridges: nativeBridges,
+        initialStoreData: initialStoreData,
+        sduiComponents: sduiComponents,
+        sduiVariants: sduiVariants,
+        sduiPipes: sduiPipes,
+        schemas: schemas,
+        actionMiddlewares: actionMiddlewares,
+        routeMiddlewares: routeMiddlewares,
+        actionFactories: actionFactories,
+        aliases: aliases,
+        tests: tests,
+        installHooks: next,
+        defaultVariant: defaultVariant,
+        widgetBuilder: widgetBuilder,
+        onInitialize: onInitialize,
+        orchestrator: orchestrator,
+      );
 }
+
 
 // ─────────────────────────────────────────────────────────────────────── §4 ─
 //  PAYLOAD-STYLE MASTER CONFIGURATION

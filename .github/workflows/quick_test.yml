@@ -1,0 +1,42 @@
+name: Fast Manual Test Suite
+
+on:
+  workflow_dispatch:
+    inputs:
+      fail_fast:
+        description: 'Stop test execution on first failure'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  quick_test:
+    name: ⚡ Fast Unit & Lint Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Get Dependencies
+        run: flutter pub get
+
+      - name: Run Static Analysis
+        run: flutter analyze
+
+      - name: Run Unit Tests
+        run: flutter test ${{ inputs.fail_fast && '--fail-fast' || '' }}

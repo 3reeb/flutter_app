@@ -48,11 +48,10 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import '../foundation/quantum_yaml_engine.dart';
-import 'package:quantum_layout/src/runtime/api/network_shell.dart';
-import 'package:quantum_layout/src/runtime/api/network.dart';
+import '../platform/api/network_shell.dart';
+import '../platform/api/network.dart';
 
 import 'quantum_app_boot.dart';
-import 'quantum_boot_schema.dart';
 import 'quantum_http_transport.dart';
 import 'quantum_file_router.dart';
 

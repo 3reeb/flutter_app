@@ -294,45 +294,48 @@ Widget _buildVisual(QLContext rawCtx) {
   return RepaintBoundary(child: content);
 }
 
-void _registerVisualAliases(QuantumVM vm) {
-  vm.defineAlias(
-    'visual_surface',
-    'visual:surface',
-    description: 'Visual surface alias.',
-    tags: const ['visual', 'alias'],
-  );
-  vm.defineAlias(
-    'visual_shell',
-    'visual:shell',
-    description: 'Visual shell alias.',
-    tags: const ['visual', 'alias'],
-  );
-  vm.defineAlias(
-    'visual_scene',
-    'visual:scene',
-    description: 'Visual scene alias.',
-    tags: const ['visual', 'alias'],
-  );
-  vm.defineAlias(
-    'visual_overlay',
-    'visual:overlay',
-    description: 'Visual overlay alias.',
-    tags: const ['visual', 'alias'],
-  );
-  vm.defineAlias(
-    'visual_delegate',
-    'visual:delegate',
-    description: 'Visual delegation alias.',
-    tags: const ['visual', 'alias'],
-  );
-}
+final QuantumDomain visualDomain = quantumDomain('visual')
+    .surface('visual', _buildVisual, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias(
+        'visual_surface',
+        'visual:surface',
+        description: 'Visual surface alias.',
+        tags: const ['visual', 'alias'],
+      );
+      vm.defineAlias(
+        'visual_shell',
+        'visual:shell',
+        description: 'Visual shell alias.',
+        tags: const ['visual', 'alias'],
+      );
+      vm.defineAlias(
+        'visual_scene',
+        'visual:scene',
+        description: 'Visual scene alias.',
+        tags: const ['visual', 'alias'],
+      );
+      vm.defineAlias(
+        'visual_overlay',
+        'visual:overlay',
+        description: 'Visual overlay alias.',
+        tags: const ['visual', 'alias'],
+      );
+      vm.defineAlias(
+        'visual_delegate',
+        'visual:delegate',
+        description: 'Visual delegation alias.',
+        tags: const ['visual', 'alias'],
+      );
+    })
+    .build();
 
 class VisualCoreExporter implements QuantumCoreExporter {
   const VisualCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('visual', _buildVisual, tags: const ['core', 'visual']);
-    _registerVisualAliases(vm);
+    vm.installDomain(visualDomain);
   }
 }
+

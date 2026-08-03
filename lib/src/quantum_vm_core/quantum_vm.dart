@@ -47,6 +47,7 @@ import './qee/qee_registry.dart';
 part 'quantum_vm_compiler.dart';
 part 'quantum_vm_registry.dart';
 part 'quantum_vm_components.dart';
+part 'quantum_vm_layout.dart';
 
 class QuantumSecurityException implements Exception {
   final String message;
@@ -394,6 +395,7 @@ class QuantumVM {
 
   // ًںڑ€ ALIAS REGISTRY
   final Map<String, Map<String, dynamic>> _aliases = {};
+  final Map<String, Map<String, dynamic>> _variants = {};
 
   static Map<String, dynamic> _cloneMap(dynamic raw) {
     if (raw is Map) {
@@ -653,6 +655,12 @@ class QuantumVM {
       ..['defaultPropsSchema'] = defaultPropsSchema;
 
     _aliases[alias] = {'type': targetType, 'props': clonedProps};
+    if (targetType.isNotEmpty && targetType != alias) {
+      _aliases.putIfAbsent(
+        targetType,
+        () => {'type': targetType, 'props': clonedProps},
+      );
+    }
     _registryEntries['alias:$alias'] = QLRegistryEntry(
       id: 'alias:$alias',
       kind: 'alias',
@@ -684,7 +692,130 @@ class QuantumVM {
     );
   }
 
-  Map<String, dynamic>? getAlias(String alias) => _aliases[alias];
+  void defineVariant(
+    String variant,
+    String targetType, {
+    Map<String, dynamic> defaultProps = const {},
+    String? description,
+    Map<String, dynamic> metadata = const {},
+    List<String> tags = const [],
+  }) {
+    final Map<String, dynamic> clonedProps =
+        Map<String, dynamic>.from(defaultProps);
+    final String resolvedDescription =
+        description ?? 'Variant for $targetType';
+    final List<String> resolvedTags = tags.isNotEmpty
+        ? List<String>.unmodifiable(tags)
+        : List<String>.unmodifiable(<String>[
+            'variant',
+            targetType.split(':').first,
+            _humanizeTarget(targetType),
+          ]);
+    _variants[variant] = <String, dynamic>{
+      'type': targetType,
+      'props': clonedProps,
+      'variant': variant,
+      'description': resolvedDescription,
+      'metadata': Map<String, dynamic>.from(metadata),
+      'tags': resolvedTags,
+    };
+    defineAlias(
+      variant,
+      targetType,
+      defaultProps: clonedProps,
+      description: resolvedDescription,
+      metadata: <String, dynamic>{
+        ...metadata,
+        'kind': 'variant',
+        'variant': variant,
+      },
+      tags: resolvedTags,
+    );
+    _registryEntries['variant:$variant'] = QLRegistryEntry(
+      id: 'variant:$variant',
+      kind: 'variant',
+      name: variant,
+      description: resolvedDescription,
+      engine: 'QuantumVM',
+      tags: resolvedTags,
+      params: <String, dynamic>{
+        'targetType': targetType,
+        'defaultProps': clonedProps,
+      },
+      metadata: <String, dynamic>{
+        ...metadata,
+        'kind': 'variant',
+        'variant': variant,
+        'targetType': targetType,
+      },
+      registeredAt: DateTime.now(),
+    );
+  }
+
+  Map<String, dynamic>? getVariant(String variant) => _variants[variant];
+
+  bool hasVariant(String variant) => _variants.containsKey(variant);
+
+  void defineSurface(
+    String name,
+    Widget Function(QLContext ctx) builder, {
+    Map<String, dynamic> defaultProps = const {},
+    Map<String, String> aliases = const {},
+    Map<String, Map<String, dynamic>> variants = const {},
+    String? description,
+    Map<String, dynamic> metadata = const {},
+    List<String> tags = const [],
+  }) {
+    define(
+      name,
+      builder,
+      defaultProps: defaultProps,
+      description: description,
+      metadata: metadata,
+      tags: tags,
+    );
+    for (final entry in aliases.entries) {
+      defineAlias(
+        entry.key,
+        name,
+        defaultProps: defaultProps,
+        description: description == null ? null : '$description (alias: ${entry.key})',
+        metadata: <String, dynamic>{
+          ...metadata,
+          'surface': name,
+          'alias': entry.key,
+          if (entry.value.isNotEmpty) 'aliasValue': entry.value,
+        },
+        tags: tags,
+      );
+    }
+    for (final entry in variants.entries) {
+      defineVariant(
+        '$name:${entry.key}',
+        name,
+        defaultProps: entry.value,
+        description: description == null ? null : '$description (variant: ${entry.key})',
+        metadata: <String, dynamic>{
+          ...metadata,
+          'surface': name,
+          'variant': entry.key,
+        },
+        tags: tags,
+      );
+    }
+  }
+
+  Map<String, dynamic>? getAlias(String alias) {
+    final direct = _aliases[alias];
+    if (direct != null) return direct;
+    if (alias.contains(':')) {
+      for (final entry in _aliases.values) {
+        if (entry['type'] == alias) return entry;
+      }
+      return <String, dynamic>{'type': alias, 'props': const <String, dynamic>{}};
+    }
+    return null;
+  }
 
   final Map<String, QLPlugin> _plugins = {};
   final Map<String, QLActionPlugin> _actions = {};
@@ -728,9 +859,14 @@ class QuantumVM {
     if (_isInitialized) return;
     _workerPool = QLWorkerPool(size: workerThreads);
 
-    // ًںڑ€ HOOK: Wire state slice registry directly to VM action dispatcher!
+    // 🚀 HOOK: Wire state slice registry directly to VM action dispatcher!
     QLSliceRegistry.actionRegistrar = registerAction;
     _registerCoreStateActions();
+
+    // 🏗️ NATIVE LAYOUT: Register all built-in layout types, matrix shells,
+    // and aliases. This runs BEFORE any external omni_core plugin, ensuring
+    // layout is always available as a first-class built-in.
+    _registerNativeLayoutCore(this);
 
     _isInitialized = true;
   }
@@ -1035,6 +1171,25 @@ class QuantumVM {
       );
     });
 
+    bundle.variants.forEach((variant, payload) {
+      if (!overwrite && hasVariant(variant)) return;
+      final targetType = payload['type']?.toString() ?? '';
+      if (targetType.isEmpty) return;
+      final defaultProps = Map<String, dynamic>.from(
+        payload['props'] as Map? ?? const {},
+      );
+      defineVariant(
+        variant,
+        targetType,
+        defaultProps: defaultProps,
+        description: payload['description']?.toString(),
+        metadata: Map<String, dynamic>.from(
+          payload['metadata'] as Map? ?? const {},
+        ),
+        tags: _asStringList(payload['tags']),
+      );
+    });
+
     bundle.slotTypes.forEach((alias, types) {
       if (!overwrite && getSlotTypes(alias) != null) return;
       registerSlotTypes(alias, Map<String, String>.from(types));
@@ -1206,15 +1361,22 @@ class QuantumVM {
   }
 
   QLRegistryEntry? registryEntry(String key, {String? kind}) {
-    if (key.contains(':') && _registryEntries.containsKey(key)) {
-      return _registryEntries[key];
-    }
+    final normalized = key.trim();
+
+    // exact id
+    if (_registryEntries.containsKey(normalized))
+      return _registryEntries[normalized];
+
+    // exact kind:key
     if (kind != null) {
-      final direct = _registryEntries['$kind:$key'];
+      final direct = _registryEntries['$kind:$normalized'];
       if (direct != null) return direct;
     }
+
+    // match by name or explicit id field
     for (final entry in _aggregateRegistryEntries()) {
-      if (entry.name == key && (kind == null || entry.kind == kind)) {
+      if ((entry.id == normalized || entry.name == normalized) &&
+          (kind == null || entry.kind == kind)) {
         return entry;
       }
     }
@@ -2092,7 +2254,9 @@ class QuantumVM {
         if (renderType == 'row' || renderType == '->') {
           combinedStyle = 'row $combinedStyle';
         }
-        if (renderType == 'col' || renderType == 'column' || renderType == 'v') {
+        if (renderType == 'col' ||
+            renderType == 'column' ||
+            renderType == 'v') {
           combinedStyle = 'col $combinedStyle';
         }
         if (renderType == 'wrap') combinedStyle = 'wrap $combinedStyle';
@@ -2147,10 +2311,14 @@ class QuantumVM {
       }
     }
 
-    final String? nodeId = node.props['id'] ?? node.props['key'];
+    final String? testIdProp = node.props['testId']?.toString();
+    final String? nodeId = node.props['id']?.toString() ?? node.props['key']?.toString() ?? testIdProp;
     if (nodeId != null || keySuffix != null) {
+      final keyString = testIdProp != null
+          ? '__qte_testId_$testIdProp'
+          : (keySuffix != null ? '${nodeId ?? ''}_$keySuffix' : nodeId!);
       content = KeyedSubtree(
-          key: ValueKey('${nodeId ?? ''}_${keySuffix ?? ''}'), child: content);
+          key: ValueKey(keyString), child: content);
     }
 
     return content;
@@ -2622,8 +2790,20 @@ class _QLReactiveNodeBoundaryState extends State<_QLReactiveNodeBoundary> {
   }
 
   void _extractDeps(dynamic value, Set<String> deps) {
-    if (value is Map) {
-      if (value['_isTokenized'] == true) {
+    if (value is String) {
+      final matches = RegExp(r'\{\{(.*?)\}\}').allMatches(value);
+      for (final m in matches) {
+        final expr = m.group(1) ?? '';
+        final tokens = RegExp(r'[a-zA-Z_][a-zA-Z0-9_\.]*').allMatches(expr);
+        for (final t in tokens) {
+          final name = t.group(0);
+          if (name != null && name != 'true' && name != 'false' && name != 'null') {
+            deps.add(name);
+          }
+        }
+      }
+    } else if (value is Map) {
+      if (value['_isTokenized'] == true && value['deps'] is List) {
         deps.addAll((value['deps'] as List).cast<String>());
       }
       for (final v in value.values) {
@@ -2784,6 +2964,58 @@ extension QuantumVMMicroPlugin on QuantumVM {
         metadata: metadata,
         tags: tags,
       );
+
+  void installDomain(QuantumDomain domain) {
+    domain.sduiComponents.forEach((name, builder) => define(name, builder));
+    domain.sduiVariants.forEach((variantName, builder) {
+      final targetType = '${domain.name}:$variantName';
+      defineVariant(variantName, targetType);
+      define(variantName, builder);
+      define(targetType, builder);
+    });
+    if (domain.widgetBuilder != null) {
+      define(domain.name, domain.widgetBuilder!);
+    }
+    for (final plugin in domain.sduiPlugins) {
+      registerPlugin(plugin);
+    }
+    domain.sduiActions.forEach((key, plugin) {
+      registerAction(key, plugin);
+    });
+    domain.sduiPipes.forEach((name, transform) {
+      QLPipes.register(name, transform);
+    });
+    domain.schemas.forEach((name, def) {
+      QLSchemaRegistry.instance.registerRaw(name, def);
+    });
+    domain.aliases.forEach((alias, info) {
+      final targetType = info['type']?.toString() ?? '';
+      final props = info['props'] is Map
+          ? Map<String, dynamic>.from(info['props'] as Map)
+          : const <String, dynamic>{};
+      final description = info['description']?.toString();
+      final metadata = info['metadata'] is Map
+          ? Map<String, dynamic>.from(info['metadata'] as Map)
+          : const <String, dynamic>{};
+      final tags = info['tags'] is List
+          ? (info['tags'] as List).map((e) => e.toString()).toList()
+          : const <String>[];
+      defineAlias(
+        alias,
+        targetType,
+        defaultProps: props,
+        description: description,
+        metadata: metadata,
+        tags: tags,
+      );
+    });
+    if (domain.initialStoreData.isNotEmpty) {
+      store.merge(domain.initialStoreData);
+    }
+    for (final hook in domain.installHooks) {
+      hook(this);
+    }
+  }
 }
 
 // ADD THIS HELPER JUST ABOVE THE PLUGINS IF NOT ALREADY THERE

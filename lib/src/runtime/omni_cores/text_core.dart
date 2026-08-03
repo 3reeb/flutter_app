@@ -189,31 +189,34 @@ Widget _buildText(QLContext rawCtx) {
 // §2 — ALIAS REGISTRATION
 // ─────────────────────────────────────────────────────────────────────────────
 
-void _registerTextAliases(QuantumVM vm) {
-  vm.defineAlias('text', 'text',
-      description: 'Base text alias.', tags: const ['text']);
-  vm.defineAlias('p', 'text:p',
-      description: 'Paragraph alias.', tags: const ['text']);
-  vm.defineAlias('h1', 'text:h1',
-      description: 'Heading 1 alias.', tags: const ['text']);
-  vm.defineAlias('h2', 'text:h2',
-      description: 'Heading 2 alias.', tags: const ['text']);
-  vm.defineAlias('h3', 'text:h3',
-      description: 'Heading 3 alias.', tags: const ['text']);
-  vm.defineAlias('label', 'text:label',
-      description: 'Label alias.', tags: const ['text']);
-  vm.defineAlias('code', 'text:code',
-      description: 'Code alias.', tags: const ['text']);
-  vm.defineAlias('rich', 'text:rich',
-      description: 'Rich text alias.', tags: const ['text']);
-}
+final QuantumDomain textDomain = quantumDomain('text')
+    .surface('text', _buildText, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias('text', 'text',
+          description: 'Base text alias.', tags: const ['text']);
+      vm.defineAlias('p', 'text:p',
+          description: 'Paragraph alias.', tags: const ['text']);
+      vm.defineAlias('h1', 'text:h1',
+          description: 'Heading 1 alias.', tags: const ['text']);
+      vm.defineAlias('h2', 'text:h2',
+          description: 'Heading 2 alias.', tags: const ['text']);
+      vm.defineAlias('h3', 'text:h3',
+          description: 'Heading 3 alias.', tags: const ['text']);
+      vm.defineAlias('label', 'text:label',
+          description: 'Label alias.', tags: const ['text']);
+      vm.defineAlias('code', 'text:code',
+          description: 'Code alias.', tags: const ['text']);
+      vm.defineAlias('rich', 'text:rich',
+          description: 'Rich text alias.', tags: const ['text']);
+    })
+    .build();
 
 class TextCoreExporter implements QuantumCoreExporter {
   const TextCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('text', _buildText, tags: const ['core', 'text']);
-    _registerTextAliases(vm);
+    vm.installDomain(textDomain);
   }
 }
+

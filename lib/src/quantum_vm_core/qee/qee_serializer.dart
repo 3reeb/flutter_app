@@ -331,10 +331,82 @@ class QEncodeBuffer {
     if (map.isEmpty) return;
     writeU8(id);
     writeU8(QSerial.tMap);
-    // Encode as JSON string — for complex nested maps (macros, schemas, etc.)
-    // We trade some space for correctness here. The string is interned.
-    final json = _mapToJson(map);
-    writeU16(_intern(json));
+    writeU16(map.length);
+    for (final entry in map.entries) {
+      writeU16(_intern(entry.key));
+      _writeDynamicValue(entry.value);
+    }
+  }
+
+  void _writeDynamicValue(dynamic value) {
+    if (value == null) {
+      writeU8(QSerial.tNull);
+      return;
+    }
+    if (value is bool) {
+      writeU8(value ? QSerial.tTrue : QSerial.tFalse);
+      return;
+    }
+    if (value is int) {
+      if (value < 0) {
+        writeU8(QSerial.tI64);
+        writeI64(value);
+      } else if (value <= 0xFF) {
+        writeU8(QSerial.tU8);
+        writeU8(value);
+      } else if (value <= 0xFFFF) {
+        writeU8(QSerial.tU16);
+        writeU16(value);
+      } else if (value <= 0xFFFFFFFF) {
+        writeU8(QSerial.tU32);
+        writeU32(value);
+      } else {
+        writeU8(QSerial.tU64);
+        writeU64(value);
+      }
+      return;
+    }
+    if (value is double) {
+      writeU8(QSerial.tF64);
+      writeF64(value);
+      return;
+    }
+    if (value is String) {
+      writeU8(QSerial.tStr);
+      writeU16(_intern(value));
+      return;
+    }
+    if (value is Uint8List) {
+      writeU8(QSerial.tBytes);
+      writeBytes(value);
+      return;
+    }
+    if (value is QNodeRef) {
+      writeU8(QSerial.tNodeRef);
+      writeU64(value.nodeId);
+      return;
+    }
+    if (value is List) {
+      writeU8(QSerial.tList);
+      writeU16(value.length);
+      for (final item in value) {
+        _writeDynamicValue(item);
+      }
+      return;
+    }
+    if (value is Map) {
+      final map = value.map((k, v) => MapEntry(k.toString(), v));
+      writeU8(QSerial.tMap);
+      writeU16(map.length);
+      for (final entry in map.entries) {
+        writeU16(_intern(entry.key));
+        _writeDynamicValue(entry.value);
+      }
+      return;
+    }
+    // Fallback: preserve a readable string rather than losing the value.
+    writeU8(QSerial.tStr);
+    writeU16(_intern(value.toString()));
   }
 
   // ── Finalization ──────────────────────────────────────────────────────────
@@ -486,6 +558,7 @@ abstract final class QNodeEncoder {
     if (n.openGraph.isNotEmpty) { buf.fieldStringMap(QSerial.fOpenGraph, n.openGraph); fc++; }
     if (n.twitterCard.isNotEmpty) { buf.fieldStringMap(QSerial.fTwitterCard, n.twitterCard); fc++; }
     if (n.extra.isNotEmpty) { buf.fieldStringMap(QSerial.fExtraMeta, n.extra); fc++; }
+    if (n.raw.isNotEmpty) { buf.fieldDynamicMap(QSerial.fRawMeta, n.raw); fc++; }
 
     return buf.finalize(fc);
   }
@@ -648,6 +721,17 @@ class QDecodeBuffer {
     return bd.getFloat64(0, Endian.little);
   }
 
+  int readVarint() {
+    var shift = 0;
+    var result = 0;
+    while (true) {
+      final byte = readU8();
+      result |= (byte & 0x7F) << shift;
+      if ((byte & 0x80) == 0) return result;
+      shift += 7;
+    }
+  }
+
   Uint8List readBytes() {
     final len = readU32();
     final slice = Uint8List.sublistView(_data, _pos, _pos + len);
@@ -691,6 +775,7 @@ class QDecodeBuffer {
       QSerial.tNodeRefList => _readNodeRefList(),
       QSerial.tList  => _readList(),
       QSerial.tMap   => _readMap(),
+      QSerial.tVarint => readVarint(),
       _              => null,
     };
   }
@@ -878,7 +963,7 @@ abstract final class QNodeDecoder {
       openGraph: _toStringMap(f[QSerial.fOpenGraph]),
       twitterCard: _toStringMap(f[QSerial.fTwitterCard]),
       extra: _toStringMap(f[QSerial.fExtraMeta]),
-      raw: const {},
+      raw: _toDynamicMap(f[QSerial.fRawMeta]),
     );
   }
 
@@ -1074,7 +1159,7 @@ abstract final class QNodeIdGen {
     int hash = 5381;
     for (final unit in utf8.encode(key)) {
       hash = ((hash << 5) + hash) ^ unit;
-      hash &= 0xFFFFFFFFFFFFFFFF; // keep 64-bit
+      hash &= 0xFFFFFFFF; // keep 32-bit (JS safe & cross-platform)
     }
     return hash;
   }

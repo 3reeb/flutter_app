@@ -424,11 +424,27 @@ class QTEAssertionEngine {
 
       case QTEAssertionType.stateType:
         final actual = store.get(a.storeKey ?? '');
-        final expType = a.expected?.toString() ?? '';
+        final expType = (a.expected?.toString() ?? '').toLowerCase().trim();
         final actualType = actual.runtimeType.toString();
-        if (actualType != expType) {
+
+        bool typeMatches = actualType == expType || actualType.toLowerCase() == expType;
+        if (!typeMatches) {
+          if ((expType == 'object' || expType == 'map' || expType == '_map') && actual is Map) {
+            typeMatches = true;
+          } else if ((expType == 'list' || expType == 'array' || expType == '_list') && actual is List) {
+            typeMatches = true;
+          } else if ((expType == 'string' || expType == 'str') && actual is String) {
+            typeMatches = true;
+          } else if ((expType == 'number' || expType == 'num' || expType == 'int' || expType == 'double') && actual is num) {
+            typeMatches = true;
+          } else if ((expType == 'boolean' || expType == 'bool') && actual is bool) {
+            typeMatches = true;
+          }
+        }
+
+        if (!typeMatches) {
           return QTEAssertionOutcome.fail(a.id, stepId, label,
-              'Type mismatch', actual: actualType, expected: expType, severity: a.severity);
+              'Type mismatch', actual: actualType, expected: a.expected?.toString(), severity: a.severity);
         }
         return QTEAssertionOutcome.pass(a.id, stepId, label);
 

@@ -24,7 +24,7 @@
  * ============================================================================
  */
 // ??????????????????????????????????????????????????????????????????????????????
-// QTE REPORT — qte_report.dart
+// QTE REPORT ï¿½ qte_report.dart
 // Structured pass/fail result with diffs, JSON export, human-readable output.
 // ??????????????????????????????????????????????????????????????????????????????
 import 'dart:convert';
@@ -49,8 +49,12 @@ class QTEStepResult {
   final QTEStepPerformance? performance;
 
   int get passCount => assertions.where((a) => a.passed).length;
-  int get failCount => assertions.where((a) => !a.passed && a.severity == QTESeverity.error).length;
-  int get warnCount => assertions.where((a) => !a.passed && a.severity == QTESeverity.warning).length;
+  int get failCount => assertions
+      .where((a) => !a.passed && a.severity == QTESeverity.error)
+      .length;
+  int get warnCount => assertions
+      .where((a) => !a.passed && a.severity == QTESeverity.warning)
+      .length;
 
   const QTEStepResult({
     required this.stepId,
@@ -64,14 +68,18 @@ class QTEStepResult {
   });
 
   Map<String, dynamic> toJson() => {
-    'stepId': stepId, 'label': label, 'status': status.name,
-    'elapsed_ms': elapsed.inMilliseconds,
-    'pass': passCount, 'fail': failCount, 'warn': warnCount,
-    if (interactionError != null) 'interactionError': interactionError,
-    'assertions': assertions.map((a) => a.toJson()).toList(),
-    if (stateSnapshot != null) 'stateSnapshot': stateSnapshot,
-    if (performance != null) 'performance': performance!.toJson(),
-  };
+        'stepId': stepId,
+        'label': label,
+        'status': status.name,
+        'elapsed_ms': elapsed.inMilliseconds,
+        'pass': passCount,
+        'fail': failCount,
+        'warn': warnCount,
+        if (interactionError != null) 'interactionError': interactionError,
+        'assertions': assertions.map((a) => a.toJson()).toList(),
+        if (stateSnapshot != null) 'stateSnapshot': stateSnapshot,
+        if (performance != null) 'performance': performance!.toJson(),
+      };
 }
 
 class QTERunResult {
@@ -112,16 +120,28 @@ class QTERunResult {
   });
 
   Map<String, dynamic> toJson() => {
-    'testId': testId, 'title': title, 'passed': passed,
-    'runAt': runAt.toIso8601String(),
-    'elapsed_ms': totalElapsed.inMilliseconds,
-    'summary': {
-      'steps': {'total': totalSteps, 'passed': passedSteps, 'failed': failedSteps, 'skipped': skippedSteps},
-      'assertions': {'total': totalAssertions, 'passed': passedAssertions, 'failed': failedAssertions, 'warned': warnedAssertions},
-    },
-    if (performanceSummary != null) 'performance': performanceSummary,
-    'steps': steps.map((s) => s.toJson()).toList(),
-  };
+        'testId': testId,
+        'title': title,
+        'passed': passed,
+        'runAt': runAt.toIso8601String(),
+        'elapsed_ms': totalElapsed.inMilliseconds,
+        'summary': {
+          'steps': {
+            'total': totalSteps,
+            'passed': passedSteps,
+            'failed': failedSteps,
+            'skipped': skippedSteps
+          },
+          'assertions': {
+            'total': totalAssertions,
+            'passed': passedAssertions,
+            'failed': failedAssertions,
+            'warned': warnedAssertions
+          },
+        },
+        if (performanceSummary != null) 'performance': performanceSummary,
+        'steps': steps.map((s) => s.toJson()).toList(),
+      };
 }
 
 // ?????????????????????????????????????????????????????????????????????????????
@@ -129,7 +149,6 @@ class QTERunResult {
 // ?????????????????????????????????????????????????????????????????????????????
 
 abstract final class QTEReportGenerator {
-
   static QTERunResult build({
     required String testId,
     required String title,
@@ -142,10 +161,18 @@ abstract final class QTEReportGenerator {
 
     for (final step in steps) {
       switch (step.status) {
-        case QTEStepStatus.passed: passedSteps++; break;
-        case QTEStepStatus.failed: failedSteps++; break;
-        case QTEStepStatus.skipped: skippedSteps++; break;
-        case QTEStepStatus.warning: passedSteps++; break;
+        case QTEStepStatus.passed:
+          passedSteps++;
+          break;
+        case QTEStepStatus.failed:
+          failedSteps++;
+          break;
+        case QTEStepStatus.skipped:
+          skippedSteps++;
+          break;
+        case QTEStepStatus.warning:
+          passedSteps++;
+          break;
       }
       passedAssertions += step.passCount;
       failedAssertions += step.failCount;
@@ -155,14 +182,19 @@ abstract final class QTEReportGenerator {
     final passed = failedSteps == 0 && failedAssertions == 0;
 
     return QTERunResult(
-      testId: testId, title: title, passed: passed,
+      testId: testId,
+      title: title,
+      passed: passed,
       totalSteps: steps.length,
-      passedSteps: passedSteps, failedSteps: failedSteps, skippedSteps: skippedSteps,
+      passedSteps: passedSteps,
+      failedSteps: failedSteps,
+      skippedSteps: skippedSteps,
       totalAssertions: passedAssertions + failedAssertions + warnedAssertions,
       passedAssertions: passedAssertions,
       failedAssertions: failedAssertions,
       warnedAssertions: warnedAssertions,
-      steps: steps, totalElapsed: totalElapsed,
+      steps: steps,
+      totalElapsed: totalElapsed,
       performanceSummary: performanceSummary,
       runAt: DateTime.now(),
     );
@@ -183,23 +215,33 @@ abstract final class QTEReportGenerator {
     lines.add(thin);
     lines.add('  Steps:      ${result.passedSteps}/${result.totalSteps} passed'
         '${result.skippedSteps > 0 ? " (${result.skippedSteps} skipped)" : ""}');
-    lines.add('  Assertions: ${result.passedAssertions}/${result.totalAssertions} passed'
+    lines.add(
+        '  Assertions: ${result.passedAssertions}/${result.totalAssertions} passed'
         '${result.warnedAssertions > 0 ? " (${result.warnedAssertions} warnings)" : ""}');
     lines.add(bar);
 
     for (final step in result.steps) {
-      final icon = step.status == QTEStepStatus.passed ? '?'
-          : step.status == QTEStepStatus.failed ? '?'
-          : step.status == QTEStepStatus.warning ? '??' : '??';
+      final icon = step.status == QTEStepStatus.passed
+          ? '?'
+          : step.status == QTEStepStatus.failed
+              ? '?'
+              : step.status == QTEStepStatus.warning
+                  ? '??'
+                  : '??';
       lines.add('');
-      lines.add('  $icon STEP [${step.stepId}]: ${step.label} (${step.elapsed.inMilliseconds}ms)');
+      lines.add(
+          '  $icon STEP [${step.stepId}]: ${step.label} (${step.elapsed.inMilliseconds}ms)');
 
       if (step.interactionError != null) {
         lines.add('     ? Interaction error: ${step.interactionError}');
       }
 
       for (final a in step.assertions) {
-        final aIcon = a.passed ? '  ?' : a.severity == QTESeverity.error ? '  ?' : '  ??';
+        final aIcon = a.passed
+            ? '  ?'
+            : a.severity == QTESeverity.error
+                ? '  ?'
+                : '  ??';
         lines.add('$aIcon [${a.assertionId}] ${a.label}');
         if (!a.passed && a.failureMessage != null) {
           lines.add('       ? ${a.failureMessage}');
@@ -214,7 +256,8 @@ abstract final class QTEReportGenerator {
             'reRender=${p.reRenderMs.toStringAsFixed(1)}ms '
             'drops=${p.frameDropCount}');
         if (p.memoryDeltaMb != null) {
-          lines.add('     ?? memDelta=${p.memoryDeltaMb!.toStringAsFixed(1)}MB');
+          lines
+              .add('     ?? memDelta=${p.memoryDeltaMb!.toStringAsFixed(1)}MB');
         }
       }
     }
@@ -226,11 +269,13 @@ abstract final class QTEReportGenerator {
       for (final step in result.steps) {
         for (final a in step.assertions) {
           if (!a.passed && a.severity == QTESeverity.error) {
-            lines.add('  ? [${step.stepId}] ? [${a.assertionId}] ${a.failureMessage}');
+            lines.add(
+                '  ? [${step.stepId}] ? [${a.assertionId}] ${a.failureMessage}');
           }
         }
         if (step.interactionError != null) {
-          lines.add('  ? [${step.stepId}] Interaction: ${step.interactionError}');
+          lines.add(
+              '  ? [${step.stepId}] Interaction: ${step.interactionError}');
         }
       }
       lines.add(bar);
@@ -241,7 +286,8 @@ abstract final class QTEReportGenerator {
 
   // ?? Machine-readable JSON ??????????????????????????????????????????????????
   static String jsonReport(QTERunResult result, {bool pretty = true}) {
-    final encoder = pretty ? const JsonEncoder.withIndent('  ') : const JsonEncoder();
+    final encoder =
+        pretty ? const JsonEncoder.withIndent('  ') : const JsonEncoder();
     return encoder.convert(result.toJson());
   }
 
@@ -254,12 +300,16 @@ abstract final class QTEReportGenerator {
         'time="${(result.totalElapsed.inMilliseconds / 1000).toStringAsFixed(3)}">');
     for (final step in result.steps) {
       for (final a in step.assertions) {
-        final time = (step.elapsed.inMilliseconds / step.assertions.length / 1000).toStringAsFixed(3);
-        sb.writeln('  <testcase classname="${_escape(result.testId)}.${_escape(step.stepId)}" '
+        final time =
+            (step.elapsed.inMilliseconds / step.assertions.length / 1000)
+                .toStringAsFixed(3);
+        sb.writeln(
+            '  <testcase classname="${_escape(result.testId)}.${_escape(step.stepId)}" '
             'name="${_escape(a.label.isNotEmpty ? a.label : a.assertionId)}" time="$time">');
         if (!a.passed) {
           final type = a.severity == QTESeverity.error ? 'failure' : 'warning';
-          sb.writeln('    <$type message="${_escape(a.failureMessage ?? "Failed")}">'
+          sb.writeln(
+              '    <$type message="${_escape(a.failureMessage ?? "Failed")}">'
               '${_escape("actual: ${a.actual}\nexpected: ${a.expected}")}</$type>');
         }
         sb.writeln('  </testcase>');
@@ -270,8 +320,12 @@ abstract final class QTEReportGenerator {
   }
 
   static String _escape(String? s) {
-    return (s ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&apos;');
+    return (s ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&apos;');
   }
 
   // ?? Diff helper ????????????????????????????????????????????????????????????

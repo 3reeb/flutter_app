@@ -55,6 +55,8 @@ import 'package:quantum_layout/quantum.dart';
 import '../foundation/quantum_json_dsl.dart';
 import '../features/charts/quantum_charts.dart';
 import '../foundation/quantum_matrix_engine.dart';
+import '../platform/quantum_connect_engine.dart';
+import 'package:quantum_layout/src/features/media/quantum_media_engine.dart';
 part 'omni_cores/box_core.dart';
 part 'omni_cores/action_core.dart';
 part 'omni_cores/field_core.dart';
@@ -67,7 +69,6 @@ part 'omni_cores/portal_core.dart';
 part 'omni_cores/control_core.dart';
 part 'omni_cores/canvas_core.dart';
 part 'omni_cores/system_core.dart';
-part 'omni_cores/layout_core.dart';
 part 'omni_cores/decoration_core.dart';
 part 'omni_cores/preset_core.dart';
 part 'omni_cores/connect_core.dart';
@@ -276,8 +277,7 @@ abstract final class QDesignMatrix {
           css.write('shadow-lg shadow-$intent/30 ');
           break;
         case 'neon':
-          css.write(
-              'shadow-lg shadow-$intent-400 border border-$intent-300 ');
+          css.write('shadow-lg shadow-$intent-400 border border-$intent-300 ');
           break;
         case 'neobrutal':
           css.write('border-2 border-black shadow-[4px_4px_0px_#000000] ');
@@ -365,7 +365,6 @@ abstract final class QDesignMatrix {
 //  REGISTRATION & TOP-LEVEL CORE BUILDERS
 // ────────────────────────────────────────────────────────────────────────────
 
-
 abstract class QuantumCoreExporter {
   void export(QuantumVM vm);
 }
@@ -383,7 +382,6 @@ const List<QuantumCoreExporter> _omniCoreExporters = [
   DecorationCoreExporter(),
   FieldCoreExporter(),
   HookCoreExporter(),
-  LayoutCoreExporter(),
   MediaCoreExporter(),
   PortalCoreExporter(),
   PresetCoreExporter(),
@@ -427,5 +425,9 @@ void registerOmniComponents(QuantumVM vm) {
   _registerPowerFieldPresets(vm);
   _registerGeneralBuiltInPresets(vm);
   _registerRichDesignSystemPresets(vm);
-  _registerRichSpatialLayouts(vm);
+  // NOTE: _registerRichSpatialLayouts was moved to QuantumVM.initialize().
+  // All 8 matrix layout shells (workspace, page, app_shell, split_shell,
+  // feed_shell, form_shell, modal_shell, timeline_shell) and all layout aliases
+  // are now registered natively in quantum_vm_core/quantum_vm_layout.dart
+  // before any external plugin runs. No action needed here.
 }

@@ -193,19 +193,22 @@ class _QLRingBufferNodeState extends State<_QLRingBufferNode> {
   }
 }
 
-void _registerStreamAliases(QuantumVM vm) {
-  vm.defineAlias('ws', 'stream:ws', description: 'WebSocket stream alias.', tags: const ['stream', 'alias']);
-  vm.defineAlias('sse', 'stream:sse', description: 'SSE stream alias.', tags: const ['stream', 'alias']);
-  vm.defineAlias('tick', 'stream:tick', description: 'Tick stream alias.', tags: const ['stream', 'alias']);
-  vm.defineAlias('ring', 'stream:ring', description: 'Ring buffer stream alias.', tags: const ['stream', 'alias']);
-}
+final QuantumDomain streamDomain = quantumDomain('stream')
+    .surface('stream', _buildStream, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias('ws', 'stream:ws', description: 'WebSocket stream alias.', tags: const ['stream', 'alias']);
+      vm.defineAlias('sse', 'stream:sse', description: 'SSE stream alias.', tags: const ['stream', 'alias']);
+      vm.defineAlias('tick', 'stream:tick', description: 'Tick stream alias.', tags: const ['stream', 'alias']);
+      vm.defineAlias('ring', 'stream:ring', description: 'Ring buffer stream alias.', tags: const ['stream', 'alias']);
+    })
+    .build();
 
 class StreamCoreExporter implements QuantumCoreExporter {
   const StreamCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('stream', _buildStream, tags: const ['core', 'stream']);
-    _registerStreamAliases(vm);
+    vm.installDomain(streamDomain);
   }
 }
+

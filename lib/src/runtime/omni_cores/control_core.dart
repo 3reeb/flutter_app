@@ -480,40 +480,43 @@ class _QLLocalReducerNodeState extends State<_QLLocalReducerNode> {
 // CORE 9: CANVAS (GPU Fragment Pipelines & Custom Paint)
 // ════════════════════════════════════════════════════════════════════════════
 
-void _registerControlAliases(QuantumVM vm) {
-  vm.defineAlias('flow', 'control:flow',
-      description: 'Flow control alias.', tags: const ['control', 'alias']);
-  vm.defineAlias('workflow', 'control:flow',
-      description: 'Workflow alias for flow control.',
-      tags: const ['control', 'alias']);
-  vm.defineAlias('form_scope', 'control:form_scope',
-      description: 'Form scope alias.', tags: const ['control', 'alias']);
-  vm.defineAlias('tabs', 'control:tabs',
-      description: 'Tabs control alias.', tags: const ['control', 'alias']);
-  vm.defineAlias('segment', 'control:tabs',
-      description: 'Segment alias for tabs control.',
-      tags: const ['control', 'alias']);
-  vm.defineAlias('stepper', 'control:stepper',
-      description: 'Stepper control alias.', tags: const ['control', 'alias']);
-  vm.defineAlias('accordion', 'control:accordion',
-      description: 'Accordion control alias.',
-      tags: const ['control', 'alias']);
-  vm.defineAlias('machine', 'control:machine',
-      description: 'State machine control alias.',
-      tags: const ['control', 'alias']);
-  vm.defineAlias('reducer', 'control:reducer',
-      description: 'Reducer control alias.', tags: const ['control', 'alias']);
-  vm.defineAlias('optimistic', 'control:optimistic',
-      description: 'Optimistic control alias.',
-      tags: const ['control', 'alias']);
-}
+final QuantumDomain controlDomain = quantumDomain('control')
+    .surface('control', _buildControl, defaultSurface: true)
+    .install((vm) {
+      vm.defineAlias('flow', 'control:flow',
+          description: 'Flow control alias.', tags: const ['control', 'alias']);
+      vm.defineAlias('workflow', 'control:flow',
+          description: 'Workflow alias for flow control.',
+          tags: const ['control', 'alias']);
+      vm.defineAlias('form_scope', 'control:form_scope',
+          description: 'Form scope alias.', tags: const ['control', 'alias']);
+      vm.defineAlias('tabs', 'control:tabs',
+          description: 'Tabs control alias.', tags: const ['control', 'alias']);
+      vm.defineAlias('segment', 'control:tabs',
+          description: 'Segment alias for tabs control.',
+          tags: const ['control', 'alias']);
+      vm.defineAlias('stepper', 'control:stepper',
+          description: 'Stepper control alias.', tags: const ['control', 'alias']);
+      vm.defineAlias('accordion', 'control:accordion',
+          description: 'Accordion control alias.',
+          tags: const ['control', 'alias']);
+      vm.defineAlias('machine', 'control:machine',
+          description: 'State machine control alias.',
+          tags: const ['control', 'alias']);
+      vm.defineAlias('reducer', 'control:reducer',
+          description: 'Reducer control alias.', tags: const ['control', 'alias']);
+      vm.defineAlias('optimistic', 'control:optimistic',
+          description: 'Optimistic control alias.',
+          tags: const ['control', 'alias']);
+    })
+    .build();
 
 class ControlCoreExporter implements QuantumCoreExporter {
   const ControlCoreExporter();
-  
+
   @override
   void export(QuantumVM vm) {
-    vm.define('control', _buildControl, tags: const ['core', 'control']);
-    _registerControlAliases(vm);
+    vm.installDomain(controlDomain);
   }
 }
+

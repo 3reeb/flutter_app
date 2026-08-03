@@ -368,6 +368,8 @@ class QFileRouterBridge {
       }
     }
 
+    await QNodeRegistry.instance.flushResolution();
+
     return QBridgeSyncResult(
       pagesRegistered: 0,
       layoutsRegistered: layoutsReg,
