@@ -31,7 +31,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:quantum_layout/src/platform/api/network.dart';
+import 'package:quantum_layout/src/platform/network/main.dart';
 
 class QuantumPermissionException implements Exception {
   final String code;

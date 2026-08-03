@@ -27,11 +27,10 @@
 // =============================================================================
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:typed_data';
 
 // Import the core engine (ensure the path is correct for your project)
-import 'network.dart';
+import 'main.dart';
 
 enum QuantumDriverMode { mock, http, grpc }
 
@@ -892,7 +891,7 @@ class _OmniMediaFacade {
     return _sdk.transfers.startDownload(
       id: taskId,
       path: url,
-      file: File(savePath),
+      file: QuantumFile(savePath),
       headers: headers,
     );
   }

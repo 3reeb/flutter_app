@@ -25,15 +25,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'quantum_data_state.dart';
-import 'package:quantum_layout/quantum.dart'
-    hide
-        QLStoreRegistry,
-        QLMutationFn,
-        QLQueryFn,
-        QLSliceRegistry,
-        QLStoreSlice,
-        QLDataStore,
-        QLActionPlugin;
+import 'package:quantum_layout/src/runtime/quantum_data_state.dart';
+import 'package:quantum_layout/src/foundation/quantum_core.dart';
+import 'package:quantum_layout/src/foundation/quantum_isolate_bridge.dart';
 
 /// Bootstrap/orchestration only.
 /// State storage and pipeline evaluation live in their own files.

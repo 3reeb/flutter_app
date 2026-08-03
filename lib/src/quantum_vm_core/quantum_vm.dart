@@ -41,6 +41,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:collection/collection.dart';
 import 'package:quantum_layout/quantum.dart';
+import 'package:quantum_layout/src/platform/network/main.dart';
 import 'quantum_vm_catalog.dart';
 import './qee/qee_registry.dart';
 
@@ -702,8 +703,7 @@ class QuantumVM {
   }) {
     final Map<String, dynamic> clonedProps =
         Map<String, dynamic>.from(defaultProps);
-    final String resolvedDescription =
-        description ?? 'Variant for $targetType';
+    final String resolvedDescription = description ?? 'Variant for $targetType';
     final List<String> resolvedTags = tags.isNotEmpty
         ? List<String>.unmodifiable(tags)
         : List<String>.unmodifiable(<String>[
@@ -779,7 +779,8 @@ class QuantumVM {
         entry.key,
         name,
         defaultProps: defaultProps,
-        description: description == null ? null : '$description (alias: ${entry.key})',
+        description:
+            description == null ? null : '$description (alias: ${entry.key})',
         metadata: <String, dynamic>{
           ...metadata,
           'surface': name,
@@ -794,7 +795,8 @@ class QuantumVM {
         '$name:${entry.key}',
         name,
         defaultProps: entry.value,
-        description: description == null ? null : '$description (variant: ${entry.key})',
+        description:
+            description == null ? null : '$description (variant: ${entry.key})',
         metadata: <String, dynamic>{
           ...metadata,
           'surface': name,
@@ -812,7 +814,10 @@ class QuantumVM {
       for (final entry in _aliases.values) {
         if (entry['type'] == alias) return entry;
       }
-      return <String, dynamic>{'type': alias, 'props': const <String, dynamic>{}};
+      return <String, dynamic>{
+        'type': alias,
+        'props': const <String, dynamic>{}
+      };
     }
     return null;
   }
@@ -2312,13 +2317,14 @@ class QuantumVM {
     }
 
     final String? testIdProp = node.props['testId']?.toString();
-    final String? nodeId = node.props['id']?.toString() ?? node.props['key']?.toString() ?? testIdProp;
+    final String? nodeId = node.props['id']?.toString() ??
+        node.props['key']?.toString() ??
+        testIdProp;
     if (nodeId != null || keySuffix != null) {
       final keyString = testIdProp != null
           ? '__qte_testId_$testIdProp'
           : (keySuffix != null ? '${nodeId ?? ''}_$keySuffix' : nodeId!);
-      content = KeyedSubtree(
-          key: ValueKey(keyString), child: content);
+      content = KeyedSubtree(key: ValueKey(keyString), child: content);
     }
 
     return content;
@@ -2797,7 +2803,10 @@ class _QLReactiveNodeBoundaryState extends State<_QLReactiveNodeBoundary> {
         final tokens = RegExp(r'[a-zA-Z_][a-zA-Z0-9_\.]*').allMatches(expr);
         for (final t in tokens) {
           final name = t.group(0);
-          if (name != null && name != 'true' && name != 'false' && name != 'null') {
+          if (name != null &&
+              name != 'true' &&
+              name != 'false' &&
+              name != 'null') {
             deps.add(name);
           }
         }

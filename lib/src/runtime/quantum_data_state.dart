@@ -26,7 +26,8 @@ import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quantum_layout/quantum.dart';
-import 'package:quantum_layout/src/platform/api/network_shell.dart';
+import 'package:quantum_layout/src/platform/network/network_shell.dart';
+import 'package:quantum_layout/src/platform/network/main.dart';
 
 typedef QLJsonMap = Map<String, dynamic>;
 typedef QLJsonList = List<dynamic>;
@@ -2194,8 +2195,7 @@ dynamic _dispatchLocalOperation(
       return store.push(path, value);
       return value;
     case 'pop':
-      return store.pop(path,
-          index: (payload['index'] as num?)?.toInt() ?? -1);
+      return store.pop(path, index: (payload['index'] as num?)?.toInt() ?? -1);
       return null;
     case 'move':
       return store.move(
@@ -2490,8 +2490,7 @@ class QLDataSourceHandle {
           return optimistic;
         }
       }
-      _enterError(
-          error, stackTrace);
+      _enterError(error, stackTrace);
       rethrow;
     }
   }
@@ -2995,6 +2994,7 @@ class QLDataSourceRegistry {
       handle.signal.data.removeListener(onData);
       handle.signal.loading.removeListener(onLoading);
     }
+
     _namespaceTeardowns
         .putIfAbsent(namespace, () => <VoidCallback>[])
         .add(cancel);
